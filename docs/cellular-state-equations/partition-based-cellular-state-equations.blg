@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: partition-based-cellular-state-equations.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: unsrtnat.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Database file #1: references.bib
+Warning--empty journal in haldane1930enzymes
+You've used 95 entries,
+            2481 wiz_defined-function locations,
+            1058 strings with 17086 characters,
+and the built_in function-call counts, 32598 in all, are:
+= -- 2896
+> -- 1217
+< -- 77
++ -- 536
+- -- 346
+* -- 2183
+:= -- 5157
+add.period$ -- 285
+call.type$ -- 95
+change.case$ -- 173
+chr.to.int$ -- 95
+cite$ -- 96
+duplicate$ -- 1804
+empty$ -- 3277
+format.name$ -- 489
+if$ -- 6937
+int.to.chr$ -- 1
+int.to.str$ -- 96
+missing$ -- 128
+newline$ -- 483
+num.names$ -- 285
+pop$ -- 818
+preamble$ -- 1
+purify$ -- 95
+quote$ -- 0
+skip$ -- 1019
+stack$ -- 0
+substring$ -- 1718
+swap$ -- 189
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 566
+warning$ -- 1
+while$ -- 312
+width$ -- 0
+write$ -- 1223
+(There was 1 warning)

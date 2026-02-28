@@ -1,0 +1,287 @@
+\section{Disease Categories}
+\label{sec:disease_categories}
+
+\subsection{Oscillatory Holes}
+
+\begin{definition}[Oscillatory Hole]
+\label{def:oscillatory_hole}
+An oscillatory hole is a deficit in amplitude or frequency of a cellular pathway oscillation caused by genetic variants affecting protein function:
+\begin{equation}
+H(\omega, A) = \left(1 - \frac{A}{A_{\mathrm{ref}}}\right) + \left(1 - \frac{\omega}{\omega_{\mathrm{ref}}}\right)
+\label{eq:oscillatory_hole}
+\end{equation}
+where $A$ is observed amplitude, $A_{\mathrm{ref}}$ is reference amplitude, $\omega$ is observed frequency, and $\omega_{\mathrm{ref}}$ is reference frequency.
+\end{definition}
+
+\begin{theorem}[Hole-Richness Correspondence]
+\label{thm:hole_richness}
+Oscillatory holes correspond to reductions in categorical richness:
+\begin{equation}
+H(\omega, A) = 1 - \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}}
+\label{eq:hole_richness_correspondence}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Categorical richness $R = 2n^2 \times N_{\mathrm{iso}} \times \exp(S_{\mathrm{conf}}/\kB)$ quantifies accessible states. A genetic variant reducing protein function decreases one or more factors:
+
+\textbf{(1) Partition depth:} Misfolding or truncation reduces $n$, decreasing $2n^2$.
+
+\textbf{(2) Isoform count:} Splicing defects reduce $N_{\mathrm{iso}}$.
+
+\textbf{(3) Conformational entropy:} Rigidifying mutations reduce $S_{\mathrm{conf}}$.
+
+The oscillation amplitude $A$ scales with the number of functional protein molecules, which scales with $R$. The oscillation frequency $\omega$ scales with the transition rate between states, which scales with $\exp(S_{\mathrm{conf}}/\kB)$. Therefore:
+\begin{align}
+\frac{A}{A_{\mathrm{ref}}} &\sim \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}} \label{eq:amplitude_richness} \\
+\frac{\omega}{\omega_{\mathrm{ref}}} &\sim \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}} \label{eq:frequency_richness}
+\end{align}
+
+Substituting into Equation~\eqref{eq:oscillatory_hole} yields Equation~\eqref{eq:hole_richness_correspondence}.
+\end{proof}
+
+\subsection{Genetic Disease Classification}
+
+\begin{theorem}[Genetic Disease Equation]
+\label{thm:genetic_disease}
+Genetic diseases are characterized by pathway-specific oscillatory holes:
+\begin{equation}
+D_{\mathrm{genetic}} = \sum_{i=1}^{N_{\mathrm{pathways}}} w_i H_i(\omega_i, A_i)
+\label{eq:genetic_disease}
+\end{equation}
+where $w_i$ is the pathway importance weight and $H_i$ is the oscillatory hole in pathway $i$.
+\end{equation}
+
+\begin{proof}
+Genetic variants affect specific proteins, creating holes in pathways containing those proteins. The disease severity is the weighted sum of holes across all affected pathways.
+
+The weights $w_i$ encode pathway importance: essential pathways (e.g., DNA repair, cell cycle control) have $w_i \gg 1$, while redundant pathways have $w_i \ll 1$. This explains variable expressivity: the same variant has different severity depending on which pathways are affected.
+
+For monogenic diseases, typically one pathway dominates: $D_{\mathrm{genetic}} \approx w_1 H_1$. For polygenic diseases, multiple pathways contribute: $D_{\mathrm{genetic}} = \sum_i w_i H_i$.
+\end{proof}
+
+\begin{corollary}[Penetrance]
+\label{cor:penetrance}
+Incomplete penetrance arises when oscillatory holes are small enough that compensatory mechanisms can maintain trajectory statistics within physiological ranges.
+\end{corollary}
+
+\begin{proof}
+A genetic variant creates hole $H_i$ in pathway $i$. If $H_i < H_{\mathrm{threshold}}$ where $H_{\mathrm{threshold}}$ is the minimum hole size detectable as pathological trajectory statistics, the variant is non-penetrant. Penetrance is:
+\begin{equation}
+\mathcal{P} = P(H_i > H_{\mathrm{threshold}}) = P\left(1 - \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}} > H_{\mathrm{threshold}}\right)
+\label{eq:penetrance}
+\end{equation}
+
+Variability in $R_{\mathrm{wildtype}}$ across individuals (due to modifier genes, environmental factors) causes variability in $H_i$, leading to incomplete penetrance.
+\end{proof}
+
+\subsection{Infectious Disease Classification}
+
+\begin{theorem}[Infectious Disease Equation]
+\label{thm:infectious_disease}
+Infectious diseases are characterized by pathogen-induced modifications to host trajectory statistics:
+\begin{equation}
+D_{\mathrm{infectious}} = f\left(\langle\Delta R_{\mathrm{host}}\rangle_t, \langle R_{\mathrm{pathogen}}\rangle_t, \langle\Delta\Phi_{\mathrm{host}}\rangle_t, \sigma_{\Phi,\mathrm{host}}^2\right)
+\label{eq:infectious_disease}
+\end{equation}
+where $R_{\mathrm{pathogen}}$ is the pathogen categorical richness.
+\end{theorem}
+
+\begin{proof}
+Pathogens disrupt host oscillatory dynamics through multiple mechanisms:
+
+\textbf{(1) Resource competition:} Pathogens consume host resources (ATP, amino acids, nucleotides), reducing $R_{\mathrm{host}}$ by limiting substrate availability for host protein synthesis.
+
+\textbf{(2) Molecular mimicry:} Pathogen proteins with high $R_{\mathrm{pathogen}}$ can interfere with host signaling pathways, increasing $\sigma_{\Phi,\mathrm{host}}^2$ by introducing spurious signals.
+
+\textbf{(3) Direct cytotoxicity:} Pathogen toxins damage host proteins, creating oscillatory holes similar to genetic variants.
+
+The disease severity depends on both the magnitude of host disruption ($\langle\Delta R_{\mathrm{host}}\rangle_t$, $\sigma_{\Phi,\mathrm{host}}^2$) and the pathogen load ($\langle R_{\mathrm{pathogen}}\rangle_t$). High $R_{\mathrm{pathogen}}$ indicates high pathogen protein diversity, correlating with virulence.
+\end{proof}
+
+\begin{corollary}[Viral Load Dynamics]
+\label{cor:viral_load}
+Viral load $V(t)$ corresponds to time-dependent pathogen categorical richness:
+\begin{equation}
+V(t) \propto \langle R_{\mathrm{pathogen}}(t) \rangle_{\mathrm{ensemble}}
+\label{eq:viral_load}
+\end{equation}
+where the ensemble average is over all infected cells.
+\end{corollary}
+
+\subsection{Metabolic Disease Classification}
+
+\begin{theorem}[Metabolic Disease Equation]
+\label{thm:metabolic_disease}
+Metabolic diseases are characterized by sustained deviations in categorical transition rates:
+\begin{equation}
+D_{\mathrm{metabolic}} = \left|\left\langle\frac{dC}{dt}\right\rangle_t - \left\langle\frac{dC}{dt}\right\rangle_t^{\mathrm{(phys)}}\right|
+\label{eq:metabolic_disease}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Metabolic pathways govern the rate of categorical transitions through substrate availability and enzyme activity. Metabolic diseases (diabetes, metabolic syndrome, mitochondrial disorders) disrupt these rates.
+
+\textbf{Diabetes:} Insulin resistance reduces glucose uptake, decreasing ATP production and slowing categorical transitions: $\langle dC/dt \rangle_t < \langle dC/dt \rangle_t^{\mathrm{(phys)}}$.
+
+\textbf{Hyperthyroidism:} Excess thyroid hormone accelerates metabolism, increasing categorical transition rates: $\langle dC/dt \rangle_t > \langle dC/dt \rangle_t^{\mathrm{(phys)}}$.
+
+\textbf{Mitochondrial disorders:} Defective oxidative phosphorylation reduces ATP production, slowing transitions.
+
+The disease severity is proportional to the magnitude of the rate deviation.
+\end{proof}
+
+\begin{corollary}[Metabolic Compensation]
+\label{cor:metabolic_compensation}
+Metabolic diseases exhibit compensatory mechanisms that partially restore normal transition rates, reducing disease severity.
+\end{corollary}
+
+\begin{proof}
+When $\langle dC/dt \rangle_t$ deviates from physiological values, feedback mechanisms activate:
+
+\textbf{Slow transitions:} Cells upregulate glycolysis, increase mitochondrial biogenesis, or activate alternative energy pathways to restore ATP production.
+
+\textbf{Fast transitions:} Cells downregulate metabolic enzymes or activate inhibitory pathways to slow transitions.
+
+These compensatory mechanisms reduce $|\langle dC/dt \rangle_t - \langle dC/dt \rangle_t^{\mathrm{(phys)}}|$, but typically cannot fully restore physiological rates, resulting in chronic disease.
+\end{proof}
+
+\subsection{Neurodegenerative Disease Classification}
+
+\begin{theorem}[Neurodegenerative Disease Equation]
+\label{thm:neurodegenerative_disease}
+Neurodegenerative diseases are characterized by progressive reduction in categorical richness due to protein aggregation:
+\begin{equation}
+D_{\mathrm{neurodegen}} = \int_0^t \frac{d\langle R \rangle_t}{dt'} \, dt' = \langle R(0) \rangle_t - \langle R(t) \rangle_t
+\label{eq:neurodegenerative_disease}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Neurodegenerative diseases (Alzheimer's, Parkinson's, Huntington's) involve progressive accumulation of misfolded protein aggregates (amyloid-β, α-synuclein, huntingtin). Aggregation sequesters functional protein, reducing $R$ over time.
+
+The rate of $R$ reduction depends on:
+
+\textbf{(1) Aggregation kinetics:} Nucleation-dependent aggregation follows $d[A]/dt \propto [M]^n$ where $[A]$ is aggregate concentration, $[M]$ is monomer concentration, and $n \approx 2-4$ is the critical nucleus size \citep{knowles2014amyloid}.
+
+\textbf{(2) Clearance capacity:} Autophagy and proteasomal degradation remove aggregates at rate $k_{\mathrm{clear}}[A]$. When aggregation rate exceeds clearance capacity, $R$ declines.
+
+\textbf{(3) Spreading:} Aggregates propagate between cells through prion-like mechanisms, accelerating $R$ reduction \citep{jucker2013self}.
+
+The cumulative loss $\langle R(0) \rangle_t - \langle R(t) \rangle_t$ determines disease severity. Early stages have small $\Delta R$, while late stages have large $\Delta R$ as aggregates accumulate.
+\end{proof}
+
+\begin{corollary}[Cognitive Reserve]
+\label{cor:cognitive_reserve}
+Cognitive reserve corresponds to high baseline $\langle R(0) \rangle_t$, delaying symptomatic onset despite ongoing $R$ reduction.
+\end{corollary}
+
+\begin{proof}
+Symptomatic neurodegenerative disease occurs when $\langle R(t) \rangle_t$ falls below threshold $R_{\mathrm{threshold}}$ required for normal function. If $\langle R(0) \rangle_t \gg R_{\mathrm{threshold}}$, the system can tolerate larger $\Delta R$ before symptoms appear:
+\begin{equation}
+t_{\mathrm{symptom}} = \frac{\langle R(0) \rangle_t - R_{\mathrm{threshold}}}{|d\langle R \rangle_t/dt|}
+\label{eq:symptom_onset}
+\end{equation}
+
+Individuals with high $\langle R(0) \rangle_t$ (high education, complex occupations, rich social networks) have longer $t_{\mathrm{symptom}}$, explaining cognitive reserve \citep{stern2012cognitive}.
+\end{proof}
+
+\subsection{Cancer Classification}
+
+\begin{theorem}[Cancer Equation]
+\label{thm:cancer}
+Cancer is characterized by escape from normal attractor basins and entry into proliferative attractor basins with altered trajectory statistics:
+\begin{equation}
+D_{\mathrm{cancer}} = \|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|_{\Sspace} + \langle\Delta \frac{dC}{dt}\rangle_t^{\mathrm{(prolif)}}
+\label{eq:cancer}
+\end{equation}
+where $\Scoord_{\mathrm{cancer}}$ is the cancer attractor basin center and $\langle\Delta dC/dt\rangle_t^{\mathrm{(prolif)}}$ is the increased proliferation rate.
+\end{theorem}
+
+\begin{proof}
+Cancer involves two distinct processes:
+
+\textbf{(1) Basin escape:} Oncogenic mutations (p53 loss, Ras activation, Myc overexpression) modify the effective potential $U_{\mathrm{eff}}(\Scoord)$, enabling escape from the physiological basin. The distance $\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$ quantifies how far the system has moved from physiological states.
+
+\textbf{(2) Proliferation acceleration:} Cancer cells increase categorical transition rates in proliferative pathways (cell cycle, DNA replication, metabolism), quantified by $\langle\Delta dC/dt\rangle_t^{\mathrm{(prolif)}}$. This acceleration enables rapid cell division.
+
+The cancer severity depends on both the distance from physiological states (determining malignancy) and the proliferation rate (determining growth rate).
+\end{proof}
+
+\begin{corollary}[Metastatic Potential]
+\label{cor:metastatic_potential}
+Metastatic potential correlates with $\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$: cancers farther from physiological basins have higher metastatic capacity.
+\end{corollary}
+
+\begin{proof}
+Metastasis requires cells to survive in foreign tissue environments, demanding high adaptability. Cells far from physiological basins (large $\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$) have explored larger regions of $\Sspace$, acquiring adaptations enabling survival in diverse environments. Therefore, metastatic potential increases with distance from physiological basins.
+\end{proof}
+
+\subsection{Autoimmune Disease Classification}
+
+\begin{theorem}[Autoimmune Disease Equation]
+\label{thm:autoimmune_disease}
+Autoimmune diseases are characterized by immune system misclassification of self-antigens, arising from altered categorical richness distributions:
+\begin{equation}
+D_{\mathrm{autoimmune}} = \sum_{i \in \mathrm{self}} P_{\mathrm{attack}}(R_i) \times w_i
+\label{eq:autoimmune_disease}
+\end{equation}
+where $P_{\mathrm{attack}}(R_i)$ is the probability of immune attack on self-antigen $i$ with richness $R_i$.
+\end{theorem}
+
+\begin{proof}
+The immune system distinguishes self from non-self through categorical richness (Section~\ref{sec:immune_eos}). Self-antigens typically have $R_{\mathrm{self}} > 10^5$ (high richness), while pathogens have $R_{\mathrm{pathogen}} < 10^4$ (low richness).
+
+Autoimmune disease occurs when self-antigens acquire low richness (through post-translational modifications, genetic variants, or environmental damage), making them appear pathogen-like. The probability of immune attack is:
+\begin{equation}
+P_{\mathrm{attack}}(R_i) = \begin{cases}
+0 & R_i > R_{\mathrm{threshold}} \\
+1 - \frac{R_i}{R_{\mathrm{threshold}}} & R_i < R_{\mathrm{threshold}}
+\end{cases}
+\label{eq:attack_probability}
+\end{equation}
+
+The disease severity is the weighted sum over all self-antigens with $R_i < R_{\mathrm{threshold}}$, with weights $w_i$ encoding tissue importance.
+\end{proof}
+
+\begin{corollary}[Molecular Mimicry]
+\label{cor:molecular_mimicry}
+Molecular mimicry occurs when pathogen antigens have richness $R_{\mathrm{pathogen}} \approx R_{\mathrm{self}}$, causing immune responses to cross-react with self-antigens.
+\end{corollary}
+
+\begin{proof}
+If pathogen antigen has $R_{\mathrm{pathogen}} > R_{\mathrm{threshold}}$, it resembles self-antigens in richness. Immune responses targeting this pathogen may cross-react with self-antigens of similar richness, triggering autoimmunity. This explains post-infectious autoimmune diseases (rheumatic fever after Streptococcus infection, Guillain-Barré syndrome after Campylobacter infection).
+\end{proof}
+
+\subsection{Unified Disease Taxonomy}
+
+\begin{theorem}[Disease State Unification]
+\label{thm:disease_unification}
+All disease categories can be expressed in the unified form:
+\begin{equation}
+D = \mathcal{D}\left(\{\langle R_i \rangle_t\}, \left\{\frac{dC_i}{dt}\right\}, \{\Phi_i\}, \{\sigma_{\Phi_i}^2\}, \{\taudecorr^{(i)}\}\right)
+\label{eq:disease_unification}
+\end{equation}
+where $i$ indexes pathways, and $\mathcal{D}$ is a functional mapping trajectory statistics to disease severity.
+\end{theorem}
+
+\begin{proof}
+All disease equations (genetic, infectious, metabolic, neurodegenerative, cancer, autoimmune) are special cases of Equation~\eqref{eq:disease_unification}:
+
+\textbf{Genetic:} Pathway-specific $R_i$ reductions.
+
+\textbf{Infectious:} Time-dependent $R_{\mathrm{pathogen}}$ and host $R_i$ reductions.
+
+\textbf{Metabolic:} Pathway-specific $dC_i/dt$ deviations.
+
+\textbf{Neurodegenerative:} Progressive global $R_i$ reductions.
+
+\textbf{Cancer:} Basin escape (large $\|\Scoord - \Scoord_{\mathrm{phys}}\|$) and proliferation acceleration (increased $dC_{\mathrm{prolif}}/dt$).
+
+\textbf{Autoimmune:} Richness-dependent immune attack.
+
+Therefore, Equation~\eqref{eq:disease_unification} provides a universal framework encompassing all disease categories.
+\end{proof}
+
+This unification demonstrates that disease is fundamentally disruption of oscillatory dynamics in bounded phase space, with specific disease types determined by which aspects of the dynamics are disrupted.

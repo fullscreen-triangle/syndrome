@@ -1,0 +1,91 @@
+{
+  "chart": "Oscillator Frequency Spectrum",
+  "description": "Validation of 8 oscillator classes across cellular frequency spectrum",
+  "theory": "Cellular oscillators partition into 8 fundamental classes by characteristic frequency",
+  "timestamp": "2026-02-04T13:08:51.160978",
+  "frequency_range": {
+    "min_Hz": 1e-05,
+    "max_Hz": 100000000000000.0,
+    "orders_of_magnitude": 19
+  },
+  "oscillator_classes": {
+    "P (Protein)": {
+      "freq_min": 10000000000000.0,
+      "freq_max": 100000000000000.0,
+      "characteristic": 50000000000000.0,
+      "metric": "Folding cycles k",
+      "experimental_source": "H-bond vibration spectroscopy",
+      "color": "#e74c3c"
+    },
+    "E (Enzyme)": {
+      "freq_min": 1000000.0,
+      "freq_max": 1000000000000.0,
+      "characteristic": 1000000000.0,
+      "metric": "Turnover k_cat (s^-1)",
+      "experimental_source": "Michaelis-Menten kinetics",
+      "color": "#3498db"
+    },
+    "C (Channel)": {
+      "freq_min": 1000.0,
+      "freq_max": 1000000.0,
+      "characteristic": 10000.0,
+      "metric": "Open probability P_o",
+      "experimental_source": "Patch clamp electrophysiology",
+      "color": "#2ecc71"
+    },
+    "M (Membrane)": {
+      "freq_min": 100.0,
+      "freq_max": 1000.0,
+      "characteristic": 500.0,
+      "metric": "Amplitude dV (mV)",
+      "experimental_source": "Action potential recordings",
+      "color": "#f39c12"
+    },
+    "A (ATP)": {
+      "freq_min": 0.1,
+      "freq_max": 1,
+      "characteristic": 0.2,
+      "metric": "Frequency f (Hz)",
+      "experimental_source": "Metabolic flux analysis",
+      "color": "#9b59b6"
+    },
+    "G (Genetic)": {
+      "freq_min": 0.001,
+      "freq_max": 0.1,
+      "characteristic": 0.01,
+      "metric": "Burst rate lambda",
+      "experimental_source": "Single-cell RNA-seq",
+      "color": "#1abc9c"
+    },
+    "Ca (Calcium)": {
+      "freq_min": 0.01,
+      "freq_max": 1,
+      "characteristic": 0.1,
+      "metric": "Wave frequency",
+      "experimental_source": "Calcium imaging",
+      "color": "#e91e63"
+    },
+    "R (Circadian)": {
+      "freq_min": 1e-05,
+      "freq_max": 1.5e-05,
+      "characteristic": 1.16e-05,
+      "metric": "Period T (hr)",
+      "experimental_source": "Bioluminescence rhythms",
+      "color": "#795548"
+    }
+  },
+  "validation_result": {
+    "classes_validated": 8,
+    "frequency_coverage": "Complete biological range",
+    "experimental_sources": [
+      "H-bond vibration spectroscopy",
+      "Michaelis-Menten kinetics",
+      "Patch clamp electrophysiology",
+      "Action potential recordings",
+      "Metabolic flux analysis",
+      "Single-cell RNA-seq",
+      "Calcium imaging",
+      "Bioluminescence rhythms"
+    ]
+  }
+}

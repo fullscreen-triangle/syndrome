@@ -1,0 +1,74 @@
+{
+  "panel": "Panel 4: Information Catalysis Dynamics",
+  "timestamp": "2026-02-04T13:08:19.581181",
+  "catalytic_distance_reduction": {
+    "K_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "d_direct": 10.0,
+    "d_catalyzed": [
+      10.0,
+      7.071067811865475,
+      5.773502691896258,
+      5.0,
+      4.47213595499958,
+      4.08248290463863,
+      3.779644730092272,
+      3.5355339059327373,
+      3.3333333333333335,
+      3.162277660168379
+    ],
+    "reduction_factor": [
+      1.0,
+      1.4142135623730951,
+      1.7320508075688772,
+      2.0,
+      2.23606797749979,
+      2.449489742783178,
+      2.6457513110645907,
+      2.8284271247461903,
+      3.0,
+      3.1622776601683795
+    ]
+  },
+  "enzyme_data": {
+    "Carbonic Anhydrase": {
+      "K": 1,
+      "kcat": 1000000
+    },
+    "Catalase": {
+      "K": 2,
+      "kcat": 400000
+    },
+    "Hexokinase": {
+      "K": 3,
+      "kcat": 1000
+    },
+    "Chymotrypsin": {
+      "K": 4,
+      "kcat": 100
+    },
+    "RuBisCO": {
+      "K": 12,
+      "kcat": 3
+    }
+  },
+  "michaelis_menten_parameters": {
+    "K_M": 1.0,
+    "V_max": 100
+  },
+  "theorem_validation": {
+    "d_cat_catalyzed_leq_d_cat_direct": true,
+    "reduction_formula": "d_cat^cat = d_0 / sqrt(K)",
+    "enzyme_as_information_catalyst": true
+  }
+}

@@ -1,0 +1,226 @@
+\section{S-Entropy Coordinates and Thermodynamic Structure}
+\label{sec:st_stellas}
+
+\subsection{S-Entropy Coordinate Space}
+
+The bounded phase space admits a three-dimensional entropy coordinate representation that provides a natural macroscopic description.
+
+\begin{definition}[S-Entropy Coordinates]
+\label{def:s_entropy}
+The S-entropy coordinate space $\Sspace = [0,1]^3$ comprises three components:
+\begin{align}
+\Sk &\in [0,1] \quad \text{(knowledge entropy)} \label{eq:Sk} \\
+\St &\in [0,1] \quad \text{(temporal entropy)} \label{eq:St} \\
+\Se &\in [0,1] \quad \text{(evolution entropy)} \label{eq:Se}
+\end{align}
+where $\Sk$ quantifies uncertainty in state identification, $\St$ quantifies uncertainty in timing relationships, and $\Se$ quantifies uncertainty in trajectory progression.
+\end{definition}
+
+\begin{theorem}[Compactness]
+\label{thm:s_entropy_compact}
+The S-entropy coordinate space $\Sspace = [0,1]^3$ is compact.
+\end{theorem}
+
+\begin{proof}
+As a closed and bounded subset of $\RR^3$, the cube $[0,1]^3$ is compact by the Heine-Borel theorem. Compactness ensures satisfaction of Axiom~\ref{ax:bounded}: all trajectories remain within finite bounds.
+\end{proof}
+
+\subsection{Mapping from Partition Coordinates}
+
+\begin{definition}[Coordinate Transformation Functions]
+\label{def:coordinate_transform}
+The transformation from partition coordinates $(n,\ell,m,s)$ to S-entropy coordinates $(\Sk,\St,\Se)$ is given by:
+\begin{align}
+\Sk(n,\ell) &= \frac{1}{1 + \exp\left(-\alpha_k\left(\frac{n^2}{\ell+1} - \beta_k\right)\right)} \label{eq:Sk_map} \\
+\St(n,m) &= \frac{1}{1 + \exp\left(-\alpha_t\left(\frac{n^2}{|m|+1} - \beta_t\right)\right)} \label{eq:St_map} \\
+\Se(n,s) &= \frac{1}{1 + \exp\left(-\alpha_e\left(\frac{n^2}{2|s|+1} - \beta_e\right)\right)} \label{eq:Se_map}
+\end{align}
+where $\alpha_k, \alpha_t, \alpha_e$ are scaling parameters and $\beta_k, \beta_t, \beta_e$ are offset parameters chosen to map the partition coordinate range to $[0,1]$.
+\end{definition}
+
+\begin{theorem}[Bijective Mapping]
+\label{thm:bijective_mapping}
+For appropriate choice of parameters $(\alpha_k, \beta_k, \alpha_t, \beta_t, \alpha_e, \beta_e)$, the transformation $\Phi: \mathcal{P}_n \to \Sspace$ defined by Equations~\eqref{eq:Sk_map}--\eqref{eq:Se_map} is bijective onto a dense subset of $\Sspace$.
+\end{theorem}
+
+\begin{proof}
+The sigmoid functions $\sigma(x) = 1/(1+e^{-x})$ are strictly monotonic and map $\RR \to (0,1)$. For each partition coordinate component, the argument is a strictly monotonic function of the corresponding quantum number. Therefore, the composition is strictly monotonic, ensuring injectivity.
+
+Surjectivity onto a dense subset follows from the fact that as $n \to \infty$, the arguments of the sigmoid functions span $\RR$, and the sigmoid function approaches its full range $(0,1)$. The discrete nature of partition coordinates means exact surjectivity is achieved only in the limit, but the image is dense in $\Sspace$ for sufficiently large $n$.
+\end{proof}
+
+\subsection{Thermodynamic Interpretation}
+
+\begin{definition}[Entropy Functional]
+\label{def:entropy_functional}
+The total entropy in S-entropy coordinates is:
+\begin{equation}
+S_{\mathrm{total}}(\Sk,\St,\Se) = \kB \left[\Sk \ln\Omega_k + \St \ln\Omega_t + \Se \ln\Omega_e\right]
+\label{eq:total_entropy}
+\end{equation}
+where $\Omega_k, \Omega_t, \Omega_e$ are the number of microstates associated with each entropy component.
+\end{definition}
+
+\begin{theorem}[Entropy Bounds]
+\label{thm:entropy_bounds}
+The total entropy satisfies:
+\begin{equation}
+0 \leq S_{\mathrm{total}} \leq \kB \ln(\Omega_k \Omega_t \Omega_e)
+\label{eq:entropy_bounds}
+\end{equation}
+with equality at the lower bound when $(\Sk,\St,\Se) = (0,0,0)$ (complete knowledge, no uncertainty) and at the upper bound when $(\Sk,\St,\Se) = (1,1,1)$ (maximum uncertainty).
+\end{theorem}
+
+\begin{proof}
+Since $\Sk, \St, \Se \in [0,1]$, each term in Equation~\eqref{eq:total_entropy} is non-negative and bounded above by $\kB \ln\Omega_i$. The total entropy is therefore bounded between $0$ and $\kB \ln(\Omega_k \Omega_t \Omega_e)$.
+\end{proof}
+
+\subsection{Thermodynamic Potentials}
+
+\begin{definition}[Free Energy in S-Entropy Space]
+\label{def:free_energy_s}
+The Helmholtz free energy in S-entropy coordinates is:
+\begin{equation}
+F(\Sk,\St,\Se,T) = E(\Sk,\St,\Se) - T S_{\mathrm{total}}(\Sk,\St,\Se)
+\label{eq:free_energy_s}
+\end{equation}
+where $E(\Sk,\St,\Se)$ is the internal energy as a function of S-entropy coordinates.
+\end{equation}
+
+\begin{theorem}[Equilibrium Condition]
+\label{thm:equilibrium_s}
+At thermodynamic equilibrium at temperature $T$, the S-entropy coordinates satisfy:
+\begin{equation}
+\frac{\partial F}{\partial \Sk} = \frac{\partial F}{\partial \St} = \frac{\partial F}{\partial \Se} = 0
+\label{eq:equilibrium_condition}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Equilibrium corresponds to minimization of free energy at fixed temperature. The minimum is characterized by vanishing first derivatives with respect to all independent variables $(\Sk,\St,\Se)$.
+\end{proof}
+
+\subsection{Trajectory Dynamics in S-Entropy Space}
+
+\begin{definition}[S-Entropy Trajectory]
+\label{def:s_trajectory}
+A trajectory in S-entropy space is a continuous curve $\gamma: [0,T] \to \Sspace$ satisfying $\gamma(t) = (\Sk(t), \St(t), \Se(t))$ for all $t \in [0,T]$.
+\end{definition}
+
+\begin{theorem}[Trajectory Boundedness]
+\label{thm:trajectory_bounded}
+All trajectories in S-entropy space remain bounded: $\gamma(t) \in [0,1]^3$ for all $t$.
+\end{theorem}
+
+\begin{proof}
+Direct consequence of Definition~\ref{def:s_entropy} and the compactness of $\Sspace$ (Theorem~\ref{thm:s_entropy_compact}).
+\end{proof}
+
+\begin{definition}[Trajectory Length]
+\label{def:trajectory_length}
+The length of a trajectory $\gamma: [0,T] \to \Sspace$ is:
+\begin{equation}
+L[\gamma] = \int_0^T \sqrt{\left(\frac{d\Sk}{dt}\right)^2 + \left(\frac{d\St}{dt}\right)^2 + \left(\frac{d\Se}{dt}\right)^2} \, dt
+\label{eq:trajectory_length}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Poincaré Recurrence in S-Entropy Space]
+\label{thm:poincare_s}
+For measure-preserving dynamics on $\Sspace$, almost every trajectory returns arbitrarily close to its initial point: for any $\epsilon > 0$, there exists $T_{\mathrm{rec}}$ such that $\|\gamma(T_{\mathrm{rec}}) - \gamma(0)\| < \epsilon$.
+\end{theorem}
+
+\begin{proof}
+This is the Poincaré recurrence theorem applied to the compact space $\Sspace = [0,1]^3$ \citep{poincare1890probleme,katok1995introduction}. Compactness and measure preservation guarantee recurrence.
+\end{proof}
+
+\subsection{Geodesics in S-Entropy Space}
+
+\begin{definition}[Geodesic]
+\label{def:geodesic}
+A geodesic in S-entropy space is a trajectory $\gamma_{\mathrm{geo}}$ that minimizes the length functional $L[\gamma]$ subject to fixed endpoints $\gamma(0) = \Scoord_0$ and $\gamma(T) = \Scoord_1$.
+\end{definition}
+
+\begin{theorem}[Geodesic Equation]
+\label{thm:geodesic_equation}
+Geodesics in flat S-entropy space (Euclidean metric) are straight lines:
+\begin{equation}
+\gamma_{\mathrm{geo}}(t) = \Scoord_0 + \frac{t}{T}(\Scoord_1 - \Scoord_0)
+\label{eq:geodesic}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+In Euclidean space, the shortest path between two points is a straight line. This follows from the calculus of variations: the Euler-Lagrange equation for the length functional $L[\gamma]$ with Euclidean metric yields $d^2\gamma/dt^2 = 0$, whose solution is Equation~\eqref{eq:geodesic}.
+\end{proof}
+
+\begin{remark}
+In the presence of effective potentials $U_{\mathrm{eff}}(\Scoord)$ (Definition~\ref{def:effective_potential}), geodesics deviate from straight lines, curving to minimize the action $\int (T - U_{\mathrm{eff}}) dt$ where $T$ is kinetic energy.
+\end{remark}
+
+\subsection{Volume Element and Measure}
+
+\begin{definition}[Volume Element]
+\label{def:volume_element}
+The volume element in S-entropy space is:
+\begin{equation}
+d\mu = d\Sk \, d\St \, d\Se
+\label{eq:volume_element}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Total Volume]
+\label{thm:total_volume}
+The total volume of S-entropy space is:
+\begin{equation}
+\mu(\Sspace) = \int_0^1 \int_0^1 \int_0^1 d\Sk \, d\St \, d\Se = 1
+\label{eq:total_volume}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Direct integration of the volume element over $[0,1]^3$ yields unity.
+\end{proof}
+
+\begin{definition}[Probability Density]
+\label{def:probability_density}
+The probability density for finding a system at S-entropy coordinate $\Scoord$ is:
+\begin{equation}
+\rho(\Scoord) = \frac{1}{Z} \exp\left(-\frac{U_{\mathrm{eff}}(\Scoord)}{\kB T}\right)
+\label{eq:probability_density}
+\end{equation}
+where $Z = \int_{\Sspace} \exp(-U_{\mathrm{eff}}(\Scoord)/\kB T) \, d\mu$ is the partition function.
+\end{definition}
+
+\begin{theorem}[Normalization]
+\label{thm:normalization}
+The probability density satisfies:
+\begin{equation}
+\int_{\Sspace} \rho(\Scoord) \, d\mu = 1
+\label{eq:normalization}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By definition of the partition function $Z$, we have:
+\begin{equation}
+\int_{\Sspace} \rho(\Scoord) \, d\mu = \frac{1}{Z} \int_{\Sspace} \exp\left(-\frac{U_{\mathrm{eff}}(\Scoord)}{\kB T}\right) d\mu = \frac{Z}{Z} = 1
+\end{equation}
+\end{proof}
+
+\subsection{Connection to Partition Coordinates}
+
+\begin{theorem}[Partition Function Equivalence]
+\label{thm:partition_equivalence}
+The partition function in S-entropy coordinates equals the partition function in partition coordinates:
+\begin{equation}
+Z_{\Sspace} = \sum_{n,\ell,m,s} \exp\left(-\frac{E(n,\ell,m,s)}{\kB T}\right) = Z_{\mathcal{P}}
+\label{eq:partition_equivalence}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The transformation $\Phi: \mathcal{P}_n \to \Sspace$ (Theorem~\ref{thm:bijective_mapping}) preserves the energy function: $E(\Phi(n,\ell,m,s)) = E(n,\ell,m,s)$. Therefore, the Boltzmann weights are identical under the transformation, and the partition functions are equal.
+\end{proof}
+
+This equivalence ensures that thermodynamic quantities calculated in either coordinate system yield identical results, confirming the consistency of the S-entropy coordinate representation.

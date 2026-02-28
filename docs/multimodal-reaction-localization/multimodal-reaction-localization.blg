@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: multimodal-reaction-localization.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: unsrtnat.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Database file #1: references.bib
+Warning--I didn't find a database entry for "hell2007far"
+Warning--I didn't find a database entry for "cheng2015single"
+Warning--I didn't find a database entry for "binnig1986atomic"
+Warning--empty journal in duck1990physical
+You've used 24 entries,
+            2481 wiz_defined-function locations,
+            702 strings with 7921 characters,
+and the built_in function-call counts, 7933 in all, are:
+= -- 714
+> -- 264
+< -- 21
++ -- 124
+- -- 74
+* -- 546
+:= -- 1257
+add.period$ -- 72
+call.type$ -- 24
+change.case$ -- 45
+chr.to.int$ -- 22
+cite$ -- 25
+duplicate$ -- 434
+empty$ -- 800
+format.name$ -- 109
+if$ -- 1678
+int.to.chr$ -- 3
+int.to.str$ -- 25
+missing$ -- 27
+newline$ -- 128
+num.names$ -- 72
+pop$ -- 190
+preamble$ -- 1
+purify$ -- 24
+quote$ -- 0
+skip$ -- 252
+stack$ -- 0
+substring$ -- 418
+swap$ -- 47
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 150
+warning$ -- 1
+while$ -- 75
+width$ -- 0
+write$ -- 311
+(There were 4 warnings)

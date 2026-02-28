@@ -1,0 +1,424 @@
+\subsection{The Derivation IS the Computation}
+
+The central insight of this framework is that \textbf{deriving a cell from partition operations IS computing cellular function}. There is no separation between:
+\begin{itemize}
+\item The mathematical derivation (partition operations on bounded phase space)
+\item The physical system (the living cell)
+\item The computation (cellular information processing)
+\end{itemize}
+
+These are three descriptions of the same underlying structure, just as oscillation $\equiv$ category $\equiv$ partition are three descriptions yielding identical entropy $S = k_B M \ln n$.
+
+\begin{theorem}[Observation-Computation-Process Identity]
+\label{thm:identity}
+For any cellular process described by categorical morphism chain $\Phi_1 \circ \Phi_2 \circ \cdots \circ \Phi_k$:
+\begin{equation}
+\text{Observation} = \text{Computation} = \text{Process}
+\end{equation}
+The act of observing (projecting partition signatures), computing (completing trajectories), and physical process (cellular dynamics) are mathematically identical operations.
+\end{theorem}
+
+This identity resolves the apparent paradox of ``implementing'' cellular computation: we do not implement a model OF the cell---we run the same partition operations that constitute the cell. The Moon is derived from gravitational phase-lock networks; running those operations IS lunar dynamics. The cell is derived from categorical morphism chains; running those operations IS cellular function.
+
+\subsection{The Poincar\'{e} Computing Paradigm}
+
+Traditional computational biology simulates forward from initial conditions:
+\begin{equation}
+\mathbf{x}(t + \Delta t) = \mathbf{x}(t) + f(\mathbf{x}, t)\Delta t
+\end{equation}
+
+This requires $O(N \cdot T)$ operations for $N$ particles over $T$ time steps. For chaotic systems with Lyapunov exponent $\lambda$, precision requirements grow as $O(e^{\lambda T})$---computationally intractable for cellular timescales.
+
+Poincar\'{e} computing inverts this paradigm: given boundary conditions and categorical constraints, valid trajectories are \emph{determined}, not computed step-by-step. The trajectory exists as a whole; we discover it through constraint propagation.
+
+\begin{definition}[Poincar\'{e} Computing]
+\label{def:poincare_computing}
+Computational paradigm where trajectories are completed backward from observations through categorical constraints, rather than simulated forward from initial conditions using dynamical laws.
+\end{definition}
+
+\begin{theorem}[Complexity Reduction]
+\label{thm:poincare_complexity}
+Trajectory completion with $m$ constraints on $k$-trit precision requires $O(k \cdot m)$ operations, compared to $O(e^{\lambda T})$ for forward simulation of chaotic systems.
+\end{theorem}
+
+\begin{proof}
+Each of $k$ trit positions requires checking $m$ constraints. Each constraint check is $O(1)$ for local constraints. Total: $O(k \cdot m)$. For cellular systems with $\lambda \sim 1$ s$^{-1}$ and characteristic times $T \sim 1$ ms, forward simulation requires $O(e^{1000})$ operations---effectively infinite. Trajectory completion requires $O(20 \times 3) = O(60)$ operations for typical enzymatic processes.
+\end{proof}
+
+\subsection{Position-Trajectory Duality}
+
+The foundational insight enabling Poincar\'{e} computing is that in ternary S-entropy representation, position and trajectory are identical:
+
+\begin{theorem}[Position-Trajectory Duality]
+\label{thm:position_trajectory_duality}
+For any $k$-trit string $\mathbf{t} = t_1 t_2 \cdots t_k$ where $t_i \in \{0, 1, 2\}$:
+\begin{enumerate}
+\item $\mathbf{t}$ addresses exactly one cell $C_{\mathbf{t}}$ in the $3^k$ partition of $\Sspace$
+\item $\mathbf{t}$ encodes the unique trajectory from the origin to $C_{\mathbf{t}}$
+\item The trajectory is the sequence of refinements: refine along axis $t_1$, then $t_2$, etc.
+\end{enumerate}
+The address IS the path.
+\end{theorem}
+
+This duality eliminates the von Neumann separation between data (position) and instructions (trajectory). In cellular computing, they are identical.
+
+\subsection{Primitive Operations}
+
+Three primitive operations replace Boolean AND, OR, NOT as computational foundations:
+
+\begin{definition}[\textsc{Project}]
+\label{def:project}
+Extract categorical coordinate from physical observable:
+\begin{equation}
+\textsc{Project}: \Omega_{\text{physical}} \to \Sspace
+\end{equation}
+Given physical state $\Psi$, returns S-entropy coordinates $(\Sk, \St, \Se)$.
+
+Implementation:
+\begin{equation}
+\textsc{Project}_i(\mathbf{t}) = t_i
+\end{equation}
+Extracts the $i$-th trit, revealing refinement along one axis.
+\end{definition}
+
+\begin{definition}[\textsc{Complete}]
+\label{def:complete}
+Given partial trajectory and constraints, return valid completion:
+\begin{equation}
+\textsc{Complete}: (\mathbf{t}_{1:j}, \mathcal{C}) \to \mathbf{t}_{j+1:k}
+\end{equation}
+This is the core operation of Poincar\'{e} computing. Given boundary conditions $\mathbf{t}_0$ and $\mathbf{t}_f$, plus categorical constraints $\mathcal{C}$, returns the unique trajectory satisfying all constraints.
+
+When multiple completions exist, returns the set of valid completions.
+\end{definition}
+
+\begin{definition}[\textsc{Compose}]
+\label{def:compose}
+Concatenate two trajectories:
+\begin{equation}
+\textsc{Compose}: (\mathbf{t}^{(1)}, \mathbf{t}^{(2)}) \to \mathbf{t}^{(1)} \cdot \mathbf{t}^{(2)}
+\end{equation}
+The endpoint of $\mathbf{t}^{(1)}$ must match the startpoint of $\mathbf{t}^{(2)}$ in categorical space.
+\end{definition}
+
+\begin{proposition}[Closure]
+The operations \textsc{Project}, \textsc{Complete}, and \textsc{Compose} are closed over the space of ternary trajectories: any composition of these operations yields a valid ternary trajectory.
+\end{proposition}
+
+\subsection{Backward Completion Algorithm}
+
+\begin{definition}[Backward Completion]
+\label{def:backward_completion}
+Given final state $\mathbf{t}_f$ and constraints $\mathcal{C}$, propagate constraints backward:
+\begin{enumerate}
+\item Initialize: $\mathbf{t}^{(k)} = \mathbf{t}_f$
+\item For $i = k-1$ down to $1$:
+\begin{enumerate}
+\item Compute valid predecessors: $\mathcal{P}_i = \{t : \mathcal{C}(t, \mathbf{t}^{(i+1:k)}) = \text{valid}\}$
+\item Select: $t_i \in \mathcal{P}_i$ (unique if constraints are tight)
+\end{enumerate}
+\item Return: $\mathbf{t}^* = t_1 \cdots t_k$
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Backward Completion Complexity]
+Backward completion with $m$ constraints over $k$ trit positions requires exactly $k \cdot m$ constraint evaluations.
+\end{theorem}
+
+\subsection{Constraint Types}
+
+Four constraint types govern trajectory validity:
+
+\begin{enumerate}
+\item \textbf{Boundary constraints:} Fix initial/final states
+\begin{equation}
+\mathcal{C}_{\text{boundary}}: \mathbf{t}_0 = (0,0,0,\ldots), \quad \mathbf{t}_f = (2,2,2,\ldots)
+\end{equation}
+
+\item \textbf{Aperture constraints:} Require passage through categorical aperture $\mathcal{A}$
+\begin{equation}
+\mathcal{C}_{\mathcal{A}}(\mathbf{t}) = \begin{cases}
+\text{valid} & \exists i: C_{t_1 \cdots t_i} \cap \mathcal{A} \neq \emptyset \\
+\text{invalid} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\item \textbf{Continuity constraints:} Adjacent trits satisfy $|t_{i+1} - t_i| \leq 1$
+
+\item \textbf{Conservation constraints:} Certain trit patterns sum to fixed values (charge neutrality, energy conservation)
+\end{enumerate}
+
+\subsection{Data Structures}
+
+\subsubsection{Ternary Tree}
+
+Hierarchical partition structure storing categorical states:
+
+\begin{verbatim}
+struct TernaryNode {
+    depth: u32,
+    coordinate: (f64, f64, f64),  // (S_k, S_t, S_e)
+    children: [Option<Box<TernaryNode>>; 3],
+    constraints: Vec<Constraint>,
+    valid: bool,
+}
+\end{verbatim}
+
+Tree operations:
+\begin{itemize}
+\item \texttt{insert(trit\_string)}: $O(\log_3 N)$
+\item \texttt{lookup(trit\_string)}: $O(\log_3 N)$
+\item \texttt{validate(constraints)}: $O(k \cdot m)$
+\item \texttt{complete(boundary, constraints)}: $O(k \cdot m)$
+\end{itemize}
+
+\subsubsection{Oscillator Network}
+
+Phase-locked oscillator array for harmonic coincidence:
+
+\begin{verbatim}
+struct OscillatorNetwork {
+    oscillators: Vec<Oscillator>,
+    coupling_matrix: Matrix<f64>,
+    phase_lock_threshold: f64,
+}
+
+struct Oscillator {
+    frequency: f64,           // Hz
+    phase: f64,               // radians
+    amplitude: f64,
+    coupling_strength: f64,
+}
+\end{verbatim}
+
+Network operations:
+\begin{itemize}
+\item \texttt{detect\_coincidence()}: Returns beat frequencies where phases align
+\item \texttt{categorical\_access(S\_coord)}: Maps S-entropy coordinate to oscillator state
+\item \texttt{phase\_lock(oscillators)}: Synchronize oscillator subset
+\end{itemize}
+
+\subsubsection{Constraint Graph}
+
+Dependency graph for constraint propagation:
+
+\begin{verbatim}
+struct ConstraintGraph {
+    nodes: Vec<ConstraintNode>,
+    edges: Vec<(usize, usize)>,  // dependency edges
+}
+
+struct ConstraintNode {
+    constraint_type: ConstraintType,
+    trit_positions: Vec<usize>,
+    evaluate: fn(&TritString) -> bool,
+}
+\end{verbatim}
+
+\subsection{Cellular Partition Language (CPL)}
+
+A declarative language for specifying cellular computations:
+
+\subsubsection{Syntax}
+
+\begin{verbatim}
+# Define S-entropy space
+space S = [0,1]^3
+
+# Define categorical aperture (enzyme active site)
+aperture CA_II {
+    geometry: tetrahedral
+    center: (0.5, 0.5, 0.5)
+    width: 0.01
+    pattern: "012"  # zinc passage trit sequence
+}
+
+# Define boundary conditions
+initial = project(CO2, r=5Å)  # substrate
+final = project(HCO3-, r=5Å)  # product
+
+# Define constraints
+constraints {
+    charge_neutrality: sum(q_i) == 0
+    energy_conservation: |E_f - E_i| < kT
+    categorical_coherence: R > 0.7
+}
+
+# Complete trajectory
+trajectory = complete(
+    from: initial,
+    to: final,
+    through: [CA_II],
+    satisfying: constraints,
+    precision: 20 trits
+)
+
+# Extract observables
+categorical_distance = |trajectory|
+transitions = count(trajectory, pattern="012")
+turnover = omega_0 * exp(-categorical_distance / k_B)
+\end{verbatim}
+
+\subsubsection{Semantics}
+
+\begin{enumerate}
+\item \texttt{space}: Declares S-entropy coordinate space
+\item \texttt{aperture}: Defines geometric constraint (enzyme, channel, etc.)
+\item \texttt{project}: Maps physical observables to S-entropy coordinates
+\item \texttt{constraints}: Specifies physical validity constraints
+\item \texttt{complete}: Core operation---backward propagation from boundary conditions
+\item Observable extraction: Derive measurable quantities from completed trajectory
+\end{enumerate}
+
+\subsubsection{No Dynamical Laws}
+
+CPL contains no force fields, rate equations, or differential equations. Trajectories emerge from constraint satisfaction in S-entropy space. Laws are \emph{derived} from constraints through geometry:
+\begin{itemize}
+\item Euler-Lagrange equations: Geodesic constraint
+\item Fick's law: Diffusive aperture constraint
+\item Michaelis-Menten: Enzymatic aperture constraint
+\end{itemize}
+
+\subsection{Interface Specification}
+
+\subsubsection{Input Format}
+
+\begin{verbatim}
+{
+    "query_type": "trajectory_completion",
+    "initial_state": {
+        "S_k": 0.1,
+        "S_t": 0.1,
+        "S_e": 0.1
+    },
+    "final_state": {
+        "S_k": 0.9,
+        "S_t": 0.9,
+        "S_e": 0.9
+    },
+    "apertures": [
+        {
+            "name": "enzyme_active_site",
+            "center": [0.5, 0.5, 0.5],
+            "width": 0.01,
+            "pattern": "012"
+        }
+    ],
+    "constraints": [
+        {"type": "charge_neutrality"},
+        {"type": "energy_conservation", "tolerance": 1e-3},
+        {"type": "categorical_coherence", "threshold": 0.7}
+    ],
+    "precision": 20
+}
+\end{verbatim}
+
+\subsubsection{Output Format}
+
+\begin{verbatim}
+{
+    "status": "completed",
+    "trajectory": {
+        "trit_string": "00000000001201222222",
+        "length": 20,
+        "categorical_distance": 1,
+        "transitions": [
+            {"position": 10, "pattern": "012", "type": "aperture_traversal"}
+        ]
+    },
+    "observables": {
+        "path_length": 20,
+        "turnover_rate": 1e6,
+        "constraint_satisfaction": {
+            "charge_neutrality": true,
+            "energy_conservation": true,
+            "categorical_coherence": 0.85
+        }
+    },
+    "metadata": {
+        "computation_time_ns": 1250,
+        "constraint_checks": 60,
+        "oscillator_coincidences": 42
+    }
+}
+\end{verbatim}
+
+\subsection{Hardware Mapping}
+
+\subsubsection{Consumer Hardware Components}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Component & Frequency & Role \\
+\midrule
+CPU clock & $\sim 3$ GHz & Base oscillator \\
+GPU clock & $\sim 2$ GHz & Parallel coincidence detection \\
+Memory controller & $\sim 3$ GHz & Phase reference \\
+USB controller & $\sim 480$ MHz & Low-frequency harmonics \\
+Audio DAC & $\sim 192$ kHz & Fine timing \\
+Network PHY & $\sim 125$ MHz & Independent reference \\
+PCIe clock & $\sim 100$ MHz & Synchronization \\
+RTC crystal & $32.768$ kHz & Long-term stability \\
+\bottomrule
+\end{tabular}
+\caption{Consumer hardware oscillators for harmonic coincidence network}
+\end{table}
+
+\subsubsection{Coincidence Detection}
+
+Beat frequencies from $N = 8$ oscillators with integer coefficients $n_i \in [-10^6, 10^6]$:
+\begin{equation}
+\omega_{\text{beat}} = \left|\sum_{i=1}^N n_i \omega_i\right|
+\end{equation}
+
+Coincidence occurs when multiple beat frequency paths yield identical values:
+\begin{equation}
+\omega_{\text{beat}}^{(1)} = \omega_{\text{beat}}^{(2)} = \cdots = \omega_{\text{beat}}^{(M)}
+\end{equation}
+
+Each coincidence maps to a categorical coordinate through:
+\begin{equation}
+(\Sk, \St, \Se) = \text{decode}(\omega_{\text{beat}})
+\end{equation}
+
+\subsection{Implementation Phases}
+
+\subsubsection{Phase 1: Python Validation}
+
+Rapid prototyping to validate:
+\begin{itemize}
+\item Ternary tree operations
+\item Backward completion algorithm
+\item Constraint propagation
+\item CPL parser and interpreter
+\item CA II trajectory reproduction
+\end{itemize}
+
+Target: Reproduce $10^9\times$ speedup over molecular dynamics for enzymatic trajectories.
+
+\subsubsection{Phase 2: Rust Implementation}
+
+Production implementation with:
+\begin{itemize}
+\item Zero-cost abstractions for ternary operations
+\item Lock-free concurrent constraint evaluation
+\item Hardware oscillator interface (via OS timing APIs)
+\item SIMD-optimized coincidence detection
+\item Memory-mapped partition trees
+\end{itemize}
+
+Target: Real-time cellular trajectory completion at $10^6$ queries/second.
+
+\subsubsection{Phase 3: Hardware Integration}
+
+Direct hardware oscillator access:
+\begin{itemize}
+\item FPGA-based coincidence detection
+\item Custom oscillator arrays
+\item Phase-locked loop integration
+\item Trans-Planckian timing validation
+\end{itemize}
+
+Target: Categorical access at $\tau_{\text{meas}} = 10^{-66}$ s effective resolution.

@@ -1,0 +1,312 @@
+\section{Circuit Dynamics and Geometric Pathology}
+\label{sec:circuit_dynamics}
+
+\subsection{Charge-to-Geometry Coupling in Disease}
+
+Disease disrupts the charge-to-geometry coupling mechanism, impairing cellular function.
+
+\begin{theorem}[Pathological Charge-Geometry Decoupling]
+\label{thm:pathological_decoupling}
+In disease, charge accumulation fails to produce proportional geometric response:
+\begin{equation}
+\frac{\Delta V_{\text{disease}}}{\Delta Q} < \frac{\Delta V_{\text{healthy}}}{\Delta Q}
+\end{equation}
+indicating impaired mechanical transduction.
+\end{theorem}
+
+\begin{proof}
+Healthy coupling: $\Delta V/\Delta Q = V_0/(A K \epsilon_0 \epsilon_r)$. Disease increases membrane rigidity (higher $K$) through oxidation, crosslinking, or cholesterol accumulation. Higher $K$ reduces $\Delta V$ for given $\Delta Q$, weakening charge-geometry coupling. Alternatively, reduced permittivity $\epsilon_r$ (lipid oxidation) has same effect.
+\end{proof}
+
+\begin{corollary}[Rigidity-Induced Dysfunction]
+\label{cor:rigidity_dysfunction}
+Membrane rigidification ($K \uparrow 2\times$) halves geometric response:
+\begin{equation}
+\Delta V_{\text{rigid}} = \frac{1}{2} \Delta V_{\text{normal}}
+\end{equation}
+impairing volume oscillations and flux concentration.
+\end{corollary}
+
+\subsection{Impaired Work Transduction}
+
+Disease reduces the efficiency of charge-to-mechanical work conversion.
+
+\begin{theorem}[Pathological Work Reduction]
+\label{thm:pathological_work}
+Disease decreases work done per charge cycle:
+\begin{equation}
+W_{\text{disease}} = W_{\text{electric}}^{\text{disease}} + W_{\text{bending}}^{\text{disease}} < W_{\text{healthy}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Electric work: $W_{\text{electric}} = Q^2/(2C)$. Disease reduces $Q$ (charge depletion) and may alter $C$ (membrane composition), decreasing $W_{\text{electric}}$. Bending work: $W_{\text{bending}} = \kappa (\Delta A)^2/2$. Increased rigidity (higher $\kappa$) paradoxically reduces $\Delta A$ (less deformation), and net effect is reduced $W_{\text{bending}}$ due to smaller amplitude. Total work decreases.
+\end{proof}
+
+\begin{corollary}[Energy Deficit]
+\label{cor:energy_deficit}
+For $Q_{\text{disease}} = 0.5 Q_{\text{healthy}}$ and $\kappa_{\text{disease}} = 2\kappa_{\text{healthy}}$:
+\begin{equation}
+\frac{W_{\text{disease}}}{W_{\text{healthy}}} \approx 0.3
+\end{equation}
+representing 70\% work deficit.
+\end{corollary}
+
+\subsection{Volume Oscillation Disruption}
+
+Disease impairs volume oscillations, reducing flux concentration and reaction enhancement.
+
+\begin{theorem}[Pathological Oscillation Damping]
+\label{thm:oscillation_damping}
+Disease introduces damping factor $\gamma_{\text{disease}}$ to volume dynamics:
+\begin{equation}
+V(t) = V_0 + \Delta V e^{-\gamma_{\text{disease}} t} \sin(\omega t)
+\end{equation}
+where $\gamma_{\text{disease}} > \gamma_{\text{healthy}}$.
+\end{theorem}
+
+\begin{proof}
+Membrane rigidification and protein aggregation increase viscous damping. Damping coefficient $\gamma \propto \eta/K$ where $\eta$ is effective viscosity. Disease increases $\eta$ (aggregates, crosslinks) and $K$ (rigidity), but $\eta$ effect dominates, yielding $\gamma_{\text{disease}} > \gamma_{\text{healthy}}$. Oscillations decay faster, reducing sustained flux concentration.
+\end{proof}
+
+\begin{corollary}[Reaction Enhancement Loss]
+\label{cor:reaction_loss}
+Damped oscillations reduce reaction enhancement:
+\begin{equation}
+\eta_{\text{disease}} = \left(1 + \frac{\epsilon^2}{2} e^{-2\gamma_{\text{disease}} t}\right)^N < \eta_{\text{healthy}}
+\end{equation}
+\end{corollary}
+
+\subsection{Spatial Pattern Disruption}
+
+Disease alters spatial deformation patterns, disrupting functional compartmentalization.
+
+\begin{theorem}[Pathological Mode Suppression]
+\label{thm:mode_suppression}
+Disease suppresses higher-order deformation modes:
+\begin{equation}
+a_{nm}^{\text{disease}} = a_{nm}^{\text{healthy}} \cdot e^{-\lambda_{nm}/\lambda_{\text{critical}}}
+\end{equation}
+where $\lambda_{nm}$ is the mode wavelength and $\lambda_{\text{critical}}$ is the disease-dependent cutoff.
+\end{theorem}
+
+\begin{proof}
+Higher-order modes (large $n$, $m$) have shorter wavelengths $\lambda_{nm}$. Membrane rigidification preferentially suppresses short-wavelength deformations due to higher bending energy cost: $E_{\text{bend}} \propto \kappa/\lambda^2$. Disease increases $\kappa$, exponentially suppressing modes with $\lambda < \lambda_{\text{critical}}$.
+\end{proof}
+
+\begin{corollary}[Hot Spot Elimination]
+\label{cor:hotspot_elimination}
+Loss of high-order modes eliminates localized concentration hot spots, reducing spatially-organized biochemistry.
+\end{corollary}
+
+\subsection{O$_2$ Clock Desynchronization}
+
+Disease disrupts synchronization between volume oscillations and O$_2$ clock.
+
+\begin{theorem}[Pathological Desynchronization]
+\label{thm:pathological_desync}
+Disease introduces phase lag $\phi_{\text{disease}}$ between charge and geometry:
+\begin{equation}
+\Delta V(t) = \Delta V_0 \sin(\omega_{\text{O}_2} t + \phi_{\text{disease}})
+\end{equation}
+where $|\phi_{\text{disease}}| > |\phi_{\text{healthy}}|$.
+\end{theorem}
+
+\begin{proof}
+Mechanical response time $\tau_{\text{mech}} = \eta/K$ increases in disease (higher $\eta$, variable $K$). Phase lag $\phi = \arctan(\omega \tau_{\text{mech}})$ increases with $\tau_{\text{mech}}$. Desynchronization reduces resonant coupling efficiency, dissipating energy as heat rather than functional work.
+\end{proof}
+
+\begin{corollary}[Decoherence Threshold]
+\label{cor:decoherence_threshold}
+Synchronization fails when:
+\begin{equation}
+|\phi_{\text{disease}}| > \frac{\pi}{4}
+\end{equation}
+corresponding to $\tau_{\text{mech}} > 1/\omega_{\text{O}_2} \approx 1$ $\mu$s.
+\end{corollary}
+
+\subsection{Transporter Conformational Pathology}
+
+Disease-altered membrane geometry disrupts transporter conformational dynamics.
+
+\begin{theorem}[Curvature-Gating Dysfunction]
+\label{thm:curvature_gating_dysfunction}
+Pathological curvature shifts transporter open probability:
+\begin{equation}
+P_{\text{open}}^{\text{disease}} = \frac{1}{1 + \exp\left(\frac{E_{\text{conf}}(C_{\text{disease}}) - E_{\text{threshold}}}{k_B T}\right)} < P_{\text{open}}^{\text{healthy}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Disease alters membrane curvature $C$ through lipid remodeling (PE depletion $\to$ $C \to 0$). Curvature-dependent conformational energy $E_{\text{conf}}(C)$ shifts away from optimal, increasing energy barrier. Boltzmann factor reduces open probability, impairing transport.
+\end{proof}
+
+\begin{corollary}[Transport Flux Reduction]
+\label{cor:transport_reduction}
+Reduced open probability decreases transport flux:
+\begin{equation}
+\Phi_{\text{transport}}^{\text{disease}} = N_{\text{transporters}} \cdot P_{\text{open}}^{\text{disease}} \cdot k_{\text{transport}} < \Phi^{\text{healthy}}
+\end{equation}
+\end{corollary}
+
+\subsection{Genome Deformation Pathology}
+
+Disease-induced charge imbalance alters genome compaction and accessibility.
+
+\begin{theorem}[Pathological Genome Compaction]
+\label{thm:pathological_compaction}
+Charge depletion increases genome compaction:
+\begin{equation}
+\rho_{\text{genome}}^{\text{disease}} = \rho_0 \left(1 + \beta_{\text{genome}} \frac{|Q_{\text{disease}}|}{|Q_0|}\right) < \rho_{\text{genome}}^{\text{healthy}}
+\end{equation}
+for $|Q_{\text{disease}}| < |Q_0|$.
+\end{theorem}
+
+\begin{proof}
+Reduced genome charge $|Q_{\text{disease}}| < |Q_0|$ decreases electrostatic self-repulsion, allowing tighter compaction. Higher compaction $\rho$ reduces transcription factor accessibility, impairing gene expression. Creates positive feedback: charge depletion $\to$ compaction $\to$ reduced transporter expression $\to$ worse charge imbalance.
+\end{proof}
+
+\begin{corollary}[Transcriptional Silencing]
+\label{cor:transcriptional_silencing}
+Excessive compaction ($\rho > 2\rho_0$) silences charge-regulating genes, creating irreversible circuit failure.
+\end{corollary}
+
+\subsection{Coupled Dynamics Failure}
+
+Disease destabilizes the coupled electrical-geometric system.
+
+\begin{theorem}[Pathological Instability]
+\label{thm:pathological_instability}
+Disease introduces instability when timescale mismatch exceeds threshold:
+\begin{equation}
+\left|\frac{\tau_{RC}^{\text{disease}}}{\tau_{\text{mech}}^{\text{disease}}}\right| > 10 \implies \text{unstable}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Healthy system maintains $\tau_{RC} \approx \tau_{\text{mech}} \approx 1$ $\mu$s. Disease alters both: $\tau_{RC}$ increases (higher resistance from lipid changes), $\tau_{\text{mech}}$ increases (higher viscosity from aggregates). If timescales diverge by factor $>10$, coupling breaks down. Electrical and mechanical dynamics decouple, eliminating resonance and functional synchronization.
+\end{proof}
+
+\begin{corollary}[Stability Criterion]
+\label{cor:stability_criterion}
+Therapeutic intervention must restore timescale matching:
+\begin{equation}
+\frac{1}{10} < \frac{\tau_{RC}^{\text{therapy}}}{\tau_{\text{mech}}^{\text{therapy}}} < 10
+\end{equation}
+to re-establish stable coupled dynamics.
+\end{corollary}
+
+\subsection{Energy Dissipation vs Transduction}
+
+Disease shifts energy partitioning toward dissipation, away from functional work.
+
+\begin{theorem}[Pathological Energy Partitioning]
+\label{thm:pathological_partitioning}
+In disease, energy partitioning becomes:
+\begin{equation}
+E_{\text{charge}}^{\text{disease}} = E_{\text{dissipated}}^{\text{disease}} + E_{\text{mechanical}}^{\text{disease}} + E_{\text{chemical}}^{\text{disease}}
+\end{equation}
+with $E_{\text{dissipated}}^{\text{disease}}/E_{\text{charge}}^{\text{disease}} > E_{\text{dissipated}}^{\text{healthy}}/E_{\text{charge}}^{\text{healthy}}$.
+\end{theorem}
+
+\begin{proof}
+Disease increases dissipation through: (1) desynchronization (phase lag $\to$ heat), (2) increased viscosity (damping $\to$ heat), (3) impaired coupling (charge $\not\to$ geometry $\to$ heat). Simultaneously, functional work decreases (reduced $E_{\text{mechanical}}$, $E_{\text{chemical}}$). Fraction dissipated increases.
+\end{proof}
+
+\begin{corollary}[Coupling Efficiency Degradation]
+\label{cor:efficiency_degradation}
+Disease reduces coupling efficiency:
+\begin{equation}
+\eta_{\text{coupling}}^{\text{disease}} = \frac{E_{\text{mechanical}}^{\text{disease}} + E_{\text{chemical}}^{\text{disease}}}{E_{\text{charge}}^{\text{disease}}} \approx 0.1 < 0.3 = \eta_{\text{coupling}}^{\text{healthy}}
+\end{equation}
+\end{corollary}
+
+\subsection{Therapeutic Restoration of Geometry}
+
+Therapeutic interventions can restore charge-to-geometry coupling.
+
+\begin{theorem}[Geometric Restoration Mechanism]
+\label{thm:geometric_restoration}
+Therapeutic intervention restores coupling through:
+\begin{equation}
+K_{\text{therapy}} = K_{\text{disease}} - \Delta K_{\text{intervention}} \to K_{\text{healthy}}
+\end{equation}
+reducing rigidity and enabling geometric response.
+\end{theorem}
+
+\begin{proof}
+Interventions targeting membrane fluidity (lipid supplementation, antioxidants) reduce $K$ by: (1) replacing oxidized lipids, (2) preventing crosslinking, (3) optimizing lipid composition. Lower $K$ increases $\Delta V/\Delta Q$, restoring charge-geometry coupling. Sustained intervention drives $K \to K_{\text{healthy}}$.
+\end{proof}
+
+\begin{corollary}[Combination Geometric Therapy]
+\label{cor:combination_geometric}
+Combining lipid therapy (reduce $K$) with charge restoration (increase $Q$) synergistically restores geometric response:
+\begin{equation}
+\Delta V_{\text{therapy}} = \frac{V_0 Q_{\text{therapy}}}{A K_{\text{therapy}} \epsilon_0 \epsilon_r} \to \Delta V_{\text{healthy}}
+\end{equation}
+\end{corollary}
+
+\subsection{Disease Trajectory and Geometric Collapse}
+
+Progressive geometric dysfunction drives disease trajectory toward irreversible failure.
+
+\begin{theorem}[Geometric Collapse Cascade]
+\label{thm:geometric_collapse}
+Geometric dysfunction initiates positive feedback:
+\begin{equation}
+\Delta V \downarrow \to \Delta C \downarrow \to \text{reactions} \downarrow \to \text{ATP} \downarrow \to K \uparrow \to \Delta V \downarrow
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Reduced volume oscillation $\Delta V$ decreases concentration oscillation $\Delta C$. Lower $\Delta C$ impairs reaction enhancement, reducing ATP production. ATP depletion impairs membrane maintenance, increasing rigidity $K$. Higher $K$ further reduces $\Delta V$, closing positive feedback loop that accelerates geometric collapse.
+\end{proof}
+
+\begin{corollary}[Geometric Failure Threshold]
+\label{cor:geometric_threshold}
+Geometric collapse becomes irreversible when:
+\begin{equation}
+\frac{\Delta V_{\text{disease}}}{\Delta V_{\text{healthy}}} < 0.1
+\end{equation}
+corresponding to 90\% loss of geometric response.
+\end{corollary}
+
+\begin{theorem}[Therapeutic Window for Geometric Intervention]
+\label{thm:therapeutic_window_geometric}
+Geometric intervention effective only when:
+\begin{equation}
+\frac{\Delta V_{\text{disease}}}{\Delta V_{\text{healthy}}} > 0.1 \implies \text{reversible}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Above 10\% geometric response, sufficient coupling remains for therapeutic restoration. Interventions reducing $K$ and increasing $Q$ can reverse trajectory. Below 10\%, positive feedback dominates, membrane rigidification irreversible, and geometric collapse inevitable. Defines therapeutic window for geometry-based interventions.
+\end{proof}
+
+\subsection{Integration with Disease State Equations}
+
+Geometric pathology integrates with categorical disease dynamics.
+
+\begin{theorem}[Geometry-Richness Coupling]
+\label{thm:geometry_richness}
+Geometric dysfunction reduces categorical richness:
+\begin{equation}
+\frac{dR}{dt} = -\gamma_{\text{disease}} R - \alpha_{\text{geometric}} \left(1 - \frac{\Delta V}{\Delta V_0}\right) R
+\end{equation}
+where $\alpha_{\text{geometric}}$ couples geometric deficit to richness loss.
+\end{theorem}
+
+\begin{proof}
+Reduced geometric response impairs spatial organization, reducing effective categorical richness $R$. Coupling term $\alpha_{\text{geometric}}(1 - \Delta V/\Delta V_0)$ quantifies richness loss from geometric deficit. Integrates with disease-induced richness reduction $\gamma_{\text{disease}} R$, accelerating categorical collapse.
+\end{proof}
+
+\begin{corollary}[Unified Disease Trajectory]
+\label{cor:unified_trajectory}
+Disease progression involves coupled electrical, geometric, and categorical dynamics:
+\begin{align}
+\frac{dQ}{dt} &= -\frac{Q}{\tau_{RC}} + I_{\text{H}^+}(Q, V) \\
+\frac{dV}{dt} &= \frac{V_0}{\tau_{\text{mech}}} \left(\frac{Q}{Q_0} - \frac{V}{V_0}\right) \\
+\frac{dR}{dt} &= -\gamma_{\text{disease}} R - \alpha_{\text{geometric}} \left(1 - \frac{\Delta V}{\Delta V_0}\right) R
+\end{align}
+Therapeutic intervention must address all three components for effective disease reversal.
+\end{corollary}

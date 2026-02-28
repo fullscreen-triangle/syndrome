@@ -1,0 +1,122 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: observation-equations.aux
+White space in argument---line 21 of file observation-equations.aux
+ : \citation{Mac
+ :               Lane1971}
+I'm skipping whatever remains of this command
+Reallocating 'name_of_file' (item size: 1) to 27 items.
+Reallocating 'name_of_file' (item size: 1) to 10 items.
+The style file: apsrev4-2.bst
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Database file #1: observation-equationsNotes.bib
+Warning--I didn't find a database entry for "vonNeumann1932"
+Warning--I didn't find a database entry for "Wigner1961"
+Warning--I didn't find a database entry for "Landauer1961"
+Warning--I didn't find a database entry for "Alberts2014"
+Warning--I didn't find a database entry for "Wheeler1983"
+Warning--I didn't find a database entry for "Zurek2003"
+Warning--I didn't find a database entry for "Everett1957"
+Warning--I didn't find a database entry for "Zurek1981"
+Warning--I didn't find a database entry for "Landau1980"
+Warning--I didn't find a database entry for "Shannon1948"
+Warning--I didn't find a database entry for "Bray1995"
+Warning--I didn't find a database entry for "Nurse2008"
+Warning--I didn't find a database entry for "Poincare1890"
+Warning--I didn't find a database entry for "Pauli1925"
+Warning--I didn't find a database entry for "Bohr1913"
+Warning--I didn't find a database entry for "Hartl2011"
+Warning--I didn't find a database entry for "Schuler2002"
+Warning--I didn't find a database entry for "Toyabe2010"
+Warning--I didn't find a database entry for "Bar-Even2011"
+Warning--I didn't find a database entry for "Alberty2003"
+Warning--I didn't find a database entry for "Blankenship2014"
+Warning--I didn't find a database entry for "Visscher1999"
+Warning--I didn't find a database entry for "Kunkel2003"
+Warning--I didn't find a database entry for "Hille2001"
+Warning--I didn't find a database entry for "Skou1998"
+Warning--I didn't find a database entry for "Landick2006"
+Warning--I didn't find a database entry for "Rodnina2016"
+Warning--I didn't find a database entry for "Monod1965"
+Warning--I didn't find a database entry for "Takahashi2017"
+Warning--I didn't find a database entry for "Berridge2003"
+Warning--I didn't find a database entry for "Salvesen2002"
+Warning--I didn't find a database entry for "Berg2002"
+Warning--I didn't find a database entry for "Hinkle2005"
+Warning--I didn't find a database entry for "Wakil1983"
+Warning--I didn't find a database entry for "Rock1994"
+Warning--I didn't find a database entry for "Mizushima2011"
+Warning--I didn't find a database entry for "Sudhof2013"
+Warning--I didn't find a database entry for "Pollard2016"
+Warning--I didn't find a database entry for "Morgan2007"
+Warning--I didn't find a database entry for "Graf2011"
+Warning--I didn't find a database entry for "Kubelka2003"
+Warning--I didn't find a database entry for "Junge2009"
+Warning--I didn't find a database entry for "Katz2008"
+Warning--I didn't find a database entry for "Susskind1995"
+Warning--I didn't find a database entry for "Elowitz2000"
+Warning--I didn't find a database entry for "liouville1838"
+Warning--I didn't find a database entry for "noether1918"
+control{REVTEX42Control}, control.key{N/A}, control.author{N/A}, control.editor{N/A}, control.title{N/A}, control.pages{N/A}, control.year{N/A}, control.eprint{N/A}, 
+control{apsrev42Control}, control.key{N/A}, control.author{08}, control.editor{1}, control.title{0}, control.pages{0}, control.year{1}, control.eprint{N/A}, 
+Warning--jnrlst (dependency: not reversed) set 1
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 9000 items.
+apsrev4-2.bst 2019-01-14 (MD) hand-edited version of apsrev4-1.bst
+Control: key (0) 
+Control: author (8) initials jnrlst
+Control: editor formatted (1) identically to author
+Control: production of article title (0) allowed
+Control: page (0) single
+Control: year (1) truncated
+Control: production of eprint (0) enabled
+You've used 2 entries,
+            6079 wiz_defined-function locations,
+            1727 strings with 16025 characters,
+and the built_in function-call counts, 991 in all, are:
+= -- 12
+> -- 16
+< -- 35
++ -- 8
+- -- 20
+* -- 131
+:= -- 72
+add.period$ -- 0
+call.type$ -- 2
+change.case$ -- 0
+chr.to.int$ -- 12
+cite$ -- 2
+duplicate$ -- 137
+empty$ -- 17
+format.name$ -- 0
+if$ -- 127
+int.to.chr$ -- 1
+int.to.str$ -- 9
+missing$ -- 28
+newline$ -- 52
+num.names$ -- 0
+pop$ -- 68
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 33
+stack$ -- 0
+substring$ -- 12
+swap$ -- 110
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 10
+type$ -- 12
+warning$ -- 1
+while$ -- 11
+width$ -- 0
+write$ -- 52
+(There was 1 error message)

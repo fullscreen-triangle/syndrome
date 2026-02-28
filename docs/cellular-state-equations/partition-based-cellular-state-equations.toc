@@ -1,0 +1,222 @@
+\contentsline {section}{\numberline {1}Introduction}{8}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Foundational Axioms}{8}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Partition Coordinate Structure}{8}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}S-Entropy Coordinate Space}{8}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Ternary Representation}{9}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Organization}{9}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Partition Coordinate Structure}{9}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Geometric Derivation}{9}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Selection Rules}{10}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Pauli Exclusion}{10}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Partition Signatures}{11}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Energy Scaling}{11}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Hyperfine Structure}{11}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Periodic Structure}{11}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Coordinate Transformations}{12}{subsection.2.8}%
+\contentsline {subsection}{\numberline {2.9}Measurement Correspondence}{12}{subsection.2.9}%
+\contentsline {section}{\numberline {3}Categorical Dynamics}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Triple Structure of S-Entropy Coordinates}{13}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Categorical Derivatives}{13}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Pendulum Dynamics in Categorical Form}{14}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Partition Decomposition Example}{15}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Oxygen Master Clock and Frequency Partitioning}{15}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Full S-Entropy Dynamics}{17}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Hamiltonian Structure in Categorical Space}{18}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Relationship to Temporal Derivatives}{19}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Discrete vs Continuous Limits}{19}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}Experimental Observables}{20}{subsection.3.10}%
+\contentsline {subsection}{\numberline {3.11}Categorical Memory Reset}{20}{subsection.3.11}%
+\contentsline {subsection}{\numberline {3.12}Van Deemter Analogy: Plates as Categories}{21}{subsection.3.12}%
+\contentsline {subsection}{\numberline {3.13}Geometric Exclusion Through Memory Reset}{21}{subsection.3.13}%
+\contentsline {subsection}{\numberline {3.14}Implications for Cellular Dynamics}{22}{subsection.3.14}%
+\contentsline {section}{\numberline {4}Partition-Based Equations of State}{23}{section.4}%
+\contentsline {subsection}{\numberline {4.1}General Framework}{23}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Neutral Gas Regime}{23}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Plasma Regime}{23}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Degenerate Matter Regime}{24}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Relativistic Regime}{24}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Bose-Einstein Condensate Regime}{25}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Temperature as Scaling Factor}{25}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Equilibrium as Recurrence}{25}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Experimental Validation}{26}{subsection.4.9}%
+\contentsline {section}{\numberline {5}Transport Phenomena from Partition Dynamics}{26}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Universal Transport Formula}{26}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Electrical Resistivity}{27}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Viscosity}{27}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Diffusivity}{27}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Thermal Conductivity}{28}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Partition Extinction}{28}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Critical Temperature}{29}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Undetermined Residue}{29}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Cellular Transport}{30}{subsection.5.9}%
+\contentsline {section}{\numberline {6}Electric Field Mechanism of Cellular Coordination}{30}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Foundational Circuit Architecture}{30}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Electric Field Geometry}{30}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Oxygen Molecule as Field Probe}{31}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Steric Field Architecture}{32}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Electron Cascade Transport}{32}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Circuit Impedance and Time Constants}{33}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Oxygen Clock and Frequency Partitioning}{34}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Integrated Dynamics: Volume-pH-ATP Coupling}{34}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}Relationship to Categorical Dynamics}{35}{subsection.6.9}%
+\contentsline {subsection}{\numberline {6.10}Computational Validation}{35}{subsection.6.10}%
+\contentsline {section}{\numberline {7}Proton-Electron Coupling and Membrane Scaffolding}{36}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Genome Capacitor Discharge-Recharge Dynamics}{36}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Membrane as Electron Transport Scaffolding}{37}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Lipid Physical Chemistry and Curvature}{37}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Geometric Aperture Selection}{38}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Metabolic Cost of Lipid Synthesis}{39}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Phase Behavior and Membrane Dynamics}{39}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}Coupling to Circuit Dynamics}{40}{subsection.7.7}%
+\contentsline {section}{\numberline {8}Circuit Dynamics and Charge-to-Geometry Coupling}{40}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Charge Flow as Mechanical Work}{40}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Work Done by Electric Charge}{41}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Volume Oscillations and Flux Concentration}{41}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Spatial Flux Concentration}{42}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Oxygen-Synchronized Dynamics}{43}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Transporter Conformational Coupling}{43}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Genome Deformation Coupling}{44}{subsection.8.7}%
+\contentsline {subsection}{\numberline {8.8}Integrated Circuit-Geometry Dynamics}{44}{subsection.8.8}%
+\contentsline {subsection}{\numberline {8.9}Functional Implications}{45}{subsection.8.9}%
+\contentsline {section}{\numberline {9}Resolution of the Cytoplasmic State Paradox}{45}{section.9}%
+\contentsline {subsection}{\numberline {9.1}The Sol-Gel Transition Hypothesis}{45}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Dynamic Compartmentalization Precludes Bulk States}{46}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Charge and Volume Exclusion Ensure Sufficient Inclusions}{46}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Invalidation of Sol-Gel and Glass Transitions}{47}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}The Compartment Distribution Function}{47}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Why Cells Never Jam}{48}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}Electro-Brownian Motion}{48}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.8}Experimental Predictions}{49}{subsection.9.8}%
+\contentsline {subsection}{\numberline {9.9}Implications for Disease}{49}{subsection.9.9}%
+\contentsline {section}{\numberline {10}Protein Function as Charge/Geometry Balancing}{49}{section.10}%
+\contentsline {subsection}{\numberline {10.1}The Traditional Paradigm and Its Limitations}{50}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}The Circuit-Based Paradigm}{50}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Heat Shock Proteins: Charge Neutralization as Chaperone Activity}{51}{subsection.10.3}%
+\contentsline {subsubsection}{\numberline {10.3.1}The Circuit-Based Explanation}{51}{subsubsection.10.3.1}%
+\contentsline {subsubsection}{\numberline {10.3.2}Why No Streamlined HSP Pipeline}{52}{subsubsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.4}ATP as Charge Currency}{52}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}Chaperone Activity: Spatial Charge/Geometry Balancing}{53}{subsection.10.5}%
+\contentsline {subsubsection}{\numberline {10.5.1}1. Charge Neutralization (Direct)}{53}{subsubsection.10.5.1}%
+\contentsline {subsubsection}{\numberline {10.5.2}2. Spatial Isolation (Confinement)}{53}{subsubsection.10.5.2}%
+\contentsline {subsubsection}{\numberline {10.5.3}3. Steric Balancing (Exclusion)}{53}{subsubsection.10.5.3}%
+\contentsline {subsubsection}{\numberline {10.5.4}4. Frequency Scanning (ATP Cycles)}{53}{subsubsection.10.5.4}%
+\contentsline {subsubsection}{\numberline {10.5.5}5. Phase-Locking (Synchronization)}{54}{subsubsection.10.5.5}%
+\contentsline {subsection}{\numberline {10.6}GroEL as Prototype Single-Protein Bioreactor}{54}{subsection.10.6}%
+\contentsline {subsection}{\numberline {10.7}Membrane Deformation as Bioreactor Array}{54}{subsection.10.7}%
+\contentsline {subsection}{\numberline {10.8}The Isoform Paradox Resolved}{55}{subsection.10.8}%
+\contentsline {subsubsection}{\numberline {10.8.1}Isoforms as Charge/Geometry Variants}{55}{subsubsection.10.8.1}%
+\contentsline {subsection}{\numberline {10.9}Kinase Function as Charge Injection}{55}{subsection.10.9}%
+\contentsline {subsection}{\numberline {10.10}Enzyme Catalysis as Facilitated Charge Transfer}{56}{subsection.10.10}%
+\contentsline {subsection}{\numberline {10.11}Transporter Function as Circuit Balancing}{56}{subsection.10.11}%
+\contentsline {subsection}{\numberline {10.12}Experimental Predictions}{56}{subsection.10.12}%
+\contentsline {subsection}{\numberline {10.13}Implications for Drug Design}{57}{subsection.10.13}%
+\contentsline {subsection}{\numberline {10.14}Implications for Evolution}{57}{subsection.10.14}%
+\contentsline {section}{\numberline {11}Ternary Encoding of S-Entropy Space}{57}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Representation Theorem}{57}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Molecular Coordinate Transformation}{58}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Continuous Emergence}{59}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Trajectory Encoding}{59}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Tryte Structure}{59}{subsection.11.5}%
+\contentsline {subsection}{\numberline {11.6}Arithmetic Operations}{60}{subsection.11.6}%
+\contentsline {subsection}{\numberline {11.7}Distance Metrics}{60}{subsection.11.7}%
+\contentsline {subsection}{\numberline {11.8}Hardware Implementation}{60}{subsection.11.8}%
+\contentsline {subsection}{\numberline {11.9}Information Density}{61}{subsection.11.9}%
+\contentsline {subsection}{\numberline {11.10}Cellular Implementation}{61}{subsection.11.10}%
+\contentsline {section}{\numberline {12}Poincaré Computing Framework}{62}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Computational Paradigm}{62}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Identity Unification}{62}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Complexity Measure}{62}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Non-Halting Dynamics}{63}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Emergent Memory}{63}{subsection.12.5}%
+\contentsline {subsection}{\numberline {12.6}Constraint Satisfaction}{64}{subsection.12.6}%
+\contentsline {subsection}{\numberline {12.7}Solution Uniqueness}{64}{subsection.12.7}%
+\contentsline {subsection}{\numberline {12.8}Parallel Computation}{64}{subsection.12.8}%
+\contentsline {subsection}{\numberline {12.9}Cellular Implementation}{65}{subsection.12.9}%
+\contentsline {subsection}{\numberline {12.10}Energy Landscape}{65}{subsection.12.10}%
+\contentsline {section}{\numberline {13}Metabolic Positioning Through Oxygen Triangulation}{65}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Oxygen Information Density}{65}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Metabolic GPS Theorem}{66}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Categorical Distance Metric}{67}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Enzymatic Pathway Length}{67}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Oxygen Triangulation Algorithm}{68}{subsection.13.5}%
+\contentsline {subsection}{\numberline {13.6}Metabolic State Determination}{68}{subsection.13.6}%
+\contentsline {subsection}{\numberline {13.7}Temporal Resolution}{68}{subsection.13.7}%
+\contentsline {subsection}{\numberline {13.8}Spatial Resolution Enhancement}{69}{subsection.13.8}%
+\contentsline {subsection}{\numberline {13.9}Cellular Oxygen Distribution}{69}{subsection.13.9}%
+\contentsline {subsection}{\numberline {13.10}Experimental Validation}{69}{subsection.13.10}%
+\contentsline {section}{\numberline {14}Phase-Lock Network Topology}{70}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Network Structure}{70}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Coupling Strength}{70}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Network Topology}{70}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Categorical Distance in Networks}{71}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Oxygen as Network Hub}{71}{subsection.14.5}%
+\contentsline {subsection}{\numberline {14.6}Dynamic Categorical Exclusion}{72}{subsection.14.6}%
+\contentsline {subsection}{\numberline {14.7}Network Dynamics}{72}{subsection.14.7}%
+\contentsline {subsection}{\numberline {14.8}Metabolic Network Embedding}{72}{subsection.14.8}%
+\contentsline {subsection}{\numberline {14.9}Network Resilience}{73}{subsection.14.9}%
+\contentsline {subsection}{\numberline {14.10}Oxygen Phase States}{73}{subsection.14.10}%
+\contentsline {subsection}{\numberline {14.11}Experimental Validation}{73}{subsection.14.11}%
+\contentsline {section}{\numberline {15}Enzymatic Catalysis as Categorical Aperture Selection}{74}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Aperture Geometry}{74}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Zero Information Processing}{74}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Turnover Number}{74}{subsection.15.3}%
+\contentsline {subsection}{\numberline {15.4}Michaelis-Menten Kinetics}{75}{subsection.15.4}%
+\contentsline {subsection}{\numberline {15.5}Catalytic Efficiency}{75}{subsection.15.5}%
+\contentsline {subsection}{\numberline {15.6}Allosteric Regulation}{76}{subsection.15.6}%
+\contentsline {subsection}{\numberline {15.7}Enzyme Promiscuity}{76}{subsection.15.7}%
+\contentsline {subsection}{\numberline {15.8}Transition State Stabilization}{77}{subsection.15.8}%
+\contentsline {subsection}{\numberline {15.9}Oxygen Phase-Lock Modulation}{77}{subsection.15.9}%
+\contentsline {subsection}{\numberline {15.10}Multi-Enzyme Complexes}{78}{subsection.15.10}%
+\contentsline {subsection}{\numberline {15.11}Experimental Validation}{78}{subsection.15.11}%
+\contentsline {section}{\numberline {16}Substrate Navigation Through Enzyme Networks}{78}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Optimal Pathway Problem}{78}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Categorical Distance Minimization}{79}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}Constraint Satisfaction}{79}{subsection.16.3}%
+\contentsline {subsection}{\numberline {16.4}Dynamic Pathway Selection}{80}{subsection.16.4}%
+\contentsline {subsection}{\numberline {16.5}Parallel Pathways}{80}{subsection.16.5}%
+\contentsline {subsection}{\numberline {16.6}Oxygen-Guided Navigation}{80}{subsection.16.6}%
+\contentsline {subsection}{\numberline {16.7}Pathway Switching}{81}{subsection.16.7}%
+\contentsline {subsection}{\numberline {16.8}Energy Landscape Navigation}{81}{subsection.16.8}%
+\contentsline {subsection}{\numberline {16.9}Metabolic Flux}{82}{subsection.16.9}%
+\contentsline {subsection}{\numberline {16.10}Pathway Redundancy}{82}{subsection.16.10}%
+\contentsline {subsection}{\numberline {16.11}Temporal Coordination}{82}{subsection.16.11}%
+\contentsline {subsection}{\numberline {16.12}Experimental Validation}{83}{subsection.16.12}%
+\contentsline {section}{\numberline {17}Protein Folding Through Phase-Locked Hydrogen Bond Networks}{83}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Hydrogen Bonds as Coupled Oscillators}{83}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Phase-Locking Dynamics}{84}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}Native State as Variance Minimum}{84}{subsection.17.3}%
+\contentsline {subsection}{\numberline {17.4}GroEL Cavity as Resonance Chamber}{85}{subsection.17.4}%
+\contentsline {subsection}{\numberline {17.5}Cycle-by-Cycle Folding Pathway}{85}{subsection.17.5}%
+\contentsline {subsection}{\numberline {17.6}Folding Time Scaling}{85}{subsection.17.6}%
+\contentsline {subsection}{\numberline {17.7}Misfolding Prevention}{86}{subsection.17.7}%
+\contentsline {subsection}{\numberline {17.8}Chaperonin Independence}{86}{subsection.17.8}%
+\contentsline {subsection}{\numberline {17.9}S-Entropy Trajectory}{86}{subsection.17.9}%
+\contentsline {subsection}{\numberline {17.10}Experimental Validation}{87}{subsection.17.10}%
+\contentsline {section}{\numberline {18}Membrane Transport Through Categorical Aperture Selection}{87}{section.18}%
+\contentsline {subsection}{\numberline {18.1}Transporters as Categorical Apertures}{87}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}Phase-Locked Substrate Selection}{88}{subsection.18.2}%
+\contentsline {subsection}{\numberline {18.3}ATP-Driven Frequency Modulation}{88}{subsection.18.3}%
+\contentsline {subsection}{\numberline {18.4}Categorical Measurement}{89}{subsection.18.4}%
+\contentsline {subsection}{\numberline {18.5}Conformational State Mapping}{89}{subsection.18.5}%
+\contentsline {subsection}{\numberline {18.6}Ensemble Aperture Behavior}{89}{subsection.18.6}%
+\contentsline {subsection}{\numberline {18.7}Collective Selectivity}{90}{subsection.18.7}%
+\contentsline {subsection}{\numberline {18.8}Multi-Substrate Competition}{90}{subsection.18.8}%
+\contentsline {subsection}{\numberline {18.9}Aperture Thermodynamics}{91}{subsection.18.9}%
+\contentsline {subsection}{\numberline {18.10}Membrane Domain Effects}{91}{subsection.18.10}%
+\contentsline {subsection}{\numberline {18.11}Experimental Validation}{91}{subsection.18.11}%
+\contentsline {section}{\numberline {19}Categorical Thermometry Through Virtual Temperature Stations}{92}{section.19}%
+\contentsline {subsection}{\numberline {19.1}Temperature as Categorical Distance}{92}{subsection.19.1}%
+\contentsline {subsection}{\numberline {19.2}Virtual Thermometry Stations}{92}{subsection.19.2}%
+\contentsline {subsection}{\numberline {19.3}Hardware-Molecular Synchronization}{93}{subsection.19.3}%
+\contentsline {subsection}{\numberline {19.4}Molecular Categorical Navigation}{93}{subsection.19.4}%
+\contentsline {subsection}{\numberline {19.5}Sequential Cooling Cascades}{94}{subsection.19.5}%
+\contentsline {subsection}{\numberline {19.6}Triangular Amplification}{94}{subsection.19.6}%
+\contentsline {subsection}{\numberline {19.7}Time-Asymmetric Thermometry}{95}{subsection.19.7}%
+\contentsline {subsection}{\numberline {19.8}Zeptokelvin Regime Access}{95}{subsection.19.8}%
+\contentsline {subsection}{\numberline {19.9}Integration with Virtual Microscopy}{95}{subsection.19.9}%
+\contentsline {subsection}{\numberline {19.10}Cellular Temperature Gradients}{96}{subsection.19.10}%
+\contentsline {subsection}{\numberline {19.11}Experimental Validation}{96}{subsection.19.11}%
+\contentsline {section}{\numberline {20}Discussion}{97}{section.20}%
+\contentsline {subsection}{\numberline {20.1}Computational Validation}{97}{subsection.20.1}%
+\contentsline {subsection}{\numberline {20.2}Experimental Validation}{98}{subsection.20.2}%
+\contentsline {section}{\numberline {21}Conclusion}{99}{section.21}%

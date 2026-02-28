@@ -1,0 +1,50 @@
+Declaration of Interest
+
+The author declares no competing financial interests or personal relationships 
+that could have influenced the work reported in this paper. This research was 
+conducted independently without external funding.
+
+AI Tool Disclosure: The development of this work involved the use of several 
+computational and AI-assisted tools: (i) Lean 4 and Coq 8.16 proof assistants 
+for mathematical verification of theorems; (ii) Claude (Anthropic, claude-sonnet-4.5) 
+for manuscript preparation and writing assistance; (iii) custom Retrieval-Augmented 
+Generation (RAG) system for conceptual unification and literature synthesis, 
+available at https://github.com/fullscreen-triangle/four-sided-triangle.
+
+All mathematical derivations, theoretical frameworks, and scientific conclusions 
+are the original intellectual contribution of the author. AI tools were used 
+solely for proof verification, writing assistance, and literature synthesis. 
+The author takes full responsibility for all content, claims, and any errors 
+in this manuscript.
+
+Funding Statement
+
+This research received no specific grant from any funding agency in the public, 
+commercial, or not-for-profit sectors.
+
+Data Availability
+
+This work is purely theoretical and does not involve experimental data. All 
+mathematical derivations are presented in the manuscript. Lean and Coq proof 
+verification scripts are included in supplementary materials. The custom RAG 
+system is available at https://github.com/fullscreen-triangle/four-sided-triangle.
+
+Code Availability
+
+The custom RAG system used for literature synthesis is freely available under 
+the MIT license at https://github.com/fullscreen-triangle/four-sided-triangle. 
+Lean 4 and Coq 8.16 proof verification scripts are included in the supplementary 
+materials.
+
+Author Contributions
+
+K.F.S. developed the theoretical framework, derived all mathematical results, 
+performed proof verification using Lean and Coq, synthesized literature using 
+custom RAG tools, and wrote the manuscript with AI-assisted writing tools.
+
+Acknowledgments
+
+The author thanks the Technical University of Munich for institutional support. 
+The author acknowledges the use of Lean and Coq proof assistants for mathematical 
+verification, Claude (Anthropic) for writing assistance, and the open-source 
+community for scientific computing tools.

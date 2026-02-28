@@ -1,0 +1,260 @@
+\section{Ternary Encoding}
+\label{sec:ternary}
+
+\subsection{Motivation for Ternary Representation}
+
+Binary representation naturally encodes one-dimensional information through the $2^k$ hierarchy. Three-dimensional S-entropy space $\Sspace = [0,1]^3$ admits natural encoding through ternary (base-3) representation.
+
+\begin{definition}[Trit]
+\label{def:trit}
+A trit (ternary digit) is an element of $\{0,1,2\}$. A $k$-trit string is an ordered sequence $(t_1, t_2, \ldots, t_k)$ with $t_i \in \{0,1,2\}$ for all $i$.
+\end{definition}
+
+\begin{definition}[Trit Interpretation]
+\label{def:trit_interpretation}
+Each trit value specifies refinement along one S-entropy axis:
+\begin{align}
+t_i = 0 &\leftrightarrow \text{refinement along } \Sk \label{eq:trit_0} \\
+t_i = 1 &\leftrightarrow \text{refinement along } \St \label{eq:trit_1} \\
+t_i = 2 &\leftrightarrow \text{refinement along } \Se \label{eq:trit_2}
+\end{align}
+\end{definition}
+
+\subsection{Ternary-Coordinate Correspondence}
+
+\begin{theorem}[Ternary-Coordinate Correspondence]
+\label{thm:ternary_correspondence}
+Each $k$-trit string $(t_1,t_2,\ldots,t_k)$ maps bijectively to a cell in the $3^k$ partition of $\Sspace = [0,1]^3$.
+\end{theorem}
+
+\begin{proof}
+A $k$-trit string specifies a sequence of $k$ refinements of $\Sspace$. At step $i$, the trit $t_i$ specifies which axis to subdivide:
+\begin{itemize}
+\item If $t_i = 0$: subdivide current cell into 3 parts along $\Sk$ axis
+\item If $t_i = 1$: subdivide current cell into 3 parts along $\St$ axis  
+\item If $t_i = 2$: subdivide current cell into 3 parts along $\Se$ axis
+\end{itemize}
+
+After $k$ steps, the space is partitioned into $3^k$ cells. Each distinct $k$-trit string produces a distinct refinement sequence, hence a distinct cell. Conversely, each cell corresponds to exactly one refinement sequence, hence one $k$-trit string. Therefore, the mapping is bijective.
+\end{proof}
+
+\begin{corollary}[Cell Count]
+\label{cor:cell_count}
+The number of cells in the $k$-level ternary partition of $\Sspace$ is exactly $3^k$.
+\end{corollary}
+
+\begin{proof}
+There are $3^k$ distinct $k$-trit strings, and each maps to a unique cell by Theorem~\ref{thm:ternary_correspondence}.
+\end{proof}
+
+\subsection{Molecular Coordinate Transformation}
+
+Ternary encoding extends to molecular data through S-entropy coordinate transformation~\cite{weininger1988smiles,cover2006elements,shannon1948mathematical}.
+
+\begin{definition}[Nucleotide Cardinal Mapping]
+\label{def:nucleotide_cardinal}
+Nucleotide bases map to cardinal directions in 2D coordinate space:
+\begin{align}
+\psi(A) &= (0, 1) \quad \text{(North)} \\
+\psi(T) &= (0, -1) \quad \text{(South)} \\
+\psi(G) &= (1, 0) \quad \text{(East)} \\
+\psi(C) &= (-1, 0) \quad \text{(West)}
+\end{align}
+preserving Watson-Crick complementarity through opposing directions.
+\end{definition}
+
+\begin{definition}[S-Entropy Coordinate Extension]
+\label{def:sentropy_extension}
+For nucleotide $b$ at position $i$ with context window $W_i$, the S-entropy coordinate is:
+\begin{equation}
+\Phi(b,i,W_i) = (w_k(b,i,W_i) \cdot \psi_x(b), w_t(b,i,W_i) \cdot \psi_y(b), w_e(b,i,W_i) \cdot |\psi(b)|)
+\end{equation}
+where weighting functions $w_k$, $w_t$, $w_e$ quantify knowledge (information content), time (sequential position), and entropy (local disorder) respectively.
+\end{definition}
+
+\begin{theorem}[Molecular Information Preservation]
+\label{thm:molecular_preservation}
+The genomic coordinate path $\mathbf{P}(S) = \sum_{i=1}^n \Phi(s_i, i, W_i)$ preserves complete sequence information for genomic sequence $S = s_1...s_n$.
+\end{theorem}
+
+\begin{proof}
+Injectivity of $\Phi$ follows from: (1) unique base coordinates $\psi(s_i)$, (2) position-dependent context windows $W_i$, (3) context-dependent weighting functions. Distinct sequences yield distinct coordinate paths, establishing bijection and information preservation.
+\end{proof}
+
+\begin{corollary}[Ternary-Molecular Correspondence]
+\label{cor:ternary_molecular}
+The ternary trit string $(t_1,...,t_k)$ and molecular coordinate $\Phi(b,i,W_i)$ both represent points in S-entropy space $[0,1]^3$, providing dual discrete-continuous representations.
+\end{corollary}
+
+\subsection{Cell Geometry}
+
+\begin{definition}[Cell Coordinates]
+\label{def:cell_coordinates}
+For a $k$-trit string $(t_1,\ldots,t_k)$, the corresponding cell $\mathcal{C}(t_1,\ldots,t_k)$ has coordinates:
+\begin{align}
+\Sk^{\min} &= \frac{n_k}{3^{k_k}}, \quad \Sk^{\max} = \frac{n_k+1}{3^{k_k}} \label{eq:Sk_cell} \\
+\St^{\min} &= \frac{n_t}{3^{k_t}}, \quad \St^{\max} = \frac{n_t+1}{3^{k_t}} \label{eq:St_cell} \\
+\Se^{\min} &= \frac{n_e}{3^{k_e}}, \quad \Se^{\max} = \frac{n_e+1}{3^{k_e}} \label{eq:Se_cell}
+\end{align}
+where $k_k, k_t, k_e$ count the number of refinements along each axis (with $k_k + k_t + k_e = k$), and $n_k, n_t, n_e$ specify which subdivision along each axis.
+\end{definition}
+
+\begin{theorem}[Cell Volume]
+\label{thm:cell_volume}
+The volume of a cell after $k$ refinements is:
+\begin{equation}
+V_k = \frac{1}{3^k}
+\label{eq:cell_volume}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The total volume of $\Sspace$ is 1 (Theorem~\ref{thm:total_volume}). After $k$ refinements, the space is divided into $3^k$ cells of equal volume (by symmetry of the refinement process). Therefore, each cell has volume $V_k = 1/3^k$.
+\end{proof}
+
+\subsection{Continuous Emergence}
+
+\begin{theorem}[Continuous Emergence]
+\label{thm:continuous_emergence}
+As $k \to \infty$, the discrete $3^k$ cell structure converges to the continuous space $[0,1]^3$:
+\begin{equation}
+\lim_{k \to \infty} \text{Cell}(t_1,\ldots,t_k) = \Scoord \in [0,1]^3
+\label{eq:continuous_emergence}
+\end{equation}
+where $\Scoord$ is the unique point in the nested intersection $\bigcap_{k=1}^\infty \text{Cell}(t_1,\ldots,t_k)$.
+\end{theorem}
+
+\begin{proof}
+Each $k$-trit string defines a nested sequence of cells: $\text{Cell}(t_1) \supset \text{Cell}(t_1,t_2) \supset \text{Cell}(t_1,t_2,t_3) \supset \cdots$. The volume of the $k$-th cell is $1/3^k \to 0$ as $k \to \infty$ (Theorem~\ref{thm:cell_volume}).
+
+By the nested interval theorem in $\RR^3$, the intersection $\bigcap_{k=1}^\infty \text{Cell}(t_1,\ldots,t_k)$ contains exactly one point $\Scoord$. This point is the limit of the cell centers as $k \to \infty$.
+
+Conversely, every point $\Scoord \in [0,1]^3$ can be represented as such a limit by choosing the appropriate infinite trit sequence $(t_1,t_2,t_3,\ldots)$ such that $\Scoord$ lies in $\text{Cell}(t_1,\ldots,t_k)$ for all $k$.
+\end{proof}
+
+\begin{corollary}[Ternary Representation of Points]
+\label{cor:ternary_representation}
+Every point $\Scoord \in [0,1]^3$ admits a ternary representation as an infinite trit sequence $(t_1,t_2,t_3,\ldots)$.
+\end{corollary}
+
+\subsection{Trajectory Encoding}
+
+\begin{definition}[Trajectory Encoding]
+\label{def:trajectory_encoding}
+A trajectory $\gamma: [0,T] \to \Sspace$ is encoded at resolution $k$ by the sequence of cells it visits:
+\begin{equation}
+\text{Enc}_k[\gamma] = \left(\mathcal{C}_1, \mathcal{C}_2, \ldots, \mathcal{C}_{N(k)}\right)
+\label{eq:trajectory_encoding}
+\end{equation}
+where $\mathcal{C}_i$ are the $3^k$-partition cells visited in order, and $N(k)$ is the number of distinct cells visited.
+\end{definition}
+
+\begin{theorem}[Encoding Refinement]
+\label{thm:encoding_refinement}
+As resolution increases ($k \to k+1$), the trajectory encoding refines:
+\begin{equation}
+\text{Enc}_{k+1}[\gamma] \text{ is a refinement of } \text{Enc}_k[\gamma]
+\label{eq:encoding_refinement}
+\end{equation}
+meaning each cell $\mathcal{C}_i$ in $\text{Enc}_k[\gamma]$ is subdivided into at most 3 cells in $\text{Enc}_{k+1}[\gamma]$.
+\end{theorem}
+
+\begin{proof}
+When partition resolution increases from $k$ to $k+1$, each cell in the $3^k$ partition is subdivided into at most 3 subcells (along one axis). A trajectory passing through cell $\mathcal{C}_i$ at resolution $k$ must pass through one or more of its subcells at resolution $k+1$. Therefore, $\text{Enc}_{k+1}[\gamma]$ refines $\text{Enc}_k[\gamma]$.
+\end{proof}
+
+\subsection{Complexity Measures}
+
+\begin{definition}[Trajectory Complexity]
+\label{def:trajectory_complexity}
+The complexity of a trajectory at resolution $k$ is:
+\begin{equation}
+\mathcal{K}_k[\gamma] = N(k) \cdot \log_3 3^k = k \cdot N(k)
+\label{eq:trajectory_complexity}
+\end{equation}
+where $N(k)$ is the number of distinct cells visited (Definition~\ref{def:trajectory_encoding}).
+\end{definition}
+
+\begin{theorem}[Complexity Bounds]
+\label{thm:complexity_bounds}
+The trajectory complexity satisfies:
+\begin{equation}
+k \leq \mathcal{K}_k[\gamma] \leq k \cdot 3^k
+\label{eq:complexity_bounds}
+\end{equation}
+with the lower bound achieved by trajectories confined to a single cell and the upper bound achieved by space-filling trajectories visiting all cells.
+\end{theorem}
+
+\begin{proof}
+Lower bound: A trajectory must visit at least one cell, so $N(k) \geq 1$, giving $\mathcal{K}_k[\gamma] \geq k$.
+
+Upper bound: A trajectory can visit at most $3^k$ distinct cells (the total number of cells at resolution $k$), so $N(k) \leq 3^k$, giving $\mathcal{K}_k[\gamma] \leq k \cdot 3^k$.
+\end{proof}
+
+\subsection{Information Content}
+
+\begin{definition}[Shannon Entropy of Trajectory]
+\label{def:shannon_entropy_trajectory}
+For a trajectory visiting cells with frequencies $p_i$ (fraction of time spent in cell $i$), the Shannon entropy is:
+\begin{equation}
+H[\gamma] = -\sum_{i=1}^{N(k)} p_i \log_3 p_i
+\label{eq:shannon_entropy}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Maximum Entropy]
+\label{thm:maximum_entropy}
+The Shannon entropy is maximized when the trajectory spends equal time in all visited cells:
+\begin{equation}
+H_{\max}[\gamma] = \log_3 N(k)
+\label{eq:maximum_entropy}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The Shannon entropy is maximized subject to $\sum_i p_i = 1$ when all $p_i$ are equal: $p_i = 1/N(k)$. Substituting into Equation~\eqref{eq:shannon_entropy}:
+\begin{equation}
+H_{\max} = -\sum_{i=1}^{N(k)} \frac{1}{N(k)} \log_3 \frac{1}{N(k)} = -N(k) \cdot \frac{1}{N(k)} \cdot (-\log_3 N(k)) = \log_3 N(k)
+\end{equation}
+\end{proof}
+
+\subsection{Hierarchical Structure}
+
+\begin{definition}[Hierarchical Levels]
+\label{def:hierarchical_levels}
+The ternary encoding admits a natural hierarchy:
+\begin{align}
+\text{Level 0:} \quad &\text{Full space } [0,1]^3 \quad (3^0 = 1 \text{ cell}) \label{eq:level_0} \\
+\text{Level 1:} \quad &\text{First refinement} \quad (3^1 = 3 \text{ cells}) \label{eq:level_1} \\
+\text{Level 2:} \quad &\text{Second refinement} \quad (3^2 = 9 \text{ cells}) \label{eq:level_2} \\
+&\vdots \notag \\
+\text{Level } k: \quad &k\text{-th refinement} \quad (3^k \text{ cells}) \label{eq:level_k}
+\end{align}
+\end{definition}
+
+\begin{theorem}[Hierarchical Consistency]
+\label{thm:hierarchical_consistency}
+The partition at level $k+1$ is a refinement of the partition at level $k$: each cell at level $k$ is subdivided into exactly 3 cells at level $k+1$.
+\end{theorem}
+
+\begin{proof}
+By construction of the ternary refinement process (Theorem~\ref{thm:ternary_correspondence}), each cell at level $k$ is subdivided along one axis into 3 equal parts at level $k+1$. This subdivision is consistent across all cells, ensuring hierarchical consistency.
+\end{proof}
+
+\subsection{Connection to Partition Coordinates}
+
+\begin{theorem}[Ternary-Partition Correspondence]
+\label{thm:ternary_partition}
+The ternary encoding of S-entropy space corresponds to the partition coordinate structure: $k$-trit refinement level corresponds to partition depth $n \sim 3^{k/3}$.
+\end{theorem}
+
+\begin{proof}
+Partition coordinates have capacity $C(n) = 2n^2$. For $k$ ternary refinements, the number of cells is $3^k$. Equating these (up to a constant factor accounting for the difference between base-2 and base-3):
+\begin{equation}
+2n^2 \sim 3^k \implies n \sim \sqrt{\frac{3^k}{2}} \sim 3^{k/2}
+\end{equation}
+
+The precise correspondence depends on how partition coordinates map to S-entropy cells, but the scaling $n \sim 3^{k/2}$ establishes the connection between ternary refinement level and partition depth.
+\end{proof}
+
+This correspondence shows that ternary encoding provides a natural discrete approximation to the continuous S-entropy space, with refinement level $k$ corresponding to partition depth $n$.

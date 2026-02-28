@@ -1,0 +1,49 @@
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Poincar{\'e}(1890)]{poincare1890probleme}
+Henri Poincar{\'e}.
+\newblock Sur le probl{\`e}me des trois corps et les {\'e}quations de la
+  dynamique.
+\newblock \emph{Acta Mathematica}, 13:\penalty0 1--270, 1890.
+
+\bibitem[Birkhoff(1931)]{birkhoff1931proof}
+George~David Birkhoff.
+\newblock \emph{Proof of the ergodic theorem}.
+\newblock National Academy of Sciences, 1931.
+
+\bibitem[Arnold(1978)]{arnold1978mathematical}
+Vladimir~I Arnold.
+\newblock \emph{Mathematical methods of classical mechanics}.
+\newblock Springer, 1978.
+
+\bibitem[Sachikonye(2025{\natexlab{a}})]{Sachikonye2025_Partition}
+Kundai~Farai Sachikonye.
+\newblock Partition theory of atomic structure.
+\newblock In preparation, 2025{\natexlab{a}}.
+
+\bibitem[Sachikonye(2025{\natexlab{b}})]{Sachikonye2025_IdealGas}
+Kundai~Farai Sachikonye.
+\newblock Ideal gas laws from partition operations.
+\newblock In preparation, 2025{\natexlab{b}}.
+
+\bibitem[Sachikonye(2025{\natexlab{c}})]{Sachikonye2025_Fluid}
+Kundai~Farai Sachikonye.
+\newblock Fluid dynamics from phase-locked particle networks.
+\newblock In preparation, 2025{\natexlab{c}}.
+
+\bibitem[Sachikonye(2025{\natexlab{d}})]{Sachikonye2025_Current}
+Kundai~Farai Sachikonye.
+\newblock Current flow from partition lag and coupling.
+\newblock In preparation, 2025{\natexlab{d}}.
+
+\bibitem[Sachikonye(2025{\natexlab{e}})]{Sachikonye2025_Genome}
+Kundai~Farai Sachikonye.
+\newblock Genomic structure from electron transport partitioning.
+\newblock In preparation, 2025{\natexlab{e}}.
+
+\end{thebibliography}

@@ -1,0 +1,544 @@
+\begin{thebibliography}{95}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Poincar{\'e}(1890)]{poincare1890probleme}
+Henri Poincar{\'e}.
+\newblock Sur le probl{\`e}me des trois corps et les {\'e}quations de la
+  dynamique.
+\newblock \emph{Acta Mathematica}, 13:\penalty0 1--270, 1890.
+
+\bibitem[Katok and Hasselblatt(1995)]{katok1995introduction}
+Anatole Katok and Boris Hasselblatt.
+\newblock \emph{Introduction to the Modern Theory of Dynamical Systems}.
+\newblock Cambridge University Press, 1995.
+
+\bibitem[Rydberg(1890)]{rydberg1890recherches}
+Johannes Rydberg.
+\newblock Recherches sur la constitution des spectres d'{\'e}mission des
+  {\'e}l{\'e}ments chimiques.
+\newblock \emph{Kongliga Svenska Vetenskaps-Akademiens Handlingar},
+  23:\penalty0 1--155, 1890.
+
+\bibitem[Bohr(1913)]{bohr1913constitution}
+Niels Bohr.
+\newblock On the constitution of atoms and molecules.
+\newblock \emph{Philosophical Magazine}, 26:\penalty0 1--25, 1913.
+
+\bibitem[Woodgate(1980)]{woodgate1980elementary}
+Gordon~K Woodgate.
+\newblock \emph{Elementary Atomic Structure}.
+\newblock Oxford University Press, 1980.
+
+\bibitem[Scerri(2007)]{scerri2007periodic}
+Eric~R Scerri.
+\newblock \emph{The Periodic Table: Its Story and Its Significance}.
+\newblock Oxford University Press, 2007.
+
+\bibitem[Gross(2017)]{gross2017mass}
+J{\"u}rgen~H Gross.
+\newblock \emph{Mass Spectrometry: A Textbook}.
+\newblock Springer, 3rd edition, 2017.
+
+\bibitem[Herzberg(1950)]{herzberg1950molecular}
+Gerhard Herzberg.
+\newblock \emph{Molecular Spectra and Molecular Structure. I. Spectra of
+  Diatomic Molecules}.
+\newblock Van Nostrand, 2nd edition, 1950.
+
+\bibitem[Pathria and Beale(2011)]{pathria2011statistical}
+Raj~K Pathria and Paul~D Beale.
+\newblock \emph{Statistical Mechanics}.
+\newblock Academic Press, 3rd edition, 2011.
+
+\bibitem[Ichimaru(1982)]{ichimaru1982strongly}
+Setsuo Ichimaru.
+\newblock Strongly coupled plasmas: high-density classical plasmas and
+  degenerate electron liquids.
+\newblock \emph{Reviews of Modern Physics}, 54:\penalty0 1017--1059, 1982.
+
+\bibitem[Dubin and O'Neil(1999)]{dubin1999trapped}
+Daniel~HE Dubin and Thomas~M O'Neil.
+\newblock Trapped nonneutral plasmas, liquids, and crystals (the thermal
+  equilibrium states).
+\newblock \emph{Reviews of Modern Physics}, 71:\penalty0 87--172, 1999.
+
+\bibitem[Chandrasekhar(1935)]{chandrasekhar1935highly}
+Subrahmanyan Chandrasekhar.
+\newblock The highly collapsed configurations of a stellar mass (second paper).
+\newblock \emph{Monthly Notices of the Royal Astronomical Society},
+  95:\penalty0 207--225, 1935.
+
+\bibitem[Ashcroft and Mermin(1976)]{ashcroft1976solid}
+Neil~W Ashcroft and N~David Mermin.
+\newblock \emph{Solid State Physics}.
+\newblock Holt, Rinehart and Winston, 1976.
+
+\bibitem[Shapiro and Teukolsky(1983)]{shapiro1983black}
+Stuart~L Shapiro and Saul~A Teukolsky.
+\newblock \emph{Black Holes, White Dwarfs, and Neutron Stars: The Physics of
+  Compact Objects}.
+\newblock Wiley, 1983.
+
+\bibitem[Pethick and Smith(2008)]{pethick2008bose}
+Christopher~J Pethick and Henrik Smith.
+\newblock \emph{Bose--Einstein Condensation in Dilute Gases}.
+\newblock Cambridge University Press, 2nd edition, 2008.
+
+\bibitem[Cornell and Wieman(2002)]{cornell1999nobel}
+Eric~A Cornell and Carl~E Wieman.
+\newblock Nobel lecture: Bose-einstein condensation in a dilute gas, the first
+  70 years and some recent experiments.
+\newblock \emph{Reviews of Modern Physics}, 74:\penalty0 875--893, 2002.
+
+\bibitem[Callen(1985)]{callen1985thermodynamics}
+Herbert~B Callen.
+\newblock \emph{Thermodynamics and an Introduction to Thermostatistics}.
+\newblock Wiley, 2nd edition, 1985.
+
+\bibitem[Haldane(1930)]{haldane1930enzymes}
+John~BS Haldane.
+\newblock Enzymes.
+\newblock 1930.
+
+\bibitem[McLafferty and Tur{\v{c}}ek(1993)]{mclafferty1993interpretation}
+Fred~W McLafferty and Franti{\v{s}}ek Tur{\v{c}}ek.
+\newblock \emph{Interpretation of Mass Spectra}.
+\newblock University Science Books, 4th edition, 1993.
+
+\bibitem[Tinkham(2004)]{tinkham2004introduction}
+Michael Tinkham.
+\newblock \emph{Introduction to Superconductivity}.
+\newblock Dover, 2nd edition, 2004.
+
+\bibitem[Ziman(1960)]{ziman1960electrons}
+John~M Ziman.
+\newblock \emph{Electrons and Phonons: The Theory of Transport Phenomena in
+  Solids}.
+\newblock Oxford University Press, 1960.
+
+\bibitem[Chapman and Cowling(1990)]{chapman1990mathematical}
+Sydney Chapman and Thomas~G Cowling.
+\newblock \emph{The Mathematical Theory of Non-uniform Gases}.
+\newblock Cambridge University Press, 3rd edition, 1990.
+
+\bibitem[Sutherland(1893)]{sutherland1893lii}
+William Sutherland.
+\newblock Lii. the viscosity of gases and molecular force.
+\newblock \emph{The London, Edinburgh, and Dublin Philosophical Magazine and
+  Journal of Science}, 36:\penalty0 507--531, 1893.
+
+\bibitem[Einstein(1905)]{einstein1905bewegung}
+Albert Einstein.
+\newblock {\"U}ber die von der molekularkinetischen theorie der w{\"a}rme
+  geforderte bewegung von in ruhenden fl{\"u}ssigkeiten suspendierten teilchen.
+\newblock \emph{Annalen der Physik}, 322:\penalty0 549--560, 1905.
+
+\bibitem[Kubo(1957)]{kubo1957statistical}
+Ryogo Kubo.
+\newblock Statistical-mechanical theory of irreversible processes. i. general
+  theory and simple applications to magnetic and conduction problems.
+\newblock \emph{Journal of the Physical Society of Japan}, 12:\penalty0
+  570--586, 1957.
+
+\bibitem[Bardeen et~al.(1957)Bardeen, Cooper, and
+  Schrieffer]{bardeen1957theory}
+John Bardeen, Leon~N Cooper, and J~Robert Schrieffer.
+\newblock Theory of superconductivity.
+\newblock \emph{Physical Review}, 108:\penalty0 1175--1204, 1957.
+
+\bibitem[Landau(1941)]{landau1941theory}
+Lev~D Landau.
+\newblock Theory of the superfluidity of helium ii.
+\newblock \emph{Physical Review}, 60:\penalty0 356--358, 1941.
+
+\bibitem[Jaynes(1957)]{jaynes1957information}
+Edwin~T Jaynes.
+\newblock Information theory and statistical mechanics.
+\newblock \emph{Physical Review}, 106:\penalty0 620--630, 1957.
+
+\bibitem[Steinfeld et~al.(1999)Steinfeld, Francisco, and
+  Hase]{steinfeld1999chemical}
+Jeffrey~I Steinfeld, Joseph~S Francisco, and William~L Hase.
+\newblock \emph{Chemical Kinetics and Dynamics}.
+\newblock Prentice Hall, 2nd edition, 1999.
+
+\bibitem[Hayes(2001)]{hayes2001ternary}
+Brian Hayes.
+\newblock A lucid interval.
+\newblock \emph{American Scientist}, 89:\penalty0 490--493, 2001.
+
+\bibitem[Perutz(1970)]{perutz1970stereochemistry}
+Max~F Perutz.
+\newblock Stereochemistry of cooperative effects in haemoglobin: haem--haem
+  interaction and the problem of allostery.
+\newblock \emph{Nature}, 228:\penalty0 726--734, 1970.
+
+\bibitem[Backus(1978)]{backus1978can}
+John Backus.
+\newblock Can programming be liberated from the von neumann style? a functional
+  style and its algebra of programs.
+\newblock \emph{Communications of the ACM}, 21:\penalty0 613--641, 1978.
+
+\bibitem[Alberts et~al.(2002)Alberts, Johnson, Lewis, Raff, Roberts, and
+  Walter]{alberts2002molecular}
+Bruce Alberts, Alexander Johnson, Julian Lewis, Martin Raff, Keith Roberts, and
+  Peter Walter.
+\newblock \emph{Molecular Biology of the Cell}.
+\newblock Garland Science, 4th edition, 2002.
+
+\bibitem[Kubo(1966)]{kubo1966fluctuation}
+Ryogo Kubo.
+\newblock The fluctuation-dissipation theorem.
+\newblock \emph{Reports on Progress in Physics}, 29:\penalty0 255--284, 1966.
+
+\bibitem[Nelson and Cox(2008)]{nelson2008lehninger}
+David~L Nelson and Michael~M Cox.
+\newblock \emph{Lehninger Principles of Biochemistry}.
+\newblock W. H. Freeman, 5th edition, 2008.
+
+\bibitem[Press et~al.(2007)Press, Teukolsky, Vetterling, and
+  Flannery]{press2007numerical}
+William~H Press, Saul~A Teukolsky, William~T Vetterling, and Brian~P Flannery.
+\newblock \emph{Numerical Recipes: The Art of Scientific Computing}.
+\newblock Cambridge University Press, 3rd edition, 2007.
+
+\bibitem[Berg(1993)]{berg1993random}
+Howard~C Berg.
+\newblock \emph{Random Walks in Biology}.
+\newblock Princeton University Press, 1993.
+
+\bibitem[Semenza(2001)]{semenza2001hypoxia}
+Gregg~L Semenza.
+\newblock Hypoxia-inducible factor 1: oxygen homeostasis and disease
+  pathophysiology.
+\newblock \emph{Trends in Molecular Medicine}, 7:\penalty0 345--350, 2001.
+
+\bibitem[Kuramoto(1984)]{kuramoto1984chemical}
+Yoshiki Kuramoto.
+\newblock \emph{Chemical Oscillations, Waves, and Turbulence}.
+\newblock Springer, 1984.
+
+\bibitem[Pikovsky et~al.(2001)Pikovsky, Rosenblum, and
+  Kurths]{pikovsky2001synchronization}
+Arkady Pikovsky, Michael Rosenblum, and J{\"u}rgen Kurths.
+\newblock \emph{Synchronization: A Universal Concept in Nonlinear Sciences}.
+\newblock Cambridge University Press, 2001.
+
+\bibitem[Israelachvili(2011)]{israelachvili2011intermolecular}
+Jacob~N Israelachvili.
+\newblock \emph{Intermolecular and Surface Forces}.
+\newblock Academic Press, 3rd edition, 2011.
+
+\bibitem[Watts and Strogatz(1998)]{watts1998collective}
+Duncan~J Watts and Steven~H Strogatz.
+\newblock Collective dynamics of 'small-world' networks.
+\newblock \emph{Nature}, 393:\penalty0 440--442, 1998.
+
+\bibitem[Barab{\'a}si and Oltvai(2004)]{barabasi2004network}
+Albert-L{\'a}szl{\'o} Barab{\'a}si and Zolt{\'a}n~N Oltvai.
+\newblock Network biology: understanding the cell's functional organization.
+\newblock \emph{Nature Reviews Genetics}, 5:\penalty0 101--113, 2004.
+
+\bibitem[Cormen et~al.(2009)Cormen, Leiserson, Rivest, and
+  Stein]{cormen2009introduction}
+Thomas~H Cormen, Charles~E Leiserson, Ronald~L Rivest, and Clifford Stein.
+\newblock \emph{Introduction to Algorithms}.
+\newblock MIT Press, 3rd edition, 2009.
+
+\bibitem[Fersht(1999)]{fersht1999structure}
+Alan Fersht.
+\newblock \emph{Structure and Mechanism in Protein Science: A Guide to Enzyme
+  Catalysis and Protein Folding}.
+\newblock W. H. Freeman, 1999.
+
+\bibitem[Strogatz(2000)]{strogatz2000kuramoto}
+Steven~H Strogatz.
+\newblock From kuramoto to crawford: exploring the onset of synchronization in
+  populations of coupled oscillators.
+\newblock \emph{Physica D: Nonlinear Phenomena}, 143:\penalty0 1--20, 2000.
+
+\bibitem[Newman(2018)]{newman2018networks}
+Mark Newman.
+\newblock \emph{Networks}.
+\newblock Oxford University Press, 2nd edition, 2018.
+
+\bibitem[Kitano(2004)]{kitano2004biological}
+Hiroaki Kitano.
+\newblock Biological robustness.
+\newblock \emph{Nature Reviews Genetics}, 5:\penalty0 826--837, 2004.
+
+\bibitem[Weiss et~al.(2004)Weiss, Elsner, Kartberg, and
+  Nilsson]{weiss1999anomalous}
+Matthias Weiss, Markus Elsner, Fredrik Kartberg, and Tommy Nilsson.
+\newblock Anomalous subdiffusion is a measure for cytoplasmic crowding in
+  living cells.
+\newblock \emph{Biophysical Journal}, 87:\penalty0 3518--3524, 2004.
+
+\bibitem[Shannon(1948)]{shannon1948mathematical}
+Claude~E Shannon.
+\newblock A mathematical theory of communication.
+\newblock \emph{Bell System Technical Journal}, 27:\penalty0 379--423,
+  623--656, 1948.
+
+\bibitem[Bennett(1982)]{bennett1982thermodynamics}
+Charles~H Bennett.
+\newblock The thermodynamics of computation---a review.
+\newblock \emph{International Journal of Theoretical Physics}, 21:\penalty0
+  905--940, 1982.
+
+\bibitem[Portis~Jr(2003)]{portis2003rubisco}
+Archie~R Portis~Jr.
+\newblock Rubisco activase--rubisco's catalytic chaperone.
+\newblock \emph{Photosynthesis Research}, 75:\penalty0 11--27, 2003.
+
+\bibitem[Michaelis and Menten(1913)]{michaelis1913kinetik}
+Leonor Michaelis and Maud~L Menten.
+\newblock Die kinetik der invertinwirkung.
+\newblock \emph{Biochemische Zeitschrift}, 49:\penalty0 333--369, 1913.
+
+\bibitem[Ellis(2001)]{ellis2001macromolecular}
+R~John Ellis.
+\newblock Macromolecular crowding: obvious but underappreciated.
+\newblock \emph{Trends in Biochemical Sciences}, 26:\penalty0 597--604, 2001.
+
+\bibitem[Monod et~al.(1965)Monod, Wyman, and Changeux]{monod1965nature}
+Jacques Monod, Jeffries Wyman, and Jean-Pierre Changeux.
+\newblock On the nature of allosteric transitions: a plausible model.
+\newblock \emph{Journal of Molecular Biology}, 12:\penalty0 88--118, 1965.
+
+\bibitem[Khersonsky and Tawfik(2010)]{khersonsky2010enzyme}
+Olga Khersonsky and Dan~S Tawfik.
+\newblock Enzyme promiscuity: a mechanistic and evolutionary perspective.
+\newblock \emph{Annual Review of Biochemistry}, 79:\penalty0 471--505, 2010.
+
+\bibitem[Pauling(1946)]{pauling1946molecular}
+Linus Pauling.
+\newblock Molecular architecture and biological reactions.
+\newblock \emph{Chemical and Engineering News}, 24:\penalty0 1375--1377, 1946.
+
+\bibitem[Wolfenden and Snider(2001)]{wolfenden2006degrees}
+Richard Wolfenden and Mark~J Snider.
+\newblock Degrees of difficulty of water-consuming reactions in the absence of
+  enzymes.
+\newblock \emph{Accounts of Chemical Research}, 34:\penalty0 938--945, 2001.
+
+\bibitem[Dijkstra(1959)]{dijkstra1959note}
+Edsger~W Dijkstra.
+\newblock A note on two problems in connexion with graphs.
+\newblock \emph{Numerische Mathematik}, 1:\penalty0 269--271, 1959.
+
+\bibitem[Ahuja et~al.(1993)Ahuja, Magnanti, and Orlin]{ahuja1993network}
+Ravindra~K Ahuja, Thomas~L Magnanti, and James~B Orlin.
+\newblock \emph{Network Flows: Theory, Algorithms, and Applications}.
+\newblock Prentice Hall, 1993.
+
+\bibitem[Srere(1987)]{srere1987complexes}
+Paul~A Srere.
+\newblock Complexes of sequential metabolic enzymes.
+\newblock \emph{Annual Review of Biochemistry}, 56:\penalty0 89--124, 1987.
+
+\bibitem[Frauenfelder et~al.(1991)Frauenfelder, Sligar, and
+  Wolynes]{frauenfelder1991energy}
+Hans Frauenfelder, Stephen~G Sligar, and Peter~G Wolynes.
+\newblock The energy landscapes and motions of proteins.
+\newblock \emph{Science}, 254:\penalty0 1598--1603, 1991.
+
+\bibitem[Menger(1927)]{menger1927allgemeinen}
+Karl Menger.
+\newblock Zur allgemeinen kurventheorie.
+\newblock \emph{Fundamenta Mathematicae}, 10:\penalty0 96--115, 1927.
+
+\bibitem[Zamboni et~al.(2009)Zamboni, Fendt, R{\"u}hl, and
+  Sauer]{zamboni2009isotope}
+Nicola Zamboni, Sarah-Maria Fendt, Matthias R{\"u}hl, and Uwe Sauer.
+\newblock $^{13}$c-based metabolic flux analysis.
+\newblock \emph{Nature Protocols}, 4:\penalty0 878--892, 2009.
+
+\bibitem[Jeffrey(1997)]{jeffrey1997introduction}
+George~A Jeffrey.
+\newblock \emph{An Introduction to Hydrogen Bonding}.
+\newblock Oxford University Press, 1997.
+
+\bibitem[Steiner(2002)]{steiner2002hydrogen}
+Thomas Steiner.
+\newblock The hydrogen bond in the solid state.
+\newblock \emph{Angewandte Chemie International Edition}, 41:\penalty0 48--76,
+  2002.
+
+\bibitem[W{\"u}thrich(1986)]{wuthrich1986nmr}
+Kurt W{\"u}thrich.
+\newblock \emph{NMR of Proteins and Nucleic Acids}.
+\newblock Wiley, 1986.
+
+\bibitem[Horwich et~al.(2006)Horwich, Fenton, Chapman, and
+  Farr]{horwich2006chaperonin}
+Arthur~L Horwich, William~A Fenton, Eli Chapman, and George~W Farr.
+\newblock Chaperonin-mediated protein folding: using a central cavity to
+  kinetically assist polypeptide chain folding.
+\newblock \emph{Quarterly Reviews of Biophysics}, 39:\penalty0 1--68, 2006.
+
+\bibitem[Clare et~al.(2012)Clare, Vasishtan, Stagg, Quispe, Farr, Topf,
+  Horwich, and Saibil]{clare2012atp}
+Daniel~K Clare, Daven Vasishtan, Simon Stagg, Joel Quispe, George~W Farr, Maya
+  Topf, Arthur~L Horwich, and Helen~R Saibil.
+\newblock Atp-triggered conformational changes delineate substrate-binding and
+  -folding mechanics of the groel chaperonin.
+\newblock \emph{Cell}, 149:\penalty0 113--123, 2012.
+
+\bibitem[Thirumalai and Klimov(1999)]{thirumalai1995theoretical}
+Devarajan Thirumalai and Dmitri~K Klimov.
+\newblock Theoretical perspectives on protein folding.
+\newblock \emph{Annual Review of Biophysics and Biomolecular Structure},
+  28:\penalty0 153--183, 1999.
+
+\bibitem[Hartl et~al.(2011)Hartl, Bracher, and Hayer-Hartl]{hartl2011molecular}
+F~Ulrich Hartl, Andreas Bracher, and Manajit Hayer-Hartl.
+\newblock Molecular chaperones in protein folding and proteostasis.
+\newblock \emph{Nature}, 475:\penalty0 324--332, 2011.
+
+\bibitem[Anfinsen(1973)]{anfinsen1973principles}
+Christian~B Anfinsen.
+\newblock Principles that govern the folding of protein chains.
+\newblock \emph{Science}, 181:\penalty0 223--230, 1973.
+
+\bibitem[Dill and Bromberg(2010)]{dill2008protein}
+Ken~A Dill and Sarina Bromberg.
+\newblock \emph{Molecular Driving Forces: Statistical Thermodynamics in
+  Biology, Chemistry, Physics, and Nanoscience}.
+\newblock Garland Science, 2nd edition, 2010.
+
+\bibitem[Gruebele(2005)]{gruebele2005downhill}
+Martin Gruebele.
+\newblock Downhill protein folding: evolution meets physics.
+\newblock \emph{Comptes Rendus Biologies}, 328:\penalty0 701--712, 2005.
+
+\bibitem[Chung et~al.(2012)Chung, Louis, and Eaton]{chung2012single}
+Hoi~Sung Chung, John~M Louis, and William~A Eaton.
+\newblock Single-molecule fluorescence experiments determine protein folding
+  transition path times.
+\newblock \emph{Science}, 335:\penalty0 981--984, 2012.
+
+\bibitem[Jarzynski(2011)]{jarzynski2011equalities}
+Christopher Jarzynski.
+\newblock Equalities and inequalities: irreversibility and the second law of
+  thermodynamics at the nanoscale.
+\newblock \emph{Annual Review of Condensed Matter Physics}, 2:\penalty0
+  329--351, 2011.
+
+\bibitem[Rees et~al.(2009)Rees, Johnson, and Lewinson]{rees2009abc}
+Douglas~C Rees, Erin Johnson, and Oded Lewinson.
+\newblock Abc transporters: the power to change.
+\newblock \emph{Nature Reviews Molecular Cell Biology}, 10:\penalty0 218--227,
+  2009.
+
+\bibitem[Hollenstein et~al.(2007)Hollenstein, Dawson, and
+  Locher]{hollenstein2007structure}
+Kaspar Hollenstein, Roger~JP Dawson, and Kaspar~P Locher.
+\newblock Structure and mechanism of abc transporter proteins.
+\newblock \emph{Current Opinion in Structural Biology}, 17:\penalty0 412--418,
+  2007.
+
+\bibitem[Locher(2016)]{locher2016mechanistic}
+Kaspar~P Locher.
+\newblock Mechanistic diversity in atp-binding cassette (abc) transporters.
+\newblock \emph{Nature Structural \& Molecular Biology}, 23:\penalty0 487--493,
+  2016.
+
+\bibitem[Zurek(2003)]{zurek2003decoherence}
+Wojciech~H Zurek.
+\newblock Decoherence, einselection, and the quantum origins of the classical.
+\newblock \emph{Reviews of Modern Physics}, 75:\penalty0 715--775, 2003.
+
+\bibitem[Jardetzky(1966)]{jardetzky1966simple}
+Oleg Jardetzky.
+\newblock Simple allosteric model for membrane pumps.
+\newblock \emph{Nature}, 211:\penalty0 969--970, 1966.
+
+\bibitem[Saier~Jr and Paulsen(2000)]{saier2000molecular}
+Milton~H Saier~Jr and Ian~T Paulsen.
+\newblock \emph{Molecular Mechanisms of Bacterial Multi-Drug Resistance}.
+\newblock Landes Bioscience, 2000.
+
+\bibitem[Seifert(2012)]{seifert2012stochastic}
+Udo Seifert.
+\newblock Stochastic thermodynamics, fluctuation theorems and molecular
+  machines.
+\newblock \emph{Reports on Progress in Physics}, 75:\penalty0 126001, 2012.
+
+\bibitem[Stein(1986)]{stein1986transport}
+Wilfred~D Stein.
+\newblock \emph{Transport and Diffusion Across Cell Membranes}.
+\newblock Academic Press, 1986.
+
+\bibitem[Simons and Ikonen(1997)]{simons1997functional}
+Kai Simons and Elina Ikonen.
+\newblock Functional rafts in cell membranes.
+\newblock \emph{Nature}, 387:\penalty0 569--572, 1997.
+
+\bibitem[Pike(2006)]{pike2006rafts}
+Linda~J Pike.
+\newblock Rafts defined: a report on the keystone symposium on lipid rafts and
+  cell function.
+\newblock \emph{Journal of Lipid Research}, 47:\penalty0 1597--1598, 2006.
+
+\bibitem[Verhalen et~al.(2017)Verhalen, Dastvan, Thangapandian, Peskova,
+  Koteiche, Nakamoto, Tajkhorshid, and McHaourab]{verhalen2017energy}
+Brandy Verhalen, Reza Dastvan, Sriram Thangapandian, Yekaterina Peskova,
+  Hassane~A Koteiche, Robert~K Nakamoto, Emad Tajkhorshid, and Hassane~S
+  McHaourab.
+\newblock Energy transduction and alternating access of the mammalian abc
+  transporter p-glycoprotein.
+\newblock \emph{Nature}, 543:\penalty0 738--741, 2017.
+
+\bibitem[Oldham and Chen(2016)]{oldham2016structural}
+Michael~L Oldham and Jue Chen.
+\newblock Structural insights into abc transporter mechanism.
+\newblock \emph{Current Opinion in Structural Biology}, 37:\penalty0 118--124,
+  2016.
+
+\bibitem[Metcalf and van~der Straten(1999)]{metcalf1999laser}
+Harold~J Metcalf and Peter van~der Straten.
+\newblock \emph{Laser Cooling and Trapping}.
+\newblock Springer, 1999.
+
+\bibitem[Dalibard and Cohen-Tannoudji(1989)]{aspect2008laser}
+Jean Dalibard and Claude Cohen-Tannoudji.
+\newblock Laser cooling below the doppler limit by polarization gradients:
+  simple theoretical models.
+\newblock \emph{Journal of the Optical Society of America B}, 6:\penalty0
+  2023--2045, 1989.
+
+\bibitem[Rovelli(2004)]{rovelli2004quantum}
+Carlo Rovelli.
+\newblock \emph{Quantum Gravity}.
+\newblock Cambridge University Press, 2004.
+
+\bibitem[Abbe(1873)]{abbe1873beitrage}
+Ernst Abbe.
+\newblock Beitr{\"a}ge zur theorie des mikroskops und der mikroskopischen
+  wahrnehmung.
+\newblock \emph{Archiv f{\"u}r Mikroskopische Anatomie}, 9:\penalty0 413--418,
+  1873.
+
+\bibitem[Baffou and Quidant(2013)]{baffou2014thermoplasmonics}
+Guillaume Baffou and Romain Quidant.
+\newblock Thermoplasmonics: using metallic nanostructures as nano-sources of
+  heat.
+\newblock \emph{Laser \& Photonics Reviews}, 7:\penalty0 171--187, 2013.
+
+\bibitem[Ketterle(2002)]{ketterle1999bose}
+Wolfgang Ketterle.
+\newblock Bose-einstein condensation of atomic gases.
+\newblock \emph{Reviews of Modern Physics}, 74:\penalty0 1131--1151, 2002.
+
+\bibitem[Silverman and Lindskog(1988)]{silverman1988carbonic}
+David~N Silverman and Sven Lindskog.
+\newblock The catalytic mechanism of carbonic anhydrase: implications of a
+  rate-limiting protolysis of water.
+\newblock \emph{Accounts of Chemical Research}, 21:\penalty0 30--36, 1988.
+
+\end{thebibliography}

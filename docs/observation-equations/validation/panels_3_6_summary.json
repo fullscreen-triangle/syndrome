@@ -1,0 +1,38 @@
+{
+  "suite": "CPL Validation Panels 3-6",
+  "timestamp": "2026-02-04T13:08:31.086689",
+  "panels_generated": 4,
+  "output_directory": "c:\\Users\\kundai\\Documents\\biology\\hegel\\wilhelm\\publications\\observation-equations\\validation",
+  "key_results": {
+    "panel3_categorical_distance": {
+      "spatial_categorical_correlation": 0.11683384117555579,
+      "independence_validated": false
+    },
+    "panel4_information_catalysis": {
+      "enzymes": [
+        "Carbonic Anhydrase",
+        "Catalase",
+        "Hexokinase",
+        "Chymotrypsin",
+        "RuBisCO"
+      ],
+      "reduction_formula": "d_cat^cat = d_0 / sqrt(K)"
+    },
+    "panel5_opacity_independent": {
+      "modalities": [
+        "kinetic (photon)",
+        "categorical (partition)"
+      ],
+      "opacity_independence": true
+    },
+    "panel6_disease_trajectories": {
+      "disease_types": [
+        "healthy",
+        "acute",
+        "chronic",
+        "progressive"
+      ],
+      "bistable_dynamics": true
+    }
+  }
+}

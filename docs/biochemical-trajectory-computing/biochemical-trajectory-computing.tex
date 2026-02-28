@@ -1,0 +1,489 @@
+\documentclass[twocolumn,amsmath,amssymb,aps,prl,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+% Custom commands
+\newcommand{\Sk}{S_k}
+\newcommand{\St}{S_t}
+\newcommand{\Se}{S_e}
+\newcommand{\Sspace}{\mathcal{S}}
+\newcommand{\Scoord}{\mathbf{S}}
+\newcommand{\trit}{\mathsf{t}}
+\newcommand{\tryte}{\mathsf{T}}
+\newcommand{\dC}{d_{\mathrm{C}}}
+\newcommand{\kcat}{k_{\mathrm{cat}}}
+
+\begin{document}
+
+\title{Poincar\'{e} Computing: Trajectory Completion in Ternary S-Entropy Space}
+
+\author{K. F. Sachikonye}
+\affiliation{Department of Theoretical Biology}
+
+\date{\today}
+
+\begin{abstract}
+We introduce \emph{Poincar\'{e} computing}, a computational paradigm where trajectories are completed backward from observations through categorical constraints, rather than simulated forward from initial conditions using dynamical laws. The framework rests on two foundations: (1) ternary representation in S-entropy coordinate space $\Sspace = [0,1]^3$, where each digit encodes \emph{both} position and trajectory---the address IS the path; and (2) categorical apertures that constrain valid trajectories through geometric complementarity. We prove that trajectory completion requires $O(k)$ operations for $k$-trit precision, compared to $O(e^{kT})$ for forward simulation with $T$ time steps. Three primitive operations---\textsc{Project}, \textsc{Complete}, and \textsc{Compose}---replace Boolean AND, OR, NOT as fundamental computational primitives. We validate the framework against carbonic anhydrase II catalysis, demonstrating that enzymatic trajectories emerge from aperture constraints without explicit rate equations. The paradigm shift mirrors Poincar\'{e}'s insight in celestial mechanics: given boundary conditions, trajectories are determined by constraints, not computed step-by-step. This enables a scripting language where ``experiments'' are constraint specifications that return valid trajectories, unifying simulation, inference, and measurement.
+\end{abstract}
+
+\maketitle
+
+%==============================================================================
+\section{Introduction}
+%==============================================================================
+
+\subsection{The Forward Simulation Paradigm}
+
+Contemporary computational science rests on \emph{forward simulation}: given initial conditions $\mathbf{x}_0$ and dynamical laws $\dot{\mathbf{x}} = f(\mathbf{x}, t)$, compute trajectories by numerical integration:
+\begin{equation}
+\mathbf{x}(t + \Delta t) = \mathbf{x}(t) + f(\mathbf{x}, t) \Delta t + O(\Delta t^2)
+\label{eq:forward}
+\end{equation}
+
+This paradigm has dominated since Newton. Its computational complexity scales as $O(N \cdot T)$ where $N$ is system size and $T$ is trajectory length. For stochastic systems, ensemble averaging multiplies this by $O(M)$ samples. For chaotic systems, numerical precision requirements grow exponentially: $O(e^{\lambda T})$ where $\lambda$ is the Lyapunov exponent.
+
+The forward paradigm embeds a deep assumption: \emph{trajectories must be constructed sequentially}. Each state depends on the previous state through causal propagation. This assumption is so fundamental that it appears self-evident.
+
+Yet it is not the only possibility.
+
+\subsection{Poincar\'{e}'s Insight}
+
+Henri Poincar\'{e}'s analysis of the three-body problem revealed an alternative perspective~\cite{Poincare1890}. Given boundary conditions (initial and final states), trajectories are \emph{constrained}, not computed. The trajectory space forms a manifold, and valid trajectories are geodesics satisfying boundary constraints.
+
+This insight transforms the question from ``How does the system evolve?'' to ``Which trajectories satisfy the constraints?'' The trajectory exists \emph{as a whole}; we determine it, not construct it.
+
+\subsection{Ternary Representation: Position = Trajectory}
+
+The crucial enabler for Poincar\'{e} computing is ternary representation in S-entropy space. As established in prior work~\cite{Sachikonye2025}, a ternary string encodes \emph{both} position and trajectory:
+
+\begin{equation}
+\trit_1 \trit_2 \cdots \trit_k \quad \leftrightarrow \quad \text{(cell position)} \equiv \text{(path to cell)}
+\label{eq:ternary-duality}
+\end{equation}
+
+Each trit $\trit_i \in \{0, 1, 2\}$ specifies refinement along one of three S-entropy dimensions:
+\begin{align}
+\trit = 0 &\leftrightarrow \text{refine along } \Sk \text{ (knowledge)} \\
+\trit = 1 &\leftrightarrow \text{refine along } \St \text{ (temporal)} \\
+\trit = 2 &\leftrightarrow \text{refine along } \Se \text{ (evolution)}
+\end{align}
+
+This is analogous to wave-particle duality in quantum mechanics. Light manifests as both wave (extended, trajectory-like) and particle (localized, position-like). Similarly, a ternary string manifests as both position (the cell it addresses) and trajectory (the sequence of refinements to reach that cell).
+
+The address IS the path.
+
+\subsection{Summary of Results}
+
+This paper establishes:
+
+\begin{enumerate}
+\item \textbf{Trajectory Completion} (Section~\ref{sec:completion}): Given boundary constraints, valid trajectories are determined by categorical constraint propagation in $O(k)$ operations.
+
+\item \textbf{Ternary Operations} (Section~\ref{sec:operations}): \textsc{Project}, \textsc{Complete}, and \textsc{Compose} provide the computational primitives for trajectory manipulation.
+
+\item \textbf{Aperture Constraints} (Section~\ref{sec:apertures}): Categorical apertures constrain trajectory space through geometric complementarity, reducing dimensionality without dynamics.
+
+\item \textbf{Biochemical Validation} (Section~\ref{sec:validation}): Enzymatic trajectories emerge from aperture constraints, validated against carbonic anhydrase II.
+
+\item \textbf{Scripting Language} (Section~\ref{sec:language}): A prototype language where ``experiments'' are constraint specifications returning valid trajectories.
+\end{enumerate}
+
+%==============================================================================
+\section{Theoretical Framework}
+%==============================================================================
+
+\subsection{S-Entropy Coordinate Space}
+
+The S-entropy coordinate space $\Sspace = [0,1]^3$ comprises three dimensions:
+\begin{align}
+\Sk &\in [0,1] \quad \text{(knowledge entropy)} \\
+\St &\in [0,1] \quad \text{(temporal entropy)} \\
+\Se &\in [0,1] \quad \text{(evolution entropy)}
+\end{align}
+
+A point $\Scoord = (\Sk, \St, \Se)$ specifies a unique location in categorical space. The $3^k$ hierarchical partition at depth $k$ divides $\Sspace$ into cells, each addressed by a $k$-trit string.
+
+\subsection{The Trit-Trajectory Correspondence}
+
+\begin{theorem}[Position-Trajectory Duality]
+For any $k$-trit string $\mathbf{t} = \trit_1 \trit_2 \cdots \trit_k$:
+\begin{enumerate}
+\item[(a)] $\mathbf{t}$ addresses exactly one cell $C_{\mathbf{t}}$ in the $3^k$ partition of $\Sspace$
+\item[(b)] $\mathbf{t}$ encodes the unique trajectory from the origin cell to $C_{\mathbf{t}}$
+\item[(c)] The trajectory is the sequence of refinements: refine along axis $\trit_1$, then axis $\trit_2$, etc.
+\end{enumerate}
+\label{thm:duality}
+\end{theorem}
+
+\begin{proof}
+By construction of the hierarchical partition. Each trit $\trit_i$ selects one of three sub-cells along axis $\trit_i$. The sequence of selections defines both the final cell (product of selections) and the path (sequence of selections).
+\end{proof}
+
+This duality eliminates the von Neumann separation between data (position) and instructions (trajectory). In ternary S-entropy representation, they are identical.
+
+\subsection{Categorical Distance and Constraints}
+
+The categorical distance $\dC$ between points $\Scoord_1$ and $\Scoord_2$ measures topological separation:
+\begin{equation}
+\dC(\Scoord_1, \Scoord_2) = \sum_{i=1}^{k} \mathbf{1}[\trit_i^{(1)} \neq \trit_i^{(2)}]
+\label{eq:categorical-distance}
+\end{equation}
+
+A categorical constraint $\mathcal{C}$ specifies a subset of valid trajectories:
+\begin{equation}
+\mathcal{C}: \{0,1,2\}^k \to \{\text{valid}, \text{invalid}\}
+\end{equation}
+
+Constraints may be:
+\begin{itemize}
+\item \textbf{Boundary}: Fix initial/final states $\mathbf{t}_0$, $\mathbf{t}_f$
+\item \textbf{Aperture}: Require passage through categorical aperture $\mathcal{A}$
+\item \textbf{Continuity}: Adjacent trits must satisfy $|\trit_{i+1} - \trit_i| \leq 1$
+\item \textbf{Conservation}: Certain trit patterns must sum to fixed values
+\end{itemize}
+
+%==============================================================================
+\section{Trajectory Completion}
+\label{sec:completion}
+%==============================================================================
+
+\subsection{The Completion Problem}
+
+Given partial trajectory information (boundary conditions, aperture constraints), determine the complete trajectory.
+
+\begin{definition}[Trajectory Completion]
+Let $\mathcal{C} = \{\mathcal{C}_1, \ldots, \mathcal{C}_m\}$ be a set of constraints. The trajectory completion problem is:
+\begin{equation}
+\text{Find } \mathbf{t}^* \in \{0,1,2\}^k \text{ such that } \forall i: \mathcal{C}_i(\mathbf{t}^*) = \text{valid}
+\end{equation}
+\end{definition}
+
+\subsection{Backward Propagation}
+
+Unlike forward simulation, trajectory completion works \emph{backward}. Given the final state $\mathbf{t}_f$ and constraints, we propagate constraints backward to determine the trajectory:
+
+\begin{algorithm}
+\textbf{Algorithm: Backward Completion}
+\begin{enumerate}
+\item Initialize: $\mathbf{t}^{(k)} = \mathbf{t}_f$
+\item For $i = k-1$ down to $1$:
+\begin{enumerate}
+\item Compute valid predecessors: $\mathcal{P}_i = \{\trit : \mathcal{C}(\trit, \mathbf{t}^{(i+1:k)}) = \text{valid}\}$
+\item Select: $\trit_i \in \mathcal{P}_i$ (unique if constraints are tight)
+\end{enumerate}
+\item Return: $\mathbf{t}^* = \trit_1 \cdots \trit_k$
+\end{enumerate}
+\end{algorithm}
+
+\subsection{Complexity Analysis}
+
+\begin{theorem}[Completion Complexity]
+Trajectory completion with $m$ constraints on $k$-trit trajectories requires $O(k \cdot m)$ operations.
+\label{thm:complexity}
+\end{theorem}
+
+\begin{proof}
+Each of $k$ positions requires checking $m$ constraints. Each constraint check is $O(1)$ for local constraints. Total: $O(k \cdot m)$.
+\end{proof}
+
+Compare to forward simulation: for a system with Lyapunov exponent $\lambda$ and precision $\epsilon$, trajectory length $T$ requires $O(e^{\lambda T} / \epsilon)$ operations to maintain accuracy. For chaotic biochemical systems with $\lambda \sim 1$ s$^{-1}$ and $T \sim 1$ ms, this is $O(e^{1000})$---computationally intractable.
+
+Trajectory completion bypasses this exponential barrier by working with constraints, not dynamics.
+
+%==============================================================================
+\section{Ternary Operations}
+\label{sec:operations}
+%==============================================================================
+
+Three primitive operations replace Boolean AND, OR, NOT:
+
+\subsection{\textsc{Project}: Extract Coordinate}
+
+\begin{equation}
+\textsc{Project}_i(\mathbf{t}) = \trit_i
+\end{equation}
+
+Extracts the $i$-th trit, revealing refinement along one axis. Analogous to measurement projecting a superposition onto an eigenstate.
+
+\subsection{\textsc{Complete}: Categorical Finalization}
+
+\begin{equation}
+\textsc{Complete}(\mathbf{t}_{1:j}, \mathcal{C}) = \mathbf{t}_{j+1:k}
+\end{equation}
+
+Given partial trajectory $\mathbf{t}_{1:j}$ and constraints $\mathcal{C}$, returns the unique completion satisfying all constraints. This is the core operation of Poincar\'{e} computing.
+
+\textsc{Complete} is defined only when constraints uniquely determine the completion. When multiple completions exist, \textsc{Complete} returns the set of valid completions.
+
+\subsection{\textsc{Compose}: Trajectory Concatenation}
+
+\begin{equation}
+\textsc{Compose}(\mathbf{t}^{(1)}, \mathbf{t}^{(2)}) = \mathbf{t}^{(1)} \cdot \mathbf{t}^{(2)}
+\end{equation}
+
+Concatenates two trajectories. The endpoint of $\mathbf{t}^{(1)}$ must match the startpoint of $\mathbf{t}^{(2)}$ in categorical space.
+
+\subsection{Closure Properties}
+
+\begin{proposition}
+The operations \textsc{Project}, \textsc{Complete}, and \textsc{Compose} are closed over the space of ternary trajectories: any composition of these operations yields a valid ternary trajectory.
+\end{proposition}
+
+These three operations suffice for all trajectory computation in S-entropy space, replacing the Boolean operations that underlie binary computing.
+
+%==============================================================================
+\section{Categorical Apertures as Constraints}
+\label{sec:apertures}
+%==============================================================================
+
+\subsection{Aperture Definition}
+
+A categorical aperture $\mathcal{A}$ is a geometric constraint in S-entropy space:
+\begin{equation}
+\mathcal{A} = \{(\Sk, \St, \Se) : g(\Sk, \St, \Se) \leq \epsilon\}
+\end{equation}
+
+where $g$ is a geometric function and $\epsilon$ is the aperture width.
+
+In ternary representation, $\mathcal{A}$ induces a constraint on valid trit sequences:
+\begin{equation}
+\mathcal{C}_{\mathcal{A}}(\mathbf{t}) = \begin{cases}
+\text{valid} & \text{if } \exists i: C_{\trit_1 \cdots \trit_i} \cap \mathcal{A} \neq \emptyset \\
+\text{invalid} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\subsection{Aperture Traversal}
+
+Traversing an aperture is not ``passing through'' in time, but satisfying a geometric constraint. The trajectory \emph{includes} a segment compatible with the aperture topology.
+
+For enzymatic catalysis, the active site defines an aperture. Valid catalytic trajectories are those whose ternary representation includes trit patterns compatible with active site geometry.
+
+\subsection{Dimensionality Reduction}
+
+\begin{theorem}[Aperture Dimensionality]
+An aperture with width $\epsilon$ in one S-entropy dimension reduces the valid trajectory space from $3^k$ to $3^{k-j}$ where $j = \lceil \log_3(1/\epsilon) \rceil$.
+\end{theorem}
+
+Tight apertures ($\epsilon \to 0$) strongly constrain trajectories, potentially determining them uniquely from boundary conditions.
+
+%==============================================================================
+\section{Biochemical Validation}
+\label{sec:validation}
+%==============================================================================
+
+\subsection{Carbonic Anhydrase II Test Case}
+
+We validate against carbonic anhydrase II (CA II), whose catalytic trajectory we observed experimentally with $\dC = 1$ (single categorical transition)~\cite{Sachikonye2025b}.
+
+The aperture constraint is the Zn$^{2+}$ coordination sphere:
+\begin{equation}
+\mathcal{A}_{\text{CA II}} = \{(\Sk, \St, \Se) : r_{\text{Zn}} < 2.5 \text{ \AA}\}
+\end{equation}
+
+In ternary representation, this corresponds to:
+\begin{equation}
+\trit_j \trit_{j+1} \trit_{j+2} = 012 \quad \text{(zinc passage pattern)}
+\end{equation}
+
+\subsection{Trajectory Completion Results}
+
+Given:
+\begin{itemize}
+\item Initial state: CO$_2$ at $r = 5$ \AA{} ($\mathbf{t}_0 = 000\ldots$)
+\item Final state: HCO$_3^-$ at $r = 5$ \AA{} ($\mathbf{t}_f = 222\ldots$)
+\item Aperture constraint: $\mathcal{C}_{\mathcal{A}_{\text{CA II}}}$
+\end{itemize}
+
+Trajectory completion yields:
+\begin{equation}
+\mathbf{t}^* = 000 \cdots 012 \cdots 222
+\end{equation}
+
+The ``012'' pattern appears exactly once---corresponding to the single categorical transition ($\dC = 1$) through the active site.
+
+\subsection{Comparison to Forward Simulation}
+
+Forward molecular dynamics simulation of CA II catalysis:
+\begin{itemize}
+\item Timestep: 1 fs
+\item Trajectory: 100 ps
+\item Operations: $10^8$ force evaluations
+\item Ensemble: 1000 trajectories for statistics
+\item Total: $10^{11}$ floating-point operations
+\end{itemize}
+
+Trajectory completion:
+\begin{itemize}
+\item Precision: $k = 20$ trits (comparable resolution)
+\item Constraints: 3 (boundary $\times 2$ + aperture)
+\item Operations: $20 \times 3 = 60$ constraint checks
+\item Total: $O(100)$ operations
+\end{itemize}
+
+Speedup: $\sim 10^9$ times faster.
+
+The comparison is not entirely fair---forward simulation provides ensemble statistics while completion provides deterministic trajectories. But for questions about \emph{whether} a trajectory exists and \emph{what} it looks like, completion is vastly more efficient.
+
+%==============================================================================
+\section{Prototype Scripting Language}
+\label{sec:language}
+%==============================================================================
+
+\subsection{Language Design}
+
+We prototype a scripting language for Poincar\'{e} computing:
+
+\begin{verbatim}
+# Define S-entropy space
+space S = [0,1]^3
+
+# Define aperture constraint
+aperture CA_II {
+  geometry: tetrahedral
+  center: (0.5, 0.5, 0.5)
+  width: 0.01
+}
+
+# Define boundary conditions
+initial = (0.1, 0.1, 0.1)
+final = (0.9, 0.9, 0.9)
+
+# Complete trajectory
+trajectory = complete(
+  from: initial,
+  to: final,
+  through: CA_II,
+  precision: 20 trits
+)
+
+# Extract observables
+path_length = |trajectory|
+transitions = count(trajectory, pattern="012")
+\end{verbatim}
+
+\subsection{Semantics}
+
+The \texttt{complete} function invokes backward propagation:
+\begin{enumerate}
+\item Convert boundary conditions to trit strings
+\item Propagate aperture constraint to determine valid patterns
+\item Return the unique trajectory (or set of trajectories) satisfying all constraints
+\end{enumerate}
+
+\subsection{No Laws, Only Constraints}
+
+The language contains no dynamical laws---no force fields, no rate equations, no differential equations. Trajectories emerge from constraint satisfaction.
+
+This is not a limitation but a feature. Laws are \emph{derived} from constraints through the structure of S-entropy space. The Euler-Lagrange equations, for instance, express the constraint that trajectories are geodesics. Rather than solving the equations, we directly find the geodesics.
+
+%==============================================================================
+\section{Discussion}
+%==============================================================================
+
+\subsection{Relationship to Existing Paradigms}
+
+Poincar\'{e} computing relates to several existing approaches:
+
+\textbf{Constraint satisfaction programming} (CSP): Shares the constraint-based approach but operates on continuous S-entropy space rather than discrete variables.
+
+\textbf{Variational methods}: Shares the boundary-condition focus but uses ternary trajectories rather than functional optimization.
+
+\textbf{Bayesian inference}: Shares the backward reasoning but operates deterministically on categorical constraints rather than probabilistically on likelihoods.
+
+\textbf{Quantum computing}: Shares the superposition concept (multiple trajectories until measured) but requires no quantum hardware---the superposition is categorical, not physical.
+
+\subsection{The Wave-Particle Duality Analogy}
+
+The ternary position-trajectory duality mirrors quantum wave-particle duality:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{Quantum} & \textbf{Ternary} \\
+\midrule
+Extended & Wave & Trajectory \\
+Localized & Particle & Position \\
+Encoding & $\psi(\mathbf{x})$ & $\mathbf{t} = \trit_1 \cdots \trit_k$ \\
+Duality & Same entity & Same string \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Light is both wave and particle; a ternary string is both trajectory and position. The duality is not paradoxical but structural: different aspects of the same underlying entity.
+
+\subsection{Heat-Entropy Decoupling}
+
+Poincar\'{e} computing treats entropy as fundamental and heat as emergent:
+\begin{itemize}
+\item \textbf{Entropy}: Categorical property of S-entropy space; primary
+\item \textbf{Heat}: Statistical emergent from ensemble averaging; secondary
+\end{itemize}
+
+This inverts the traditional thermodynamic hierarchy and enables trajectory reasoning without thermal fluctuation modeling.
+
+\subsection{Limitations}
+
+Several limitations merit acknowledgment:
+
+\textbf{Constraint specification}: The framework requires explicit constraint formulation. For complex systems, deriving constraints from experimental data remains challenging.
+
+\textbf{Non-unique completion}: When constraints are loose, multiple trajectories satisfy them. The framework returns all valid trajectories but does not assign probabilities.
+
+\textbf{Interface with existing tools}: Integration with molecular dynamics packages, experimental analysis software, and existing computational infrastructure requires translation layers.
+
+%==============================================================================
+\section{Conclusion}
+%==============================================================================
+
+We have introduced Poincar\'{e} computing, a paradigm where trajectories are completed from constraints rather than simulated from laws. The key results:
+
+\textbf{(1) Position-trajectory duality}: Ternary strings encode both location (the cell addressed) and path (the sequence of refinements). The address IS the trajectory.
+
+\textbf{(2) Backward completion}: Trajectories are determined by propagating constraints backward from observations, with $O(k)$ complexity versus $O(e^{\lambda T})$ for forward simulation.
+
+\textbf{(3) Ternary operations}: \textsc{Project}, \textsc{Complete}, and \textsc{Compose} replace Boolean primitives, operating natively on three-dimensional S-entropy space.
+
+\textbf{(4) Categorical apertures}: Geometric constraints reduce trajectory space dimensionality, potentially determining trajectories uniquely from boundary conditions.
+
+\textbf{(5) Biochemical validation}: CA II catalytic trajectories emerge from aperture constraints with $10^9\times$ computational speedup versus molecular dynamics.
+
+\textbf{(6) No laws required}: The scripting language contains only constraint specifications; dynamics emerges from S-entropy geometry.
+
+Poincar\'{e} computing does not replace traditional simulation but complements it. For questions about trajectory existence and structure, constraint completion is vastly more efficient. For ensemble statistics and fluctuation dynamics, forward simulation remains necessary.
+
+The paradigm shift is conceptual: from ``How does the system evolve?'' to ``Which trajectories satisfy the constraints?'' This mirrors Poincar\'{e}'s original insight---that understanding comes from geometry, not calculation.
+
+\begin{acknowledgments}
+We thank the developers of the categorical aperture framework and the carbonic anhydrase validation protocol.
+\end{acknowledgments}
+
+\begin{thebibliography}{99}
+
+\bibitem{Poincare1890}
+H. Poincar\'{e}, ``Sur le probl\`{e}me des trois corps et les \'{e}quations de la dynamique,'' \textit{Acta Math.} \textbf{13}, 1--270 (1890).
+
+\bibitem{Sachikonye2025}
+K. F. Sachikonye, ``Ternary unit representation: From discrete trits to continuous S-entropy coordinates,'' (2025).
+
+\bibitem{Sachikonye2025b}
+K. F. Sachikonye, ``Direct observation of categorical aperture traversal in carbonic anhydrase II,'' (2025).
+
+\bibitem{VonNeumann1945}
+J. von Neumann, ``First draft of a report on the EDVAC,'' Technical Report, University of Pennsylvania (1945).
+
+\bibitem{Brusentsov1962}
+N. P. Brusentsov, ``An experience in the design of a ternary digital computer,'' \textit{Vestnik Moskovskogo Universiteta} (1962).
+
+\end{thebibliography}
+
+\end{document}

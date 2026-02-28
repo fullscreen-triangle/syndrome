@@ -1,0 +1,50 @@
+{
+  "panel": "Panel 5: Opacity-Independent Cellular Measurement",
+  "timestamp": "2026-02-04T13:08:26.311413",
+  "targets": {
+    "Surface receptor": {
+      "depth": 0,
+      "d_cat": 2,
+      "P_kinetic": 1.0,
+      "P_categorical": 0.8620689655172414,
+      "categorical_advantage": -0.13793103448275856
+    },
+    "Cytoplasmic enzyme": {
+      "depth": 10,
+      "d_cat": 3,
+      "P_kinetic": 0.6065306597126334,
+      "P_categorical": 0.7352941176470589,
+      "categorical_advantage": 0.12876345793442545
+    },
+    "Mitochondrial complex": {
+      "depth": 20,
+      "d_cat": 4,
+      "P_kinetic": 0.36787944117144233,
+      "P_categorical": 0.6097560975609756,
+      "categorical_advantage": 0.24187665638953326
+    },
+    "Nuclear protein": {
+      "depth": 50,
+      "d_cat": 5,
+      "P_kinetic": 0.0820849986238988,
+      "P_categorical": 0.5,
+      "categorical_advantage": 0.4179150013761012
+    },
+    "Deep tissue cell": {
+      "depth": 100,
+      "d_cat": 3,
+      "P_kinetic": 0.006737946999085467,
+      "P_categorical": 0.7352941176470589,
+      "categorical_advantage": 0.7285561706479734
+    }
+  },
+  "opacity_independence": {
+    "photon_decay": "P = exp(-tau)",
+    "categorical_decay": "P = 1/(1 + d_cat^2/d_0^2)",
+    "opacity_correlation": 0.0
+  },
+  "theorem_validation": {
+    "d_cat_perp_tau_optical": true,
+    "subsurface_accessible": true
+  }
+}

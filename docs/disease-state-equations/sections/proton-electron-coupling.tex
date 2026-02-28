@@ -1,0 +1,253 @@
+\section{Proton-Electron Coupling and Membrane Scaffolding}
+\label{sec:proton_electron_coupling}
+
+\subsection{Charge Balance in Disease States}
+
+Disease disrupts the genome-membrane circuit charge balance through altered electron cascade and proton transport dynamics.
+
+\begin{theorem}[Disease-Induced Charge Imbalance]
+\label{thm:disease_charge_imbalance}
+In disease state, charge balance fails:
+\begin{equation}
+I_{\text{H}^+}^{\text{disease}} \neq I_e^{\text{disease}} \implies \frac{dQ_{\text{genome}}}{dt} \neq 0
+\end{equation}
+leading to progressive charge depletion or accumulation.
+\end{theorem}
+
+\begin{proof}
+Healthy state maintains $I_{\text{H}^+} = I_e$ through coupled dynamics. Disease perturbs either electron cascade (hypoxia, metabolic dysfunction) or proton transport (transporter mutations, pH dysregulation). Imbalance causes $dQ/dt \neq 0$, driving $Q_{\text{genome}}(t)$ away from physiological setpoint. Sustained imbalance collapses circuit function.
+\end{proof}
+
+\begin{corollary}[Charge Depletion Timescale]
+\label{cor:charge_depletion}
+Without proton recharge, genome charge depletes with timescale:
+\begin{equation}
+\tau_{\text{depletion}} = \frac{|Q_0|}{|I_e|} \approx 1~\text{ms}
+\end{equation}
+for $Q_0 \approx 10^{-17}$ C and $I_e \approx 10^{-14}$ A.
+\end{corollary}
+
+\subsection{Membrane Composition Alterations in Disease}
+
+Disease modifies membrane lipid composition, disrupting electron transport scaffolding.
+
+\begin{theorem}[Disease-Induced Lipid Remodeling]
+\label{thm:disease_lipid_remodeling}
+Disease states exhibit characteristic lipid composition shifts:
+\begin{align}
+\text{Cancer:} &\quad \uparrow \text{PC}, \downarrow \text{PE} \implies \downarrow |\sigma_{\text{membrane}}| \\
+\text{Neurodegeneration:} &\quad \downarrow \text{PI}, \uparrow \text{oxidized lipids} \implies \downarrow \kappa \\
+\text{Mitochondrial disease:} &\quad \downarrow \text{CL} \implies \downarrow v_{\text{cascade}}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Cancer cells increase PC (structural stability for rapid division) at expense of PE (transporter function). Neurodegeneration involves PI depletion (signaling defects) and lipid oxidation (membrane rigidity). Mitochondrial diseases reduce CL (impaired electron transport). Each alteration disrupts specific circuit parameters: charge density $\sigma$, bending modulus $\kappa$, or cascade velocity $v$.
+\end{proof}
+
+\begin{corollary}[Circuit Resistance in Disease]
+\label{cor:disease_resistance}
+Disease-induced lipid changes alter circuit resistance:
+\begin{equation}
+R_{\text{disease}} = \frac{k_R}{|\sigma_{\text{disease}}|} > R_{\text{healthy}}
+\end{equation}
+when $|\sigma_{\text{disease}}| < |\sigma_{\text{healthy}}|$, slowing electron cascade and reducing circuit performance.
+\end{corollary}
+
+\subsection{Curvature Defects and Transporter Dysfunction}
+
+Altered spontaneous curvature impairs transporter assembly and function.
+
+\begin{theorem}[Curvature-Dependent Transporter Efficiency]
+\label{thm:curvature_transporter}
+Transporter efficiency $\eta_{\text{transport}}$ depends on curvature matching:
+\begin{equation}
+\eta_{\text{transport}} = \eta_0 \exp\left(-\frac{\kappa(C_{\text{membrane}} - C_{\text{protein}})^2}{2k_B T}\right)
+\end{equation}
+where $C_{\text{protein}}$ is the transporter's preferred curvature.
+\end{theorem}
+
+\begin{proof}
+Curvature mismatch creates energy penalty $\Delta E = \kappa(C_{\text{membrane}} - C_{\text{protein}})^2/2$. Boltzmann factor $\exp(-\Delta E/(k_B T))$ reduces transporter stability and function. Optimal efficiency requires $C_{\text{membrane}} \approx C_{\text{protein}}$.
+\end{proof}
+
+\begin{corollary}[PE Depletion Effects]
+\label{cor:pe_depletion}
+PE depletion reduces negative curvature ($C_0 \to 0$), impairing transporters that require $C_{\text{protein}} < 0$. Efficiency drops by factor:
+\begin{equation}
+\frac{\eta_{\text{PE-depleted}}}{\eta_{\text{normal}}} = \exp\left(-\frac{\kappa C_{\text{protein}}^2}{2k_B T}\right) \approx 0.1
+\end{equation}
+for $C_{\text{protein}} \approx -0.5$ nm$^{-1}$.
+\end{corollary}
+
+\subsection{Geometric Aperture Dysfunction}
+
+Disease can alter proton transporter aperture geometry, disrupting charge balance.
+
+\begin{theorem}[Mutation-Induced Aperture Changes]
+\label{thm:mutation_aperture}
+Transporter mutations modify aperture radius:
+\begin{equation}
+r_{\text{aperture}}^{\text{mutant}} = r_{\text{aperture}}^{\text{WT}} + \delta r
+\end{equation}
+where $\delta r$ depends on mutation type. Selectivity becomes:
+\begin{equation}
+P_{\text{passage}}^{\text{mutant}} = \left(\frac{r_{\text{particle}}}{r_{\text{aperture}}^{\text{WT}} + \delta r}\right)^2
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Amino acid substitutions in transporter pore region alter aperture geometry. Larger residues decrease $r_{\text{aperture}}$ ($\delta r < 0$), potentially blocking even H$^+$. Smaller residues increase $r_{\text{aperture}}$ ($\delta r > 0$), allowing passage of larger ions (loss of selectivity).
+\end{proof}
+
+\begin{corollary}[Proton Transport Deficiency]
+\label{cor:proton_deficiency}
+Aperture constriction ($\delta r < -0.5$ \AA) reduces proton flux:
+\begin{equation}
+\Phi_{\text{H}^+}^{\text{mutant}} = \Phi_{\text{H}^+}^{\text{WT}} \cdot \left(\frac{r_{\text{aperture}}^{\text{WT}} + \delta r}{r_{\text{aperture}}^{\text{WT}}}\right)^2
+\end{equation}
+causing charge imbalance and circuit dysfunction.
+\end{corollary}
+
+\subsection{Metabolic Cost Dysregulation}
+
+Disease alters the metabolic cost-benefit balance of lipid synthesis.
+
+\begin{theorem}[Disease-Induced Cost-Benefit Imbalance]
+\label{thm:disease_cost_benefit}
+In disease, the cost-benefit ratio becomes suboptimal:
+\begin{equation}
+\eta_{\text{disease}} = \frac{B_{\text{functional}}^{\text{disease}}}{\text{Cost}_{\text{ATP}}^{\text{disease}}} < \eta_{\text{healthy}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Disease increases ATP cost (metabolic stress) while reducing functional benefit (impaired membrane function). Cancer: high PC synthesis cost without proportional benefit. Mitochondrial disease: CL synthesis impaired, reducing benefit despite maintained cost. Both scenarios decrease $\eta$, creating metabolic burden.
+\end{proof}
+
+\begin{corollary}[Therapeutic Lipid Supplementation]
+\label{cor:therapeutic_lipid}
+Exogenous lipid supplementation can restore cost-benefit balance:
+\begin{equation}
+\eta_{\text{supplemented}} = \frac{B_{\text{functional}}^{\text{restored}}}{\text{Cost}_{\text{ATP}}^{\text{reduced}}} \to \eta_{\text{healthy}}
+\end{equation}
+by providing functional lipids (PE, CL) without cellular synthesis cost.
+\end{corollary}
+
+\subsection{Phase Behavior Disruption}
+
+Disease-induced phase transitions alter membrane dynamics.
+
+\begin{theorem}[Disease-Induced Phase Shift]
+\label{thm:disease_phase_shift}
+Disease modifies membrane order parameter:
+\begin{align}
+\text{Gel-like (} S \to 1 \text{):} &\quad \text{Lipid oxidation, cholesterol accumulation} \\
+\text{Fluid-like (} S \to 0 \text{):} &\quad \text{Lipid peroxidation, membrane disruption}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Oxidative stress creates oxidized lipids with altered phase behavior. Cholesterol accumulation (atherosclerosis) increases order ($S \uparrow$), rigidifying membrane. Severe oxidation disrupts packing, decreasing order ($S \downarrow$). Both extremes impair dynamics required for circuit function.
+\end{proof}
+
+\begin{corollary}[Optimal Fluidity Window]
+\label{cor:optimal_fluidity}
+Healthy membrane maintains $S \in [0.2, 0.3]$. Disease shifts $S$ outside this window:
+\begin{equation}
+S_{\text{disease}} \notin [0.2, 0.3] \implies \text{impaired dynamics}
+\end{equation}
+\end{corollary}
+
+\subsection{Cascade Velocity Alterations}
+
+Disease modifies electron cascade velocity through multiple mechanisms.
+
+\begin{theorem}[Disease-Dependent Cascade Velocity]
+\label{thm:disease_cascade_velocity}
+In disease, cascade velocity becomes:
+\begin{equation}
+v_{\text{cascade}}^{\text{disease}} = v_0 \left(1 + \beta |\sigma_{\text{disease}}|\right) \sqrt{\frac{T_{\text{disease}}}{T_0}} \cdot f_{\text{damage}}
+\end{equation}
+where $f_{\text{damage}} < 1$ accounts for oxidative damage, protein aggregation, etc.
+\end{theorem}
+
+\begin{proof}
+Disease affects all velocity determinants: (1) charge density $\sigma$ (lipid remodeling), (2) temperature $T$ (fever, hypothermia), (3) damage factor $f$ (oxidative stress, aggregates). Each factor multiplies, compounding velocity reduction.
+\end{proof}
+
+\begin{corollary}[Cumulative Velocity Deficit]
+\label{cor:cumulative_deficit}
+For cancer with $|\sigma| \downarrow 20\%$, $f_{\text{damage}} = 0.8$:
+\begin{equation}
+\frac{v_{\text{cancer}}}{v_{\text{healthy}}} \approx 0.64
+\end{equation}
+representing 36\% velocity reduction and corresponding circuit performance loss.
+\end{corollary}
+
+\subsection{Therapeutic Restoration Strategies}
+
+Therapeutic interventions can restore charge balance and membrane scaffolding.
+
+\begin{theorem}[Lipid Therapy Mechanism]
+\label{thm:lipid_therapy}
+Therapeutic lipid supplementation restores circuit parameters:
+\begin{equation}
+\sigma_{\text{therapy}} = \sigma_{\text{disease}} + \Delta \sigma_{\text{supplement}} \to \sigma_{\text{healthy}}
+\end{equation}
+where $\Delta \sigma_{\text{supplement}}$ depends on supplemented lipid type and incorporation efficiency.
+\end{theorem}
+
+\begin{proof}
+Exogenous PE or CL incorporation increases membrane charge density. Incorporation efficiency $\epsilon_{\text{incorp}}$ determines $\Delta \sigma = \epsilon_{\text{incorp}} \cdot \sigma_{\text{lipid}} \cdot f_{\text{fraction}}$ where $f_{\text{fraction}}$ is the fraction of membrane replaced. Sustained supplementation drives $\sigma_{\text{therapy}} \to \sigma_{\text{healthy}}$.
+\end{proof}
+
+\begin{corollary}[Combination Therapy]
+\label{cor:combination_therapy}
+Combining lipid supplementation with proton transporter enhancement synergistically restores charge balance:
+\begin{equation}
+\Delta Q_{\text{therapy}} = \Delta Q_{\text{lipid}} + \Delta Q_{\text{transporter}} + \Delta Q_{\text{synergy}}
+\end{equation}
+where $\Delta Q_{\text{synergy}} > 0$ represents positive interaction.
+\end{corollary}
+
+\subsection{Disease Progression and Circuit Failure}
+
+Progressive charge imbalance drives disease trajectory.
+
+\begin{theorem}[Circuit Failure Cascade]
+\label{thm:circuit_failure}
+Charge imbalance initiates positive feedback:
+\begin{equation}
+\Delta Q \to \Delta E \to \Delta v_{\text{cascade}} \to \Delta I_e \to \Delta Q
+\end{equation}
+accelerating circuit degradation.
+\end{theorem}
+
+\begin{proof}
+Initial charge imbalance $\Delta Q$ reduces electric field $E$. Lower $E$ decreases cascade velocity $v$, reducing electron current $I_e$. Reduced $I_e$ with unchanged proton flux $I_{\text{H}^+}$ worsens charge imbalance. Positive feedback amplifies initial perturbation, driving system toward failure.
+\end{proof}
+
+\begin{corollary}[Critical Charge Threshold]
+\label{cor:critical_threshold}
+Circuit failure occurs when:
+\begin{equation}
+|Q_{\text{genome}}| < Q_{\text{critical}} \approx 0.1 |Q_0|
+\end{equation}
+below which electric field insufficient to sustain cascade.
+\end{corollary}
+
+\begin{theorem}[Therapeutic Window]
+\label{thm:therapeutic_window}
+Intervention must occur before critical threshold:
+\begin{equation}
+|Q_{\text{genome}}| > Q_{\text{critical}} \implies \text{reversible}
+\end{equation}
+\begin{equation}
+|Q_{\text{genome}}| < Q_{\text{critical}} \implies \text{irreversible}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Above $Q_{\text{critical}}$, sufficient electric field remains to support cascade. Therapeutic restoration of charge balance can reverse trajectory. Below $Q_{\text{critical}}$, field too weak for cascade, positive feedback dominates, and intervention ineffective. Defines therapeutic window for charge-based interventions.
+\end{proof}

@@ -1,0 +1,39 @@
+{
+  "panel": "Panel 6: Disease Trajectory Simulations",
+  "timestamp": "2026-02-04T13:08:31.069977",
+  "trajectory_endpoints": {
+    "healthy": {
+      "Sk": 0.2,
+      "St": 0.3,
+      "Se": 0.2
+    },
+    "disease": {
+      "Sk": 0.6,
+      "St": 0.6,
+      "Se": 0.7
+    }
+  },
+  "coherence_evolution": {
+    "healthy_mean": 0.949564071958066,
+    "acute_min": 0.4500040160319997,
+    "chronic_final": 0.43120116994196755,
+    "progressive_final": 0.3494854691128702
+  },
+  "phase_lock_bandwidths": {
+    "healthy": 2.0,
+    "early": 1.5,
+    "moderate": 1.0,
+    "severe": 0.5,
+    "critical": 0.2
+  },
+  "bistable_fixed_points": {
+    "healthy_attractor": 0.9,
+    "threshold": 0.5,
+    "disease_attractor": 0.2
+  },
+  "theorem_validation": {
+    "disease_as_decoherence": true,
+    "bistable_transition": true,
+    "recovery_possible_above_threshold": true
+  }
+}

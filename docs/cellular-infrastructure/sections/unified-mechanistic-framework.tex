@@ -1,0 +1,149 @@
+\subsection{Partition Coordinates}
+
+From bounded phase space + categorical observation, partition coordinates $(n,\ell,m,s)$ emerge:
+\begin{align}
+n &\geq 1 \quad \text{(radial partition depth)} \\
+\ell &\in \{0, \ldots, n-1\} \quad \text{(angular complexity)} \\
+m &\in \{-\ell, \ldots, +\ell\} \quad \text{(orientation, } 2\ell+1 \text{ values)} \\
+s &\in \{\pm 1/2\} \quad \text{(chirality)}
+\end{align}
+
+Capacity: $2n^2$ (generates periodic table, electron shells, nucleotide states).
+
+\subsection{Categorical Dynamics}
+
+Replace temporal derivatives with categorical derivatives:
+\begin{equation}
+\frac{\partial f}{\partial t} \to \frac{\partial f}{\partial C}
+\end{equation}
+where $C$ is category index.
+
+\begin{definition}[Categorical Evolution Equation]
+\label{def:categorical_evolution}
+\begin{equation}
+\frac{\partial \Psi}{\partial C} = \hat{H}_{\text{cat}} \Psi
+\end{equation}
+where $\hat{H}_{\text{cat}}$ is categorical Hamiltonian.
+\end{definition}
+
+Memory reset at category boundaries: previous states don't influence future—only current categorical position matters.
+
+\subsection{Oxygen as Computational Substrate}
+
+Paramagnetic O$_2$ provides:
+\begin{itemize}
+\item High oscillatory information density ($\sim 10^{11}$ Hz)
+\item Ubiquitous in aerobic cells
+\item Phase reference for all oscillators
+\item Enzymatic turnover rates = harmonics of O$_2$ frequency
+\end{itemize}
+
+\subsection{Enzymatic Catalysis as Categorical Aperture Selection}
+
+\begin{theorem}[Enzyme as Geometric Aperture]
+\label{thm:enzyme_aperture}
+Enzymes provide geometric aperture connecting substrate and product S-entropy coordinates:
+\begin{equation}
+k_{\text{cat}} = \omega_0 \exp\left(-\frac{\Delta S}{k_B}\right)
+\end{equation}
+where $\Delta S$ is categorical distance, $\omega_0$ is attempt frequency.
+\end{theorem}
+
+\begin{proof}
+Substrate occupies coordinate $\mathbf{S}_{\text{sub}}$, product occupies $\mathbf{S}_{\text{prod}}$. Direct transition requires traversing S-distance:
+\begin{equation}
+\Delta S_{\text{direct}} = |\mathbf{S}_{\text{prod}} - \mathbf{S}_{\text{sub}}|
+\end{equation}
+
+Enzyme provides alternative pathway with shorter categorical distance $\Delta S_{\text{cat}} < \Delta S_{\text{direct}}$. Transition rate:
+\begin{equation}
+k = \omega_0 \exp(-\Delta S_{\text{cat}}/k_B)
+\end{equation}
+
+Turnover number:
+\begin{equation}
+k_{\text{cat}} = k = \omega_0 \exp(-\Delta S_{\text{cat}}/k_B)
+\end{equation}
+
+Specificity emerges from aperture geometry: only substrates with coordinates near $\mathbf{S}_{\text{sub}}$ can enter aperture. No "lock-and-key" required—purely geometric selection.
+\end{proof}
+
+\subsection{Protein Folding as ATP-Driven Frequency Scanning}
+
+\begin{theorem}[Folding Through Frequency Matching]
+\label{thm:protein_folding}
+Native protein state corresponds to frequency match with cellular oscillators:
+\begin{equation}
+\omega_{\text{protein}} = n \omega_{\text{O}_2}
+\end{equation}
+where $n$ is integer harmonic number.
+\end{theorem}
+
+\begin{proof}
+Unfolded protein: high $\Se$ (many configurations). Folded protein: low $\Se$ (unique minimum). ATP hydrolysis provides energy for frequency scan across harmonics of O$_2$ oscillation. Native state = frequency match (phase-lock with cellular oscillators).
+
+Folding time:
+\begin{equation}
+\tau_{\text{fold}} = \frac{N_{\text{harmonics}}}{\omega_{\text{O}_2}} = \frac{10^3}{10^{11}} = 10^{-8} \text{ s}
+\end{equation}
+
+For 100-residue protein with $\sim 10^3$ accessible harmonics. Observed folding times $\sim 10^{-3}$--$1$ s reflect multiple ATP cycles and conformational sampling.
+\end{proof}
+
+\subsection{Membrane Transport as Categorical Maxwell Demons}
+
+\begin{theorem}[Frequency-Based Selectivity]
+\label{thm:membrane_selectivity}
+Ion channels achieve selectivity through frequency matching:
+\begin{equation}
+P_{\text{transport}} \propto \delta(\omega_{\text{ion}} - \omega_{\text{channel}})
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Ion with oscillation frequency $\omega_{\text{ion}}$ can traverse channel only if frequency matches channel resonance $\omega_{\text{channel}}$. Selectivity:
+\begin{equation}
+S = \frac{P_{\text{select}}}{P_{\text{non-select}}} = \frac{\delta\omega_{\text{channel}}}{\Delta\omega_{\text{ion}}}
+\end{equation}
+
+For $\delta\omega/\omega \sim 10^{-3}$ (channel bandwidth), $\Delta\omega/\omega \sim 1$ (ion frequency range):
+\begin{equation}
+S \sim 10^3
+\end{equation}
+
+Explains K$^+$ channel selectivity ($\sim 10^4$) without invoking dehydration energy or pore size.
+\end{proof}
+
+\subsection{Gene Expression as Charge Distribution Modulation}
+
+Chromatin state = charge distribution pattern. Transcription factors = charge redistributors. Gene "on/off" = local electromagnetic field geometry.
+
+\begin{theorem}[Field-Determined Expression]
+\label{thm:field_expression}
+Gene expression rate determined by local field magnitude:
+\begin{equation}
+r_{\text{transcribe}} = r_0 \exp\left(-\frac{|q\phi|}{k_B T}\right)
+\end{equation}
+where $\phi$ is local potential, $q$ is effective charge.
+\end{theorem}
+
+\subsection{Thirteen Coupled Coordinate Systems}
+
+Complete cellular state requires coupling:
+\begin{enumerate}
+\item Partition coordinates $(n,\ell,m,s)$
+\item S-entropy coordinates $(\Sk,\St,\Se)$
+\item Ternary encoding (trit sequences)
+\item Thermodynamic state $(P,V,T,S)$
+\item Transport coefficients $(\mu,\rho,D,\kappa)$
+\item Categorical distance $\Delta S$
+\item Enzymatic aperture geometry
+\item Metabolic GPS (O$_2$ triangulation)
+\item Poincaré trajectory completion
+\item Protein folding coordinates
+\item Membrane transport flux
+\item Categorical thermometry
+\item Quintupartite virtual microscopy
+\end{enumerate}
+
+All coupled through oscillator phase-locking with coupling time $\tau_c \sim 10^{-12}$ s.

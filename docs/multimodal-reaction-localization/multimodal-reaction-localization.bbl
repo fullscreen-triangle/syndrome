@@ -1,0 +1,146 @@
+\begin{thebibliography}{24}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Berg(1993)]{berg1993random}
+Howard~C Berg.
+\newblock \emph{Random Walks in Biology}.
+\newblock Princeton University Press, 1993.
+
+\bibitem[Elf et~al.(2007)Elf, Li, and Bhatt]{elf2007probing}
+Johan Elf, Gene-Wei Li, and Sunney Bhatt.
+\newblock Probing transcription factor dynamics at the single-molecule level in
+  a living cell.
+\newblock \emph{Science}, 316\penalty0 (5828):\penalty0 1191--1194, 2007.
+
+\bibitem[Srere(1987)]{srere1987complexes}
+Paul~A Srere.
+\newblock Complexes of sequential metabolic enzymes.
+\newblock \emph{Annual Review of Biochemistry}, 56\penalty0 (1):\penalty0
+  89--124, 1987.
+
+\bibitem[Sachikonye(2025{\natexlab{a}})]{Sachikonye2025_CellularState}
+Kundai~Farai Sachikonye.
+\newblock Complete cellular state determination from exhaustive trajectory
+  exploration at trans-planckian temporal resolution.
+\newblock In preparation, 2025{\natexlab{a}}.
+
+\bibitem[Sachikonye(2025{\natexlab{b}})]{Sachikonye2025_Observation}
+Kundai~Farai Sachikonye.
+\newblock Observational partition algebra: Unification of measurement, process,
+  and computation in cellular systems.
+\newblock In preparation, 2025{\natexlab{b}}.
+
+\bibitem[Sachikonye(2025{\natexlab{c}})]{Sachikonye2025_PartitionEquations}
+Kundai~Farai Sachikonye.
+\newblock On the consequences of charge distribution and geometric
+  transformation in dynamic colloid compositions.
+\newblock In preparation, 2025{\natexlab{c}}.
+
+\bibitem[Crank(1979)]{crank1979mathematics}
+John Crank.
+\newblock \emph{The Mathematics of Diffusion}.
+\newblock Oxford University Press, 2nd edition, 1979.
+
+\bibitem[Duck(1990)]{duck1990physical}
+Francis~A Duck.
+\newblock Physical properties of tissue: A comprehensive reference book.
+\newblock 1990.
+
+\bibitem[Greenspan(1957)]{greenspan1957propagation}
+Martin Greenspan.
+\newblock Propagation of sound in five monatomic gases.
+\newblock \emph{Journal of the Acoustical Society of America}, 28\penalty0
+  (4):\penalty0 644--648, 1957.
+
+\bibitem[Kreith et~al.(2010)Kreith, Manglik, and Bohn]{kreith2010principles}
+Frank Kreith, Raj~M Manglik, and Mark~S Bohn.
+\newblock \emph{Principles of Heat Transfer}.
+\newblock Cengage Learning, 2010.
+
+\bibitem[Baffou and Quidant(2014)]{baffou2014applications}
+Guillaume Baffou and Romain Quidant.
+\newblock Applications and challenges of thermoplasmonics.
+\newblock \emph{Nature Materials}, 13\penalty0 (5):\penalty0 451--460, 2014.
+
+\bibitem[Israelachvili(2011)]{israelachvili2011intermolecular}
+Jacob~N Israelachvili.
+\newblock \emph{Intermolecular and Surface Forces}.
+\newblock Academic Press, 3rd edition, 2011.
+
+\bibitem[Netz(2003)]{netz2003electrostatistics}
+Roland~R Netz.
+\newblock Electrostatistics of counter-ions at and between planar charged
+  walls: From poisson-boltzmann to the strong-coupling theory.
+\newblock \emph{European Physical Journal E}, 5\penalty0 (5):\penalty0
+  557--574, 2003.
+
+\bibitem[Stuart(2004)]{stuart2004infrared}
+Barbara~H Stuart.
+\newblock \emph{Infrared Spectroscopy: Fundamentals and Applications}.
+\newblock John Wiley \& Sons, 2004.
+
+\bibitem[Barth(2007)]{barth2007infrared}
+Andreas Barth.
+\newblock Infrared spectroscopy of proteins.
+\newblock \emph{Biochimica et Biophysica Acta (BBA)-Bioenergetics},
+  1767\penalty0 (9):\penalty0 1073--1101, 2007.
+
+\bibitem[Fang(1990)]{fang2008simple}
+Bertrand~T Fang.
+\newblock Simple solutions for hyperbolic and related position fixes.
+\newblock \emph{IEEE Transactions on Aerospace and Electronic Systems},
+  26\penalty0 (5):\penalty0 748--753, 1990.
+
+\bibitem[Chan and Ho(1994)]{chan1994simple}
+Y~T Chan and K~C Ho.
+\newblock A simple and efficient estimator for hyperbolic location.
+\newblock \emph{IEEE Transactions on Signal Processing}, 42\penalty0
+  (8):\penalty0 1905--1915, 1994.
+
+\bibitem[Betzig et~al.(2006)Betzig, Patterson, Sougrat,
+  et~al.]{betzig2006imaging}
+Eric Betzig, George~H Patterson, Rachid Sougrat, et~al.
+\newblock Imaging intracellular fluorescent proteins at nanometer resolution.
+\newblock \emph{Science}, 313\penalty0 (5793):\penalty0 1642--1645, 2006.
+
+\bibitem[Xie and Lu(1999)]{xie1998single}
+X~Sunney Xie and H~Peter Lu.
+\newblock Single-molecule enzymology.
+\newblock \emph{Journal of Biological Chemistry}, 274\penalty0 (23):\penalty0
+  15967--15970, 1999.
+
+\bibitem[English et~al.(2011)]{english2011single}
+Brian~P English et~al.
+\newblock Single-molecule investigations of the stringent response machinery in
+  living bacterial cells.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 108\penalty0
+  (31):\penalty0 E365--E373, 2011.
+
+\bibitem[Sweetlove and Fernie(2018)]{sweetlove2008role}
+Lee~J Sweetlove and Alisdair~R Fernie.
+\newblock The role of dynamic enzyme assemblies and substrate channelling in
+  metabolic regulation.
+\newblock \emph{Nature Communications}, 9\penalty0 (1):\penalty0 2136, 2018.
+
+\bibitem[Turing(1952)]{turing1952chemical}
+Alan~M Turing.
+\newblock The chemical basis of morphogenesis.
+\newblock \emph{Philosophical Transactions of the Royal Society B},
+  237\penalty0 (641):\penalty0 37--72, 1952.
+
+\bibitem[Murray(2002)]{murray2002mathematical}
+James~D Murray.
+\newblock \emph{Mathematical Biology I: An Introduction}.
+\newblock Springer, 3rd edition, 2002.
+
+\bibitem[Hell and Wichmann(1994)]{hell1994breaking}
+Stefan~W Hell and Jan Wichmann.
+\newblock Breaking the diffraction resolution limit by stimulated emission:
+  stimulated-emission-depletion fluorescence microscopy.
+\newblock \emph{Optics Letters}, 19\penalty0 (11):\penalty0 780--782, 1994.
+
+\end{thebibliography}

@@ -1,0 +1,23 @@
+{
+  "validation_suite": "Cellular Partition Language (CPL)",
+  "timestamp": "2026-02-04T13:09:07.523202",
+  "charts_generated": 8,
+  "3d_charts": [
+    "chart1_sentropy_3d",
+    "chart7_phaselock_3d"
+  ],
+  "output_directory": "c:/Users/kundai/Documents/biology/hegel/wilhelm/publications/observation-equations/validation",
+  "fundamental_constants": {
+    "e": 1.602176634e-19,
+    "hbar": 1.054571817e-34,
+    "kB": 1.380649e-23,
+    "c": 299792458,
+    "h": 6.62607015e-34
+  },
+  "key_equations": {
+    "partition_capacity": "C(n) = 2n^2",
+    "universal_coherence": "eta = (Pi_obs - Pi_deg)/(Pi_opt - Pi_deg)",
+    "cellular_coherence": "eta_cell = (1/W) sum_i w_i eta_i",
+    "disease_classification": "Class = argmax_i D_i"
+  }
+}
