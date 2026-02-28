@@ -1,0 +1,28 @@
+[package]
+name = "syndrome"
+version = "0.1.0"
+edition = "2021"
+authors = ["Kundai Farai Sachikonye <kundai.sachikonye@wzw.tum.de>"]
+description = "Categorical Resolution of Disease Trajectories through Partition Geometry and Oscillator Coherence"
+license = "MIT"
+repository = "https://github.com/kundai/syndrome"
+keywords = ["biology", "disease", "coherence", "partition", "trajectory"]
+categories = ["science", "simulation"]
+
+[dependencies]
+nalgebra = "0.32"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = "0.8"
+
+[dev-dependencies]
+approx = "0.5"
+
+[lib]
+name = "syndrome"
+path = "src/lib.rs"
+
+[[bin]]
+name = "syndrome-cli"
+path = "src/main.rs"
