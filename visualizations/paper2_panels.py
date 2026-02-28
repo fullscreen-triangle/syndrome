@@ -429,8 +429,293 @@ def panel_5_thermodynamic():
     return fig
 
 
+def panel_6_oxygen_charge():
+    """
+    Panel 6: Oxygen and Circuit Charge Dynamics
+    - A: Oxygen master clock harmonics
+    - B: 3D phase-locked oscillator network
+    - C: Plasma coupling parameter effects
+    - D: Circuit charge distribution
+    """
+    fig = plt.figure(figsize=(16, 4))
+
+    # A: Oxygen master clock harmonics
+    ax1 = fig.add_subplot(1, 4, 1)
+    omega_O2 = 1.0  # Normalized master frequency
+    N = 12  # Number of harmonic channels
+    harmonics = np.arange(1, N + 1) / N * omega_O2
+
+    # Cellular process frequencies that phase-lock to harmonics
+    np.random.seed(42)
+    n_processes = 50
+    natural_freqs = np.random.uniform(0.05, 1.0, n_processes)
+    locked_freqs = np.array([harmonics[np.argmin(np.abs(harmonics - f))] for f in natural_freqs])
+
+    ax1.scatter(natural_freqs, locked_freqs, alpha=0.6, s=40, c='steelblue', label='Processes')
+    for h in harmonics:
+        ax1.axhline(h, color='red', alpha=0.3, linewidth=1)
+    ax1.plot([0, 1], [0, 1], 'k--', alpha=0.3, label='ω=ω_nat')
+    ax1.set_xlabel('ω_nat / ω_O₂', fontsize=12)
+    ax1.set_ylabel('ω_locked / ω_O₂', fontsize=12)
+    ax1.set_title('A', fontsize=14, fontweight='bold', loc='left')
+    ax1.legend(fontsize=9)
+    ax1.grid(True, alpha=0.3)
+    ax1.set_xlim(0, 1)
+    ax1.set_ylim(0, 1)
+
+    # B: 3D phase-locked oscillator network
+    ax2 = fig.add_subplot(1, 4, 2, projection='3d')
+
+    # Create oscillator network
+    n_osc = 30
+    np.random.seed(123)
+    theta = np.random.uniform(0, 2*np.pi, n_osc)  # Phase
+    r = np.random.uniform(0.3, 1.0, n_osc)  # Amplitude
+    freq = np.random.choice(harmonics, n_osc)  # Locked frequency
+
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    z = freq
+
+    # Color by frequency
+    colors = plt.cm.plasma(freq / max(freq))
+    ax2.scatter(x, y, z, c=colors, s=50, alpha=0.8)
+
+    # Draw connections for nearby oscillators
+    for i in range(n_osc):
+        for j in range(i+1, n_osc):
+            if abs(freq[i] - freq[j]) < 0.1:  # Same harmonic
+                ax2.plot([x[i], x[j]], [y[i], y[j]], [z[i], z[j]],
+                        'gray', alpha=0.2, linewidth=0.5)
+
+    ax2.set_xlabel('Re(z)', fontsize=10)
+    ax2.set_ylabel('Im(z)', fontsize=10)
+    ax2.set_zlabel('ω/ω_O₂', fontsize=10)
+    ax2.set_title('B', fontsize=14, fontweight='bold', loc='left')
+
+    # C: Plasma coupling parameter effects
+    ax3 = fig.add_subplot(1, 4, 3)
+    Gamma = np.linspace(0, 2, 100)  # Coulomb coupling parameter
+
+    # Structure factor S = 1 - Γ/3 (weakly coupled)
+    S_plasma = np.maximum(1 - Gamma/3, 0)
+
+    # Compressibility Z = PV/NkT
+    Z_ideal = np.ones_like(Gamma)
+    Z_plasma = S_plasma
+
+    ax3.plot(Gamma, Z_ideal, 'b--', linewidth=2, label='Ideal (Z=1)')
+    ax3.plot(Gamma, Z_plasma, 'r-', linewidth=2.5, label='Plasma')
+    ax3.fill_between(Gamma, Z_plasma, Z_ideal, alpha=0.3, color='red')
+    ax3.axvline(1, color='gray', linestyle=':', alpha=0.5)
+    ax3.text(1.05, 0.9, 'Γ=1', fontsize=10)
+    ax3.set_xlabel('Γ (Coupling)', fontsize=12)
+    ax3.set_ylabel('Z = PV/NkT', fontsize=12)
+    ax3.set_title('C', fontsize=14, fontweight='bold', loc='left')
+    ax3.legend()
+    ax3.grid(True, alpha=0.3)
+    ax3.set_xlim(0, 2)
+    ax3.set_ylim(0, 1.2)
+
+    # D: Circuit charge distribution (membrane potential dynamics)
+    ax4 = fig.add_subplot(1, 4, 4)
+
+    # Membrane circuit: capacitor discharge/recharge cycles
+    t = np.linspace(0, 50, 500)
+    V_rest = -70  # mV
+    V_threshold = -55  # mV
+    V_peak = 30  # mV
+
+    # Generate action potential train
+    V = np.zeros_like(t)
+    spike_times = [5, 15, 25, 35, 45]
+    tau_rise = 0.5
+    tau_fall = 2.0
+
+    for spike_t in spike_times:
+        mask_rise = (t >= spike_t) & (t < spike_t + 1)
+        mask_fall = (t >= spike_t + 1) & (t < spike_t + 10)
+        V[mask_rise] += (V_peak - V_rest) * (1 - np.exp(-(t[mask_rise] - spike_t) / tau_rise))
+        V[mask_fall] += (V_peak - V_rest) * np.exp(-(t[mask_fall] - spike_t - 1) / tau_fall)
+
+    V += V_rest
+    V = np.clip(V, V_rest - 10, V_peak + 10)
+
+    # Charge Q = C*V (normalized)
+    C_membrane = 1.0  # μF/cm²
+    Q = C_membrane * (V - V_rest) / (V_peak - V_rest)
+
+    ax4.plot(t, Q, 'purple', linewidth=1.5)
+    ax4.fill_between(t, 0, Q, alpha=0.3, color='purple')
+    ax4.axhline(0, color='gray', linestyle='--', alpha=0.5)
+    ax4.axhline(1, color='red', linestyle=':', alpha=0.5, label='Peak')
+    ax4.set_xlabel('Time (ms)', fontsize=12)
+    ax4.set_ylabel('Q/Q_max', fontsize=12)
+    ax4.set_title('D', fontsize=14, fontweight='bold', loc='left')
+    ax4.legend(fontsize=9)
+    ax4.grid(True, alpha=0.3)
+    ax4.set_xlim(0, 50)
+
+    plt.tight_layout()
+    return fig
+
+
+def panel_7_disease_taxonomy():
+    """
+    Panel 7: Disease Taxonomy
+    - A: Eight oscillator class disease indices
+    - B: 3D disease taxonomy clusters
+    - C: Disease co-occurrence matrix
+    - D: Taxonomic classification tree
+    """
+    fig = plt.figure(figsize=(16, 4))
+
+    # Disease class definitions
+    classes = ['P', 'E', 'C', 'M', 'A', 'G', 'Ca', 'R']
+    class_names = ['Misfolding', 'Metabolic', 'Channelo-\npathy', 'Excitability',
+                   'Mito-\nchondrial', 'Expression', 'Signaling', 'Rhythm']
+
+    # A: Eight oscillator class disease indices (stacked bar)
+    ax1 = fig.add_subplot(1, 4, 1)
+
+    # Example disease profiles
+    diseases = {
+        "Alzheimer's": [0.85, 0.25, 0.15, 0.30, 0.35, 0.20, 0.25, 0.15],
+        "Diabetes": [0.15, 0.80, 0.20, 0.25, 0.40, 0.30, 0.35, 0.20],
+        "Epilepsy": [0.20, 0.25, 0.45, 0.85, 0.30, 0.25, 0.40, 0.30],
+        "MELAS": [0.30, 0.45, 0.25, 0.35, 0.90, 0.40, 0.35, 0.25],
+    }
+
+    x = np.arange(len(classes))
+    width = 0.2
+    colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3']
+
+    for i, (disease, values) in enumerate(diseases.items()):
+        ax1.bar(x + i*width, values, width, label=disease, color=colors[i], alpha=0.8)
+
+    ax1.set_xlabel('Oscillator Class', fontsize=11)
+    ax1.set_ylabel('Disease Index D', fontsize=12)
+    ax1.set_xticks(x + width * 1.5)
+    ax1.set_xticklabels(classes, fontsize=10)
+    ax1.set_title('A', fontsize=14, fontweight='bold', loc='left')
+    ax1.legend(fontsize=8, loc='upper right')
+    ax1.grid(True, alpha=0.3, axis='y')
+    ax1.set_ylim(0, 1)
+
+    # B: 3D disease taxonomy clusters
+    ax2 = fig.add_subplot(1, 4, 2, projection='3d')
+
+    np.random.seed(42)
+    # Generate clustered disease samples for different categories
+    cluster_centers = {
+        'Misfolding': (0.8, 0.2, 0.2),
+        'Metabolic': (0.2, 0.8, 0.3),
+        'Channelopathy': (0.3, 0.3, 0.7),
+        'Mitochondrial': (0.5, 0.6, 0.6),
+    }
+    cluster_colors = ['red', 'blue', 'green', 'purple']
+
+    for (name, center), color in zip(cluster_centers.items(), cluster_colors):
+        n_samples = 25
+        samples = np.random.multivariate_normal(
+            center,
+            np.eye(3) * 0.01,
+            n_samples
+        )
+        samples = np.clip(samples, 0, 1)
+        ax2.scatter(samples[:, 0], samples[:, 1], samples[:, 2],
+                   c=color, s=30, alpha=0.6, label=name)
+
+    ax2.set_xlabel('D_P', fontsize=10)
+    ax2.set_ylabel('D_E', fontsize=10)
+    ax2.set_zlabel('D_C', fontsize=10)
+    ax2.set_title('B', fontsize=14, fontweight='bold', loc='left')
+    ax2.legend(fontsize=7, loc='upper left')
+
+    # C: Disease co-occurrence matrix
+    ax3 = fig.add_subplot(1, 4, 3)
+
+    # Co-occurrence probability (diseases affecting multiple systems)
+    np.random.seed(456)
+    cooccur = np.eye(8) * 0.9  # Diagonal = self
+
+    # Add off-diagonal correlations (biological coupling)
+    coupling = [
+        (0, 4, 0.6),  # P-A: misfolding-mitochondrial
+        (1, 4, 0.7),  # E-A: metabolic-mitochondrial
+        (2, 3, 0.65), # C-M: channel-membrane
+        (3, 6, 0.55), # M-Ca: membrane-calcium
+        (5, 7, 0.5),  # G-R: expression-rhythm
+        (4, 5, 0.45), # A-G: mitochondrial-expression
+        (1, 5, 0.5),  # E-G: metabolic-expression
+    ]
+
+    for i, j, val in coupling:
+        cooccur[i, j] = val
+        cooccur[j, i] = val
+
+    # Add small random correlations
+    cooccur += np.random.rand(8, 8) * 0.15
+    cooccur = np.minimum(cooccur, 1.0)
+    np.fill_diagonal(cooccur, 1.0)
+
+    im = ax3.imshow(cooccur, cmap='YlOrRd', vmin=0, vmax=1)
+    plt.colorbar(im, ax=ax3, label='Co-occurrence')
+    ax3.set_xticks(range(8))
+    ax3.set_yticks(range(8))
+    ax3.set_xticklabels(classes, fontsize=9)
+    ax3.set_yticklabels(classes, fontsize=9)
+    ax3.set_title('C', fontsize=14, fontweight='bold', loc='left')
+
+    # D: Taxonomic classification (severity vs specificity)
+    ax4 = fig.add_subplot(1, 4, 4)
+
+    # Disease taxonomy: severity (y) vs specificity (x)
+    # Specificity = how focused on one oscillator class
+    # Severity = total disease burden
+
+    disease_data = {
+        "Alzheimer's": (0.85, 0.70, 'P'),
+        "Parkinson's": (0.80, 0.65, 'P'),
+        "Diabetes T2": (0.65, 0.55, 'E'),
+        "Cystic Fibrosis": (0.90, 0.75, 'C'),
+        "Epilepsy": (0.75, 0.60, 'M'),
+        "MELAS": (0.60, 0.80, 'A'),
+        "Cancer": (0.40, 0.90, 'G'),
+        "Insomnia": (0.85, 0.40, 'R'),
+    }
+
+    colors_map = {'P': 'red', 'E': 'blue', 'C': 'green', 'M': 'orange',
+                  'A': 'purple', 'G': 'brown', 'Ca': 'pink', 'R': 'gray'}
+
+    for disease, (spec, sev, cls) in disease_data.items():
+        ax4.scatter(spec, sev, c=colors_map[cls], s=100, alpha=0.7, edgecolors='black')
+        ax4.annotate(disease, (spec, sev), fontsize=7,
+                    xytext=(5, 5), textcoords='offset points')
+
+    # Add quadrant lines
+    ax4.axvline(0.65, color='gray', linestyle='--', alpha=0.4)
+    ax4.axhline(0.65, color='gray', linestyle='--', alpha=0.4)
+
+    # Quadrant labels
+    ax4.text(0.3, 0.85, 'Systemic\nSevere', fontsize=8, ha='center', alpha=0.6)
+    ax4.text(0.85, 0.85, 'Focal\nSevere', fontsize=8, ha='center', alpha=0.6)
+    ax4.text(0.3, 0.45, 'Systemic\nMild', fontsize=8, ha='center', alpha=0.6)
+    ax4.text(0.85, 0.45, 'Focal\nMild', fontsize=8, ha='center', alpha=0.6)
+
+    ax4.set_xlabel('Specificity', fontsize=12)
+    ax4.set_ylabel('Severity', fontsize=12)
+    ax4.set_title('D', fontsize=14, fontweight='bold', loc='left')
+    ax4.grid(True, alpha=0.3)
+    ax4.set_xlim(0.2, 1)
+    ax4.set_ylim(0.3, 1)
+
+    plt.tight_layout()
+    return fig
+
+
 def generate_all_panels():
-    """Generate all 5 panels for paper 2."""
+    """Generate all 7 panels for paper 2."""
     output_dir = ensure_output_dir()
 
     panels = [
@@ -439,6 +724,8 @@ def generate_all_panels():
         ('panel3_address_resolution.pdf', panel_3_address_resolution),
         ('panel4_coherence_disease.pdf', panel_4_coherence_disease),
         ('panel5_thermodynamic.pdf', panel_5_thermodynamic),
+        ('panel6_oxygen_charge.pdf', panel_6_oxygen_charge),
+        ('panel7_disease_taxonomy.pdf', panel_7_disease_taxonomy),
     ]
 
     for filename, panel_func in panels:
