@@ -1,0 +1,335 @@
+{
+  "name": "Trajectory",
+  "passed": 16,
+  "failed": 0,
+  "total": 16,
+  "pass_rate": 1.0,
+  "timestamp": "2026-02-28T16:45:03.303990",
+  "results": [
+    {
+      "name": "address_resolution_empty",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 0.5,
+      "actual": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "address": [],
+        "interpretation": "Empty → midpoint"
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "address_resolution_zero",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 0.0,
+      "actual": 0.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "address": [
+          0
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "address_resolution_two",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 0.6666666666666666,
+      "actual": 0.6666666666666666,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "address": [
+          2
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "address_resolution_multi_digit",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 0.4444444444444444,
+      "actual": 0.4444444444444444,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "address": [
+          1,
+          1
+        ],
+        "calculation": "1/3 + 1/9 = 4/9"
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "address_resolution_range_scaling",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 13.333333333333332,
+      "actual": 13.333333333333332,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "address": [
+          1
+        ],
+        "range": [
+          10.0,
+          20.0
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "address_precision_scaling",
+      "category": "trajectory",
+      "passed": true,
+      "expected": "precision(d) = 1/3^d",
+      "actual": [
+        {
+          "depth": 1,
+          "expected": 0.3333333333333333,
+          "actual": 0.3333333333333333,
+          "match": true
+        },
+        {
+          "depth": 2,
+          "expected": 0.1111111111111111,
+          "actual": 0.1111111111111111,
+          "match": true
+        },
+        {
+          "depth": 3,
+          "expected": 0.037037037037037035,
+          "actual": 0.037037037037037035,
+          "match": true
+        },
+        {
+          "depth": 4,
+          "expected": 0.012345679012345678,
+          "actual": 0.012345679012345678,
+          "match": true
+        },
+        {
+          "depth": 5,
+          "expected": 0.00411522633744856,
+          "actual": 0.00411522633744856,
+          "match": true
+        },
+        {
+          "depth": 6,
+          "expected": 0.0013717421124828531,
+          "actual": 0.0013717421124828531,
+          "match": true
+        },
+        {
+          "depth": 7,
+          "expected": 0.0004572473708276177,
+          "actual": 0.0004572473708276177,
+          "match": true
+        }
+      ],
+      "error": 0.0,
+      "tolerance": 1e-15,
+      "details": {
+        "formula": "precision = 1 / 3^depth",
+        "interpretation": "Exponential refinement with ternary addresses"
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "complete_boundary_conditions",
+      "category": "trajectory",
+      "passed": true,
+      "expected": "Initial and final states preserved",
+      "actual": {
+        "initial_match": true,
+        "final_match": true,
+        "trajectory_initial": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "trajectory_final": [
+          0.8,
+          0.7,
+          0.6
+        ]
+      },
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "initial": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "final": [
+          0.8,
+          0.7,
+          0.6
+        ],
+        "n_points": 50
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "constraint_bounded_valid",
+      "category": "trajectory",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "points_range": [
+          0.1,
+          0.9
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "constraint_bounded_invalid",
+      "category": "trajectory",
+      "passed": true,
+      "expected": false,
+      "actual": false,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "out_of_bounds_value": 1.5
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "constraint_smooth_parabolic",
+      "category": "trajectory",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "trajectory_type": "parabolic"
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "constraint_monotonic_increasing",
+      "category": "trajectory",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "dimension": 0,
+        "direction": "increasing"
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "constraint_energy_satisfied",
+      "category": "trajectory",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "max_total_change": 1.0
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "trajectory_duration",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "times": [
+          0.0,
+          0.2,
+          0.4,
+          0.6,
+          0.8,
+          1.0
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "trajectory_arc_length",
+      "category": "trajectory",
+      "passed": true,
+      "expected": 1.4913591357920932,
+      "actual": 1.4913591357920932,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "n_segments": 5
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "trajectory_endpoint_states",
+      "category": "trajectory",
+      "passed": true,
+      "expected": "Endpoints match trajectory bounds",
+      "actual": {
+        "initial": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final": [
+          1.0,
+          0.8,
+          0.7
+        ]
+      },
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {},
+      "timestamp": "2026-02-28T16:45:03.303990"
+    },
+    {
+      "name": "trajectory_interpolation",
+      "category": "trajectory",
+      "passed": true,
+      "expected": "Linear interpolation with boundary clamping",
+      "actual": {
+        "mid_match": true,
+        "start_match": true,
+        "end_match": true,
+        "before_clamped": true,
+        "after_clamped": true
+      },
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "midpoint_state": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "expected_midpoint": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.303990"
+    }
+  ]
+}

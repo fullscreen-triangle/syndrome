@@ -1,0 +1,17 @@
+suite,test_name,category,passed,expected,actual,error,tolerance,timestamp
+Trajectory,address_resolution_empty,trajectory,True,0.5,0.5,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,address_resolution_zero,trajectory,True,0.0,0.0,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,address_resolution_two,trajectory,True,0.6666666666666666,0.6666666666666666,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,address_resolution_multi_digit,trajectory,True,0.4444444444444444,0.4444444444444444,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,address_resolution_range_scaling,trajectory,True,13.333333333333332,13.333333333333332,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,address_precision_scaling,trajectory,True,precision(d) = 1/3^d,"[{'depth': 1, 'expected': 0.3333333333333333, 'actual': 0.3333333333333333, 'match': True}, {'depth': 2, 'expected': 0.1111111111111111, 'actual': 0.1111111111111111, 'match': True}, {'depth': 3, 'expected': 0.037037037037037035, 'actual': 0.037037037037037035, 'match': True}, {'depth': 4, 'expected': 0.012345679012345678, 'actual': 0.012345679012345678, 'match': True}, {'depth': 5, 'expected': 0.00411522633744856, 'actual': 0.00411522633744856, 'match': True}, {'depth': 6, 'expected': 0.0013717421124828531, 'actual': 0.0013717421124828531, 'match': True}, {'depth': 7, 'expected': 0.0004572473708276177, 'actual': 0.0004572473708276177, 'match': True}]",0.0,1e-15,2026-02-28T16:45:03.303990
+Trajectory,complete_boundary_conditions,trajectory,True,Initial and final states preserved,"{'initial_match': True, 'final_match': True, 'trajectory_initial': (0.1, 0.2, 0.3), 'trajectory_final': (0.8, 0.7, 0.6)}",0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,constraint_bounded_valid,trajectory,True,True,True,0.0,0.0,2026-02-28T16:45:03.303990
+Trajectory,constraint_bounded_invalid,trajectory,True,False,False,0.0,0.0,2026-02-28T16:45:03.303990
+Trajectory,constraint_smooth_parabolic,trajectory,True,True,True,0.0,0.0,2026-02-28T16:45:03.303990
+Trajectory,constraint_monotonic_increasing,trajectory,True,True,True,0.0,0.0,2026-02-28T16:45:03.303990
+Trajectory,constraint_energy_satisfied,trajectory,True,True,True,0.0,0.0,2026-02-28T16:45:03.303990
+Trajectory,trajectory_duration,trajectory,True,1.0,1.0,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,trajectory_arc_length,trajectory,True,1.4913591357920932,1.4913591357920932,0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,trajectory_endpoint_states,trajectory,True,Endpoints match trajectory bounds,"{'initial': (0.0, 0.0, 0.0), 'final': (1.0, 0.8, 0.7)}",0.0,1e-10,2026-02-28T16:45:03.303990
+Trajectory,trajectory_interpolation,trajectory,True,Linear interpolation with boundary clamping,"{'mid_match': True, 'start_match': True, 'end_match': True, 'before_clamped': True, 'after_clamped': True}",0.0,1e-10,2026-02-28T16:45:03.303990

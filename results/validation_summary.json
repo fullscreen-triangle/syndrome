@@ -1,0 +1,1848 @@
+{
+  "timestamp": "2026-02-28T16:45:02.422157",
+  "total_tests": 73,
+  "total_passed": 73,
+  "total_failed": 0,
+  "overall_pass_rate": 1.0,
+  "categories": {
+    "Partition": {
+      "name": "Partition",
+      "passed": 9,
+      "failed": 0,
+      "total": 9,
+      "pass_rate": 1.0,
+      "timestamp": "2026-02-28T16:45:02.422157",
+      "results": [
+        {
+          "name": "partition_capacity_formula",
+          "category": "partition",
+          "passed": true,
+          "expected": "C(n) = 2n\u00b2 for all n",
+          "actual": "Formula verified",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "test_cases": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                8
+              ],
+              [
+                3,
+                18
+              ],
+              [
+                4,
+                32
+              ],
+              [
+                5,
+                50
+              ],
+              [
+                6,
+                72
+              ],
+              [
+                7,
+                98
+              ]
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "electron_shell_correspondence",
+          "category": "partition",
+          "passed": true,
+          "expected": [
+            2,
+            8,
+            18,
+            32,
+            50,
+            72,
+            98
+          ],
+          "actual": [
+            2,
+            8,
+            18,
+            32,
+            50,
+            72,
+            98
+          ],
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "interpretation": "Partition capacity matches atomic electron shell capacities",
+            "significance": "Geometric necessity, not coincidence"
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "enumeration_count",
+          "category": "partition",
+          "passed": true,
+          "expected": "len(enumerate_partition_states(n)) == C(n)",
+          "actual": "Verified",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "n=1": {
+              "expected": 2,
+              "actual": 2
+            },
+            "n=2": {
+              "expected": 8,
+              "actual": 8
+            },
+            "n=3": {
+              "expected": 18,
+              "actual": 18
+            },
+            "n=4": {
+              "expected": 32,
+              "actual": 32
+            },
+            "n=5": {
+              "expected": 50,
+              "actual": 50
+            }
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "metric_non_negativity",
+          "category": "partition",
+          "passed": true,
+          "expected": "d(x,y) >= 0 and d(x,x) = 0",
+          "actual": "d(s1,s2)=1.4142, d(s1,s1)=0.0000",
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "d12": 1.4142135623730951,
+            "d11": 0.0
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "metric_symmetry",
+          "category": "partition",
+          "passed": true,
+          "expected": "d(x,y) = d(y,x)",
+          "actual": "d(s1,s2)=1.414214, d(s2,s1)=1.414214",
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "d12": 1.4142135623730951,
+            "d21": 1.4142135623730951,
+            "difference": 0.0
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "metric_triangle_inequality",
+          "category": "partition",
+          "passed": true,
+          "expected": "d(x,z) <= d(x,y) + d(y,z)",
+          "actual": "d(s1,s3)=1.7321 <= 1.4142 + 2.6458 = 4.0600",
+          "error": 0,
+          "tolerance": 1e-10,
+          "details": {
+            "d12": 1.4142135623730951,
+            "d23": 2.6457513110645907,
+            "d13": 1.7320508075688772,
+            "sum": 4.059964873437686
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "address_resolution_accuracy",
+          "category": "partition",
+          "passed": true,
+          "expected": "Error < 1.69e-05 (theoretical precision)",
+          "actual": "Max error: 1.69e-05",
+          "error": 1.6935087808533922e-05,
+          "tolerance": 3.387017561686057e-05,
+          "details": {
+            "test_values": [
+              0.0,
+              0.25,
+              0.333,
+              0.5,
+              0.667,
+              0.75,
+              1.0
+            ],
+            "depth": 10,
+            "theoretical_precision": 1.6935087808430286e-05
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "ternary_structure",
+          "category": "partition",
+          "passed": true,
+          "expected": "address [1,1,1] -> ~0.4815",
+          "actual": "Computed: 0.4815",
+          "error": 0.0,
+          "tolerance": 0.01,
+          "details": {
+            "address": [
+              1,
+              1,
+              1
+            ],
+            "value": 0.48148148148148145
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        },
+        {
+          "name": "coordinate_constraints",
+          "category": "partition",
+          "passed": true,
+          "expected": "Valid coords accepted, invalid coords rejected",
+          "actual": "Valid: 4/4, Invalid rejected: 4/4",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "valid_coords": [
+              [
+                1,
+                0,
+                0,
+                0.5
+              ],
+              [
+                2,
+                1,
+                -1,
+                -0.5
+              ],
+              [
+                3,
+                2,
+                2,
+                0.5
+              ],
+              [
+                5,
+                4,
+                -4,
+                -0.5
+              ]
+            ],
+            "invalid_coords": [
+              [
+                0,
+                0,
+                0,
+                0.5
+              ],
+              [
+                2,
+                2,
+                0,
+                0.5
+              ],
+              [
+                3,
+                1,
+                2,
+                0.5
+              ],
+              [
+                2,
+                1,
+                0,
+                0.3
+              ]
+            ],
+            "valid_accepted": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "invalid_rejected": [
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.422157"
+        }
+      ]
+    },
+    "Coherence": {
+      "name": "Coherence",
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "pass_rate": 1.0,
+      "timestamp": "2026-02-28T16:45:02.435690",
+      "results": [
+        {
+          "name": "universal_coherence_standard",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.8,
+          "actual": 0.8,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "pi_obs": 0.8,
+            "pi_opt": 1.0,
+            "pi_deg": 0.0
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "universal_coherence_inverse",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.75,
+          "actual": 0.75,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "k_obs": 13,
+            "k_opt": 12,
+            "k_deg": 16,
+            "interpretation": "Lower is better (folding cycles)"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "universal_coherence_midpoint",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.5,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "pi_obs": 0.5,
+            "pi_opt": 1.0,
+            "pi_deg": 0.0
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "coherence_boundary_conditions",
+          "category": "coherence",
+          "passed": true,
+          "expected": "\u03b7=1 at optimal, \u03b7=0 at degraded",
+          "actual": [
+            [
+              "optimal",
+              1.0,
+              1.0
+            ],
+            [
+              "degraded",
+              0.0,
+              0.0
+            ],
+            [
+              "inverse_optimal",
+              1.0,
+              1.0
+            ],
+            [
+              "inverse_degraded",
+              0.0,
+              0.0
+            ]
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "test_cases": [
+              [
+                "optimal",
+                1.0,
+                1.0
+              ],
+              [
+                "degraded",
+                0.0,
+                0.0
+              ],
+              [
+                "inverse_optimal",
+                1.0,
+                1.0
+              ],
+              [
+                "inverse_degraded",
+                0.0,
+                0.0
+              ]
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "coherence_monotonicity",
+          "category": "coherence",
+          "passed": true,
+          "expected": "Coherence increases monotonically with performance",
+          "actual": "All differences >= 0: True",
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "pi_values": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "coherences": [
+              0.0,
+              0.1,
+              0.2,
+              0.30000000000000004,
+              0.4,
+              0.5,
+              0.6000000000000001,
+              0.7000000000000001,
+              0.8,
+              0.9,
+              1.0
+            ],
+            "differences": [
+              0.1,
+              0.1,
+              0.10000000000000003,
+              0.09999999999999998,
+              0.09999999999999998,
+              0.10000000000000009,
+              0.09999999999999998,
+              0.09999999999999998,
+              0.09999999999999998,
+              0.09999999999999998
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "protein_folding_coherence",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.75,
+          "actual": 0.75,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "k_obs": 13,
+            "k_min": 12,
+            "k_max": 16,
+            "interpretation": "75% coherence at 13 cycles"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "enzyme_turnover_coherence",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.1,
+          "actual": 0.1,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "k_cat_obs": 100000.0,
+            "k_cat_max": 1000000.0,
+            "interpretation": "10% of maximum turnover"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "channel_open_probability_coherence",
+          "category": "coherence",
+          "passed": true,
+          "expected": 1.0,
+          "actual": 1.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "p_o_obs": 0.5,
+            "p_o_opt": 0.5,
+            "interpretation": "At optimal open probability"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "membrane_amplitude_coherence",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.8,
+          "actual": 0.8,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "delta_v_obs": 80.0,
+            "delta_v_max": 100.0
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "circadian_period_coherence",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.9,
+          "actual": 0.9,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "sigma_t": 2.4,
+            "t_0": 24.0,
+            "interpretation": "10% period variation"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "cellular_coherence_weighted",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.6375,
+          "actual": 0.6375,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "oscillator_coherences": [
+              0.75,
+              0.5,
+              0.8
+            ],
+            "weights": [
+              1.0,
+              2.0,
+              1.0
+            ],
+            "formula": "\u03b7_cell = \u03a3(w_i * \u03b7_i) / \u03a3(w_i)"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "therapeutic_efficacy_calculation",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.4999999999999999,
+          "error": 1.1102230246251565e-16,
+          "tolerance": 1e-10,
+          "details": {
+            "eta_untreated": 0.4,
+            "eta_treated": 0.7,
+            "eta_healthy": 1.0,
+            "interpretation": "50% of coherence gap closed"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "predicted_coherence_after_treatment",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.65,
+          "actual": 0.6499999999999999,
+          "error": 1.1102230246251565e-16,
+          "tolerance": 1e-10,
+          "details": {
+            "eta_untreated": 0.3,
+            "efficacy": 0.5,
+            "formula": "\u03b7_treated = \u03b7_untreated + E(1 - \u03b7_untreated)"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        },
+        {
+          "name": "efficacy_prediction_consistency",
+          "category": "coherence",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.49999999999999994,
+          "error": 5.551115123125783e-17,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Efficacy recovered from predicted coherence matches original"
+          },
+          "timestamp": "2026-02-28T16:45:02.436213"
+        }
+      ]
+    },
+    "Disease": {
+      "name": "Disease",
+      "passed": 20,
+      "failed": 0,
+      "total": 20,
+      "pass_rate": 1.0,
+      "timestamp": "2026-02-28T16:45:02.447540",
+      "results": [
+        {
+          "name": "disease_vector_protein_class",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.25,
+          "actual": 0.25,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "oscillator": "P",
+            "coherence": 0.75
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "disease_vector_enzyme_class",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.5,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "oscillator": "E",
+            "coherence": 0.5
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "disease_vector_weighted_aggregation",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.33333333333333337,
+          "actual": 0.33333333333333337,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "weights": [
+              2.0,
+              1.0
+            ],
+            "coherences": [
+              0.6,
+              0.8
+            ],
+            "interpretation": "Weighted average of coherences"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_P",
+          "category": "disease",
+          "passed": true,
+          "expected": "P",
+          "actual": "P",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Misfolding"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_E",
+          "category": "disease",
+          "passed": true,
+          "expected": "E",
+          "actual": "E",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Metabolic"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_C",
+          "category": "disease",
+          "passed": true,
+          "expected": "C",
+          "actual": "C",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Channelopathy"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_M",
+          "category": "disease",
+          "passed": true,
+          "expected": "M",
+          "actual": "M",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Excitability"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_A",
+          "category": "disease",
+          "passed": true,
+          "expected": "A",
+          "actual": "A",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Mitochondrial"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_G",
+          "category": "disease",
+          "passed": true,
+          "expected": "G",
+          "actual": "G",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Expression"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_Ca",
+          "category": "disease",
+          "passed": true,
+          "expected": "Ca",
+          "actual": "Ca",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Signaling"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "classification_dominant_R",
+          "category": "disease",
+          "passed": true,
+          "expected": "R",
+          "actual": "R",
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dominant_value": 0.9,
+            "background_value": 0.1,
+            "class_name": "Rhythm"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "severity_uniform",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.5,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "All classes at 50% disease index"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "severity_weighted",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.5333333333333333,
+          "actual": 0.5333333333333333,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "weights": [
+              8.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "severity_healthy_zero",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Healthy state has zero severity"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "healthy_vector_all_zeros",
+          "category": "disease",
+          "passed": true,
+          "expected": "All disease indices = 0",
+          "actual": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Healthy = full coherence = zero disease"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "disease_vector_bounds",
+          "category": "disease",
+          "passed": true,
+          "expected": "D_i in [0, 1] for all i",
+          "actual": [
+            [
+              0.0,
+              "valid",
+              true
+            ],
+            [
+              0.5,
+              "valid",
+              true
+            ],
+            [
+              1.0,
+              "valid",
+              true
+            ],
+            [
+              -0.1,
+              "correctly_rejected",
+              true
+            ],
+            [
+              1.1,
+              "correctly_rejected",
+              true
+            ]
+          ],
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "test_cases": [
+              [
+                0.0,
+                "valid",
+                true
+              ],
+              [
+                0.5,
+                "valid",
+                true
+              ],
+              [
+                1.0,
+                "valid",
+                true
+              ],
+              [
+                -0.1,
+                "correctly_rejected",
+                true
+              ],
+              [
+                1.1,
+                "correctly_rejected",
+                true
+              ]
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "signature_distance_self_zero",
+          "category": "disease",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Distance to self is zero"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "signature_distance_symmetry",
+          "category": "disease",
+          "passed": true,
+          "expected": "d(D1, D2) = d(D2, D1)",
+          "actual": {
+            "d12": 0.8544003745317532,
+            "d21": 0.8544003745317532
+          },
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Distance is symmetric"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "signature_distance_triangle",
+          "category": "disease",
+          "passed": true,
+          "expected": "d(D1, D3) <= d(D1, D2) + d(D2, D3)",
+          "actual": {
+            "d13": 0.7810249675906654,
+            "d12": 0.8544003745317532,
+            "d23": 0.4472135954999578,
+            "sum": 1.301613970031711
+          },
+          "error": 0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Triangle inequality holds"
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        },
+        {
+          "name": "disease_profile_generation",
+          "category": "disease",
+          "passed": true,
+          "expected": "Generated profiles classify to intended dominant class",
+          "actual": [
+            {
+              "class": "P",
+              "dominant_value": 0.8,
+              "classified_as": "P",
+              "match": true
+            },
+            {
+              "class": "E",
+              "dominant_value": 0.8,
+              "classified_as": "E",
+              "match": true
+            },
+            {
+              "class": "C",
+              "dominant_value": 0.8,
+              "classified_as": "C",
+              "match": true
+            },
+            {
+              "class": "M",
+              "dominant_value": 0.8,
+              "classified_as": "M",
+              "match": true
+            },
+            {
+              "class": "A",
+              "dominant_value": 0.8,
+              "classified_as": "A",
+              "match": true
+            },
+            {
+              "class": "G",
+              "dominant_value": 0.8,
+              "classified_as": "G",
+              "match": true
+            },
+            {
+              "class": "Ca",
+              "dominant_value": 0.8,
+              "classified_as": "Ca",
+              "match": true
+            },
+            {
+              "class": "R",
+              "dominant_value": 0.8,
+              "classified_as": "R",
+              "match": true
+            }
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "severity": 0.8,
+            "spread": 0.1
+          },
+          "timestamp": "2026-02-28T16:45:02.447540"
+        }
+      ]
+    },
+    "Trajectory": {
+      "name": "Trajectory",
+      "passed": 16,
+      "failed": 0,
+      "total": 16,
+      "pass_rate": 1.0,
+      "timestamp": "2026-02-28T16:45:03.303990",
+      "results": [
+        {
+          "name": "address_resolution_empty",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 0.5,
+          "actual": 0.5,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "address": [],
+            "interpretation": "Empty \u2192 midpoint"
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "address_resolution_zero",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "address": [
+              0
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "address_resolution_two",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 0.6666666666666666,
+          "actual": 0.6666666666666666,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "address": [
+              2
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "address_resolution_multi_digit",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 0.4444444444444444,
+          "actual": 0.4444444444444444,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "address": [
+              1,
+              1
+            ],
+            "calculation": "1/3 + 1/9 = 4/9"
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "address_resolution_range_scaling",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 13.333333333333332,
+          "actual": 13.333333333333332,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "address": [
+              1
+            ],
+            "range": [
+              10.0,
+              20.0
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "address_precision_scaling",
+          "category": "trajectory",
+          "passed": true,
+          "expected": "precision(d) = 1/3^d",
+          "actual": [
+            {
+              "depth": 1,
+              "expected": 0.3333333333333333,
+              "actual": 0.3333333333333333,
+              "match": true
+            },
+            {
+              "depth": 2,
+              "expected": 0.1111111111111111,
+              "actual": 0.1111111111111111,
+              "match": true
+            },
+            {
+              "depth": 3,
+              "expected": 0.037037037037037035,
+              "actual": 0.037037037037037035,
+              "match": true
+            },
+            {
+              "depth": 4,
+              "expected": 0.012345679012345678,
+              "actual": 0.012345679012345678,
+              "match": true
+            },
+            {
+              "depth": 5,
+              "expected": 0.00411522633744856,
+              "actual": 0.00411522633744856,
+              "match": true
+            },
+            {
+              "depth": 6,
+              "expected": 0.0013717421124828531,
+              "actual": 0.0013717421124828531,
+              "match": true
+            },
+            {
+              "depth": 7,
+              "expected": 0.0004572473708276177,
+              "actual": 0.0004572473708276177,
+              "match": true
+            }
+          ],
+          "error": 0.0,
+          "tolerance": 1e-15,
+          "details": {
+            "formula": "precision = 1 / 3^depth",
+            "interpretation": "Exponential refinement with ternary addresses"
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "complete_boundary_conditions",
+          "category": "trajectory",
+          "passed": true,
+          "expected": "Initial and final states preserved",
+          "actual": {
+            "initial_match": true,
+            "final_match": true,
+            "trajectory_initial": [
+              0.1,
+              0.2,
+              0.3
+            ],
+            "trajectory_final": [
+              0.8,
+              0.7,
+              0.6
+            ]
+          },
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "initial": [
+              0.1,
+              0.2,
+              0.3
+            ],
+            "final": [
+              0.8,
+              0.7,
+              0.6
+            ],
+            "n_points": 50
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "constraint_bounded_valid",
+          "category": "trajectory",
+          "passed": true,
+          "expected": true,
+          "actual": true,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "points_range": [
+              0.1,
+              0.9
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "constraint_bounded_invalid",
+          "category": "trajectory",
+          "passed": true,
+          "expected": false,
+          "actual": false,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "out_of_bounds_value": 1.5
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "constraint_smooth_parabolic",
+          "category": "trajectory",
+          "passed": true,
+          "expected": true,
+          "actual": true,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "trajectory_type": "parabolic"
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "constraint_monotonic_increasing",
+          "category": "trajectory",
+          "passed": true,
+          "expected": true,
+          "actual": true,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "dimension": 0,
+            "direction": "increasing"
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "constraint_energy_satisfied",
+          "category": "trajectory",
+          "passed": true,
+          "expected": true,
+          "actual": true,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "max_total_change": 1.0
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "trajectory_duration",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 1.0,
+          "actual": 1.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "times": [
+              0.0,
+              0.2,
+              0.4,
+              0.6,
+              0.8,
+              1.0
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "trajectory_arc_length",
+          "category": "trajectory",
+          "passed": true,
+          "expected": 1.4913591357920932,
+          "actual": 1.4913591357920932,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "n_segments": 5
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "trajectory_endpoint_states",
+          "category": "trajectory",
+          "passed": true,
+          "expected": "Endpoints match trajectory bounds",
+          "actual": {
+            "initial": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final": [
+              1.0,
+              0.8,
+              0.7
+            ]
+          },
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {},
+          "timestamp": "2026-02-28T16:45:03.303990"
+        },
+        {
+          "name": "trajectory_interpolation",
+          "category": "trajectory",
+          "passed": true,
+          "expected": "Linear interpolation with boundary clamping",
+          "actual": {
+            "mid_match": true,
+            "start_match": true,
+            "end_match": true,
+            "before_clamped": true,
+            "after_clamped": true
+          },
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "midpoint_state": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "expected_midpoint": [
+              0.5,
+              0.5,
+              0.5
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.303990"
+        }
+      ]
+    },
+    "Thermodynamic": {
+      "name": "Thermodynamic",
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "pass_rate": 1.0,
+      "timestamp": "2026-02-28T16:45:03.321281",
+      "results": [
+        {
+          "name": "s_entropy_bounds",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "S_k, S_t, S_e in [0, 1]",
+          "actual": [
+            {
+              "coords": [
+                0,
+                0,
+                0
+              ],
+              "status": "valid",
+              "passed": true
+            },
+            {
+              "coords": [
+                1,
+                1,
+                1
+              ],
+              "status": "valid",
+              "passed": true
+            },
+            {
+              "coords": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "status": "valid",
+              "passed": true
+            },
+            {
+              "coords": [
+                0,
+                0.5,
+                1
+              ],
+              "status": "valid",
+              "passed": true
+            },
+            {
+              "coords": [
+                -0.1,
+                0.5,
+                0.5
+              ],
+              "status": "correctly_rejected",
+              "passed": true
+            },
+            {
+              "coords": [
+                0.5,
+                1.1,
+                0.5
+              ],
+              "status": "correctly_rejected",
+              "passed": true
+            },
+            {
+              "coords": [
+                0.5,
+                0.5,
+                -0.5
+              ],
+              "status": "correctly_rejected",
+              "passed": true
+            }
+          ],
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "interpretation": "S-entropy space is unit cube [0,1]^3"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_distance_non_negative",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "d >= 0",
+          "actual": 0.5196152422706631,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {},
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_distance_identity",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "d(p, p) = 0"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_distance_symmetry",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "d(p1, p2) = d(p2, p1)",
+          "actual": {
+            "d12": 0.5196152422706631,
+            "d21": 0.5196152422706631
+          },
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {},
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_distance_triangle",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "d(p1, p3) <= d(p1, p2) + d(p2, p3)",
+          "actual": {
+            "d13": 0.640312423743285,
+            "d12": 0.5196152422706631,
+            "d23": 0.6164414002968976,
+            "sum": 1.136056642567561
+          },
+          "error": 0,
+          "tolerance": 1e-10,
+          "details": {},
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_uniform_distribution",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": 1.0,
+          "actual": 0.9999999999999998,
+          "error": 2.220446049250313e-16,
+          "tolerance": 1e-10,
+          "details": {
+            "n": 10,
+            "interpretation": "Uniform \u2192 max entropy"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_delta_distribution",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": 0.0,
+          "actual": -0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Single certain outcome \u2192 zero entropy"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_binary_distribution",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": 1.0,
+          "actual": 1.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "interpretation": "Fair coin \u2192 max binary entropy"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_intermediate",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "0 < S < 1",
+          "actual": 0.46899559358928117,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "distribution": [
+              0.9,
+              0.1
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_normalization",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "actual": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "raw_values": [
+              50.0,
+              100.0,
+              75.0
+            ],
+            "bounds": [
+              [
+                0.0,
+                100.0
+              ],
+              [
+                0.0,
+                200.0
+              ],
+              [
+                50.0,
+                100.0
+              ]
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "s_entropy_interpolation",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "Linear interpolation: p(t) = (1-t)*p1 + t*p2",
+          "actual": [
+            {
+              "t": 0.0,
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "passed": true
+            },
+            {
+              "t": 0.25,
+              "expected": [
+                0.25,
+                0.25,
+                0.25
+              ],
+              "actual": [
+                0.25,
+                0.25,
+                0.25
+              ],
+              "passed": true
+            },
+            {
+              "t": 0.5,
+              "expected": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "actual": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "passed": true
+            },
+            {
+              "t": 0.75,
+              "expected": [
+                0.75,
+                0.75,
+                0.75
+              ],
+              "actual": [
+                0.75,
+                0.75,
+                0.75
+              ],
+              "passed": true
+            },
+            {
+              "t": 1.0,
+              "expected": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "actual": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "passed": true
+            }
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "p1": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "p2": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_estimation_ordering",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "Ordered trajectory has lower entropy than random",
+          "actual": {
+            "ordered_entropy": 0.7354771018126174,
+            "random_entropy": 1.3541184956421062
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "ordered_components": [
+              0.3333333333333333,
+              0.5901443518880597,
+              0.28556102695255525
+            ],
+            "random_components": [
+              0.6626529333911468,
+              0.9384723796315171,
+              0.7167967513716191
+            ]
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "partition_thermodynamic_connection",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "C(n) = 2n^2, entropy increases with n",
+          "actual": {
+            "test_cases": [
+              {
+                "n": 1,
+                "capacity": 2,
+                "expected": 2,
+                "entropy_proxy": 0.6931471805599453,
+                "match": true
+              },
+              {
+                "n": 2,
+                "capacity": 8,
+                "expected": 8,
+                "entropy_proxy": 2.0794415416798357,
+                "match": true
+              },
+              {
+                "n": 3,
+                "capacity": 18,
+                "expected": 18,
+                "entropy_proxy": 2.8903717578961645,
+                "match": true
+              },
+              {
+                "n": 4,
+                "capacity": 32,
+                "expected": 32,
+                "entropy_proxy": 3.4657359027997265,
+                "match": true
+              },
+              {
+                "n": 5,
+                "capacity": 50,
+                "expected": 50,
+                "entropy_proxy": 3.912023005428146,
+                "match": true
+              },
+              {
+                "n": 6,
+                "capacity": 72,
+                "expected": 72,
+                "entropy_proxy": 4.276666119016055,
+                "match": true
+              },
+              {
+                "n": 7,
+                "capacity": 98,
+                "expected": 98,
+                "entropy_proxy": 4.584967478670572,
+                "match": true
+              }
+            ],
+            "entropy_increasing": true
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "formula": "S = kB * M * ln(n), where M = C(n) = 2n^2",
+            "interpretation": "Partition geometry encodes thermodynamic states"
+          },
+          "timestamp": "2026-02-28T16:45:03.321281"
+        },
+        {
+          "name": "entropy_aggregations",
+          "category": "thermodynamic",
+          "passed": true,
+          "expected": "Total = ||S||, Mean = (S_k + S_t + S_e)/3",
+          "actual": [
+            {
+              "point": [
+                0.3,
+                0.4,
+                0.5
+              ],
+              "total": {
+                "expected": 0.7071067811865476,
+                "actual": 0.7071067811865476,
+                "match": true
+              },
+              "mean": {
+                "expected": 0.39999999999999997,
+                "actual": 0.39999999999999997,
+                "match": true
+              }
+            },
+            {
+              "point": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "total": {
+                "expected": 0.0,
+                "actual": 0.0,
+                "match": true
+              },
+              "mean": {
+                "expected": 0.0,
+                "actual": 0.0,
+                "match": true
+              }
+            },
+            {
+              "point": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "total": {
+                "expected": 1.7320508075688772,
+                "actual": 1.7320508075688772,
+                "match": true
+              },
+              "mean": {
+                "expected": 1.0,
+                "actual": 1.0,
+                "match": true
+              }
+            },
+            {
+              "point": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "total": {
+                "expected": 0.8660254037844386,
+                "actual": 0.8660254037844386,
+                "match": true
+              },
+              "mean": {
+                "expected": 0.5,
+                "actual": 0.5,
+                "match": true
+              }
+            }
+          ],
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {},
+          "timestamp": "2026-02-28T16:45:03.321281"
+        }
+      ]
+    }
+  }
+}

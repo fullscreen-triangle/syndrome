@@ -1,0 +1,303 @@
+{
+  "name": "Coherence",
+  "passed": 14,
+  "failed": 0,
+  "total": 14,
+  "pass_rate": 1.0,
+  "timestamp": "2026-02-28T16:45:02.435690",
+  "results": [
+    {
+      "name": "universal_coherence_standard",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.8,
+      "actual": 0.8,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "pi_obs": 0.8,
+        "pi_opt": 1.0,
+        "pi_deg": 0.0
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "universal_coherence_inverse",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.75,
+      "actual": 0.75,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "k_obs": 13,
+        "k_opt": 12,
+        "k_deg": 16,
+        "interpretation": "Lower is better (folding cycles)"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "universal_coherence_midpoint",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.5,
+      "actual": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "pi_obs": 0.5,
+        "pi_opt": 1.0,
+        "pi_deg": 0.0
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "coherence_boundary_conditions",
+      "category": "coherence",
+      "passed": true,
+      "expected": "η=1 at optimal, η=0 at degraded",
+      "actual": [
+        [
+          "optimal",
+          1.0,
+          1.0
+        ],
+        [
+          "degraded",
+          0.0,
+          0.0
+        ],
+        [
+          "inverse_optimal",
+          1.0,
+          1.0
+        ],
+        [
+          "inverse_degraded",
+          0.0,
+          0.0
+        ]
+      ],
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "test_cases": [
+          [
+            "optimal",
+            1.0,
+            1.0
+          ],
+          [
+            "degraded",
+            0.0,
+            0.0
+          ],
+          [
+            "inverse_optimal",
+            1.0,
+            1.0
+          ],
+          [
+            "inverse_degraded",
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "coherence_monotonicity",
+      "category": "coherence",
+      "passed": true,
+      "expected": "Coherence increases monotonically with performance",
+      "actual": "All differences >= 0: True",
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "pi_values": [
+          0.0,
+          0.1,
+          0.2,
+          0.30000000000000004,
+          0.4,
+          0.5,
+          0.6000000000000001,
+          0.7000000000000001,
+          0.8,
+          0.9,
+          1.0
+        ],
+        "coherences": [
+          0.0,
+          0.1,
+          0.2,
+          0.30000000000000004,
+          0.4,
+          0.5,
+          0.6000000000000001,
+          0.7000000000000001,
+          0.8,
+          0.9,
+          1.0
+        ],
+        "differences": [
+          0.1,
+          0.1,
+          0.10000000000000003,
+          0.09999999999999998,
+          0.09999999999999998,
+          0.10000000000000009,
+          0.09999999999999998,
+          0.09999999999999998,
+          0.09999999999999998,
+          0.09999999999999998
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "protein_folding_coherence",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.75,
+      "actual": 0.75,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "k_obs": 13,
+        "k_min": 12,
+        "k_max": 16,
+        "interpretation": "75% coherence at 13 cycles"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "enzyme_turnover_coherence",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.1,
+      "actual": 0.1,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "k_cat_obs": 100000.0,
+        "k_cat_max": 1000000.0,
+        "interpretation": "10% of maximum turnover"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "channel_open_probability_coherence",
+      "category": "coherence",
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "p_o_obs": 0.5,
+        "p_o_opt": 0.5,
+        "interpretation": "At optimal open probability"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "membrane_amplitude_coherence",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.8,
+      "actual": 0.8,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "delta_v_obs": 80.0,
+        "delta_v_max": 100.0
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "circadian_period_coherence",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.9,
+      "actual": 0.9,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "sigma_t": 2.4,
+        "t_0": 24.0,
+        "interpretation": "10% period variation"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "cellular_coherence_weighted",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.6375,
+      "actual": 0.6375,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "oscillator_coherences": [
+          0.75,
+          0.5,
+          0.8
+        ],
+        "weights": [
+          1.0,
+          2.0,
+          1.0
+        ],
+        "formula": "η_cell = Σ(w_i * η_i) / Σ(w_i)"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "therapeutic_efficacy_calculation",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.5,
+      "actual": 0.4999999999999999,
+      "error": 1.1102230246251565e-16,
+      "tolerance": 1e-10,
+      "details": {
+        "eta_untreated": 0.4,
+        "eta_treated": 0.7,
+        "eta_healthy": 1.0,
+        "interpretation": "50% of coherence gap closed"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "predicted_coherence_after_treatment",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.65,
+      "actual": 0.6499999999999999,
+      "error": 1.1102230246251565e-16,
+      "tolerance": 1e-10,
+      "details": {
+        "eta_untreated": 0.3,
+        "efficacy": 0.5,
+        "formula": "η_treated = η_untreated + E(1 - η_untreated)"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    },
+    {
+      "name": "efficacy_prediction_consistency",
+      "category": "coherence",
+      "passed": true,
+      "expected": 0.5,
+      "actual": 0.49999999999999994,
+      "error": 5.551115123125783e-17,
+      "tolerance": 1e-10,
+      "details": {
+        "interpretation": "Efficacy recovered from predicted coherence matches original"
+      },
+      "timestamp": "2026-02-28T16:45:02.436213"
+    }
+  ]
+}

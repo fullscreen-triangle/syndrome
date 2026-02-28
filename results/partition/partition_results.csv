@@ -1,0 +1,10 @@
+suite,test_name,category,passed,expected,actual,error,tolerance,timestamp
+Partition,partition_capacity_formula,partition,True,C(n) = 2n² for all n,Formula verified,0.0,0.0,2026-02-28T16:45:02.422157
+Partition,electron_shell_correspondence,partition,True,"[2, 8, 18, 32, 50, 72, 98]","[2, 8, 18, 32, 50, 72, 98]",0.0,0.0,2026-02-28T16:45:02.422157
+Partition,enumeration_count,partition,True,len(enumerate_partition_states(n)) == C(n),Verified,0.0,0.0,2026-02-28T16:45:02.422157
+Partition,metric_non_negativity,partition,True,"d(x,y) >= 0 and d(x,x) = 0","d(s1,s2)=1.4142, d(s1,s1)=0.0000",0.0,1e-10,2026-02-28T16:45:02.422157
+Partition,metric_symmetry,partition,True,"d(x,y) = d(y,x)","d(s1,s2)=1.414214, d(s2,s1)=1.414214",0.0,1e-10,2026-02-28T16:45:02.422157
+Partition,metric_triangle_inequality,partition,True,"d(x,z) <= d(x,y) + d(y,z)","d(s1,s3)=1.7321 <= 1.4142 + 2.6458 = 4.0600",0,1e-10,2026-02-28T16:45:02.422157
+Partition,address_resolution_accuracy,partition,True,Error < 1.69e-05 (theoretical precision),Max error: 1.69e-05,1.6935087808533922e-05,3.387017561686057e-05,2026-02-28T16:45:02.422157
+Partition,ternary_structure,partition,True,"address [1,1,1] -> ~0.4815",Computed: 0.4815,0.0,0.01,2026-02-28T16:45:02.422157
+Partition,coordinate_constraints,partition,True,"Valid coords accepted, invalid coords rejected","Valid: 4/4, Invalid rejected: 4/4",0.0,0.0,2026-02-28T16:45:02.422157

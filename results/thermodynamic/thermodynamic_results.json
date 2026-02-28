@@ -1,0 +1,501 @@
+{
+  "name": "Thermodynamic",
+  "passed": 14,
+  "failed": 0,
+  "total": 14,
+  "pass_rate": 1.0,
+  "timestamp": "2026-02-28T16:45:03.321281",
+  "results": [
+    {
+      "name": "s_entropy_bounds",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "S_k, S_t, S_e in [0, 1]",
+      "actual": [
+        {
+          "coords": [
+            0,
+            0,
+            0
+          ],
+          "status": "valid",
+          "passed": true
+        },
+        {
+          "coords": [
+            1,
+            1,
+            1
+          ],
+          "status": "valid",
+          "passed": true
+        },
+        {
+          "coords": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "status": "valid",
+          "passed": true
+        },
+        {
+          "coords": [
+            0,
+            0.5,
+            1
+          ],
+          "status": "valid",
+          "passed": true
+        },
+        {
+          "coords": [
+            -0.1,
+            0.5,
+            0.5
+          ],
+          "status": "correctly_rejected",
+          "passed": true
+        },
+        {
+          "coords": [
+            0.5,
+            1.1,
+            0.5
+          ],
+          "status": "correctly_rejected",
+          "passed": true
+        },
+        {
+          "coords": [
+            0.5,
+            0.5,
+            -0.5
+          ],
+          "status": "correctly_rejected",
+          "passed": true
+        }
+      ],
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "interpretation": "S-entropy space is unit cube [0,1]^3"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_distance_non_negative",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "d >= 0",
+      "actual": 0.5196152422706631,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {},
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_distance_identity",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": 0.0,
+      "actual": 0.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "interpretation": "d(p, p) = 0"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_distance_symmetry",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "d(p1, p2) = d(p2, p1)",
+      "actual": {
+        "d12": 0.5196152422706631,
+        "d21": 0.5196152422706631
+      },
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {},
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_distance_triangle",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "d(p1, p3) <= d(p1, p2) + d(p2, p3)",
+      "actual": {
+        "d13": 0.640312423743285,
+        "d12": 0.5196152422706631,
+        "d23": 0.6164414002968976,
+        "sum": 1.136056642567561
+      },
+      "error": 0,
+      "tolerance": 1e-10,
+      "details": {},
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_uniform_distribution",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": 1.0,
+      "actual": 0.9999999999999998,
+      "error": 2.220446049250313e-16,
+      "tolerance": 1e-10,
+      "details": {
+        "n": 10,
+        "interpretation": "Uniform → max entropy"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_delta_distribution",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": 0.0,
+      "actual": -0.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "interpretation": "Single certain outcome → zero entropy"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_binary_distribution",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "interpretation": "Fair coin → max binary entropy"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_intermediate",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "0 < S < 1",
+      "actual": 0.46899559358928117,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "distribution": [
+          0.9,
+          0.1
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_normalization",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "actual": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "raw_values": [
+          50.0,
+          100.0,
+          75.0
+        ],
+        "bounds": [
+          [
+            0.0,
+            100.0
+          ],
+          [
+            0.0,
+            200.0
+          ],
+          [
+            50.0,
+            100.0
+          ]
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "s_entropy_interpolation",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "Linear interpolation: p(t) = (1-t)*p1 + t*p2",
+      "actual": [
+        {
+          "t": 0.0,
+          "expected": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "actual": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "passed": true
+        },
+        {
+          "t": 0.25,
+          "expected": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "actual": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "passed": true
+        },
+        {
+          "t": 0.5,
+          "expected": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "actual": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "passed": true
+        },
+        {
+          "t": 0.75,
+          "expected": [
+            0.75,
+            0.75,
+            0.75
+          ],
+          "actual": [
+            0.75,
+            0.75,
+            0.75
+          ],
+          "passed": true
+        },
+        {
+          "t": 1.0,
+          "expected": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "actual": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "passed": true
+        }
+      ],
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "p1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "p2": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_estimation_ordering",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "Ordered trajectory has lower entropy than random",
+      "actual": {
+        "ordered_entropy": 0.7354771018126174,
+        "random_entropy": 1.3541184956421062
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "ordered_components": [
+          0.3333333333333333,
+          0.5901443518880597,
+          0.28556102695255525
+        ],
+        "random_components": [
+          0.6626529333911468,
+          0.9384723796315171,
+          0.7167967513716191
+        ]
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "partition_thermodynamic_connection",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "C(n) = 2n^2, entropy increases with n",
+      "actual": {
+        "test_cases": [
+          {
+            "n": 1,
+            "capacity": 2,
+            "expected": 2,
+            "entropy_proxy": 0.6931471805599453,
+            "match": true
+          },
+          {
+            "n": 2,
+            "capacity": 8,
+            "expected": 8,
+            "entropy_proxy": 2.0794415416798357,
+            "match": true
+          },
+          {
+            "n": 3,
+            "capacity": 18,
+            "expected": 18,
+            "entropy_proxy": 2.8903717578961645,
+            "match": true
+          },
+          {
+            "n": 4,
+            "capacity": 32,
+            "expected": 32,
+            "entropy_proxy": 3.4657359027997265,
+            "match": true
+          },
+          {
+            "n": 5,
+            "capacity": 50,
+            "expected": 50,
+            "entropy_proxy": 3.912023005428146,
+            "match": true
+          },
+          {
+            "n": 6,
+            "capacity": 72,
+            "expected": 72,
+            "entropy_proxy": 4.276666119016055,
+            "match": true
+          },
+          {
+            "n": 7,
+            "capacity": 98,
+            "expected": 98,
+            "entropy_proxy": 4.584967478670572,
+            "match": true
+          }
+        ],
+        "entropy_increasing": true
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "formula": "S = kB * M * ln(n), where M = C(n) = 2n^2",
+        "interpretation": "Partition geometry encodes thermodynamic states"
+      },
+      "timestamp": "2026-02-28T16:45:03.321281"
+    },
+    {
+      "name": "entropy_aggregations",
+      "category": "thermodynamic",
+      "passed": true,
+      "expected": "Total = ||S||, Mean = (S_k + S_t + S_e)/3",
+      "actual": [
+        {
+          "point": [
+            0.3,
+            0.4,
+            0.5
+          ],
+          "total": {
+            "expected": 0.7071067811865476,
+            "actual": 0.7071067811865476,
+            "match": true
+          },
+          "mean": {
+            "expected": 0.39999999999999997,
+            "actual": 0.39999999999999997,
+            "match": true
+          }
+        },
+        {
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total": {
+            "expected": 0.0,
+            "actual": 0.0,
+            "match": true
+          },
+          "mean": {
+            "expected": 0.0,
+            "actual": 0.0,
+            "match": true
+          }
+        },
+        {
+          "point": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "total": {
+            "expected": 1.7320508075688772,
+            "actual": 1.7320508075688772,
+            "match": true
+          },
+          "mean": {
+            "expected": 1.0,
+            "actual": 1.0,
+            "match": true
+          }
+        },
+        {
+          "point": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "total": {
+            "expected": 0.8660254037844386,
+            "actual": 0.8660254037844386,
+            "match": true
+          },
+          "mean": {
+            "expected": 0.5,
+            "actual": 0.5,
+            "match": true
+          }
+        }
+      ],
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {},
+      "timestamp": "2026-02-28T16:45:03.321281"
+    }
+  ]
+}

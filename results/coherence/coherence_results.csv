@@ -1,0 +1,15 @@
+suite,test_name,category,passed,expected,actual,error,tolerance,timestamp
+Coherence,universal_coherence_standard,coherence,True,0.8,0.8,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,universal_coherence_inverse,coherence,True,0.75,0.75,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,universal_coherence_midpoint,coherence,True,0.5,0.5,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,coherence_boundary_conditions,coherence,True,"η=1 at optimal, η=0 at degraded","[('optimal', 1.0, 1.0), ('degraded', 0.0, 0.0), ('inverse_optimal', 1.0, 1.0), ('inverse_degraded', 0.0, 0.0)]",0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,coherence_monotonicity,coherence,True,Coherence increases monotonically with performance,All differences >= 0: True,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,protein_folding_coherence,coherence,True,0.75,0.75,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,enzyme_turnover_coherence,coherence,True,0.1,0.1,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,channel_open_probability_coherence,coherence,True,1.0,1.0,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,membrane_amplitude_coherence,coherence,True,0.8,0.8,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,circadian_period_coherence,coherence,True,0.9,0.9,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,cellular_coherence_weighted,coherence,True,0.6375,0.6375,0.0,1e-10,2026-02-28T16:45:02.436213
+Coherence,therapeutic_efficacy_calculation,coherence,True,0.5,0.4999999999999999,1.1102230246251565e-16,1e-10,2026-02-28T16:45:02.436213
+Coherence,predicted_coherence_after_treatment,coherence,True,0.65,0.6499999999999999,1.1102230246251565e-16,1e-10,2026-02-28T16:45:02.436213
+Coherence,efficacy_prediction_consistency,coherence,True,0.5,0.49999999999999994,5.551115123125783e-17,1e-10,2026-02-28T16:45:02.436213

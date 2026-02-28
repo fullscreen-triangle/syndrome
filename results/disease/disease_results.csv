@@ -1,0 +1,21 @@
+suite,test_name,category,passed,expected,actual,error,tolerance,timestamp
+Disease,disease_vector_protein_class,disease,True,0.25,0.25,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,disease_vector_enzyme_class,disease,True,0.5,0.5,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,disease_vector_weighted_aggregation,disease,True,0.33333333333333337,0.33333333333333337,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,classification_dominant_P,disease,True,P,P,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_E,disease,True,E,E,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_C,disease,True,C,C,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_M,disease,True,M,M,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_A,disease,True,A,A,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_G,disease,True,G,G,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_Ca,disease,True,Ca,Ca,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,classification_dominant_R,disease,True,R,R,0.0,0.0,2026-02-28T16:45:02.447540
+Disease,severity_uniform,disease,True,0.5,0.5,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,severity_weighted,disease,True,0.5333333333333333,0.5333333333333333,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,severity_healthy_zero,disease,True,0.0,0.0,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,healthy_vector_all_zeros,disease,True,All disease indices = 0,"[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]",0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,disease_vector_bounds,disease,True,"D_i in [0, 1] for all i","[(0.0, 'valid', True), (0.5, 'valid', True), (1.0, 'valid', True), (-0.1, 'correctly_rejected', True), (1.1, 'correctly_rejected', True)]",0.0,0.0,2026-02-28T16:45:02.447540
+Disease,signature_distance_self_zero,disease,True,0.0,0.0,0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,signature_distance_symmetry,disease,True,"d(D1, D2) = d(D2, D1)","{'d12': 0.8544003745317532, 'd21': 0.8544003745317532}",0.0,1e-10,2026-02-28T16:45:02.447540
+Disease,signature_distance_triangle,disease,True,"d(D1, D3) <= d(D1, D2) + d(D2, D3)","{'d13': 0.7810249675906654, 'd12': 0.8544003745317532, 'd23': 0.4472135954999578, 'sum': 1.301613970031711}",0,1e-10,2026-02-28T16:45:02.447540
+Disease,disease_profile_generation,disease,True,Generated profiles classify to intended dominant class,"[{'class': 'P', 'dominant_value': 0.8, 'classified_as': 'P', 'match': True}, {'class': 'E', 'dominant_value': 0.8, 'classified_as': 'E', 'match': True}, {'class': 'C', 'dominant_value': 0.8, 'classified_as': 'C', 'match': True}, {'class': 'M', 'dominant_value': 0.8, 'classified_as': 'M', 'match': True}, {'class': 'A', 'dominant_value': 0.8, 'classified_as': 'A', 'match': True}, {'class': 'G', 'dominant_value': 0.8, 'classified_as': 'G', 'match': True}, {'class': 'Ca', 'dominant_value': 0.8, 'classified_as': 'Ca', 'match': True}, {'class': 'R', 'dominant_value': 0.8, 'classified_as': 'R', 'match': True}]",0.0,1e-10,2026-02-28T16:45:02.447540
