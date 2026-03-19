@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(pip install:*)",
-      "Bash(cargo test:*)"
+      "Bash(cargo test:*)",
+      "Bash(wc -l /c/Users/kunda/Documents/health/syndrome/syndrome/core/*.py)",
+      "Bash(wc -l /c/Users/kunda/Documents/health/syndrome/syndrome/validation/*.py /c/Users/kunda/Documents/health/syndrome/visualizations/*.py)"
     ]
   }
 }
