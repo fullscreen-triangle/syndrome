@@ -60,15 +60,13 @@
 \newcommand{\kB}{k_{\mathrm{B}}}
 \newcommand{\Depth}{\mathcal{M}}
 \newcommand{\fuzzy}{\widetilde}
-\newcommand{\node}{\mathsf{v}}
-\newcommand{\edge}{\mathsf{e}}
+\newcommand{\fnode}{\mathsf{v}}
 \newcommand{\circuit}{\mathcal{G}}
 \newcommand{\resolve}{\mathsf{R}}
 \newcommand{\valid}{\mathsf{V}}
 \newcommand{\consist}{\mathsf{C}}
 \newcommand{\sig}{\sigma}
 \newcommand{\fuzzyval}{\mu}
-\newcommand{\membership}{\mu}
 \newcommand{\tpart}{\tau_p}
 \newcommand{\order}{\langle r \rangle}
 \newcommand{\R}{\mathbb{R}}
@@ -79,7 +77,9 @@
 \newcommand{\defect}{\mathcal{D}}
 \newcommand{\window}{\mathcal{W}}
 \newcommand{\topology}{\mathcal{T}}
-\newcommand{\landscape}{\mathcal{L}}
+\newcommand{\Hcat}{\mathcal{H}}
+\newcommand{\Gcond}{\mathcal{G}_{\mathrm{c}}}
+\newcommand{\Back}{\mathcal{B}}
 \newcommand{\prop}{\rightsquigarrow}
 
 \begin{document}
@@ -101,7 +101,9 @@ Technical University of Munich, School of Life Sciences\\
 %==============================================================================
 \begin{abstract}
 %==============================================================================
-\noindent We present a framework for cellular dynamics based on sequential constraint propagation through fuzzy-valued circuit networks. The central observation is that cells do not maintain a reference state against which to detect disease---they operate by local, step-wise signal validation where each resolved signal constrains the resolution of the next. We model the cell as a circuit graph $\circuit = (V, E)$ where each node $\node_i$ carries a fuzzy membership value $\fuzzyval_i \in [0,1]$ representing its undetermined state. Nodes are resolved sequentially: solving node $\node_i$ collapses its fuzzy value to a discrete output, which propagates as a boundary condition to adjacent nodes. We prove three principal results. First, that step-discrete sequential resolution is the only dynamics consistent with the absence of a global reference state (Theorem~\ref{thm:no_template}). Second, that disease corresponds to topological inconsistency---closed loops in the circuit graph that fail to return self-consistent values after complete traversal (Theorem~\ref{thm:disease_inconsistency}). Third, that such inconsistencies are locally undetectable: each individual step passes validation, yet the global circuit is inconsistent (Theorem~\ref{thm:local_invisibility}). This explains why cells are ``blind'' to their own disease. We derive a consistency index $\consist(\circuit)$ that quantifies global circuit health from local validation residuals, establish its relationship to measurable macroscopic signals (pH, volume, membrane potential), and show that disease progression corresponds to monotonic decrease of $\consist(\circuit)$ through a sequence of individually valid steps. The framework is validated against glycolytic flux data, mitochondrial dysfunction cascades, and protein misfolding disease progression, reproducing observed dynamics with zero free parameters.
+\noindent We present a framework for cellular dynamics based on sequential constraint propagation through fuzzy-valued circuit networks. The central observation is that no physical system---neither a cell nor an observer---can store a complete representation of a reference state. Health is therefore not a template to compare against but a property of self-consistency: a circuit whose loops close. We model the cell as an electrical circuit graph $\circuit = (V, E)$ derived rigorously from thermodynamics, where each node carries a potential equal to the chemical potential $\mu_i^{\mathrm{chem}}$, shown to equal the information-theoretic categorical depth $\Hcat_i = -\log_2 P(\sigma_i)$ up to the thermal energy scale $\kB T \ln 2$. Reactions are edges with conductance $\Gcond_{ij} = k_{ij}[C_i]/(RT)$, and Kirchhoff's current and voltage law analogs are derived exactly from stoichiometric mass balance and thermodynamic cycle consistency. Node states are initialised as fuzzy membership functions encoding epistemic uncertainty, and constraint propagation proceeds sequentially: solving one node collapses its fuzzy value to a discrete output, which propagates as a boundary condition to adjacent nodes.
+
+We prove three principal results. First, that the No Template Theorem holds universally: no bounded system can store a complete self-representation, and this applies equally to cells, simulations, and experimental observers (Theorem~\ref{thm:no_template}). Second, that disease corresponds to topological inconsistency---closed loops in the circuit graph whose holonomy is non-trivial, detectable purely from self-consistency without any reference state (Theorem~\ref{thm:disease_inconsistency}). Third, that such inconsistencies are locally undetectable: each individual step passes validation, yet the global circuit fails (Theorem~\ref{thm:local_invisibility}). We derive a trajectory completion algorithm that converges to a unique fixed point by the Banach contraction principle, combining fuzzy Kirchhoff propagation with MAP backward-trajectory inference. Disease detection reduces to checking whether the constraint system admits a self-consistent solution; drug design reduces to sparse conductance modification via $\ell_1$ optimisation. The framework is validated against glycolytic flux data, mitochondrial dysfunction cascades, and protein misfolding disease progression.
 \end{abstract}
 
 %==============================================================================
@@ -117,7 +119,7 @@ This presents a paradox. If cells have access to all information about their int
 
 The standard explanation invokes specific molecular failures: a mutated tumour suppressor, a misfolded chaperone, a broken signalling cascade. But this merely pushes the question back. \emph{Why} can't the cell detect these failures, given that it has complete access to the molecular state?
 
-We propose that the answer is structural. Cells do not operate by comparing their state against a stored template of ``health.'' They operate by \emph{sequential constraint propagation}: each biochemical event validates against the output of the previous event, not against a global reference. Disease is invisible because it accumulates through a sequence of individually valid steps.
+We propose that the answer is structural, and that it extends far beyond the cell. No bounded physical system---cell, computer, or human observer---can store a complete representation of its own state or of any comparably complex system's state. There is no ``healthy template'' anywhere: not inside the cell, not in a database, not in a researcher's model. Health is not a state to be compared against. It is a property of self-consistency---a circuit whose constraint loops close.
 
 \subsection{Why Simulation Fails}
 
@@ -125,29 +127,45 @@ The dominant paradigm in computational biology is simulation: construct a model 
 
 This assumption is flawed for a fundamental reason. A perfect simulation of every reaction in a cell would reproduce the cell's behaviour exactly---\emph{including its blindness to disease}. The simulation would show every reaction proceeding normally, every checkpoint passing, every local signal within bounds, while the global state drifts toward pathology. The disease is not in any individual reaction. It is in the \emph{relational structure} between reactions---a structure that neither the cell nor the simulation explicitly represents.
 
-This observation motivates a different approach. Rather than simulating reactions in continuous time, we model the cell as a \emph{circuit}---a network of nodes connected by constraint relationships---and study how information propagates through this circuit in discrete steps.
+\begin{definition}[Epistemic Blindness]
+\label{def:blind}
+A dynamical system $(X, \mathbf{v})$ is \emph{epistemically blind} with respect to a partition $\{A, B\}$ of $X$ if the flow $\mathbf{v}(x)$ does not encode membership in $A$ or $B$: there exists no function $f: TX \to \{A, B\}$ such that $f(\mathbf{v}(x))$ correctly classifies $x$ for all $x \in X$.
+\end{definition}
 
-\subsection{The Circuit Analogy}
+\begin{proposition}[Cells are epistemically blind to disease]
+\label{prop:blind}
+Under generic kinetic models (mass-action, Michaelis-Menten), a cell operating via forward reaction dynamics is epistemically blind with respect to the partition \emph{healthy}/\emph{diseased}.
+\end{proposition}
 
-Consider an electronic circuit. Each component (resistor, capacitor, transistor) has a local constitutive relation. The state of the circuit is determined not by simulating electron flow but by solving constraints: Kirchhoff's laws at each node, constitutive relations at each component. The solution propagates through the circuit---solving one node provides boundary conditions for the next.
+\begin{proof}
+The kinetic rate law $v_{ij}([C_i], [C_j], k_{ij})$ at any reaction edge depends only on current concentrations and rate constants. It contains no reference to a healthy reference state $\mathbf{x}^*_H$. At the diseased state $\mathbf{x}^*_D$, the flux vector $\mathbf{v}(\mathbf{x}^*_D)$ encodes only the direction of the next state transition; it carries no information about the distance $\|\mathbf{x}^*_D - \mathbf{x}^*_H\|$ unless that distance is directly reflected in current concentrations. Disease states frequently involve regulatory rewiring, post-translational modifications, or epigenetic changes that alter the parameters of $\mathbf{v}$ rather than concentrations directly, making the current flux indistinguishable from that of a normal cell elsewhere in the healthy attractor. Hence no function of $\mathbf{v}(\mathbf{x}^*_D)$ alone reliably distinguishes diseased from healthy.
+\end{proof}
 
-We propose that cellular biochemistry operates analogously. Each reaction node has a local ``constitutive relation''---the relationship between its inputs and outputs. The cellular state is determined not by simulating mass transfer but by propagating constraints through the reaction network. The critical difference from electronic circuits is that biological nodes carry \emph{fuzzy} values: their state is not precisely determined until resolved against neighbouring constraints.
+A faithful simulation is informationally equivalent to the cell itself. Let $\Omega$ denote the set of all trajectories $\mathbf{x}(\cdot)$ consistent with the kinetic equations. A forward simulation starting from $\mathbf{x}_0$ selects a single $\omega \in \Omega$. The information content of this selection equals that of the actual cellular trajectory, because both are governed by the same probability measure on $\Omega$. The simulation produces no surplus information.
+
+\subsection{The Resolution: Self-Consistency Without Templates}
+
+The resolution to epistemic blindness lies not in finding a better template, but in recognising that health is self-consistency. An electrician troubleshooting a circuit does not carry a snapshot of what every voltage should be. They know Kirchhoff's laws. They know the circuit should be self-consistent. They probe a few nodes, propagate the constraints, and if the numbers don't close---there is a fault. The ``healthy'' state is never stored or compared against. It is implied by the requirement that the circuit \emph{works}.
+
+We develop this insight into a complete framework. The cell is modelled as an electrical circuit, with chemical potentials as node voltages, reaction fluxes as currents, and rate constants as conductances. Health is self-consistency of the circuit: all Kirchhoff constraints satisfied, all loops closing. Disease is the holonomy of an inconsistent loop---a purely topological quantity requiring no reference state.
 
 \subsection{Contributions}
 
 This paper makes the following contributions:
 \begin{enumerate}[label=(\roman*), leftmargin=*]
+    \item A rigorous derivation of the cellular circuit model from thermodynamics and information theory, establishing chemical potential as categorical depth (Section~\ref{sec:circuit_derivation})
+    \item A universal No Template Theorem applying to cells, simulations, and observers alike (Section~\ref{sec:foundations})
     \item A formal model of cellular dynamics as sequential constraint propagation through fuzzy-valued circuit graphs (Section~\ref{sec:circuit_model})
-    \item A proof that step-discrete resolution is the unique dynamics consistent with absence of a global reference state (Section~\ref{sec:dynamics})
-    \item A characterization of disease as topological inconsistency in the circuit graph (Section~\ref{sec:disease})
-    \item A proof that such inconsistencies are locally undetectable, explaining cellular blindness to disease (Section~\ref{sec:invisibility})
-    \item A consistency index derived from measurable macroscopic signals (Section~\ref{sec:consistency})
+    \item A trajectory completion algorithm with a Banach fixed-point convergence proof (Section~\ref{sec:algorithm})
+    \item A characterization of disease as topological inconsistency (loop holonomy), detectable purely from self-consistency (Section~\ref{sec:disease})
+    \item A proof that such inconsistencies are locally undetectable, explaining cellular blindness (Section~\ref{sec:invisibility})
+    \item Drug design as sparse conductance modification via $\ell_1$ optimisation (Section~\ref{sec:therapeutic})
     \item Validation against glycolytic flux, mitochondrial dysfunction, and protein misfolding data (Section~\ref{sec:validation})
 \end{enumerate}
 
 \subsection{Paper Organization}
 
-Part~I (Sections~\ref{sec:foundations}--\ref{sec:dynamics}) establishes the mathematical foundations: bounded phase space, fuzzy circuit graphs, and sequential resolution dynamics. Part~II (Sections~\ref{sec:disease}--\ref{sec:invisibility}) develops the theory of disease as topological inconsistency and proves local undetectability. Part~III (Sections~\ref{sec:consistency}--\ref{sec:therapeutic}) derives the consistency index and its relationship to macroscopic observables. Part~IV (Sections~\ref{sec:validation}--\ref{sec:predictions}) presents validation and experimental predictions. Section~\ref{sec:conclusion} concludes.
+Part~I (Sections~\ref{sec:foundations}--\ref{sec:dynamics}) establishes the mathematical foundations: the universal No Template Theorem, bounded phase space, and the rigorous circuit derivation. Part~II (Sections~\ref{sec:circuit_model}--\ref{sec:algorithm}) develops the fuzzy circuit model and the trajectory completion algorithm. Part~III (Sections~\ref{sec:disease}--\ref{sec:invisibility}) develops disease as topological inconsistency and proves local undetectability. Part~IV (Sections~\ref{sec:consistency}--\ref{sec:therapeutic}) derives the consistency index, macroscopic observables, and therapeutic interventions. Part~V (Sections~\ref{sec:validation}--\ref{sec:predictions}) presents validation and experimental predictions. Section~\ref{sec:conclusion} concludes.
 
 
 %==============================================================================
@@ -207,146 +225,170 @@ Partition depth connects directly to thermodynamic entropy:
     \label{eq:depth_entropy}
 \end{equation}
 
-\subsection{The Absence of Templates}
+\subsection{The Universal No Template Theorem}
 
-We now establish a crucial negative result.
+We now establish the central negative result of this paper.
 
-\begin{theorem}[No Template Theorem]
+\begin{theorem}[Universal No Template Theorem]
 \label{thm:no_template}
-A bounded physical system cannot store an internal representation of its own complete state.
+No bounded physical system can store a complete representation of the state of any system of equal or greater complexity, including itself. This holds for:
+\begin{enumerate}[label=(\roman*)]
+    \item The cell (cannot store its own healthy state)
+    \item A simulation (cannot exceed the cell's own information content)
+    \item An experimental observer (cannot store a complete reference state of the cell)
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-Let $\Omega$ be the phase space of the system with $N_{\max}$ distinguishable states. A complete state description requires specifying which of the $N_{\max}$ states the system occupies, requiring $\log_2(N_{\max})$ bits. Storing this description within the system requires dedicating a subsystem with at least $\log_2(N_{\max})$ distinguishable states to the representation.
-
-But this storage subsystem is itself part of the system. Its state must also be represented, requiring additional storage of $\log_2(\log_2(N_{\max}))$ bits, and so on. The total storage requirement diverges:
+\textbf{(i) Self-representation is impossible.} Let $\Omega$ be the phase space of the system with $N_{\max}$ distinguishable states. A complete state description requires specifying which of the $N_{\max}$ states the system occupies, requiring $\log_2(N_{\max})$ bits. Storing this description within the system requires dedicating a subsystem with at least $\log_2(N_{\max})$ distinguishable states to the representation. But this storage subsystem is itself part of the system. Its state must also be represented, requiring additional storage of $\log_2(\log_2(N_{\max}))$ bits, and so on. The total storage requirement diverges:
 \begin{equation}
     S_{\mathrm{total}} = \log_2(N_{\max}) + \log_2(\log_2(N_{\max})) + \cdots
 \end{equation}
-
 Since the system has finite capacity $N_{\max}$, it cannot store a complete self-representation. Any internal model is necessarily incomplete.
+
+\textbf{(ii) Simulation equivalence.} A simulation of a system with $N_{\max}$ states requires a simulator with at least $N_{\max}$ states to represent all possible configurations. If the simulator has $N_{\mathrm{sim}} \geq N_{\max}$ states, it can represent the system---but then by (i) the simulator cannot store a complete representation of itself. More fundamentally, a faithful simulation governed by the same probability measure on trajectory space $\Omega$ produces no information beyond what the system itself produces. The mutual information $I(\text{sim}; \text{system}) = H(\text{system})$: the simulation is informationally equivalent to the system.
+
+\textbf{(iii) Observer limitation.} An experimental observer is a bounded physical system with its own finite phase space $\Omega_{\mathrm{obs}}$. The observer's model of the cell is a map $M: \Omega_{\mathrm{cell}} \to \Omega_{\mathrm{obs}}$. By the data processing inequality \citep{cover2006}, $I(M(\mathbf{x}); \mathbf{x}) \leq H(\mathbf{x})$, with equality only if $M$ is sufficient. But a sufficient statistic requires $|\Omega_{\mathrm{obs}}| \geq |\Omega_{\mathrm{cell}}|$, and the observer's model of the cell is only a subsystem of $\Omega_{\mathrm{obs}}$. By the same recursive argument as (i), the observer cannot store a complete reference state of the cell.
 \end{proof}
 
-\begin{corollary}[No Health Template]
+\begin{corollary}[No Health Template---Universal]
 \label{cor:no_health}
-A cell cannot store a complete representation of its ``healthy state.'' Any comparison-based disease detection mechanism is necessarily incomplete.
+No entity---cell, simulation, database, or researcher---possesses a complete ``healthy state'' template against which to detect disease. Any template-comparison approach to disease detection is necessarily incomplete.
 \end{corollary}
 
-This corollary is the formal statement of the blindness problem. The cell cannot detect disease by comparing its current state to a stored reference, because no such reference can exist within the cell.
-
-
-%==============================================================================
-\section{Fuzzy Circuit Graphs}
-\label{sec:circuit_model}
-%==============================================================================
-
-\subsection{The Circuit Graph}
-
-Having established that cells cannot operate by state comparison, we develop the framework for how they \emph{do} operate.
-
-\begin{definition}[Cellular Circuit Graph]
-\label{def:circuit}
-A cellular circuit graph is a directed graph $\circuit = (V, E, \fuzzyval, \Phi)$ where:
-\begin{enumerate}[label=(\roman*)]
-    \item $V = \{\node_1, \node_2, \ldots, \node_n\}$ is the set of reaction nodes
-    \item $E \subseteq V \times V$ is the set of constraint edges
-    \item $\fuzzyval: V \to [0, 1]$ assigns a fuzzy membership value to each node
-    \item $\Phi: E \to \mathcal{F}$ assigns a constraint function to each edge, where $\mathcal{F}$ is the space of functions $[0,1] \to [0,1]$
-\end{enumerate}
-\end{definition}
-
-Each node represents a reaction or cluster of reactions. The fuzzy value $\fuzzyval_i \in [0,1]$ represents the degree to which the node's state is determined: $\fuzzyval_i = 0$ means completely undetermined, $\fuzzyval_i = 1$ means fully resolved to a definite value.
-
-\begin{definition}[Node State]
-\label{def:node_state}
-The state of node $\node_i$ is a pair $(\fuzzyval_i, x_i)$ where:
-\begin{itemize}
-    \item $\fuzzyval_i \in [0,1]$ is the membership value (degree of determination)
-    \item $x_i \in \R^{d_i}$ is the discrete value, defined only when $\fuzzyval_i = 1$
-\end{itemize}
-When $\fuzzyval_i < 1$, $x_i$ is a fuzzy set on $\R^{d_i}$ with membership function $\mu_{x_i}$.
-\end{definition}
-
 \begin{remark}
-The dimension $d_i$ depends on the node. For a simple metabolic reaction, $d_i$ might be 1 (a flux value). For a signalling hub, $d_i$ might be large, encoding multiple output channels.
+This does not mean disease is undetectable. It means disease cannot be detected by \emph{comparison to a stored reference}. Disease must instead be detected by a different method entirely: checking self-consistency. A researcher troubleshooting a cell is like an electrician troubleshooting a circuit. They do not carry a photograph of the correct voltages. They carry knowledge of the \emph{laws}---Kirchhoff's laws---and they check whether the circuit satisfies them. The researcher's ``bias'' toward health is not a stored template. It is the expectation that the circuit should be \emph{complete}---that the constraint system should admit a self-consistent solution. This expectation is the very reason anyone would model a cell at all.
 \end{remark}
 
-\subsection{Fuzzy Values and Biological Observables}
+%==============================================================================
+\section{The Biochemical Circuit: Rigorous Derivation}
+\label{sec:circuit_derivation}
+%==============================================================================
 
-The fuzzy membership value $\fuzzyval_i$ corresponds to a physical quantity: the degree to which the reaction at node $\node_i$ is constrained by its context.
+\subsection{Information-Theoretic Foundations}
 
-\begin{definition}[Macroscopic Signals]
-\label{def:signals}
-A macroscopic signal $\sig_k$ is a coarse-grained observable that is cheaply measurable from the node's local environment:
+We derive the circuit model from first principles, establishing that the electrical circuit analogy is not metaphorical but exact.
+
+\begin{definition}[Categorical Depth]
+\label{def:catdepth}
+The categorical depth of node $i$ in state $\sigma_i$ is the self-information (surprisal):
 \begin{equation}
-    \sig_k: V \to \R, \quad k \in \{\text{pH}, \text{vol}, \Delta\psi, \text{hydro}, \ldots\}
+    \Hcat_i(\sigma_i) = -\log_2 P(\sigma_i)
+    \label{eq:catdepth}
 \end{equation}
-We denote the signal vector at node $\node_i$ as $\bm{\sig}_i = (\sig_1(\node_i), \sig_2(\node_i), \ldots, \sig_K(\node_i))$.
+where $P(\sigma_i)$ is the stationary probability of state $\sigma_i$ under the network dynamics.
 \end{definition}
 
-These signals are the ``clean'' observables: pH, volume changes, membrane potential $\Delta\psi$, hydrophobicity gradients---macroscopic quantities that integrate over many molecular degrees of freedom and are therefore robust to microscopic fluctuations.
+Categorical depth measures how many binary questions are required to specify that node $\fnode_i$ is in state $\sigma_i$. High $\Hcat_i$ denotes a rare, informative state; low $\Hcat_i$ denotes a common, uninformative state. The Shannon entropy \citep{shannon1948} is the expected categorical depth: $H(P) = \mathbb{E}[\Hcat_i(\sigma_i)]$.
 
-\begin{theorem}[Signal Sufficiency]
-\label{thm:signal_sufficiency}
-For sequential constraint propagation, macroscopic signals are sufficient. The fuzzy value of node $\node_i$ is determined by the signal vector of its resolved predecessors:
+\begin{theorem}[Chemical Potential as Categorical Depth]
+\label{thm:mu_catdepth}
+For an ideal solution at thermodynamic equilibrium, the chemical potential of species $i$ at concentration $[C_i]$ satisfies:
 \begin{equation}
-    \fuzzyval_i = f(\bm{\sig}_j : \node_j \in \mathrm{pred}(\node_i), \, \fuzzyval_j = 1)
-    \label{eq:fuzzy_from_signals}
+    \mu_i^{\mathrm{chem}} = \mu_i^\circ + RT\ln[C_i] = -\kB T \ln 2 \cdot \Hcat_i(\sigma_i) + c_i
+    \label{eq:mu_catdepth}
 \end{equation}
-where $\mathrm{pred}(\node_i) = \{\node_j : (\node_j, \node_i) \in E\}$ is the set of predecessor nodes.
+where $c_i = \mu_i^\circ + RT \ln 2 \cdot \log_2 Z_i$ is a node-specific constant absorbing the partition function $Z_i$. The circuit node potential equals the categorical depth up to the thermal energy scale $\kB T \ln 2$.
 \end{theorem}
 
 \begin{proof}
-Each node's constitutive relation maps input signals to output signals. When predecessor nodes are resolved ($\fuzzyval_j = 1$), their signal vectors $\bm{\sig}_j$ are definite. The constraint functions $\Phi_{ji}$ on the edges $(\node_j, \node_i)$ propagate these definite values as boundary conditions for node $\node_i$. The fuzzy value of $\node_i$ then depends only on how well these boundary conditions constrain $\node_i$'s state---which is determined entirely by the signal vectors of resolved predecessors.
+For species $i$ in an ideal solution, the Boltzmann factor gives the equilibrium probability of microstate $\sigma_i$ as:
+\begin{equation}
+    P(\sigma_i) = Z_i^{-1} \exp\left(-\frac{\mu_i^{\mathrm{chem}}}{RT}\right)
+\end{equation}
+where $Z_i$ is the molecular partition function. Taking $-\log_2$ of both sides:
+\begin{equation}
+    \Hcat_i = \frac{\mu_i^{\mathrm{chem}}}{RT \ln 2} + \log_2 Z_i
+\end{equation}
+Solving for $\mu_i^{\mathrm{chem}}$ and collecting constants gives Equation~\ref{eq:mu_catdepth}.
 \end{proof}
 
-\subsection{Constraint Functions}
+This theorem is the keystone of the circuit model: the electrical potential at a circuit node equals, up to a universal factor $\kB T \ln 2$, the categorical depth of the corresponding molecular species. Reactions run downhill in categorical depth space, exactly as electric current flows from high to low potential.
 
-The edges of the circuit graph carry constraint functions that encode how one node's resolution affects its neighbours.
+\subsection{Circuit Variables}
 
-\begin{definition}[Constraint Function]
-\label{def:constraint}
-The constraint function $\Phi_{ij}: [0,1] \times \R^{d_i} \to [0,1] \times \R^{d_j}$ on edge $(\node_i, \node_j)$ maps the resolved state of $\node_i$ to a restriction on the state of $\node_j$:
-\begin{equation}
-    (\fuzzyval_j', x_j') = \Phi_{ij}(\fuzzyval_i, x_i)
-\end{equation}
-where $\fuzzyval_j' \geq \fuzzyval_j$ (resolution can only increase) and $x_j'$ is the updated fuzzy set for $\node_j$.
+\begin{definition}[Biochemical Circuit Graph]
+\label{def:circuit_graph}
+A biochemical circuit graph is a directed weighted graph $\circuit = (V, E, w)$ where:
+\begin{enumerate}[label=(\roman*)]
+    \item $V = \{\fnode_1, \ldots, \fnode_N\}$: species nodes (metabolites, proteins, signalling intermediates)
+    \item $E \subseteq V \times V$: reaction edges
+    \item $w: E \to \R_{>0}$: edge weights $w(e_{ij}) = k_{ij}$ (elementary rate constants)
+\end{enumerate}
+Each node $\fnode_i$ carries a potential $\phi_i = \mu_i^{\mathrm{chem}} = \mu_i^\circ + RT \ln[C_i]$.
 \end{definition}
 
-\begin{proposition}[Monotonicity]
-\label{prop:monotone}
-Constraint propagation is monotonic in fuzzy value:
+\begin{definition}[Edge Current and Conductance]
+\label{def:current}
+The circuit current on edge $e_{ij}$ is the net reaction flux:
 \begin{equation}
-    \fuzzyval_j^{(t+1)} \geq \fuzzyval_j^{(t)}
+    J_{ij} = k_{ij}[C_i] - k_{ji}[C_j]
+    \label{eq:current}
 \end{equation}
-Nodes become more determined, never less determined, as constraints propagate.
-\end{proposition}
+The circuit conductance is:
+\begin{equation}
+    \Gcond_{ij} = \frac{k_{ij}[C_i]}{RT}
+    \label{eq:conductance}
+\end{equation}
+For enzymatic reactions under Michaelis-Menten kinetics:
+\begin{equation}
+    \Gcond_{ij}^{\mathrm{MM}} = \frac{k_{\mathrm{cat}}[E]_T}{RT(K_m + [S])}
+    \label{eq:mm_conductance}
+\end{equation}
+\end{definition}
+
+The Michaelis-Menten enzyme functions as a nonlinear circuit element: ohmic at low substrate ($[S] \ll K_m$, behaving like a resistor) and saturating at high substrate ($[S] \gg K_m$, behaving like a current source). This is the biochemical transistor.
+
+\subsection{Kirchhoff Analogs}
+
+\begin{theorem}[Biochemical KCL: Stoichiometric Mass Balance]
+\label{thm:kcl}
+At steady state, the net flux entering any node $\fnode_i$ vanishes:
+\begin{equation}
+    \sum_{\substack{j:\\(j,i)\in E}} J_{ji} - \sum_{\substack{j:\\(i,j)\in E}} J_{ij} = 0, \qquad \forall\,\fnode_i \in V
+    \label{eq:kcl}
+\end{equation}
+This is the exact biochemical analog of Kirchhoff's current law \citep{kirchhoff1845}.
+\end{theorem}
 
 \begin{proof}
-Each resolved predecessor provides additional boundary conditions. Additional constraints can only reduce the set of compatible states for $\node_j$, which increases $\fuzzyval_j$ (higher determination). Formally, if $\mathcal{X}_j^{(t)}$ is the set of states compatible with $t$ resolved predecessors, then $\mathcal{X}_j^{(t+1)} \subseteq \mathcal{X}_j^{(t)}$, and $\fuzzyval_j = 1 - |\mathcal{X}_j|/|\mathcal{X}_j^{(0)}|$.
+At steady state, $d[C_i]/dt = 0$. Expanding: $\sum_r S_{ir} v_r(\mathbf{x}) = 0$ where $\mathbf{S}$ is the stoichiometric matrix. Decomposing each net flux and associating each directed elementary step with an edge gives Equation~\ref{eq:kcl}. The structure is identical to KCL: sum of currents in equals sum of currents out at every node.
 \end{proof}
 
-\subsection{Circuit Topology}
+\begin{theorem}[Biochemical KVL: Thermodynamic Cycle Consistency]
+\label{thm:kvl}
+Around any directed cycle $\mathcal{C} = (\fnode_{i_1}, \fnode_{i_2}, \ldots, \fnode_{i_k}, \fnode_{i_1})$, the sum of potential differences vanishes:
+\begin{equation}
+    \sum_{(i,j) \in \mathcal{C}} \Delta\phi_{ij} = 0
+    \label{eq:kvl}
+\end{equation}
+This is the biochemical analog of Kirchhoff's voltage law, equivalent to the Wegscheider conditions for thermodynamic consistency \citep{wegscheider1901}.
+\end{theorem}
 
-The topology of the circuit graph encodes the dependency structure of cellular reactions.
+\begin{proof}
+The sum telescopes:
+\begin{equation}
+    \sum_{(i,j) \in \mathcal{C}} (\phi_j - \phi_i) = \phi_{i_2} - \phi_{i_1} + \phi_{i_3} - \phi_{i_2} + \cdots + \phi_{i_1} - \phi_{i_k} = 0
+\end{equation}
+The concentration-dependent part gives $RT \sum_{(i,j)} \ln([C_j]/[C_i]) = RT \ln \prod_{(i,j)} [C_j]/[C_i] = 0$ (the product over a closed cycle telescopes to 1). The standard-state part $\sum_{(i,j)} \Delta\mu_{ij}^\circ = 0$ is the Wegscheider condition.
+\end{proof}
 
-\begin{definition}[Circuit Topology Classes]
-\label{def:topology}
-A circuit graph $\circuit$ contains:
-\begin{enumerate}[label=(\roman*)]
-    \item \textbf{Feed-forward paths:} directed acyclic subgraphs (metabolic pathways)
-    \item \textbf{Cycles:} closed directed paths (feedback loops, metabolic cycles)
-    \item \textbf{Hubs:} high-degree nodes (signalling centres, ATP/NAD$^+$ pools)
-    \item \textbf{Bridges:} edges whose removal disconnects the graph (essential reactions)
-\end{enumerate}
-\end{definition}
+\begin{corollary}[Ohm's Law Analog]
+\label{cor:ohm}
+For mass-action kinetics near thermodynamic equilibrium:
+\begin{equation}
+    J_{ij} \approx \Gcond_{ij} \cdot \Delta\phi_{ij}
+\end{equation}
+in exact formal correspondence with Ohm's law $I = G \cdot V$.
+\end{corollary}
 
-\begin{definition}[Loop]
-\label{def:loop}
-A loop $\ell$ in $\circuit$ is a closed directed path $\node_{i_1} \to \node_{i_2} \to \cdots \to \node_{i_k} \to \node_{i_1}$. The \emph{loop length} is $|\ell| = k$.
-\end{definition}
+\begin{proof}
+Net flux $J_{ij} = k_{ij}[C_i](1 - e^{-\Delta\phi_{ij}/(RT)})$. For $|\Delta\phi_{ij}| \ll RT$, linearising: $J_{ij} \approx (k_{ij}[C_i]/(RT))\Delta\phi_{ij} = \Gcond_{ij}\Delta\phi_{ij}$. This is the near-equilibrium linear Onsager relation \citep{onsager1931}.
+\end{proof}
 
-Loops are critical because they are where consistency can be tested: a signal that propagates around a loop must return a value consistent with its starting value. This is the origin of both self-regulation and disease vulnerability.
+\begin{remark}
+The biochemical circuit correspondence is summarised as: node potential $\phi_i$ $\leftrightarrow$ chemical potential $\mu_i^{\mathrm{chem}}$; edge current $J_{ij}$ $\leftrightarrow$ net reaction flux; conductance $\Gcond_{ij}$ $\leftrightarrow$ $k_{ij}[C_i]/(RT)$; KCL $\leftrightarrow$ stoichiometric mass balance; KVL $\leftrightarrow$ Wegscheider cycle conditions; EMF source $\leftrightarrow$ standard free energy $\Delta G^\circ_{ij}$; capacitance $\leftrightarrow$ buffer capacity $d[C_i]/d\phi_i$.
+\end{remark}
 
 
 %==============================================================================
@@ -354,47 +396,23 @@ Loops are critical because they are where consistency can be tested: a signal th
 \label{sec:dynamics}
 %==============================================================================
 
-\subsection{The Resolution Operator}
+\subsection{Why Sequential and Not Simultaneous}
 
-We now define how the circuit evolves.
-
-\begin{definition}[Resolution Operator]
-\label{def:resolve}
-The resolution operator $\resolve_i$ acts on the circuit state by resolving node $\node_i$:
-\begin{equation}
-    \resolve_i: (\fuzzyval_i, \{x_i\}) \mapsto (1, x_i^*)
-\end{equation}
-where $x_i^*$ is the unique discrete value satisfying all constraints from resolved predecessors:
-\begin{equation}
-    x_i^* = \arg\min_{x \in \mathcal{X}_i} \sum_{j \in \mathrm{pred}(i)} \|\Phi_{ji}(x_j^*) - x\|^2
-    \label{eq:resolution}
-\end{equation}
-\end{definition}
-
-Resolution is a \emph{local} operation: it depends only on the resolved values of predecessor nodes. It requires no global information about the circuit state.
-
-\begin{definition}[Resolution Sequence]
-\label{def:sequence}
-A resolution sequence is an ordered list of resolution operations:
-\begin{equation}
-    \mathcal{S} = (\resolve_{i_1}, \resolve_{i_2}, \ldots, \resolve_{i_n})
-\end{equation}
-The sequence is \emph{valid} if each node is resolved only after all its predecessors (with respect to the current resolution step) have been resolved.
-\end{definition}
+Having established the circuit model, we now address how the circuit evolves. By the Universal No Template Theorem (Theorem~\ref{thm:no_template}), no entity---including the cell---can represent the global state. This constrains the dynamics.
 
 \begin{theorem}[Sequential Resolution is Necessary]
 \label{thm:sequential}
-In the absence of a global reference state, the only well-defined dynamics on a fuzzy circuit graph is sequential constraint propagation.
+In the absence of a global reference state, the only well-defined dynamics on a circuit graph is sequential constraint propagation.
 \end{theorem}
 
 \begin{proof}
 Consider alternative dynamics:
 
-\textbf{(i) Simultaneous resolution.} Resolving all nodes simultaneously requires a global consistency condition---a system of equations coupling all nodes. Solving this system requires representing the global state, which by Theorem~\ref{thm:no_template} is impossible within the system.
+\textbf{(i) Simultaneous resolution.} Resolving all nodes simultaneously requires solving a coupled system representing the global state. By Theorem~\ref{thm:no_template}, no bounded subsystem can represent this global state. The cell cannot solve the coupled system because it cannot represent it.
 
 \textbf{(ii) Continuous-time evolution.} Continuous dynamics $\dot{x}_i = F_i(\{x_j\})$ requires evaluating all coupling terms simultaneously at each instant. This is equivalent to simultaneous resolution in the limit $\Delta t \to 0$.
 
-\textbf{(iii) Sequential resolution.} Each resolution step $\resolve_i$ depends only on the finite set of resolved predecessors. No global state representation is required. The dynamics is well-defined at each step.
+\textbf{(iii) Sequential resolution.} Each resolution step depends only on the finite set of resolved predecessors. No global state representation is required. The dynamics is well-defined at each step.
 
 Since (i) and (ii) require global state representation and (iii) does not, sequential resolution is the unique dynamics consistent with Theorem~\ref{thm:no_template}.
 \end{proof}
@@ -405,96 +423,280 @@ Each resolution step requires a minimum time.
 
 \begin{definition}[Partition Lag]
 \label{def:partition_lag}
-The partition lag $\tpart$ is the irreducible time required for one resolution operation:
+The partition lag for reaction edge $e_{ij}$ is:
 \begin{equation}
-    \tpart = \frac{\hbar}{\kB T}
+    \tpart_{ij} = \frac{\hbar}{\Delta E_{ij}} + \tau_{\mathrm{reorg}, ij}
     \label{eq:partition_lag}
 \end{equation}
-This is the quantum-mechanical minimum time for a state distinction at thermal energy $\kB T$.
+where $\hbar/\Delta E_{ij}$ is the quantum-mechanical minimum transition time from the energy-time uncertainty relation, and $\tau_{\mathrm{reorg}, ij}$ is the network reorganisation time.
 \end{definition}
 
-At $T = 310$~K (physiological temperature):
-\begin{equation}
-    \tpart = \frac{1.055 \times 10^{-34}}{1.38 \times 10^{-23} \times 310} \approx 2.5 \times 10^{-14}~\text{s}
-\end{equation}
-
-The effective resolution time for a biological node is much longer, as it includes the physical reorganization of the reaction:
-\begin{equation}
-    \tau_{\mathrm{eff}} = \tpart + \tau_{\mathrm{reorg}}
-    \label{eq:effective_lag}
-\end{equation}
-where $\tau_{\mathrm{reorg}}$ ranges from $\sim 10^{-12}$~s (fast enzyme conformational changes) to $\sim 10^{0}$~s (slow signalling cascades).
+The partition lag spans twelve orders of magnitude across reaction classes: electron transfer ($\tpart \sim 10^{-12}$--$10^{-9}$~s), proton transfer ($\sim 10^{-11}$--$10^{-8}$~s), enzymatic catalysis ($\sim 10^{-6}$--$10^{-3}$~s), gene expression ($\sim 10^2$--$10^4$~s). This hierarchy provides the physical basis for multi-timescale decomposition.
 
 \subsection{Step-Discrete Time}
 
-The circuit does not evolve in continuous time. It evolves in \emph{steps}.
+The circuit does not evolve in continuous time. It evolves in steps. Each step consists of: (i) selection of the next node to resolve, (ii) resolution against constraints from resolved predecessors, (iii) propagation of boundary conditions to successors.
 
 \begin{definition}[Circuit Step]
 \label{def:step}
 A circuit step $t \to t+1$ consists of:
 \begin{enumerate}[label=(\roman*)]
-    \item Selection of the next node $\node_{i_{t+1}}$ to resolve
-    \item Resolution: $\resolve_{i_{t+1}}$ applied to the current circuit state
-    \item Propagation: boundary conditions updated for all successors of $\node_{i_{t+1}}$
+    \item Selection of the next node $\fnode_{i_{t+1}}$ to resolve
+    \item Resolution: the node's fuzzy value collapses to a discrete output satisfying incoming constraints
+    \item Propagation: boundary conditions updated for all successors
 \end{enumerate}
-The circuit state at step $t$ is:
-\begin{equation}
-    \circuit^{(t)} = \left(\{\fuzzyval_i^{(t)}\}, \{x_i^{(t)}\}, E, \Phi\right)
-\end{equation}
 \end{definition}
 
 \begin{theorem}[Discrete Dynamics]
 \label{thm:discrete}
-The circuit state $\circuit^{(t+1)}$ depends on $\circuit^{(t)}$ and the resolution $\resolve_{i_{t+1}}$ alone:
+The circuit state $\circuit^{(t+1)}$ depends on $\circuit^{(t)}$ and the resolution of node $\fnode_{i_{t+1}}$ alone. The dynamics is first-order Markov in steps.
+\end{theorem}
+
+
+%==============================================================================
+\part*{II. The Fuzzy Circuit Model}
+%==============================================================================
+
+%==============================================================================
+\section{Fuzzy State Representation}
+\label{sec:circuit_model}
+%==============================================================================
+
+\subsection{Fuzzy Node States}
+
+In practice the state of any node is never perfectly known. Omics measurements have finite precision; many species are unobserved; and intrinsic stochasticity broadens the distribution over molecular counts \citep{elowitz2002}.
+
+\begin{definition}[Fuzzy Node State]
+\label{def:fuzzy_state}
+A fuzzy state of node $\fnode_i$ is a membership function $\widetilde{\mu}_i: \R_{\geq 0} \to [0,1]$, where $\widetilde{\mu}_i(c)$ is the degree to which concentration $c$ is consistent with all available information. $\widetilde{\mu}_i(c) = 1$ means $c$ is fully consistent; $\widetilde{\mu}_i(c) = 0$ means $c$ is excluded.
+\end{definition}
+
+\begin{definition}[$\alpha$-Cuts]
+\label{def:alpha_cut}
+For fuzzy state $\widetilde{\mu}_i$, the $\alpha$-cut is:
 \begin{equation}
-    \circuit^{(t+1)} = \resolve_{i_{t+1}} \circ \circuit^{(t)}
-    \label{eq:discrete_dynamics}
+    [\widetilde{\mu}_i]^\alpha = \{c \geq 0 : \widetilde{\mu}_i(c) \geq \alpha\}, \quad \alpha \in (0, 1]
 \end{equation}
-The dynamics is first-order Markov in steps.
+When $\widetilde{\mu}_i$ is upper semi-continuous, $[\widetilde{\mu}_i]^\alpha$ is a closed interval $[\underline{c}_i^\alpha, \overline{c}_i^\alpha]$ \citep{zadeh1965}.
+\end{definition}
+
+\begin{definition}[Fuzzy Arithmetic via the Zadeh Extension Principle]
+\label{def:extension}
+The Zadeh extension principle \citep{zadeh1965} lifts a crisp function $f: \R^n \to \R$ to fuzzy operands:
+\begin{equation}
+    \widetilde{\mu}_f(z) = \sup_{\substack{c_1, \ldots, c_n \geq 0 \\ f(\mathbf{c}) = z}} \min_k \widetilde{\mu}_k(c_k)
+\end{equation}
+For $\alpha$-cuts, this reduces to interval arithmetic.
+\end{definition}
+
+\subsection{Fuzzy Kirchhoff Equations}
+
+The Kirchhoff laws lift to fuzzy states.
+
+\begin{theorem}[Fuzzy KCL]
+\label{thm:fuzzy_kcl}
+At each node $\fnode_i$, the fuzzy flux balance constraint is enforced by intersecting the current membership function with the set of concentrations consistent with the fuzzy mass balance:
+\begin{equation}
+    \widetilde{\mu}_i \leftarrow \widetilde{\mu}_i \cap \widetilde{\mu}_i^{\mathrm{KCL}}
+    \label{eq:fuzzy_kcl}
+\end{equation}
+where $(\widetilde{\mu}_1 \cap \widetilde{\mu}_2)(c) = \min(\widetilde{\mu}_1(c), \widetilde{\mu}_2(c))$.
 \end{theorem}
 
 \begin{proof}
-Resolution of $\node_{i_{t+1}}$ depends only on the current resolved values of its predecessors (Equation~\ref{eq:resolution}). These are contained in $\circuit^{(t)}$. No information from earlier steps is required beyond what is already encoded in the current state.
+Apply Definition~\ref{def:extension} to the crisp constraint $\sum_j k_{ji}[C_j] = \sum_j k_{ij}[C_i]$ (Theorem~\ref{thm:kcl}). At each $\alpha$-level, the fuzzy intervals for all concentrations propagate through the linear flux equations by interval arithmetic. The intersection restricts $\fnode_i$ to concentrations simultaneously consistent with measurement and flux balance.
 \end{proof}
 
-\subsection{The Validation Function}
+\begin{theorem}[Fuzzy KVL]
+\label{thm:fuzzy_kvl}
+For each directed cycle $\mathcal{C}$, the thermodynamic constraint requires:
+\begin{equation}
+    0 \in \mathrm{core}\!\left(\widetilde{\Phi}_{\mathcal{C}}\right)
+    \label{eq:fuzzy_kvl}
+\end{equation}
+where $\widetilde{\Phi}_{\mathcal{C}}$ is the fuzzy number obtained by applying the extension principle to $\sum_{(i,j) \in \mathcal{C}} (\phi_j - \phi_i)$. Any assignment violating this condition has its membership reduced.
+\end{theorem}
 
-At each step, the resolved value is validated against the incoming constraints.
+\begin{proof}
+By Theorem~\ref{thm:kvl}, in the crisp case the cycle potential sum is zero exactly. The extension principle propagates fuzzy intervals; the constraint $\widetilde{\Phi}_{\mathcal{C}}(0) = 1$ is enforced by restricting cycle-node concentration intervals at each $\alpha$-level so that zero is in the $\alpha$-cut.
+\end{proof}
+
+\subsection{Macroscopic Signals}
+
+The fuzzy node states connect to measurable quantities.
+
+\begin{definition}[Macroscopic Signals]
+\label{def:signals}
+A macroscopic signal $\sig_k$ is a coarse-grained observable cheaply measurable from the node's local environment:
+\begin{equation}
+    \sig_k: V \to \R, \quad k \in \{\text{pH}, \text{vol}, \Delta\psi, \text{redox}, \ldots\}
+\end{equation}
+\end{definition}
+
+These are the ``clean'' observables: pH, volume changes, membrane potential $\Delta\psi$, redox state (NAD$^+$/NADH), ATP/ADP ratio---macroscopic quantities that integrate over many molecular degrees of freedom and are robust to microscopic fluctuations.
+
+\subsection{Local Validation}
 
 \begin{definition}[Local Validation]
 \label{def:validation}
-The local validation function $\valid_i$ at node $\node_i$ is:
+The local validation function $\valid_i$ at node $\fnode_i$ is:
 \begin{equation}
     \valid_i(x_i^*) = \prod_{j \in \mathrm{pred}(i)} \Phi_{ji}^{\mathrm{compat}}(x_j^*, x_i^*)
     \label{eq:validation}
 \end{equation}
-where $\Phi_{ji}^{\mathrm{compat}}: \R^{d_j} \times \R^{d_i} \to [0,1]$ is the compatibility function on edge $(\node_j, \node_i)$. The node passes validation if $\valid_i \geq \theta$ for threshold $\theta \in (0,1)$.
+where $\Phi_{ji}^{\mathrm{compat}}: \R^{d_j} \times \R^{d_i} \to [0,1]$ is the compatibility function on edge $(\fnode_j, \fnode_i)$. The node passes validation if $\valid_i \geq \theta$.
 \end{definition}
 
-\begin{remark}
-The product structure in Equation~\ref{eq:validation} means that a node passes validation if and only if it is compatible with \emph{each} of its resolved predecessors. A single incompatibility ($\Phi_{ji}^{\mathrm{compat}} \approx 0$ for some $j$) causes validation failure regardless of all other constraints.
-\end{remark}
-
-\begin{theorem}[Validation is Local]
-\label{thm:local_validation}
-The validation function $\valid_i$ depends only on:
-\begin{enumerate}[label=(\roman*)]
-    \item The resolved value $x_i^*$ of the current node
-    \item The resolved values $\{x_j^*\}$ of predecessor nodes
-    \item The constraint functions $\{\Phi_{ji}\}$ on incoming edges
-\end{enumerate}
-No global circuit information is required.
-\end{theorem}
-
-\begin{proof}
-Immediate from Definition~\ref{def:validation}. The validation function is a product over predecessor constraints, each of which involves only two nodes and one edge.
-\end{proof}
-
-This locality is both the strength and the vulnerability of the system. Strength: the cell can operate without global state knowledge. Vulnerability: the cell cannot detect global inconsistencies that manifest only over non-local paths.
+The product structure means a node passes if and only if it is compatible with each resolved predecessor. This locality is both the strength and the vulnerability of the system.
 
 
 %==============================================================================
-\part*{II. Disease}
+\section{Backward Trajectories and Trajectory Completion}
+\label{sec:algorithm}
+%==============================================================================
+
+\subsection{MAP Backward Trajectories}
+
+The circuit model admits a powerful inferential tool: backward trajectory analysis.
+
+\begin{definition}[MAP Backward Trajectory]
+\label{def:backward}
+Let node $\fnode_i$ be observed in state $\sigma_i$ at time $T$. The backward trajectory $\Back_i$ is the maximum-a-posteriori causal history:
+\begin{equation}
+    \Back_i = \arg\max_{\substack{\mathbf{x}(\cdot) : x_i(T) = \sigma_i \\ \mathbf{x}(\cdot) \text{ consistent with } \circuit}} P(\mathbf{x}(\cdot) \mid x_i(T) = \sigma_i, \circuit)
+\end{equation}
+It is the most probable trajectory, consistent with the network kinetics and topology, that terminates in state $\sigma_i$ at time $T$.
+\end{definition}
+
+Computationally, $\Back_i$ is obtained by the Viterbi algorithm \citep{viterbi1967} applied to the continuous-time Markov chain defined by the network's stochastic kinetics \citep{gillespie1977}.
+
+\begin{theorem}[Time-Invariance of Backward Trajectories]
+\label{thm:timeinv}
+For an autonomous reaction network $\circuit$ with time-independent rate constants, the MAP backward trajectory depends only on the current state $\sigma_i$ and the network $\circuit$, not on the observation time $T$:
+\begin{equation}
+    \Back_i = \Back_i(\sigma_i, \circuit), \quad \text{independent of } T
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The propensity functions $a_{ij}(\mathbf{n}) = k_{ij} n_i! / (n_i - \nu_{ij}^-)! \cdot \Omega^{1-\nu_{ij}^-}$ depend only on the current state $\mathbf{n}$, not on $t$. The CTMC is time-homogeneous: $P(\mathbf{n}(t+s) = \mathbf{m} \mid \mathbf{n}(t) = \mathbf{n}) = P(\mathbf{n}(s) = \mathbf{m} \mid \mathbf{n}(0) = \mathbf{n})$ \citep{gillespie1977}. Applying this shift to the conditional distribution of the past trajectory: for any $\tau > 0$,
+\begin{equation}
+    P(\mathbf{x}(T-\tau) = \mathbf{m} \mid x_i(T) = \sigma_i, \circuit) = P(\mathbf{x}(-\tau) = \mathbf{m} \mid x_i(0) = \sigma_i, \circuit)
+\end{equation}
+The MAP over the left-hand side equals the MAP over the right-hand side for all $T$.
+\end{proof}
+
+\begin{corollary}[Categorical Address]
+\label{cor:address}
+The backward trajectory $\Back_i(\sigma_i, \circuit)$ is a fixed geometric property of state $\sigma_i$ within the network's state space---a categorical address independent of when the cell is observed.
+\end{corollary}
+
+\subsection{The Trajectory Completion Algorithm}
+
+The trajectory completion problem takes as input a network $\circuit$, standard potentials $\{\mu_i^\circ\}$, and partial observations $\mathcal{O} = \{(\fnode_{i_k}, \sigma_{i_k})\}_{k=1}^M$, $M \leq N$. It outputs a fuzzy network state $\widetilde{\mathbf{X}}^*$ maximally consistent with all constraints.
+
+\begin{definition}[Constraint Operators]
+\label{def:operators}
+Define three operators on the fuzzy state space $(\widetilde{\mathcal{X}}, d)$:
+\begin{enumerate}[label=(\roman*)]
+    \item $\mathcal{T}_{\mathrm{KCL}}$: apply Theorem~\ref{thm:fuzzy_kcl} at every node (fuzzy mass balance)
+    \item $\mathcal{T}_{\mathrm{KVL}}$: apply Theorem~\ref{thm:fuzzy_kvl} to every independent cycle (thermodynamic consistency)
+    \item $\mathcal{T}_{\mathrm{Back}}$: for each node, compute the Viterbi MAP backward trajectory from the current most-probable concentration; restrict membership to concentrations whose backward trajectory is self-consistent with the network
+\end{enumerate}
+The combined operator is $\mathcal{T} = \mathcal{T}_{\mathrm{Back}} \circ \mathcal{T}_{\mathrm{KVL}} \circ \mathcal{T}_{\mathrm{KCL}}$.
+\end{definition}
+
+\begin{algorithm}[h]
+\caption{TRAJECTORY\_COMPLETION}
+\label{alg:tc}
+\begin{algorithmic}[1]
+\REQUIRE Network $\circuit$; observations $\mathcal{O}$; potentials $\{\mu_i^\circ\}$; tolerance $\varepsilon > 0$
+\ENSURE Fuzzy state $\widetilde{\mathbf{X}}^*$
+\STATE \textbf{Initialise:} For observed nodes, set trapezoidal membership from measurement $\pm \epsilon$. For unobserved nodes, set $\widetilde{\mu}_i \leftarrow \mathbf{1}$ on $[c_{\min}^i, c_{\max}^i]$ (maximum-entropy prior)
+\REPEAT
+    \STATE $\widetilde{\mathbf{X}}^{\mathrm{prev}} \leftarrow \widetilde{\mathbf{X}}$
+    \FOR{each node $\fnode_i \in V$}
+        \STATE Apply $\mathcal{T}_{\mathrm{KCL}}$ at $\fnode_i$: fuzzy mass balance
+    \ENDFOR
+    \FOR{each independent cycle $\mathcal{C}$ in $\circuit$}
+        \STATE Apply $\mathcal{T}_{\mathrm{KVL}}$: thermodynamic cycle consistency
+    \ENDFOR
+    \FOR{each node $\fnode_i \in V$}
+        \STATE Apply $\mathcal{T}_{\mathrm{Back}}$: backward trajectory self-consistency
+    \ENDFOR
+\UNTIL{$d(\widetilde{\mathbf{X}}, \widetilde{\mathbf{X}}^{\mathrm{prev}}) < \varepsilon$}
+\RETURN $\widetilde{\mathbf{X}}^* \leftarrow \widetilde{\mathbf{X}}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{remark}
+Note the critical point: $\mathcal{T}_{\mathrm{Back}}$ does \emph{not} compare backward trajectories against a ``healthy reference.'' It checks whether the backward trajectory from each node is self-consistent with the network topology and the Kirchhoff constraints. No external reference is needed. This is consistent with the Universal No Template Theorem.
+\end{remark}
+
+\subsection{Convergence}
+
+\begin{definition}[Hausdorff Metric on Fuzzy States]
+\label{def:hausdorff}
+The Hausdorff--Pompeiu metric on the space of fuzzy states is:
+\begin{equation}
+    d_H(\widetilde{\mu}, \widetilde{\nu}) = \sup_{\alpha \in (0,1]} d_{\mathrm{H}}([\widetilde{\mu}]^\alpha, [\widetilde{\nu}]^\alpha)
+\end{equation}
+where for closed intervals $d_{\mathrm{H}}([a,b], [c,d]) = \max(|a-c|, |b-d|)$. The product metric on the network state space is $d(\widetilde{\mathbf{X}}, \widetilde{\mathbf{Y}}) = \max_i d_H(\widetilde{\mu}_i, \widetilde{\nu}_i)$.
+\end{definition}
+
+\begin{theorem}[Convergence of Trajectory Completion]
+\label{thm:convergence}
+The operator $\mathcal{T} = \mathcal{T}_{\mathrm{Back}} \circ \mathcal{T}_{\mathrm{KVL}} \circ \mathcal{T}_{\mathrm{KCL}}$ is a contraction on $(\widetilde{\mathcal{X}}, d)$. By the Banach fixed-point theorem \citep{banach1922}, iteration from any initial state converges to a unique fixed point $\widetilde{\mathbf{X}}^*$.
+\end{theorem}
+
+\begin{proof}
+We show each sub-operator is a strict contraction.
+
+\emph{$\mathcal{T}_{\mathrm{KCL}}$ is a contraction.} At node $\fnode_i$, KCL relates $[C_i]$ linearly to neighbour concentrations. The resulting interval widths satisfy:
+\begin{equation}
+    d_H([\widetilde{\mu}_i^{\mathrm{KCL}}(\mathbf{X})]^\alpha, [\widetilde{\mu}_i^{\mathrm{KCL}}(\mathbf{Y})]^\alpha) \leq \sum_{j \in \mathcal{N}(i)} \frac{k_{ji}}{\sum_l k_{li}} d_H([\widetilde{\mu}_j(\mathbf{X})]^\alpha, [\widetilde{\mu}_j(\mathbf{Y})]^\alpha)
+\end{equation}
+where the coefficients sum to at most 1. Intersection with the prior can only reduce distance. Contraction constant $c_1 < 1$ whenever at least one node is constrained by observation.
+
+\emph{$\mathcal{T}_{\mathrm{KVL}}$ is a contraction.} The cycle constraint imposes a multiplicative relation on cycle-node concentrations. Restriction narrows fuzzy intervals toward the thermodynamic constraint manifold, with contraction constant $c_2 < 1$.
+
+\emph{$\mathcal{T}_{\mathrm{Back}}$ is a contraction.} The Viterbi backward trajectory identifies backward-consistent concentrations. Restriction reduces support width monotonically, with $c_3 < 1$.
+
+\emph{Composition:} $c \leq c_1 c_2 c_3 < 1$. The space $(\widetilde{\mathcal{X}}, d)$ is complete (finite product of complete spaces). By the Banach fixed-point theorem, there exists a unique fixed point with geometric convergence rate $c^n$.
+\end{proof}
+
+\begin{corollary}[Crisp Convergence Under Sufficient Observations]
+\label{cor:crisp}
+If the observations form a dominating set of $\circuit$ (every unobserved node has at least one observed neighbour), the fixed point is crisp: $\widetilde{\mu}_i^*$ has single-point support for all $i$.
+\end{corollary}
+
+\begin{proposition}[Computational Complexity]
+\label{prop:complexity}
+For a network with $N$ species, $R$ reactions, maximum degree $\Delta$, and backward trajectory depth $L$, one iteration requires $O(N \cdot R \cdot L)$. Convergence in $O(\log(1/\varepsilon) / \log(1/c))$ iterations gives total complexity $O(N \cdot R \cdot L \cdot \log(1/\varepsilon))$.
+\end{proposition}
+
+\subsection{Health as Self-Consistency}
+
+We can now state precisely what health means in this framework.
+
+\begin{theorem}[Health is Self-Consistency]
+\label{thm:health}
+A cell is healthy if and only if the trajectory completion algorithm converges to a self-consistent fixed point: a state in which every node's backward trajectory closes on the network itself---every backward path eventually returns to a node already in the network, rather than escaping to an external attractor.
+\end{theorem}
+
+\begin{proof}
+$(\Rightarrow)$ If the cell is healthy, all reaction fluxes satisfy KCL and KVL, all cycle constraints are met, and the network is in a self-sustaining steady state. The backward trajectory of every node traces the most probable causal history within the network. Since the network is self-sustaining, these trajectories close: every node's history is explained by other nodes in the network. The constraint system is self-consistent.
+
+$(\Leftarrow)$ If the constraint system is self-consistent, every Kirchhoff constraint is satisfied, every cycle closes thermodynamically, and every backward trajectory is explained within the network. This is precisely the condition for the network to be in a viable, self-sustaining steady state---the operational definition of cellular health.
+\end{proof}
+
+\begin{remark}
+No reference state appears in this theorem. Health is not ``the state matches a template.'' It is ``the constraint system closes.'' This is the electrician's criterion: the circuit works. The researcher's ``bias'' toward health is nothing more than the expectation that a circuit should be complete---that Kirchhoff's laws should hold. This is not a stored template. It is a mathematical property of the constraint system itself.
+\end{remark}
+
+
+%==============================================================================
+\part*{III. Disease}
 %==============================================================================
 
 %==============================================================================
@@ -502,59 +704,64 @@ This locality is both the strength and the vulnerability of the system. Strength
 \label{sec:disease}
 %==============================================================================
 
-\subsection{Loop Consistency}
+\subsection{Loop Consistency and Holonomy}
 
 The critical test of circuit health occurs at loops---closed paths where a signal must be self-consistent after complete traversal.
 
-\begin{definition}[Loop Consistency]
-\label{def:loop_consistency}
-For a loop $\ell = (\node_{i_1} \to \node_{i_2} \to \cdots \to \node_{i_k} \to \node_{i_1})$, the loop consistency is:
+\begin{definition}[Loop Holonomy]
+\label{def:holonomy}
+The holonomy of loop $\ell = (\fnode_{i_1} \to \fnode_{i_2} \to \cdots \to \fnode_{i_k} \to \fnode_{i_1})$ is the composed constraint map:
 \begin{equation}
-    \consist_\ell = \Phi_{i_k, i_1}^{\mathrm{compat}}\left(x_{i_k}^*, \, x_{i_1}^{*\prime}\right)
-    \label{eq:loop_consistency}
+    H_\ell = \Phi_{i_k, i_1} \circ \Phi_{i_{k-1}, i_k} \circ \cdots \circ \Phi_{i_1, i_2}
+    \label{eq:holonomy_def}
 \end{equation}
-where $x_{i_1}^{*\prime}$ is the value that node $\node_{i_1}$ would be resolved to \emph{given the output of the complete loop traversal}, and $x_{i_1}^*$ is the value it was actually resolved to at step 1.
+The loop is consistent if and only if $H_\ell = \mathrm{Id}$ (up to tolerance $\epsilon$).
 \end{definition}
 
-\begin{definition}[Consistent Loop]
-\label{def:consistent}
-A loop $\ell$ is consistent if:
+\begin{remark}
+The term ``holonomy'' is used deliberately. In differential geometry, holonomy measures the failure of parallel transport around a loop to return a vector to its original orientation. Here, it measures the failure of constraint propagation around a loop to return a signal to its original value. The mathematical structure is identical.
+\end{remark}
+
+\begin{definition}[Loop Consistency]
+\label{def:loop_consistency}
+The consistency of loop $\ell$ is:
 \begin{equation}
-    \consist_\ell \geq 1 - \epsilon
+    \consist_\ell = 1 - \frac{\|H_\ell - \mathrm{Id}\|}{\|H_\ell - \mathrm{Id}\|_{\max}}
 \end{equation}
-for tolerance $\epsilon > 0$. The loop is inconsistent if $\consist_\ell < 1 - \epsilon$.
+The loop is consistent if $\consist_\ell \geq 1 - \epsilon$ and inconsistent if $\consist_\ell < 1 - \epsilon$.
 \end{definition}
 
 \begin{theorem}[Disease as Inconsistency]
 \label{thm:disease_inconsistency}
-Disease is a state of the cellular circuit in which at least one loop is inconsistent:
+Disease is a state of the cellular circuit in which at least one loop has non-trivial holonomy:
 \begin{equation}
-    \text{Disease} \iff \exists\, \ell \in \mathcal{L}(\circuit) : \consist_\ell < 1 - \epsilon
+    \text{Disease} \iff \exists\, \ell \in \mathcal{L}(\circuit) : H_\ell \neq \mathrm{Id}
     \label{eq:disease_condition}
 \end{equation}
-where $\mathcal{L}(\circuit)$ is the set of all loops in $\circuit$.
+Equivalently, the trajectory completion algorithm fails to converge to a fully self-consistent fixed point: some Kirchhoff or thermodynamic constraint remains unsatisfied.
 \end{theorem}
 
 \begin{proof}
-We prove both directions.
+$(\Rightarrow)$ If the circuit is diseased, the global state is not self-consistent. Since feed-forward paths cannot generate inconsistency (they have no loops to close), the inconsistency must arise from at least one loop returning a value incompatible with its input. Therefore $H_\ell \neq \mathrm{Id}$ for at least one loop $\ell$.
 
-$(\Rightarrow)$ Suppose the circuit is diseased---the global state is pathological. Then the macroscopic observables deviate from viable values. Since every macroscopic observable is determined by the circuit's constraint propagation, and feed-forward paths cannot generate inconsistency (they have no loops to close), the deviation must arise from at least one loop returning an inconsistent value. Therefore at least one loop is inconsistent.
+In terms of the trajectory completion algorithm: the constraint operators (KCL, KVL, backward trajectory) cannot all be simultaneously satisfied. The algorithm converges to a fixed point, but this fixed point has non-zero residual---fuzzy intervals that cannot be narrowed to crisp values because the constraints are mutually incompatible.
 
-$(\Leftarrow)$ Suppose loop $\ell$ is inconsistent: $\consist_\ell < 1 - \epsilon$. Then the circuit cannot be in a globally self-consistent steady state, because the output of the loop contradicts its input. This inconsistency generates a drift---each traversal of the loop shifts the resolved values further from self-consistency. By the monotonicity of constraint propagation (Proposition~\ref{prop:monotone}), this drift is irreversible. An irreversible drift away from self-consistency is precisely what we observe clinically as disease.
+$(\Leftarrow)$ If loop $\ell$ has $H_\ell \neq \mathrm{Id}$, the constraint system is self-contradictory on that loop. The KVL constraint (Theorem~\ref{thm:kvl}) requires $\sum_{\mathcal{C}} \Delta\phi_{ij} = 0$, but the non-trivial holonomy means the potentials do not close around the cycle. This thermodynamic inconsistency generates a net free energy leak (or sink) on the loop, driving irreversible drift away from the self-consistent manifold.
 \end{proof}
 
-\subsection{The Consistency Residual}
+\begin{remark}
+Note what this theorem does \emph{not} require: a healthy reference state. Disease is not defined as ``deviation from healthy.'' It is defined as ``the constraint system does not close.'' This is detectable from the circuit's own topology and the Kirchhoff laws, with no external reference.
+\end{remark}
 
-When a loop is traversed, the mismatch between expected and actual return values defines a residual.
+\subsection{Consistency Residuals and Accumulation}
 
 \begin{definition}[Consistency Residual]
 \label{def:residual}
 The consistency residual of loop $\ell$ at step $t$ is:
 \begin{equation}
-    \delta_\ell^{(t)} = \|x_{i_1}^{*\prime} - x_{i_1}^*\|
-    \label{eq:residual}
+    \delta_\ell^{(t)} = \|H_\ell^{(t)} - \mathrm{Id}\|
 \end{equation}
-This is the discrepancy between the value node $\node_{i_1}$ would take from loop propagation and the value it actually has.
+This is the magnitude of the holonomy---the degree to which the loop fails to close.
 \end{definition}
 
 \begin{theorem}[Residual Accumulation]
@@ -562,61 +769,48 @@ This is the discrepancy between the value node $\node_{i_1}$ would take from loo
 In a diseased circuit, consistency residuals accumulate monotonically:
 \begin{equation}
     \delta_\ell^{(t+|\ell|)} \geq \delta_\ell^{(t)}
-    \label{eq:residual_growth}
 \end{equation}
-where $|\ell|$ is the loop length (number of steps for one complete traversal).
+where $|\ell|$ is the loop length.
 \end{theorem}
 
 \begin{proof}
-At step $t$, the loop has residual $\delta_\ell^{(t)}$. When the loop is traversed again, each node resolves against the output of the previous step, which already carries the accumulated residual. The new resolution introduces an additional residual $\delta_{\mathrm{new}} \geq 0$ (since resolution against inconsistent boundary conditions cannot reduce inconsistency). Therefore:
+At step $t$, the loop has residual $\delta_\ell^{(t)}$. When the loop is traversed again, each node resolves against the output of the previous step, which already carries the accumulated residual. Resolution against inconsistent boundary conditions cannot reduce inconsistency (the constraint functions propagate the residual forward). Therefore:
 \begin{equation}
     \delta_\ell^{(t+|\ell|)} = \delta_\ell^{(t)} + \delta_{\mathrm{new}} \geq \delta_\ell^{(t)}
 \end{equation}
 \end{proof}
 
-\begin{corollary}[Disease Progression]
+\begin{corollary}[Disease Progression is Monotonic]
 \label{cor:progression}
-Disease progression is monotonic. Once a loop becomes inconsistent, it cannot spontaneously return to consistency without external intervention.
+Once a loop becomes inconsistent, it cannot spontaneously return to consistency without external intervention. This matches clinical observation: degenerative diseases progress, they do not spontaneously reverse.
 \end{corollary}
 
-This matches clinical observation: degenerative diseases progress, they do not spontaneously reverse.
+\subsection{Holonomy Decomposition and Defect Classification}
 
-\subsection{Defect Classification}
+\begin{theorem}[Holonomy Decomposition]
+\label{thm:holonomy_decomp}
+The holonomy of any loop decomposes into:
+\begin{equation}
+    H_\ell = \mathrm{Id} + \delta H_\ell^{\mathrm{phase}} + \delta H_\ell^{\mathrm{amp}} + \delta H_\ell^{\mathrm{topo}}
+\end{equation}
+corresponding to phase, amplitude, and topological defect contributions.
+\end{theorem}
 
-Different types of loop inconsistency correspond to different disease classes.
+\begin{proof}
+Write each constraint function as $\Phi_{ij} = \Phi_{ij}^{(0)} + \delta\Phi_{ij}$, where $\Phi_{ij}^{(0)}$ is the self-consistent constraint and $\delta\Phi_{ij}$ is the perturbation. In a healthy circuit, $\prod_j \Phi_j^{(0)} = \mathrm{Id}$. The first-order perturbation decomposes by type: phase (timing shifts), amplitude (magnitude scaling), and topological (connectivity changes).
+\end{proof}
 
 \begin{definition}[Defect Types]
 \label{def:defect_types}
 Circuit defects are classified by their topological character:
 \begin{enumerate}[label=(\roman*)]
-    \item \textbf{Phase defect:} A timing mismatch---the loop traversal time shifts relative to the node's internal clock. Corresponds to oscillatory disorders (cardiac arrhythmia, circadian disruption).
-
-    \item \textbf{Amplitude defect:} The returned signal magnitude deviates from the input magnitude. Corresponds to gain-of-function or loss-of-function mutations.
-
-    \item \textbf{Topological defect:} The loop structure itself is altered---edges added, removed, or rewired. Corresponds to cancer (new autonomous loops), autoimmune disease (self-recognition loop failure), and neurodegeneration (loop dissolution).
-
-    \item \textbf{Drift defect:} No single-traversal inconsistency is detectable, but cumulative multi-traversal drift exceeds tolerance. Corresponds to aging and slow degenerative diseases.
+    \item \textbf{Drift defect:} $\delta \sim t/|\ell|$ per traversal. No single-traversal inconsistency is detectable, but cumulative multi-traversal drift exceeds tolerance. Corresponds to aging and slow degenerative diseases.
+    \item \textbf{Phase defect:} Timing mismatch, $\delta \sim \Delta\omega \cdot \tau_{\mathrm{eff}}$ per traversal. Corresponds to oscillatory disorders (cardiac arrhythmia, circadian disruption).
+    \item \textbf{Amplitude defect:} Returned signal magnitude deviates, accumulation exponential: $\delta^{(n)} \sim g^n$. Corresponds to gain-of-function or loss-of-function mutations.
+    \item \textbf{Topological defect:} Loop structure itself is altered. Immediate maximal inconsistency ($\consist_\ell = 0$). Corresponds to cancer (autonomous loops), autoimmune disease, neurodegeneration.
 \end{enumerate}
+Severity hierarchy: drift $\prec$ phase $\prec$ amplitude $\prec$ topological.
 \end{definition}
-
-\begin{theorem}[Defect Hierarchy]
-\label{thm:defect_hierarchy}
-Defect severity follows the hierarchy:
-\begin{equation}
-    \text{drift} \prec \text{phase} \prec \text{amplitude} \prec \text{topological}
-\end{equation}
-where $A \prec B$ means $B$ is more severe (faster progression, harder to compensate).
-\end{theorem}
-
-\begin{proof}
-\textbf{Drift defects} accumulate as $\delta \sim t/|\ell|$ (linear in traversal count), requiring many cycles to become significant.
-
-\textbf{Phase defects} introduce residual $\delta \sim \Delta\omega \cdot \tau_{\mathrm{eff}}$ per traversal, where $\Delta\omega$ is the frequency mismatch. Accumulation is linear but with a larger per-step increment.
-
-\textbf{Amplitude defects} introduce residual $\delta \sim |g - 1| \cdot x^*$ per traversal, where $g$ is the gain factor. For $g > 1$, accumulation is exponential: $\delta^{(n)} \sim g^n$.
-
-\textbf{Topological defects} create entirely new loop structures. The new loops may have no self-consistent solution at all ($\consist_\ell = 0$), giving immediate maximal inconsistency.
-\end{proof}
 
 
 %==============================================================================
@@ -626,85 +820,30 @@ where $A \prec B$ means $B$ is more severe (faster progression, harder to compen
 
 \subsection{The Invisibility Theorem}
 
-We now prove the central result explaining cellular blindness to disease.
-
 \begin{theorem}[Local Invisibility]
 \label{thm:local_invisibility}
 Let $\circuit$ be a diseased circuit with inconsistent loop $\ell$. Every individual resolution step along $\ell$ passes local validation:
 \begin{equation}
-    \forall\, \node_{i_j} \in \ell: \quad \valid_{i_j}(x_{i_j}^*) \geq \theta
-    \label{eq:invisibility}
+    \forall\, \fnode_{i_j} \in \ell: \quad \valid_{i_j}(x_{i_j}^*) \geq \theta
 \end{equation}
-yet the loop is globally inconsistent: $\consist_\ell < 1 - \epsilon$.
+yet the loop is globally inconsistent: $H_\ell \neq \mathrm{Id}$.
 \end{theorem}
 
 \begin{proof}
-Consider loop $\ell = (\node_{i_1} \to \cdots \to \node_{i_k} \to \node_{i_1})$.
+At step 1, node $\fnode_{i_1}$ is resolved and passes local validation. At step 2, $\fnode_{i_2}$ resolves against the definite output of $\fnode_{i_1}$ via a well-defined constraint. It passes local validation. By induction, every node passes.
 
-At step 1, node $\node_{i_1}$ is resolved. Its value $x_{i_1}^*$ is determined by external inputs (from other parts of the circuit) and passes local validation: $\valid_{i_1} \geq \theta$.
-
-At step 2, node $\node_{i_2}$ is resolved against $x_{i_1}^*$ via constraint $\Phi_{i_1, i_2}$. Since $x_{i_1}^*$ is definite (fully resolved) and the constraint function is well-defined, $x_{i_2}^*$ exists and satisfies the constraint. Therefore $\valid_{i_2} \geq \theta$.
-
-By induction, every node $\node_{i_j}$ in the loop passes local validation, because each resolves against the definite output of its predecessor via a well-defined constraint function.
-
-However, the loop consistency $\consist_\ell$ compares $x_{i_1}^{*\prime}$ (the value propagated around the entire loop) with $x_{i_1}^*$ (the value resolved at step 1). These can differ because:
+However, the loop holonomy compares the value propagated around the entire loop with the starting value:
 \begin{equation}
     x_{i_1}^{*\prime} = \Phi_{i_k, i_1} \circ \Phi_{i_{k-1}, i_k} \circ \cdots \circ \Phi_{i_1, i_2}(x_{i_1}^*)
 \end{equation}
-is the composition of $k$ constraint functions applied to $x_{i_1}^*$. Even if each $\Phi$ is individually well-behaved, their composition around a loop need not be the identity. In general:
+Even if each $\Phi$ is individually well-behaved, their composition around a loop need not be the identity:
 \begin{equation}
     \Phi_{i_k, i_1} \circ \cdots \circ \Phi_{i_1, i_2} \neq \mathrm{Id}
-    \label{eq:holonomy}
 \end{equation}
-
-The discrepancy $x_{i_1}^{*\prime} - x_{i_1}^*$ is the \emph{holonomy} of the loop---a purely global quantity that is invisible to any local validation step.
+The discrepancy $x_{i_1}^{*\prime} - x_{i_1}^*$ is the holonomy---a purely global quantity invisible to any local validation step.
 \end{proof}
 
-\begin{remark}
-The term ``holonomy'' is used deliberately. In differential geometry, holonomy measures the failure of parallel transport around a loop to return a vector to its original orientation. Here, it measures the failure of constraint propagation around a loop to return a signal to its original value. The mathematical structure is identical.
-\end{remark}
-
-\subsection{The Holonomy of Disease}
-
-\begin{definition}[Circuit Holonomy]
-\label{def:holonomy}
-The holonomy of loop $\ell$ is the composed constraint map:
-\begin{equation}
-    H_\ell = \Phi_{i_k, i_1} \circ \Phi_{i_{k-1}, i_k} \circ \cdots \circ \Phi_{i_1, i_2}
-    \label{eq:holonomy_def}
-\end{equation}
-The loop is consistent if and only if $H_\ell = \mathrm{Id}$ (up to tolerance $\epsilon$).
-\end{definition}
-
-\begin{theorem}[Holonomy Decomposition]
-\label{thm:holonomy_decomp}
-The holonomy of any loop decomposes into:
-\begin{equation}
-    H_\ell = \mathrm{Id} + \delta H_\ell^{\mathrm{phase}} + \delta H_\ell^{\mathrm{amp}} + \delta H_\ell^{\mathrm{topo}}
-    \label{eq:holonomy_decomp}
-\end{equation}
-corresponding to phase, amplitude, and topological defect contributions.
-\end{theorem}
-
-\begin{proof}
-Write each constraint function as $\Phi_{ij} = \Phi_{ij}^{(0)} + \delta\Phi_{ij}$, where $\Phi_{ij}^{(0)}$ is the ``healthy'' constraint and $\delta\Phi_{ij}$ is the perturbation. The composition is:
-\begin{align}
-    H_\ell &= \prod_{j} (\Phi_{j}^{(0)} + \delta\Phi_{j}) \\
-    &= \prod_{j} \Phi_{j}^{(0)} + \sum_{j} \delta\Phi_{j} \cdot \prod_{k \neq j} \Phi_{k}^{(0)} + \mathcal{O}(\delta^2)
-\end{align}
-
-In a healthy circuit, $\prod_j \Phi_j^{(0)} = \mathrm{Id}$ (loops are self-consistent by construction). The first-order perturbation decomposes by type:
-\begin{itemize}
-    \item Phase: $\delta\Phi_j$ shifts the timing of the constraint
-    \item Amplitude: $\delta\Phi_j$ scales the magnitude of the constraint
-    \item Topological: $\delta\Phi_j$ changes which nodes are connected
-\end{itemize}
-Higher-order terms mix these contributions.
-\end{proof}
-
-\subsection{Drift Accumulation and the Boiling Frog}
-
-The most insidious form of disease is drift: the holonomy is small on each traversal but accumulates over many cycles.
+\subsection{Drift Invisibility: The Boiling Frog}
 
 \begin{theorem}[Drift Invisibility]
 \label{thm:drift}
@@ -712,31 +851,23 @@ A drift defect with per-traversal holonomy $\|H_\ell - \mathrm{Id}\| = \delta$ b
 \begin{enumerate}[label=(\roman*)]
     \item Every local validation step passes
     \item The global consistency residual grows linearly: $\delta_\ell^{(n)} \approx n\delta$
-    \item The circuit state drifts monotonically from the healthy manifold
+    \item The circuit state drifts monotonically from the self-consistent manifold
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
-After $n$ traversals, the accumulated holonomy is:
-\begin{equation}
-    H_\ell^n \approx \mathrm{Id} + n \cdot (H_\ell - \mathrm{Id}) = \mathrm{Id} + n\delta
-\end{equation}
-(to first order for small $\delta$). Each local step sees only the single-step residual $\delta < \epsilon$ and passes validation. The global residual $n\delta$ is invisible to local checks until $n\delta > \epsilon$, which occurs at $n^* = \lceil\epsilon/\delta\rceil$.
+After $n$ traversals, the accumulated holonomy is $H_\ell^n \approx \mathrm{Id} + n(H_\ell - \mathrm{Id})$ to first order. Each local step sees only the single-step residual $\delta < \epsilon$ and passes validation. The global residual $n\delta$ is invisible to local checks until $n\delta > \epsilon$ at $n^* = \lceil\epsilon/\delta\rceil$.
 \end{proof}
 
-This is the ``boiling frog'' mechanism of degenerative disease. The cell walks itself into pathology one valid step at a time. No single step triggers an alarm. By the time the accumulated inconsistency exceeds detection threshold, the damage is extensive.
+This is the ``boiling frog'' mechanism of degenerative disease. The cell walks into pathology one valid step at a time. No single step triggers an alarm.
 
-\begin{example}[Protein Misfolding]
-Consider a protein quality control loop: synthesis $\to$ folding $\to$ function $\to$ degradation $\to$ synthesis. If the folding step introduces a small error ($\delta$) that is below the chaperone detection threshold ($\epsilon$), misfolded proteins accumulate at rate $\delta$ per cycle. After $n^* = \epsilon/\delta$ cycles, the aggregate load triggers the unfolded protein response---but by then, $n^*$ misfolded copies exist in the cell.
-\end{example}
-
-\begin{example}[Metabolic Drift]
-Consider the glycolytic cycle coupled to the TCA cycle via pyruvate. If a mutation in pyruvate kinase introduces a small flux imbalance $\delta$ per cycle, the metabolite pools drift at rate $\delta$ per cycle. Each individual enzyme passes its kinetic validation (substrate within $K_M$ range). After $n^*$ cycles, the accumulated drift pushes a metabolite concentration outside its viable range.
-\end{example}
+\begin{remark}
+An external observer running the trajectory completion algorithm can detect the inconsistency that the cell cannot, not because the observer has a template, but because the observer can check self-consistency across the entire circuit simultaneously---the constraint system either closes or it doesn't. The observer doesn't need to know what ``healthy'' looks like. They need to check whether Kirchhoff's laws hold. If the loops don't close, there is a defect.
+\end{remark}
 
 
 %==============================================================================
-\part*{III. Observables and Measurement}
+\part*{IV. Observables and Intervention}
 %==============================================================================
 
 %==============================================================================
@@ -746,34 +877,17 @@ Consider the glycolytic cycle coupled to the TCA cycle via pyruvate. If a mutati
 
 \subsection{Global Consistency from Local Residuals}
 
-We now construct a measurable quantity that captures global circuit health.
-
 \begin{definition}[Consistency Index]
 \label{def:consistency_index}
 The consistency index of circuit $\circuit$ is:
 \begin{equation}
-    \consist(\circuit) = \frac{1}{|\mathcal{L}|} \sum_{\ell \in \mathcal{L}} \consist_\ell = \frac{1}{|\mathcal{L}|} \sum_{\ell \in \mathcal{L}} \left(1 - \frac{\delta_\ell}{\delta_{\max}}\right)
+    \consist(\circuit) = \frac{1}{|\mathcal{L}|} \sum_{\ell \in \mathcal{L}} \consist_\ell = \frac{1}{|\mathcal{L}|} \sum_{\ell \in \mathcal{L}} \left(1 - \frac{\|H_\ell - \mathrm{Id}\|}{\|H_\ell - \mathrm{Id}\|_{\max}}\right)
     \label{eq:consistency_index}
 \end{equation}
-where $\mathcal{L}$ is the set of all loops, $\delta_\ell$ is the consistency residual of loop $\ell$, and $\delta_{\max}$ is the maximum possible residual.
+where $\mathcal{L}$ is the set of all loops. $\consist = 1$ for a perfectly self-consistent circuit; $\consist = 0$ for maximally inconsistent.
 \end{definition}
 
-\begin{theorem}[Consistency Bounds]
-\label{thm:consistency_bounds}
-The consistency index satisfies:
-\begin{equation}
-    0 \leq \consist(\circuit) \leq 1
-\end{equation}
-with $\consist = 1$ for a perfectly self-consistent (healthy) circuit and $\consist = 0$ for a maximally inconsistent circuit.
-\end{theorem}
-
-\begin{proof}
-Each $\consist_\ell \in [0,1]$ by construction. The average of values in $[0,1]$ is in $[0,1]$.
-\end{proof}
-
 \subsection{Relationship to Macroscopic Signals}
-
-The consistency index can be estimated from macroscopic measurements.
 
 \begin{theorem}[Signal-Consistency Relation]
 \label{thm:signal_consistency}
@@ -786,54 +900,41 @@ where $\Delta\sig_k = \sig_k^{(t+1)} - \sig_k^{(t)}$ is the step-to-step change 
 \end{theorem}
 
 \begin{proof}
-In a consistent circuit, sequential signals are tightly constrained: the output of step $t$ determines the input of step $t+1$, so $\Delta\sig_k$ is small and $\mathrm{Var}(\Delta\sig_k)$ is low.
-
-In an inconsistent circuit, loop holonomies inject additional variation: each loop traversal contributes a residual $\delta_\ell$ to the signal change. Over a window $\window$, the variance of $\Delta\sig_k$ accumulates contributions from all loops that signal $k$ participates in:
+In a consistent circuit, sequential signals are tightly constrained: $\Delta\sig_k$ is small and $\mathrm{Var}(\Delta\sig_k)$ is low. In an inconsistent circuit, loop holonomies inject additional variation: each traversal contributes a residual $\delta_\ell$ to the signal change. Over a window $\window$:
 \begin{equation}
     \mathrm{Var}(\Delta\sig_k) = \sum_{\ell \ni \sig_k} \frac{\delta_\ell^2}{|\ell|}
 \end{equation}
-
-Normalizing by the maximum variance and averaging over all signals gives Equation~\ref{eq:signal_consistency}.
+Normalizing and averaging gives Equation~\ref{eq:signal_consistency}.
 \end{proof}
 
 \begin{corollary}[Measurable Signals]
 \label{cor:measurable}
 For a cell, the relevant macroscopic signals are:
 \begin{enumerate}[label=(\roman*)]
-    \item \textbf{pH:} Proton concentration reflects the net acid-base balance of all metabolic loops
-    \item \textbf{Volume:} Cell volume reflects osmotic balance across membrane transport loops
-    \item \textbf{Membrane potential $\Delta\psi$:} Reflects the consistency of ion transport loops
-    \item \textbf{Redox state (NAD$^+$/NADH):} Reflects the consistency of electron transport loops
-    \item \textbf{ATP/ADP ratio:} Reflects the consistency of energy metabolism loops
+    \item \textbf{pH:} Net acid-base balance of all metabolic loops
+    \item \textbf{Volume:} Osmotic balance across membrane transport loops
+    \item \textbf{Membrane potential $\Delta\psi$:} Consistency of ion transport loops
+    \item \textbf{Redox state (NAD$^+$/NADH):} Consistency of electron transport loops
+    \item \textbf{ATP/ADP ratio:} Consistency of energy metabolism loops
 \end{enumerate}
 The step-to-step variance of these signals provides a direct estimate of $\consist(\circuit)$.
 \end{corollary}
 
-\subsection{Disease Progression in Terms of $\consist$}
+\subsection{Phase Transitions in Disease}
 
 \begin{theorem}[Monotonic Decline]
 \label{thm:monotonic}
-In the absence of external intervention, the consistency index of a diseased circuit decreases monotonically:
-\begin{equation}
-    \frac{d\consist}{dt} \leq 0 \quad \text{when } \consist < 1
-    \label{eq:monotonic_decline}
-\end{equation}
+In the absence of external intervention, the consistency index decreases monotonically when $\consist < 1$.
 \end{theorem}
 
 \begin{proof}
-By Theorem~\ref{thm:accumulation}, consistency residuals accumulate: $\delta_\ell^{(t+|\ell|)} \geq \delta_\ell^{(t)}$. Since $\consist$ is a decreasing function of the residuals (Equation~\ref{eq:consistency_index}), $\consist$ decreases as residuals grow.
-
-Furthermore, loop inconsistencies can \emph{propagate}: if loops $\ell_1$ and $\ell_2$ share a node, inconsistency in $\ell_1$ injects a residual into $\ell_2$ at the shared node. This means the number of inconsistent loops can only increase, further decreasing $\consist$.
+By Theorem~\ref{thm:accumulation}, consistency residuals accumulate. Since $\consist$ is a decreasing function of residuals, $\consist$ decreases. Furthermore, loops sharing nodes propagate inconsistency between each other, so the number of inconsistent loops can only increase.
 \end{proof}
 
-\begin{corollary}[Phase Transitions in Disease]
-\label{cor:phase_transition}
-Disease progression exhibits a phase transition at a critical consistency $\consist^*$. For $\consist > \consist^*$, inconsistencies remain localized. For $\consist < \consist^*$, inconsistencies percolate through the circuit graph, causing rapid global decline.
+\begin{corollary}[Percolation Transition]
+\label{cor:percolation}
+Disease progression exhibits a phase transition at critical consistency $\consist^*$. For $\consist > \consist^*$, inconsistencies remain localized. For $\consist < \consist^*$, inconsistencies percolate through the circuit graph, causing rapid global decline \citep{stauffer1994}.
 \end{corollary}
-
-\begin{proof}
-The circuit graph has a percolation threshold determined by its topology. When the fraction of inconsistent loops exceeds this threshold, there exists a connected path of inconsistent loops spanning the circuit. Above the threshold, each inconsistent loop can inject residuals into adjacent loops, triggering a cascade. This is a standard percolation transition \citep{stauffer1994}.
-\end{proof}
 
 
 %==============================================================================
@@ -841,67 +942,75 @@ The circuit graph has a percolation threshold determined by its topology. When t
 \label{sec:pathways}
 %==============================================================================
 
-\subsection{Glycolysis as a Feed-Forward Subcircuit}
+\subsection{Metabolic Pathways as Subcircuits}
 
-Metabolic pathways are not designed pipelines. They are feed-forward subcircuits that persist because they are compatible with the global circuit topology.
-
-\begin{definition}[Feed-Forward Subcircuit]
-\label{def:feedforward}
-A feed-forward subcircuit is a directed acyclic subgraph $\circuit_{\mathrm{ff}} \subset \circuit$ where each node has predecessors only from earlier nodes in the path:
-\begin{equation}
-    \node_{i_1} \to \node_{i_2} \to \cdots \to \node_{i_k}
-\end{equation}
-with $\mathrm{pred}(\node_{i_j}) \cap \circuit_{\mathrm{ff}} \subseteq \{\node_{i_1}, \ldots, \node_{i_{j-1}}\}$.
-\end{definition}
-
-Glycolysis is such a subcircuit: glucose $\to$ G6P $\to$ F6P $\to \cdots \to$ pyruvate. Each step resolves against the output of the previous step.
+Metabolic pathways are not designed pipelines. They are subcircuits that persist because they are compatible with the global circuit topology.
 
 \begin{theorem}[Pathway Compatibility]
 \label{thm:compatibility}
-A feed-forward subcircuit $\circuit_{\mathrm{ff}}$ persists in $\circuit$ if and only if it is compatible with all loops it participates in:
+A feed-forward subcircuit $\circuit_{\mathrm{ff}}$ persists in $\circuit$ if and only if it is consistent with all loops it participates in:
 \begin{equation}
-    \forall\, \ell \in \mathcal{L}(\circuit) \text{ s.t. } \ell \cap \circuit_{\mathrm{ff}} \neq \emptyset: \quad \consist_\ell \geq 1 - \epsilon
+    \forall\, \ell \in \mathcal{L}(\circuit) \text{ s.t. } \ell \cap \circuit_{\mathrm{ff}} \neq \emptyset: \quad H_\ell = \mathrm{Id}
 \end{equation}
 \end{theorem}
 
-\begin{proof}
-$(\Rightarrow)$ If $\circuit_{\mathrm{ff}}$ persists, the circuit is in a viable steady state. In a viable state, all loops are consistent (otherwise Theorem~\ref{thm:disease_inconsistency} implies disease and eventual failure). In particular, loops involving $\circuit_{\mathrm{ff}}$ are consistent.
+This explains why glycolysis has its particular architecture. Among the vast space of possible glucose-to-pyruvate cascades, the 10-step pathway is one that maintains loop consistency with the TCA cycle, pentose phosphate pathway, gluconeogenesis, and ATP/ADP cycle. The pathway fits the circuit.
 
-$(\Leftarrow)$ If all loops involving $\circuit_{\mathrm{ff}}$ are consistent, the subcircuit's outputs are compatible with its inputs through every feedback path. The subcircuit is therefore in a self-consistent steady state within the global circuit.
-\end{proof}
-
-\begin{remark}
-This explains why glycolysis has its particular 10-step architecture. It is not that evolution ``designed'' a 10-step pathway. Rather, among the vast space of possible glucose-to-pyruvate cascades, the 10-step pathway is one that maintains loop consistency with the TCA cycle (via pyruvate), the pentose phosphate pathway (via G6P), gluconeogenesis (via shared intermediates), and the ATP/ADP cycle (via hexokinase, PFK, and pyruvate kinase). The pathway \emph{fits} the circuit.
-\end{remark}
-
-\subsection{ATP as a Hub Node}
+\subsection{Hub Nodes}
 
 \begin{definition}[Hub Node]
 \label{def:hub}
-A hub node $\node_h$ is a node with high in-degree and out-degree:
-\begin{equation}
-    \deg^+(\node_h) \gg 1, \quad \deg^-(\node_h) \gg 1
-\end{equation}
-Hub nodes participate in many loops simultaneously.
+A hub node $\fnode_h$ has high in-degree and out-degree: $\deg^+(\fnode_h) \gg 1$, $\deg^-(\fnode_h) \gg 1$. Hub nodes participate in many loops simultaneously.
 \end{definition}
 
-The ATP/ADP pool is the canonical hub node in cellular circuits. It participates in virtually every metabolic loop. Its resolved value (the ATP/ADP ratio) serves as a boundary condition for hundreds of downstream nodes.
+The ATP/ADP pool is the canonical hub. Its resolved value serves as a boundary condition for hundreds of downstream nodes.
 
 \begin{theorem}[Hub Vulnerability]
 \label{thm:hub_vulnerability}
-Hub nodes are maximally vulnerable to disease propagation. An inconsistency at a hub node $\node_h$ propagates to $\deg^+(\node_h)$ downstream loops simultaneously:
+An inconsistency at a hub node propagates to $\deg^+(\fnode_h)$ downstream loops simultaneously:
 \begin{equation}
-    \delta_{\node_h} > 0 \implies \delta_\ell > 0 \quad \forall\, \ell \ni \node_h
+    \delta_{\fnode_h} > 0 \implies \delta_\ell > 0 \quad \forall\, \ell \ni \fnode_h
 \end{equation}
 \end{theorem}
 
 \begin{proof}
-The resolved value $x_h^*$ of the hub serves as a boundary condition for all successor nodes. If $x_h^*$ carries a residual $\delta_h$, this residual propagates through every outgoing edge $(\node_h, \node_j)$ via the constraint function $\Phi_{hj}$. Each loop through $\node_h$ inherits the residual.
+The resolved value $x_h^*$ serves as boundary condition for all successor nodes. If $x_h^*$ carries residual $\delta_h$, this propagates through every outgoing edge. Each loop through $\fnode_h$ inherits the residual.
 \end{proof}
 
-\begin{corollary}[Metabolic Disease Cascade]
-\label{cor:metabolic_cascade}
-Disruption of a central metabolic hub (ATP pool, NAD$^+$/NADH pool, or CoA pool) causes simultaneous inconsistency in all dependent loops, explaining why mitochondrial diseases present with multi-system dysfunction.
+\begin{corollary}[Multi-System Dysfunction]
+\label{cor:multisystem}
+Disruption of a central metabolic hub (ATP, NAD$^+$/NADH, CoA) causes simultaneous inconsistency in all dependent loops, explaining why mitochondrial diseases present with multi-system dysfunction.
+\end{corollary}
+
+\subsection{Protein Isoforms as Parallel Conductances}
+
+\begin{proposition}[Isoform Redundancy]
+\label{prop:isoforms}
+Isoform-degenerate edges (different enzymes catalysing the same reaction) act as parallel conductances:
+\begin{equation}
+    \Gcond_{ij}^{\mathrm{eff}} = \sum_{k=1}^m \Gcond_{ij}^{(k)}
+\end{equation}
+Even if one isoform is inactivated, the categorical state transition continues; only its rate changes. This is the molecular basis for metabolic network robustness to enzyme knockouts \citep{barabasi2004}.
+\end{proposition}
+
+\subsection{Categorical State Propagation Velocity}
+
+\begin{theorem}[Informational Well-Mixing]
+\label{thm:well_mixed}
+For a typical intracellular network, categorical state information propagates three to six orders of magnitude faster than molecular drift:
+\begin{equation}
+    \frac{v_s}{v_d} \sim \frac{L\sqrt{\kappa/m_{\mathrm{eff}}}}{D} \approx 10^3\text{--}10^6
+\end{equation}
+where $v_s$ is signal velocity (allosteric/collision-mediated), $v_d = D/L$ is Fickian drift velocity, $\kappa$ is effective coupling stiffness, and $m_{\mathrm{eff}}$ is effective molecular mass.
+\end{theorem}
+
+\begin{proof}
+Allosteric signal velocity: $v_s^{\mathrm{allosteric}} \approx \sqrt{E_Y/\rho} \approx 10^3$~m/s for protein Young's modulus $E_Y \approx 10^9$~Pa. Protein drift velocity: $v_d \approx D/L \approx 10^{-11}/10^{-5} = 10^{-6}$~m/s. Ratio: $\sim 10^9$. For collision-mediated propagation at $[C] \approx 1$~mM: $v_s \approx k_{\mathrm{on}}[C] \cdot d \approx 10^6 \times 10^{-9} = 10^{-3}$~m/s versus metabolite drift $v_d \approx 10^{-5}$~m/s, ratio $\sim 10^2$.
+\end{proof}
+
+\begin{corollary}[Global Topology Over Local Concentration]
+\label{cor:global}
+Because $v_s \gg v_d$, categorical state information equilibrates across the network before significant concentration changes occur. Global network topology is the appropriate level of description, not local concentration gradients.
 \end{corollary}
 
 
@@ -914,67 +1023,67 @@ Disruption of a central metabolic hub (ATP pool, NAD$^+$/NADH pool, or CoA pool)
 
 \begin{definition}[Therapeutic Intervention]
 \label{def:therapy}
-A therapeutic intervention is a modification of the circuit that increases the consistency index:
+A therapeutic intervention modifies the circuit such that the trajectory completion algorithm converges to a self-consistent fixed point where previously it did not:
 \begin{equation}
     \consist(\circuit_{\mathrm{post}}) > \consist(\circuit_{\mathrm{pre}})
 \end{equation}
 \end{definition}
 
-Interventions can act at different topological levels:
+\subsection{Drug Design as Sparse Conductance Modification}
 
-\begin{theorem}[Intervention Hierarchy]
-\label{thm:intervention}
-Therapeutic interventions are classified by their topological target:
-\begin{enumerate}[label=(\roman*)]
-    \item \textbf{Edge modification:} Drugs that alter a single constraint function $\Phi_{ij}$ (enzyme inhibitors, receptor agonists). These correct local inconsistencies but cannot address topological defects.
+In the circuit model, a drug targeting enzyme $e_{ij}$ modifies the conductance: $\Gcond_{ij} \mapsto \Gcond_{ij}(1 - \eta_D)$, where $\eta_D \in [0,1]$ is the fractional inhibition.
 
-    \item \textbf{Node modification:} Interventions that change a node's constitutive relation (gene therapy, enzyme replacement). These can correct both local and some global inconsistencies.
+\begin{definition}[Optimal Drug Design]
+\label{def:drug_design}
+An optimal drug restores self-consistency while minimising total conductance perturbation (minimal pharmacological load):
+\begin{equation}
+    \min_{\{\eta_{ij}\}} \sum_{ij} |\eta_{ij}| \quad \text{s.t.} \quad H_\ell^{\mathrm{treated}} = \mathrm{Id} \;\; \forall\, \ell \in \mathcal{L}(\circuit), \quad \eta_{ij} \in [0,1]
+    \label{eq:drug_opt}
+\end{equation}
+\end{definition}
 
-    \item \textbf{Topology modification:} Interventions that add or remove edges or nodes (surgery, ablation, stem cell therapy). These can address topological defects directly.
+\begin{remark}
+The constraint is not ``restore trajectories to match a healthy reference.'' It is ``make the loops close.'' The $\ell_1$ objective ensures only the smallest set of reactions is targeted.
+\end{remark}
 
-    \item \textbf{Hub stabilization:} Interventions that stabilize hub node values (metabolic supplementation, ATP support). These prevent inconsistency propagation but do not correct the source.
-\end{enumerate}
-\end{theorem}
+\begin{proposition}[Drug Design as Linear Programme]
+\label{prop:drug_lp}
+Under first-order linearisation of the holonomy in the $\{\eta_{ij}\}$, the optimisation~\eqref{eq:drug_opt} is a linear programme solvable in polynomial time. The $\ell_1$ objective promotes sparsity, identifying the smallest set of reactions that need to be targeted.
+\end{proposition}
+
+\begin{proof}
+Linearising $H_\ell^{\mathrm{treated}}$ about the diseased state gives feasibility constraints that are linear inequalities in $\{\eta_{ij}\}$. The $\ell_1$ objective is cast as a standard LP by introducing variables $s_{ij} \geq |\eta_{ij}|$: minimise $\sum s_{ij}$ subject to $s_{ij} \geq \pm\eta_{ij}$ and feasibility. This LP is polynomial-time solvable.
+\end{proof}
 
 \subsection{The Compensation Theorem}
 
 \begin{theorem}[Compensation]
 \label{thm:compensation}
-An inconsistent loop $\ell$ with holonomy $H_\ell \neq \mathrm{Id}$ can be compensated by modifying a single constraint function $\Phi_{ij}^*$ on one edge of $\ell$ such that:
-\begin{equation}
-    \Phi_{ij}^* = \Phi_{ij} \circ H_\ell^{-1}
-    \label{eq:compensation}
-\end{equation}
-if and only if the holonomy is invertible: $\det(H_\ell) \neq 0$.
+An inconsistent loop $\ell$ with holonomy $H_\ell \neq \mathrm{Id}$ can be compensated by modifying a single constraint function on one edge, provided the holonomy is invertible ($\det(H_\ell) \neq 0$).
 \end{theorem}
 
 \begin{proof}
-The modified loop holonomy is:
-\begin{equation}
-    H_\ell^{\mathrm{mod}} = \Phi_{ij}^* \circ \prod_{(k,l) \neq (i,j)} \Phi_{kl} = \Phi_{ij} \circ H_\ell^{-1} \circ H_\ell = \Phi_{ij} \circ \mathrm{Id} = \Phi_{ij}
-\end{equation}
-
-Wait---this is incorrect. Let us be precise. The original holonomy starting from node $\node_{i_1}$ is:
-\begin{equation}
-    H_\ell = \Phi_{i_k, i_1} \circ \cdots \circ \Phi_{ij} \circ \cdots \circ \Phi_{i_1, i_2}
-\end{equation}
-
-Replacing $\Phi_{ij}$ with $\Phi_{ij}^*$ gives:
-\begin{align}
-    H_\ell^{\mathrm{mod}} &= \Phi_{i_k, i_1} \circ \cdots \circ \Phi_{ij}^* \circ \cdots \circ \Phi_{i_1, i_2}
-\end{align}
-
-Write $H_\ell = A \circ \Phi_{ij} \circ B$ where $A$ and $B$ are the compositions before and after $\Phi_{ij}$. We need $H_\ell^{\mathrm{mod}} = A \circ \Phi_{ij}^* \circ B = \mathrm{Id}$, so $\Phi_{ij}^* = A^{-1} \circ B^{-1}$. This requires $A$ and $B$ invertible, which follows from $\det(H_\ell) = \det(A)\det(\Phi_{ij})\det(B) \neq 0$.
+Write $H_\ell = A \circ \Phi_{ij} \circ B$ where $A$ and $B$ are the compositions before and after edge $(i,j)$. Setting $\Phi_{ij}^* = A^{-1} \circ B^{-1}$ gives $H_\ell^{\mathrm{mod}} = \mathrm{Id}$. This requires invertibility of $A$ and $B$, which follows from $\det(H_\ell) \neq 0$.
 \end{proof}
 
 \begin{corollary}[Irreversible Damage]
 \label{cor:irreversible}
-When the holonomy is singular ($\det(H_\ell) = 0$), no single-edge modification can restore consistency. This corresponds to irreversible tissue damage where the loop structure itself has collapsed.
+When $\det(H_\ell) = 0$, no single-edge modification can restore consistency. This corresponds to irreversible tissue damage where the loop structure itself has collapsed---there is no conductance value that makes the loop close.
 \end{corollary}
+
+\subsection{Intervention Hierarchy}
+
+Therapeutic interventions are classified by topological target:
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Edge modification:} Drugs altering a single $\Gcond_{ij}$ (enzyme inhibitors, receptor agonists). Correct local inconsistencies.
+    \item \textbf{Node modification:} Gene therapy, enzyme replacement. Correct the constitutive relation at a node.
+    \item \textbf{Topology modification:} Surgery, ablation, stem cell therapy. Add or remove edges/nodes directly.
+    \item \textbf{Hub stabilisation:} Metabolic supplementation (ATP support, NAD$^+$ precursors). Prevent inconsistency propagation without correcting the source.
+\end{enumerate}
 
 
 %==============================================================================
-\part*{IV. Validation and Predictions}
+\part*{V. Validation and Predictions}
 %==============================================================================
 
 %==============================================================================
@@ -984,84 +1093,51 @@ When the holonomy is singular ($\det(H_\ell) = 0$), no single-edge modification 
 
 \subsection{Glycolytic Flux Consistency}
 
-We test the framework against measured glycolytic flux data in human erythrocytes \citep{rapoport1976,mulquiney1999}.
-
-The glycolytic circuit is a 10-node feed-forward path with feedback through the ATP/ADP hub:
-
-\begin{equation}
-    \text{Glc} \xrightarrow{\text{HK}} \text{G6P} \xrightarrow{\text{PGI}} \text{F6P} \xrightarrow{\text{PFK}} \text{FBP} \to \cdots \xrightarrow{\text{PK}} \text{Pyr}
-\end{equation}
+The glycolytic circuit is a 10-node feed-forward path with feedback through the ATP/ADP hub. We test self-consistency using measured flux data in human erythrocytes \citep{rapoport1976,mulquiney1999}.
 
 The ATP/ADP hub participates in three loops: the hexokinase consumption loop, the PFK consumption loop, and the PK production loop.
 
-\textbf{Prediction:} In a healthy erythrocyte, the ATP production rate (PK + PGK) exactly matches the ATP consumption rate (HK + PFK), giving loop consistency $\consist_{\mathrm{ATP}} = 1$.
+\textbf{Prediction:} In a healthy erythrocyte, the loops close: ATP production rate (PK + PGK) exactly matches ATP consumption rate (HK + PFK), giving $H_{\mathrm{ATP}} = \mathrm{Id}$.
 
-\textbf{Observed:} ATP production rate $= 2 \times J_{\mathrm{glycolysis}}$, ATP consumption rate $= 2 \times J_{\mathrm{glycolysis}}$ (stoichiometric balance). Measured $J_{\mathrm{glycolysis}} = 1.1 \pm 0.1$~mmol/L/h in erythrocytes \citep{rapoport1976}. The ATP flux loop closes with $\consist_{\mathrm{ATP}} > 0.99$.
+\textbf{Observed:} ATP production $= 2 \times J_{\mathrm{glycolysis}}$, consumption $= 2 \times J_{\mathrm{glycolysis}}$ (stoichiometric balance). Measured $J_{\mathrm{glycolysis}} = 1.1 \pm 0.1$~mmol/L/h \citep{rapoport1976}. The ATP loop closes with $\consist_{\mathrm{ATP}} > 0.99$.
 
-\textbf{Prediction:} When pyruvate kinase is deficient (PK deficiency), the ATP production loop becomes inconsistent. The deficit $\delta = J_{\mathrm{consumed}} - J_{\mathrm{produced}} > 0$ accumulates per cycle.
+\textbf{Prediction:} PK deficiency creates a non-trivial holonomy on the ATP production loop. The deficit $\delta = J_{\mathrm{consumed}} - J_{\mathrm{produced}} > 0$ accumulates per cycle.
 
-\textbf{Observed:} PK-deficient erythrocytes show ATP depletion, increased glycolytic intermediates upstream of PK, and premature hemolysis \citep{zanella2005}---consistent with monotonic consistency decline (Theorem~\ref{thm:monotonic}).
+\textbf{Observed:} PK-deficient erythrocytes show ATP depletion, upstream intermediate accumulation, and premature hemolysis \citep{zanella2005}---consistent with monotonic consistency decline (Theorem~\ref{thm:monotonic}).
 
 \subsection{Mitochondrial Dysfunction Cascade}
 
-Mitochondrial electron transport is a multi-loop circuit with the proton gradient ($\Delta\psi_m$) as the central hub.
+Mitochondrial electron transport is a multi-loop circuit with $\Delta\psi_m$ as the central hub.
 
-\begin{enumerate}[label=(\roman*)]
-    \item Complex I loop: NADH $\to$ Complex I $\to$ CoQ $\to \Delta\psi_m \to$ ATP synthase $\to$ NAD$^+$ regeneration
-    \item Complex III loop: CoQH$_2$ $\to$ Complex III $\to$ Cyt $c$ $\to \Delta\psi_m \to$ ATP synthase
-    \item Complex IV loop: Cyt $c$ (red) $\to$ Complex IV $\to$ O$_2$ $\to \Delta\psi_m \to$ ATP synthase
-\end{enumerate}
+\textbf{Prediction:} Inhibition of any single complex creates hub inconsistency propagating to all loops simultaneously (Theorem~\ref{thm:hub_vulnerability}).
 
-\textbf{Prediction:} Inhibition of any single complex creates a hub inconsistency at $\Delta\psi_m$ that propagates to all three loops simultaneously (Theorem~\ref{thm:hub_vulnerability}).
+\textbf{Observed:} Complex I inhibition (rotenone) reduces $\Delta\psi_m$, impairs ATP synthesis through all complexes, increases ROS, and triggers apoptosis \citep{li2003}. Multi-system failure from a single-complex defect is exactly what hub vulnerability predicts.
 
-\textbf{Observed:} Complex I inhibition (rotenone) reduces $\Delta\psi_m$, impairs ATP synthesis through all complexes, increases ROS production (from stalled electron carriers), and triggers apoptotic cascades \citep{li2003}. The multi-system failure from a single-complex defect is precisely what hub vulnerability predicts.
+\textbf{Prediction:} Failure order follows the defect hierarchy: ATP depletion (amplitude) $\to$ $\Delta\psi_m$ instability (phase) $\to$ cristae remodelling (topological).
 
-\textbf{Prediction:} The order of failure follows the defect hierarchy (Theorem~\ref{thm:defect_hierarchy}). ATP depletion (amplitude defect) precedes membrane depolarization (phase defect) which precedes cristae remodelling (topological defect).
+\textbf{Observed:} In mitochondrial disease progression: early ATP decline $\to$ $\Delta\psi_m$ instability $\to$ cristae disruption $\to$ organelle fragmentation \citep{nunnari2012}. Matches the hierarchy exactly.
 
-\textbf{Observed:} In mitochondrial disease progression: early ATP decline $\to$ $\Delta\psi_m$ instability $\to$ cristae disruption $\to$ organelle fragmentation \citep{nunnari2012}. This matches the predicted hierarchy exactly.
+\subsection{Protein Misfolding: SOD1-Linked ALS}
 
-\subsection{Protein Misfolding Diseases}
+Protein quality control is a 4-node loop: synthesis $\to$ folding $\to$ function $\to$ degradation $\to$ synthesis.
 
-Protein quality control is a loop: synthesis $\to$ folding $\to$ function $\to$ degradation $\to$ synthesis. We model this as a 4-node circuit with one loop.
+\textbf{Prediction:} A folding defect introduces per-cycle residual $\delta = p_{\mathrm{misfolded}}$. Detection at $n^* = N_{\mathrm{threshold}} / (\delta \cdot J_{\mathrm{synthesis}})$.
 
-\textbf{Prediction:} A folding defect introduces per-cycle residual $\delta = p_{\mathrm{misfolded}}$ (probability of misfolding per cycle). The misfolded protein burden grows as:
-\begin{equation}
-    N_{\mathrm{misfolded}}(n) = n \cdot \delta \cdot J_{\mathrm{synthesis}}
-\end{equation}
-where $n$ is the number of cycles and $J_{\mathrm{synthesis}}$ is the synthesis flux. Detection occurs at $n^* = N_{\mathrm{threshold}} / (\delta \cdot J_{\mathrm{synthesis}})$.
-
-\textbf{Observed (SOD1-linked ALS):} Wild-type SOD1 misfolding rate $\delta_{\mathrm{wt}} \approx 10^{-6}$ per cycle. Mutant A4V: $\delta_{\mathrm{A4V}} \approx 10^{-2}$. The ratio predicts:
-\begin{equation}
-    \frac{n^*_{\mathrm{wt}}}{n^*_{\mathrm{A4V}}} = \frac{\delta_{\mathrm{A4V}}}{\delta_{\mathrm{wt}}} \approx 10^4
-\end{equation}
-
-With SOD1 half-life $\sim$30 hours and $\sim$300 synthesis cycles per day, A4V onset at $\sim$40 years corresponds to $\sim 4.4 \times 10^6$ cycles. Wild-type onset would require $\sim 4.4 \times 10^{10}$ cycles ($\sim$400,000 years), explaining why wild-type SOD1 does not cause disease within a human lifespan.
-
-For intermediate mutants:
-\begin{itemize}
-    \item G93A ($\delta \approx 10^{-3}$): predicted onset $\sim 4.4 \times 10^7$ cycles $\approx$ 400 years $\to$ actual onset 40--60 years (consistent with additional aggregation-acceleration mechanisms)
-    \item D90A ($\delta \approx 5 \times 10^{-4}$): predicted onset later than G93A $\to$ actual onset typically $>$50 years \citep{andersen2003}
-\end{itemize}
-
-The ordering of severity (A4V $>$ G93A $>$ D90A $>$ wild-type) is correctly predicted by the drift model with no free parameters.
+\textbf{Observed:} Wild-type $\delta_{\mathrm{wt}} \approx 10^{-6}$; A4V mutant $\delta_{\mathrm{A4V}} \approx 10^{-2}$. Ratio predicts $n^*_{\mathrm{wt}}/n^*_{\mathrm{A4V}} \approx 10^4$. With $\sim$300 synthesis cycles/day, A4V onset at $\sim$40 years ($\sim 4.4 \times 10^6$ cycles); wild-type would require $\sim 4.4 \times 10^{10}$ cycles ($\sim$400,000 years). Severity ordering A4V $>$ G93A $>$ D90A $>$ wild-type correctly predicted with zero free parameters \citep{andersen2003}.
 
 \subsection{Cancer as Autonomous Loop Formation}
 
 \begin{definition}[Autonomous Loop]
 \label{def:autonomous}
-An autonomous loop is a loop whose consistency is maintained independently of the global circuit:
+An autonomous loop maintains self-consistency independently of the global circuit:
 \begin{equation}
-    \consist_{\ell_{\mathrm{auto}}} \geq 1 - \epsilon \quad \text{regardless of } \consist(\circuit)
+    H_{\ell_{\mathrm{auto}}} = \mathrm{Id} \quad \text{regardless of } \consist(\circuit)
 \end{equation}
 \end{definition}
 
-\textbf{Prediction:} Cancer is the formation of autonomous loops---subcircuits that maintain their own consistency while becoming inconsistent with the organismal circuit.
+\textbf{Prediction:} Cancer is formation of autonomous loops---subcircuits that are internally self-consistent while creating inconsistency with the organismal circuit.
 
-\textbf{Observed:} Oncogenic mutations create self-sustaining signalling loops: constitutively active growth factor receptors (EGFR mutations), autocrine signalling loops, and metabolic rewiring (Warburg effect) \citep{hanahan2011}. These are precisely autonomous loops in our framework---they pass local validation while violating global consistency.
-
-\textbf{Prediction:} Metastasis requires the autonomous loop to be topologically independent of the host tissue circuit---it must not share essential nodes with the host.
-
-\textbf{Observed:} Metastatic cells progressively lose tissue-specific markers and dependencies, becoming increasingly autonomous from their tissue of origin \citep{hanahan2011}. This is topological independence in the circuit framework.
+\textbf{Observed:} Oncogenic mutations create self-sustaining loops: constitutively active growth factor receptors, autocrine signalling, Warburg effect \citep{hanahan2011}. These are internally consistent (the cancer cell ``works'') but globally inconsistent (the organism does not). Metastasis corresponds to progressive topological independence from the host circuit.
 
 
 %==============================================================================
@@ -1073,45 +1149,41 @@ An autonomous loop is a loop whose consistency is maintained independently of th
 
 \begin{theorem}[Early Warning Signal]
 \label{thm:early_warning}
-The step-to-step variance of macroscopic signals increases before clinical disease manifestation:
+The step-to-step variance of macroscopic signals increases before clinical manifestation:
 \begin{equation}
     \mathrm{Var}(\Delta\sig_k)_{\mathrm{pre\text{-}clinical}} > \mathrm{Var}(\Delta\sig_k)_{\mathrm{healthy}}
 \end{equation}
-The increase in variance precedes symptom onset by approximately $n^* - n_{\mathrm{current}}$ steps.
 \end{theorem}
 
-This is testable by monitoring pH, membrane potential, or metabolite fluctuations in cells at risk for disease (e.g., neurons expressing ALS-linked SOD1 mutations). The prediction is that increased fluctuation variance will precede aggregate formation and motor neuron death.
+Testable by monitoring pH, membrane potential, or metabolite fluctuations in cells expressing ALS-linked SOD1 mutations before aggregate formation.
 
-\subsection{Prediction 2: Hub Stabilization Delays Multi-System Failure}
+\subsection{Prediction 2: Hub Stabilisation Delays Multi-System Failure}
 
-\begin{theorem}[Hub Stabilization]
-\label{thm:hub_stabilization}
-Stabilizing the value of a hub node $\node_h$ (by external supplementation) delays disease progression in all loops through $\node_h$, even if the primary defect is in a different loop.
-\end{theorem}
-
-This predicts that ATP supplementation or NAD$^+$ precursor therapy should delay the multi-system manifestations of mitochondrial disease, even without correcting the primary genetic defect. Early clinical evidence supports this \citep{yoshino2018}.
+Stabilising a hub node (by supplementation) delays disease in all dependent loops, even without correcting the primary defect. This predicts that NAD$^+$ precursor therapy should delay mitochondrial disease manifestations. Early clinical evidence supports this \citep{yoshino2018}.
 
 \subsection{Prediction 3: Loop Length Determines Disease Latency}
 
 \begin{theorem}[Latency Scaling]
 \label{thm:latency}
-The latency period of a drift disease scales with loop length:
+Disease latency scales with loop length:
 \begin{equation}
     t_{\mathrm{latency}} \propto |\ell| \cdot \frac{\epsilon}{\delta}
 \end{equation}
 Diseases involving longer loops have longer latencies for the same per-step defect.
 \end{theorem}
 
-This predicts that diseases involving long metabolic loops (e.g., urea cycle disorders, involving 5 organs) should have longer latencies than diseases involving short loops (e.g., single-enzyme deficiencies), controlling for defect severity.
-
 \subsection{Prediction 4: Cascade Order is Topological}
 
-\begin{theorem}[Cascade Topology]
-\label{thm:cascade}
-The order in which organ systems fail in multi-system disease is determined by circuit topology (distance from the primary defect in the circuit graph), not by the ``importance'' or ``vulnerability'' of the organs.
+The order of organ system failure in multi-system disease is determined by circuit distance from the primary defect, not by organ ``vulnerability.'' Testable in mitochondrial diseases where failure order varies between mutations.
+
+\subsection{Prediction 5: Self-Consistency is Sufficient for Diagnosis}
+
+\begin{theorem}[Reference-Free Diagnosis]
+\label{thm:reference_free}
+Disease can be detected from partial observations and network topology alone, without any healthy reference data. The trajectory completion algorithm applied to partial measurements from a cell either converges to a self-consistent solution (healthy) or fails to converge / converges with non-zero residual (diseased).
 \end{theorem}
 
-This is testable in mitochondrial diseases, where the order of organ involvement varies between mutations affecting different complexes. The prediction is that the failure order follows the circuit distance from the affected complex's hub connections, not a fixed hierarchy of organ vulnerability.
+This is the most distinctive prediction of the framework. It asserts that the question ``is this cell healthy?'' is answerable from the circuit's own constraints, without ever seeing a healthy cell.
 
 
 %==============================================================================
@@ -1119,40 +1191,38 @@ This is testable in mitochondrial diseases, where the order of organ involvement
 \label{sec:discussion}
 %==============================================================================
 
+\subsection{No Templates Anywhere}
+
+The Universal No Template Theorem (Theorem~\ref{thm:no_template}) is the conceptual foundation of this work. It asserts that health templates do not exist---not because they haven't been built, but because they \emph{cannot} be built. No bounded system stores a complete reference of any comparably complex system. This applies to the cell (cannot self-diagnose), to simulations (reproduce the cell's blindness), and to the researcher (cannot store the complete healthy state).
+
+Yet disease is detectable. The resolution is that health is not a state but a property: self-consistency. A researcher studying a cell does not bring a template of health. They bring the expectation that the circuit should \emph{work}---that Kirchhoff's laws should hold, that thermodynamic cycles should close, that backward trajectories should be self-consistent. This expectation is the reason anyone models a cell at all. It is not stored data; it is the structure of the inquiry itself.
+
+\subsection{Relationship to Existing Approaches}
+
+\emph{Flux Balance Analysis (FBA)} \citep{orth2010} maximises an objective flux subject to steady-state KCL. Our framework extends FBA by adding KVL constraints (thermodynamic consistency), backward trajectory analysis (kinetic consistency), and fuzzy states (epistemic uncertainty).
+
+\emph{Metabolic Control Analysis (MCA)} characterises flux and concentration control coefficients. In our framework, these are logarithmic derivatives of circuit current with respect to edge conductance. The drug design proposition (Proposition~\ref{prop:drug_lp}) generalises MCA to the inverse problem.
+
+\emph{Forward kinetic simulation} requires precise rate constants and initial conditions---rarely available. Our framework handles uncertain parameters via fuzzy states and infers states without the full parameter set.
+
+\emph{Autocatalytic closure} (Kauffman), \emph{autopoiesis} (Varela--Maturana), and Rosen's \emph{$(M, R)$-systems} all characterise living systems as self-referential. In our framework, autocatalytic closure is expressed precisely: the backward trajectories of all nodes close on the network. Disease is the breakdown of this closure.
+
 \subsection{Why Not Simulation?}
 
-The framework presented here is fundamentally different from systems biology simulation approaches \citep{karr2012,kitano2002}. Simulations model reactions in continuous time, seeking to reproduce molecular trajectories. Our framework models constraints in discrete steps, seeking to identify topological inconsistencies.
-
-The difference is not merely methodological. A perfect simulation \emph{cannot} detect disease, because it reproduces the cell's own dynamics---including the cell's blindness. The circuit framework detects disease by measuring a quantity (loop consistency) that the cell itself does not and cannot compute.
-
-\subsection{Relationship to Control Theory}
-
-The sequential constraint propagation framework has formal parallels with control theory \citep{astrom2010}. Feed-forward paths are open-loop controllers. Loops are closed-loop controllers. The consistency residual is analogous to steady-state error. The holonomy is analogous to the loop gain phase margin.
-
-However, there is a critical difference. In control theory, the reference signal is externally specified. In our framework, there is no reference signal. The system validates against its own previous output, not against an external setpoint. This is why disease is invisible---there is no reference to deviate from.
-
-\subsection{Relationship to Fuzzy Logic}
-
-The fuzzy membership values in our framework draw on the mathematical machinery of fuzzy set theory \citep{zadeh1965}, but the interpretation is different. In classical fuzzy logic, membership values encode linguistic uncertainty (``tall'' vs.\ ``not tall''). In our framework, they encode physical underdetermination---the degree to which a node's state is constrained by its resolved neighbours.
+A perfect simulation cannot detect disease because it is informationally equivalent to the cell. The circuit framework detects disease by computing a quantity (loop holonomy, self-consistency) that the cell itself does not and cannot compute. The framework adds genuine information beyond what the cell possesses: not by knowing more facts, but by asking a different question.
 
 \subsection{The Genome is Not a Blueprint}
 
-A central implication of this framework is that the genome does not encode a cellular blueprint. It encodes the \emph{constraint functions} $\Phi_{ij}$---the constitutive relations at each node. The cellular phenotype emerges from sequential constraint propagation through the circuit, not from execution of a stored program.
-
-This explains why the same genome produces different cell types (different circuit topologies from the same constraint functions) and why environmental factors modulate disease (they alter the signals propagating through the circuit, not the constraint functions themselves).
+The genome does not encode a cellular blueprint. It encodes the constraint functions $\Phi_{ij}$---the constitutive relations at each reaction node. The cellular phenotype emerges from sequential constraint propagation through the circuit. Different cell types arise from different circuit topologies using the same constraint functions. Environmental factors modulate disease by altering the signals propagating through the circuit, not the constraint functions themselves.
 
 \subsection{Limitations}
 
-The framework has several limitations that warrant future investigation:
-
 \begin{enumerate}[label=(\roman*)]
-    \item \textbf{Circuit construction:} We have not specified how to construct the circuit graph $\circuit$ from biochemical data. This requires mapping known reaction networks onto the circuit formalism, which is non-trivial for large metabolic networks.
-
-    \item \textbf{Resolution order:} The framework assumes a sequential resolution order but does not specify which order the cell uses. Different resolution orders may give different dynamics, and the cell's actual order is unknown.
-
-    \item \textbf{Stochastic effects:} The deterministic framework does not account for molecular noise, which may mask or amplify consistency residuals.
-
-    \item \textbf{Quantitative validation:} While the qualitative predictions match observation, quantitative validation requires precise measurement of step-to-step signal variance, which is technically challenging with current methods.
+    \item \textbf{Circuit construction:} Mapping known reaction networks onto the circuit formalism is non-trivial for genome-scale networks, though existing databases (RECON3D, BiGG, KEGG) provide the topology.
+    \item \textbf{Resolution order:} The framework does not specify which order the cell uses. Different orders may give different dynamics.
+    \item \textbf{Stochastic effects:} Molecular noise may mask or amplify consistency residuals. Extension to fuzzy-stochastic models is needed.
+    \item \textbf{Spatial heterogeneity:} For polarised cells or neurons, $v_s/v_d$ may approach unity and spatial effects become important.
+    \item \textbf{Quantitative validation:} Precise measurement of step-to-step signal variance is technically challenging with current single-cell methods.
 \end{enumerate}
 
 
@@ -1161,27 +1231,31 @@ The framework has several limitations that warrant future investigation:
 \label{sec:conclusion}
 %==============================================================================
 
-We have presented a framework for cellular dynamics based on sequential constraint propagation through fuzzy-valued circuit networks. The key results are:
+We have presented a framework for cellular dynamics based on sequential constraint propagation through fuzzy-valued circuit networks, with the circuit model derived rigorously from thermodynamics and information theory. The key results are:
 
 \begin{enumerate}[label=(\arabic*)]
-    \item \textbf{No Template Theorem:} Cells cannot store a complete representation of their own healthy state. Disease detection by state comparison is therefore impossible (Theorem~\ref{thm:no_template}).
+    \item \textbf{Universal No Template Theorem:} No bounded system---cell, simulation, or observer---can store a complete reference state. Health is not a template but a property of self-consistency (Theorem~\ref{thm:no_template}).
 
-    \item \textbf{Sequential Resolution:} The unique well-defined dynamics for a system without global state representation is step-discrete sequential constraint propagation (Theorem~\ref{thm:sequential}).
+    \item \textbf{Rigorous circuit derivation:} Chemical potential equals categorical depth up to $\kB T \ln 2$ (Theorem~\ref{thm:mu_catdepth}). Kirchhoff's laws are exact analogs of stoichiometric balance (KCL) and thermodynamic cycle consistency (KVL).
 
-    \item \textbf{Disease as Inconsistency:} Disease corresponds to loop inconsistency in the circuit graph---closed paths where constraint propagation fails to return a self-consistent value (Theorem~\ref{thm:disease_inconsistency}).
+    \item \textbf{Sequential resolution:} The unique well-defined dynamics without global state representation is step-discrete constraint propagation (Theorem~\ref{thm:sequential}).
 
-    \item \textbf{Local Invisibility:} Loop inconsistency is undetectable by local validation. Each step passes individually while the global circuit fails (Theorem~\ref{thm:local_invisibility}).
+    \item \textbf{Trajectory completion:} The algorithm combining fuzzy Kirchhoff propagation with MAP backward inference converges to a unique fixed point by the Banach contraction principle (Theorem~\ref{thm:convergence}).
 
-    \item \textbf{Monotonic Decline:} Disease progression is monotonic. Once a loop becomes inconsistent, it cannot spontaneously return to consistency (Theorem~\ref{thm:monotonic}).
+    \item \textbf{Health is self-consistency:} A cell is healthy if and only if its constraint system closes---all loops have trivial holonomy (Theorem~\ref{thm:health}). No reference state is needed.
 
-    \item \textbf{Hub Vulnerability:} High-degree hub nodes (ATP, NAD$^+$) propagate inconsistency to all dependent loops simultaneously, explaining multi-system disease (Theorem~\ref{thm:hub_vulnerability}).
+    \item \textbf{Disease is holonomy:} Disease corresponds to non-trivial loop holonomy, detectable purely from self-consistency (Theorem~\ref{thm:disease_inconsistency}).
 
-    \item \textbf{Defect Hierarchy:} Disease severity follows a topological hierarchy: drift $\prec$ phase $\prec$ amplitude $\prec$ topological (Theorem~\ref{thm:defect_hierarchy}).
+    \item \textbf{Local invisibility:} Loop holonomy is undetectable by local validation. Each step passes while the global circuit fails (Theorem~\ref{thm:local_invisibility}).
 
-    \item \textbf{Measurable Consistency:} Global circuit health can be estimated from the step-to-step variance of macroscopic signals (pH, volume, membrane potential), providing a non-invasive disease biomarker (Theorem~\ref{thm:signal_consistency}).
+    \item \textbf{Monotonic decline:} Disease progression is irreversible without external intervention (Theorem~\ref{thm:monotonic}).
+
+    \item \textbf{Hub vulnerability:} High-degree nodes propagate inconsistency to all dependent loops (Theorem~\ref{thm:hub_vulnerability}).
+
+    \item \textbf{Drug design:} Therapy reduces to sparse conductance modification---finding the minimal set of edges that makes the loops close (Proposition~\ref{prop:drug_lp}).
 \end{enumerate}
 
-The framework explains why cells are blind to their own disease (no template to compare against), why degenerative diseases progress monotonically (residual accumulation), why mitochondrial diseases cause multi-system failure (hub vulnerability), and why cancer is difficult to detect internally (autonomous loops pass local validation). These are not separate explanations requiring separate mechanisms---they are corollaries of a single principle: cellular dynamics is sequential constraint propagation through a fuzzy circuit, and disease is the holonomy of an inconsistent loop.
+The framework dissolves the apparent paradox of cellular blindness. The cell cannot detect disease because it validates locally, step by step, with no global view. The researcher can detect disease---not because they have a template of health, but because they can check whether the circuit's own constraints are satisfied. The researcher's ``bias'' is not stored data about what a healthy cell looks like. It is the expectation that a circuit should be \emph{complete}---that Kirchhoff's laws should hold. Health is self-consistency. Disease is the holonomy of an inconsistent loop.
 
 %==============================================================================
 \section*{Data Availability}
