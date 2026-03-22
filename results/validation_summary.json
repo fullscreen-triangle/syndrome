@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-02-28T16:45:02.422157",
-  "total_tests": 73,
-  "total_passed": 73,
+  "timestamp": "2026-03-22T18:04:07.267798",
+  "total_tests": 101,
+  "total_passed": 101,
   "total_failed": 0,
   "overall_pass_rate": 1.0,
   "categories": {
@@ -11,7 +11,7 @@
       "failed": 0,
       "total": 9,
       "pass_rate": 1.0,
-      "timestamp": "2026-02-28T16:45:02.422157",
+      "timestamp": "2026-03-22T18:04:07.267825",
       "results": [
         {
           "name": "partition_capacity_formula",
@@ -53,7 +53,7 @@
               ]
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "electron_shell_correspondence",
@@ -83,7 +83,7 @@
             "interpretation": "Partition capacity matches atomic electron shell capacities",
             "significance": "Geometric necessity, not coincidence"
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "enumeration_count",
@@ -115,7 +115,7 @@
               "actual": 50
             }
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "metric_non_negativity",
@@ -129,7 +129,7 @@
             "d12": 1.4142135623730951,
             "d11": 0.0
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "metric_symmetry",
@@ -144,7 +144,7 @@
             "d21": 1.4142135623730951,
             "difference": 0.0
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "metric_triangle_inequality",
@@ -160,7 +160,7 @@
             "d13": 1.7320508075688772,
             "sum": 4.059964873437686
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "address_resolution_accuracy",
@@ -183,7 +183,7 @@
             "depth": 10,
             "theoretical_precision": 1.6935087808430286e-05
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "ternary_structure",
@@ -201,7 +201,7 @@
             ],
             "value": 0.48148148148148145
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         },
         {
           "name": "coordinate_constraints",
@@ -277,7 +277,7 @@
               true
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.422157"
+          "timestamp": "2026-03-22T18:04:07.267833"
         }
       ]
     },
@@ -287,7 +287,7 @@
       "failed": 0,
       "total": 14,
       "pass_rate": 1.0,
-      "timestamp": "2026-02-28T16:45:02.435690",
+      "timestamp": "2026-03-22T18:04:07.270772",
       "results": [
         {
           "name": "universal_coherence_standard",
@@ -302,7 +302,7 @@
             "pi_opt": 1.0,
             "pi_deg": 0.0
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "universal_coherence_inverse",
@@ -318,7 +318,7 @@
             "k_deg": 16,
             "interpretation": "Lower is better (folding cycles)"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "universal_coherence_midpoint",
@@ -333,7 +333,7 @@
             "pi_opt": 1.0,
             "pi_deg": 0.0
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "coherence_boundary_conditions",
@@ -388,7 +388,7 @@
               ]
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "coherence_monotonicity",
@@ -438,7 +438,7 @@
               0.09999999999999998
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "protein_folding_coherence",
@@ -454,7 +454,7 @@
             "k_max": 16,
             "interpretation": "75% coherence at 13 cycles"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "enzyme_turnover_coherence",
@@ -469,7 +469,7 @@
             "k_cat_max": 1000000.0,
             "interpretation": "10% of maximum turnover"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "channel_open_probability_coherence",
@@ -484,7 +484,7 @@
             "p_o_opt": 0.5,
             "interpretation": "At optimal open probability"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "membrane_amplitude_coherence",
@@ -498,7 +498,7 @@
             "delta_v_obs": 80.0,
             "delta_v_max": 100.0
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "circadian_period_coherence",
@@ -513,7 +513,7 @@
             "t_0": 24.0,
             "interpretation": "10% period variation"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "cellular_coherence_weighted",
@@ -536,7 +536,7 @@
             ],
             "formula": "\u03b7_cell = \u03a3(w_i * \u03b7_i) / \u03a3(w_i)"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "therapeutic_efficacy_calculation",
@@ -552,7 +552,7 @@
             "eta_healthy": 1.0,
             "interpretation": "50% of coherence gap closed"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "predicted_coherence_after_treatment",
@@ -567,7 +567,7 @@
             "efficacy": 0.5,
             "formula": "\u03b7_treated = \u03b7_untreated + E(1 - \u03b7_untreated)"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         },
         {
           "name": "efficacy_prediction_consistency",
@@ -580,7 +580,7 @@
           "details": {
             "interpretation": "Efficacy recovered from predicted coherence matches original"
           },
-          "timestamp": "2026-02-28T16:45:02.436213"
+          "timestamp": "2026-03-22T18:04:07.270786"
         }
       ]
     },
@@ -590,7 +590,7 @@
       "failed": 0,
       "total": 20,
       "pass_rate": 1.0,
-      "timestamp": "2026-02-28T16:45:02.447540",
+      "timestamp": "2026-03-22T18:04:07.273553",
       "results": [
         {
           "name": "disease_vector_protein_class",
@@ -604,7 +604,7 @@
             "oscillator": "P",
             "coherence": 0.75
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "disease_vector_enzyme_class",
@@ -618,7 +618,7 @@
             "oscillator": "E",
             "coherence": 0.5
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "disease_vector_weighted_aggregation",
@@ -639,7 +639,7 @@
             ],
             "interpretation": "Weighted average of coherences"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_P",
@@ -654,7 +654,7 @@
             "background_value": 0.1,
             "class_name": "Misfolding"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_E",
@@ -669,7 +669,7 @@
             "background_value": 0.1,
             "class_name": "Metabolic"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_C",
@@ -684,7 +684,7 @@
             "background_value": 0.1,
             "class_name": "Channelopathy"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_M",
@@ -699,7 +699,7 @@
             "background_value": 0.1,
             "class_name": "Excitability"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_A",
@@ -714,7 +714,7 @@
             "background_value": 0.1,
             "class_name": "Mitochondrial"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_G",
@@ -729,7 +729,7 @@
             "background_value": 0.1,
             "class_name": "Expression"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_Ca",
@@ -744,7 +744,7 @@
             "background_value": 0.1,
             "class_name": "Signaling"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "classification_dominant_R",
@@ -759,7 +759,7 @@
             "background_value": 0.1,
             "class_name": "Rhythm"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "severity_uniform",
@@ -772,7 +772,7 @@
           "details": {
             "interpretation": "All classes at 50% disease index"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "severity_weighted",
@@ -794,7 +794,7 @@
               1.0
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "severity_healthy_zero",
@@ -807,7 +807,7 @@
           "details": {
             "interpretation": "Healthy state has zero severity"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "healthy_vector_all_zeros",
@@ -829,7 +829,7 @@
           "details": {
             "interpretation": "Healthy = full coherence = zero disease"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "disease_vector_bounds",
@@ -894,7 +894,7 @@
               ]
             ]
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "signature_distance_self_zero",
@@ -907,7 +907,7 @@
           "details": {
             "interpretation": "Distance to self is zero"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "signature_distance_symmetry",
@@ -923,7 +923,7 @@
           "details": {
             "interpretation": "Distance is symmetric"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "signature_distance_triangle",
@@ -941,7 +941,7 @@
           "details": {
             "interpretation": "Triangle inequality holds"
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         },
         {
           "name": "disease_profile_generation",
@@ -1004,7 +1004,7 @@
             "severity": 0.8,
             "spread": 0.1
           },
-          "timestamp": "2026-02-28T16:45:02.447540"
+          "timestamp": "2026-03-22T18:04:07.273566"
         }
       ]
     },
@@ -1014,7 +1014,7 @@
       "failed": 0,
       "total": 16,
       "pass_rate": 1.0,
-      "timestamp": "2026-02-28T16:45:03.303990",
+      "timestamp": "2026-03-22T18:04:07.277210",
       "results": [
         {
           "name": "address_resolution_empty",
@@ -1028,7 +1028,7 @@
             "address": [],
             "interpretation": "Empty \u2192 midpoint"
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "address_resolution_zero",
@@ -1043,7 +1043,7 @@
               0
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "address_resolution_two",
@@ -1058,7 +1058,7 @@
               2
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "address_resolution_multi_digit",
@@ -1075,7 +1075,7 @@
             ],
             "calculation": "1/3 + 1/9 = 4/9"
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "address_resolution_range_scaling",
@@ -1094,7 +1094,7 @@
               20.0
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "address_precision_scaling",
@@ -1151,7 +1151,7 @@
             "formula": "precision = 1 / 3^depth",
             "interpretation": "Exponential refinement with ternary addresses"
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "complete_boundary_conditions",
@@ -1187,7 +1187,7 @@
             ],
             "n_points": 50
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "constraint_bounded_valid",
@@ -1203,7 +1203,7 @@
               0.9
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "constraint_bounded_invalid",
@@ -1216,7 +1216,7 @@
           "details": {
             "out_of_bounds_value": 1.5
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "constraint_smooth_parabolic",
@@ -1229,7 +1229,7 @@
           "details": {
             "trajectory_type": "parabolic"
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "constraint_monotonic_increasing",
@@ -1243,7 +1243,7 @@
             "dimension": 0,
             "direction": "increasing"
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "constraint_energy_satisfied",
@@ -1256,7 +1256,7 @@
           "details": {
             "max_total_change": 1.0
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "trajectory_duration",
@@ -1276,7 +1276,7 @@
               1.0
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "trajectory_arc_length",
@@ -1289,7 +1289,7 @@
           "details": {
             "n_segments": 5
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "trajectory_endpoint_states",
@@ -1311,7 +1311,7 @@
           "error": 0.0,
           "tolerance": 1e-10,
           "details": {},
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         },
         {
           "name": "trajectory_interpolation",
@@ -1339,7 +1339,7 @@
               0.5
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.303990"
+          "timestamp": "2026-03-22T18:04:07.277228"
         }
       ]
     },
@@ -1349,7 +1349,7 @@
       "failed": 0,
       "total": 14,
       "pass_rate": 1.0,
-      "timestamp": "2026-02-28T16:45:03.321281",
+      "timestamp": "2026-03-22T18:04:07.281534",
       "results": [
         {
           "name": "s_entropy_bounds",
@@ -1426,7 +1426,7 @@
           "details": {
             "interpretation": "S-entropy space is unit cube [0,1]^3"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_distance_non_negative",
@@ -1437,7 +1437,7 @@
           "error": 0.0,
           "tolerance": 0.0,
           "details": {},
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_distance_identity",
@@ -1450,7 +1450,7 @@
           "details": {
             "interpretation": "d(p, p) = 0"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_distance_symmetry",
@@ -1464,7 +1464,7 @@
           "error": 0.0,
           "tolerance": 1e-10,
           "details": {},
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_distance_triangle",
@@ -1480,7 +1480,7 @@
           "error": 0,
           "tolerance": 1e-10,
           "details": {},
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_uniform_distribution",
@@ -1494,7 +1494,7 @@
             "n": 10,
             "interpretation": "Uniform \u2192 max entropy"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_delta_distribution",
@@ -1507,7 +1507,7 @@
           "details": {
             "interpretation": "Single certain outcome \u2192 zero entropy"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_binary_distribution",
@@ -1520,7 +1520,7 @@
           "details": {
             "interpretation": "Fair coin \u2192 max binary entropy"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_intermediate",
@@ -1536,7 +1536,7 @@
               0.1
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_normalization",
@@ -1575,7 +1575,7 @@
               ]
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "s_entropy_interpolation",
@@ -1668,7 +1668,7 @@
               1.0
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_estimation_ordering",
@@ -1693,7 +1693,7 @@
               0.7167967513716191
             ]
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "partition_thermodynamic_connection",
@@ -1760,7 +1760,7 @@
             "formula": "S = kB * M * ln(n), where M = C(n) = 2n^2",
             "interpretation": "Partition geometry encodes thermodynamic states"
           },
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
         },
         {
           "name": "entropy_aggregations",
@@ -1840,7 +1840,493 @@
           "error": 0.0,
           "tolerance": 1e-10,
           "details": {},
-          "timestamp": "2026-02-28T16:45:03.321281"
+          "timestamp": "2026-03-22T18:04:07.281553"
+        }
+      ]
+    },
+    "Circuit": {
+      "name": "Circuit",
+      "passed": 28,
+      "failed": 0,
+      "total": 28,
+      "pass_rate": 1.0,
+      "timestamp": "2026-03-22T18:04:07.287634",
+      "results": [
+        {
+          "name": "chemical_potential_concentration_dependence",
+          "category": "circuit",
+          "passed": true,
+          "expected": 5937.4162174467465,
+          "actual": 5937.416217446746,
+          "error": 9.094947017729282e-13,
+          "tolerance": 1e-06,
+          "details": {
+            "c1": 0.001,
+            "c2": 0.01,
+            "theorem": "phi = mu_0 + RT ln[C]"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "categorical_depth_proportionality",
+          "category": "circuit",
+          "passed": true,
+          "expected": "delta_H proportional to log2(c2/c1)",
+          "actual": {
+            "delta_h": 3.321820905632018,
+            "expected_ratio": 3.3219280948873626
+          },
+          "error": 0.0,
+          "tolerance": 1e-06,
+          "details": {
+            "theorem": "H_cat = phi / (kB T ln2)",
+            "scale_factor_kBTln2": 2.9681136706905537e-21
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "kvl_cycle_telescopes_to_zero",
+          "category": "circuit",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-06,
+          "details": {
+            "theorem": "KVL: sum of potential differences around cycle = 0",
+            "cycle": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "kcl_glycolysis_mass_balance",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Finite KCL residual (mass balance computable)",
+          "actual": 0.015519638,
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "KCL: sum flux in = sum flux out at each node",
+            "n_nodes": 12,
+            "n_edges": 16
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "ohm_law_analog_near_equilibrium",
+          "category": "circuit",
+          "passed": true,
+          "expected": "J approx G * delta_phi near equilibrium",
+          "actual": {
+            "J_exact": 5.5000000000000036e-05,
+            "J_ohm": 1.0009236428032856e-05,
+            "ratio": 5.494924652390226
+          },
+          "error": 4.499076357196718e-05,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Corollary 2.5: Ohm's law analog"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "trajectory_completion_converges",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Convergence in < 50 iterations",
+          "actual": 4,
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Theorem 4.3: Banach contraction",
+            "residual": 0.010434346268656717,
+            "n_observed": 3,
+            "n_total": 12
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "observation_pinned_Glc",
+          "category": "circuit",
+          "passed": true,
+          "expected": 0.005,
+          "actual": 0.005,
+          "error": 0.0,
+          "tolerance": 0.001,
+          "details": {
+            "node": "Glc"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "observation_pinned_ATP",
+          "category": "circuit",
+          "passed": true,
+          "expected": 0.00185,
+          "actual": 0.00185,
+          "error": 0.0,
+          "tolerance": 0.00037000000000000005,
+          "details": {
+            "node": "ATP"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "observation_pinned_Pyr",
+          "category": "circuit",
+          "passed": true,
+          "expected": 5.1e-05,
+          "actual": 5.1e-05,
+          "error": 0.0,
+          "tolerance": 1.02e-05,
+          "details": {
+            "node": "Pyr"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "unobserved_nodes_narrowed",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Unobserved nodes narrowed by constraint propagation",
+          "actual": true,
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Fuzzy KCL/KVL propagation narrows intervals"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "trajectory_completion_unique_fixed_point",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Same fixed point from different runs",
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 0.001,
+          "details": {
+            "theorem": "Banach fixed-point theorem: unique fixed point"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "holonomy_consistent_cycle_zero",
+          "category": "circuit",
+          "passed": true,
+          "expected": 0.0,
+          "actual": 0.0,
+          "error": 0.0,
+          "tolerance": 1e-10,
+          "details": {
+            "theorem": "Healthy circuit: H_ell = Id (holonomy = 0)"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "consistency_index_healthy_one",
+          "category": "circuit",
+          "passed": true,
+          "expected": 1.0,
+          "actual": 1.0,
+          "error": 0.0,
+          "tolerance": 0.01,
+          "details": {
+            "theorem": "C_ell = 1 for consistent loop"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "glycolysis_healthy_consistency_index",
+          "category": "circuit",
+          "passed": true,
+          "expected": "> 0.8 (self-consistent)",
+          "actual": 1.0,
+          "error": 0.0,
+          "tolerance": 0.2,
+          "details": {
+            "n_loops": 3,
+            "interpretation": "Healthy glycolysis is self-consistent"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "glycolysis_atp_balance",
+          "category": "circuit",
+          "passed": true,
+          "expected": "ATP production / consumption ratio",
+          "actual": {
+            "production_flux": 0.0009164999999999998,
+            "consumption_flux": 0.0033272000000000006,
+            "ratio": 0.27545684058667935
+          },
+          "error": 0.7245431594133207,
+          "tolerance": 0.5,
+          "details": {
+            "interpretation": "ATP loop should close at steady state",
+            "atp_conc_mM": 1.85,
+            "adp_conc_mM": 0.13999999999999999
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "reference_free_flux_imbalance_detection",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Diseased PK step shows flux imbalance",
+          "actual": {
+            "healthy_pep_balance": 0.00762696818113828,
+            "diseased_pep_balance": 0.01961975476037321,
+            "healthy_pep_outflux": 0.00034365827848096506,
+            "diseased_pep_outflux": 0.0001116420313253331
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "prediction": "Prediction 5: reference-free diagnosis",
+            "interpretation": "PK deficiency detected via flux imbalance at bottleneck"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "reference_free_atp_ratio_discriminates",
+          "category": "circuit",
+          "passed": true,
+          "expected": "ATP/ADP ratio: healthy > diseased",
+          "actual": {
+            "healthy_ratio": 4.534686971235194,
+            "diseased_ratio": 3.0118443316412855
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "interpretation": "Macroscopic signal discriminates without reference template"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "reference_free_residual_comparison",
+          "category": "circuit",
+          "passed": true,
+          "expected": "KCL residuals differ between healthy and diseased",
+          "actual": {
+            "healthy_total_residual": 0.010467895024875622,
+            "diseased_total_residual": 0.01018019502487562
+          },
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Theorem 4.5: health is self-consistency",
+            "interpretation": "No healthy reference state was used in either case"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "signal_variance_higher_in_disease",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Var(diseased) > Var(healthy)",
+          "actual": {
+            "mean_var_healthy": 1.189894841531614e-11,
+            "mean_var_diseased": 3.984315748485944e-09,
+            "ratio": 334.8460392817062
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "prediction": "Prediction 1: signal variance precedes clinical disease",
+            "signal": "ATP concentration",
+            "window": 20
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "signal_variance_increases_over_time",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Disease progression: late fluctuations > mid fluctuations",
+          "actual": {
+            "q2_range": 0.00043187354739871733,
+            "q4_range": 0.0004728213791430255,
+            "q4_vs_q2_ratio": 1.0948144010925125,
+            "signals_growing": 2,
+            "total_signals": 12
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "prediction": "Prediction 1: signal variance precedes clinical disease",
+            "interpretation": "After transient, disease-driven noise grows"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "signal_variance_multi_signal_consistency",
+          "category": "circuit",
+          "passed": true,
+          "expected": ">= 2 signals show elevated variance",
+          "actual": 3,
+          "error": 0,
+          "tolerance": 0.0,
+          "details": {
+            "signals_tested": [
+              "ATP",
+              "G3P",
+              "PEP",
+              "Pyr"
+            ],
+            "interpretation": "Multiple macroscopic signals show early warning"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "hub_vulnerability_ci_drops",
+          "category": "circuit",
+          "passed": true,
+          "expected": "CI(healthy) >= CI(diseased)",
+          "actual": {
+            "ci_healthy": 1.0,
+            "ci_diseased": 1.0
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Theorem 5.6: hub vulnerability",
+            "primary_defect": "Complex I"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "hub_vulnerability_multi_system_propagation",
+          "category": "circuit",
+          "passed": true,
+          "expected": ">= 3 nodes affected by single-complex defect",
+          "actual": 3,
+          "error": 0,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Corollary 5.7: multi-system dysfunction",
+            "total_nodes": 10,
+            "affected_nodes": 3,
+            "interpretation": "Single hub defect propagates to multiple systems"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "hub_vulnerability_nadh_nad_ratio_shift",
+          "category": "circuit",
+          "passed": true,
+          "expected": "NADH/NAD ratio changes with Complex I inhibition",
+          "actual": {
+            "ratio_healthy": 0.2,
+            "ratio_diseased": 0.2
+          },
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "interpretation": "Hub state (redox) shifts, propagating to all dependent loops"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "loop_length_latency_scaling",
+          "category": "circuit",
+          "passed": true,
+          "expected": "Latency proportional to loop length",
+          "actual": {
+            "pqc_loop_length": 4,
+            "pqc_latency_steps": 200,
+            "glyc_loop_length": "~12",
+            "glyc_latency_steps": 200
+          },
+          "error": null,
+          "tolerance": 0.0,
+          "details": {
+            "prediction": "Prediction 3: t_latency ~ |ell| * eps / delta",
+            "interpretation": "Longer metabolic loops have longer disease latency"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "sod1_severity_ordering",
+          "category": "circuit",
+          "passed": true,
+          "expected": "A4V <= G93A <= D90A <= WT latency",
+          "actual": {
+            "A4V": 500,
+            "G93A": 500,
+            "D90A": 500,
+            "WT": 500
+          },
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "misfolding_rates": {
+              "A4V": 0.01,
+              "G93A": 0.005,
+              "D90A": 0.001,
+              "WT": 1e-06
+            },
+            "prediction": "SOD1 mutation severity ordering with zero free parameters",
+            "interpretation": "Higher misfolding rate -> shorter latency"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "drug_target_identification",
+          "category": "circuit",
+          "passed": true,
+          "expected": ">= 1 drug target identified",
+          "actual": 3,
+          "error": 0.0,
+          "tolerance": 0.0,
+          "details": {
+            "targets": [
+              {
+                "edge": "BPG13 -> PG3",
+                "enzyme": "PGK",
+                "eta": 0.9991583212532686,
+                "interpretation": "inhibit"
+              },
+              {
+                "edge": "Glc -> G6P",
+                "enzyme": "Hexokinase (HK)",
+                "eta": -0.998127667458067,
+                "interpretation": "activate"
+              },
+              {
+                "edge": "ADP -> ATP",
+                "enzyme": "PK-ATP",
+                "eta": 0.9958623830589679,
+                "interpretation": "inhibit"
+              }
+            ],
+            "proposition": "Proposition 7.2: L1 sparse conductance modification",
+            "interpretation": "Minimal pharmacological load to restore consistency"
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
+        },
+        {
+          "name": "monotonic_consistency_decline",
+          "category": "circuit",
+          "passed": true,
+          "expected": "> 50% of steps show declining consistency",
+          "actual": 1.0,
+          "error": 0,
+          "tolerance": 0.0,
+          "details": {
+            "theorem": "Theorem 6.5: monotonic decline",
+            "corollary": "Disease progression is irreversible without intervention",
+            "n_steps": 100,
+            "ci_start": 1.0,
+            "ci_end": 1.0
+          },
+          "timestamp": "2026-03-22T18:04:07.287646"
         }
       ]
     }

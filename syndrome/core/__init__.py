@@ -44,6 +44,16 @@ from syndrome.core.operators import (
     phase_lock_operator,
     gradient_operator,
 )
+from syndrome.core.circuit import (
+    BiochemicalCircuit,
+    CircuitNode,
+    CircuitEdge,
+    FuzzyInterval,
+    build_glycolysis_circuit,
+    build_etc_circuit,
+    build_protein_qc_circuit,
+    simulate_disease_progression,
+)
 
 __all__ = [
     # Partition
@@ -74,4 +84,13 @@ __all__ = [
     "photon_operator",
     "phase_lock_operator",
     "gradient_operator",
+    # Circuit
+    "BiochemicalCircuit",
+    "CircuitNode",
+    "CircuitEdge",
+    "FuzzyInterval",
+    "build_glycolysis_circuit",
+    "build_etc_circuit",
+    "build_protein_qc_circuit",
+    "simulate_disease_progression",
 ]

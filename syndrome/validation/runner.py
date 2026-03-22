@@ -127,6 +127,7 @@ def run_all_validations() -> Dict[str, ValidationSuite]:
     from syndrome.validation.disease_validation import run_disease_validations
     from syndrome.validation.trajectory_validation import run_trajectory_validations
     from syndrome.validation.thermodynamic_validation import run_thermodynamic_validations
+    from syndrome.validation.circuit_validation import run_circuit_validations
 
     results_dir = _ensure_results_dir()
     timestamp = datetime.now().isoformat()
@@ -145,6 +146,7 @@ def run_all_validations() -> Dict[str, ValidationSuite]:
         ("Disease", run_disease_validations),
         ("Trajectory", run_trajectory_validations),
         ("Thermodynamic", run_thermodynamic_validations),
+        ("Circuit", run_circuit_validations),
     ]
 
     for name, run_func in categories:
