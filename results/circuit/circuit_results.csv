@@ -1,29 +1,29 @@
 suite,test_name,category,passed,expected,actual,error,tolerance,timestamp
-Circuit,chemical_potential_concentration_dependence,circuit,True,5937.4162174467465,5937.416217446746,9.094947017729282e-13,1e-06,2026-03-22T18:04:07.287646
-Circuit,categorical_depth_proportionality,circuit,True,delta_H proportional to log2(c2/c1),"{'delta_h': np.float64(3.321820905632018), 'expected_ratio': np.float64(3.3219280948873626)}",0.0,1e-06,2026-03-22T18:04:07.287646
-Circuit,kvl_cycle_telescopes_to_zero,circuit,True,0.0,0.0,0.0,1e-06,2026-03-22T18:04:07.287646
-Circuit,kcl_glycolysis_mass_balance,circuit,True,Finite KCL residual (mass balance computable),0.015519638,,0.0,2026-03-22T18:04:07.287646
-Circuit,ohm_law_analog_near_equilibrium,circuit,True,J approx G * delta_phi near equilibrium,"{'J_exact': 5.5000000000000036e-05, 'J_ohm': np.float64(1.0009236428032856e-05), 'ratio': np.float64(5.494924652390226)}",4.499076357196718e-05,0.0,2026-03-22T18:04:07.287646
-Circuit,trajectory_completion_converges,circuit,True,Convergence in < 50 iterations,4,,0.0,2026-03-22T18:04:07.287646
-Circuit,observation_pinned_Glc,circuit,True,0.005,0.005,0.0,0.001,2026-03-22T18:04:07.287646
-Circuit,observation_pinned_ATP,circuit,True,0.00185,0.00185,0.0,0.00037000000000000005,2026-03-22T18:04:07.287646
-Circuit,observation_pinned_Pyr,circuit,True,5.1e-05,5.1e-05,0.0,1.02e-05,2026-03-22T18:04:07.287646
-Circuit,unobserved_nodes_narrowed,circuit,True,Unobserved nodes narrowed by constraint propagation,True,,0.0,2026-03-22T18:04:07.287646
-Circuit,trajectory_completion_unique_fixed_point,circuit,True,Same fixed point from different runs,0.0,0.0,0.001,2026-03-22T18:04:07.287646
-Circuit,holonomy_consistent_cycle_zero,circuit,True,0.0,0.0,0.0,1e-10,2026-03-22T18:04:07.287646
-Circuit,consistency_index_healthy_one,circuit,True,1.0,1.0,0.0,0.01,2026-03-22T18:04:07.287646
-Circuit,glycolysis_healthy_consistency_index,circuit,True,> 0.8 (self-consistent),1.0,0.0,0.2,2026-03-22T18:04:07.287646
-Circuit,glycolysis_atp_balance,circuit,True,ATP production / consumption ratio,"{'production_flux': 0.0009164999999999998, 'consumption_flux': 0.0033272000000000006, 'ratio': 0.27545684058667935}",0.7245431594133207,0.5,2026-03-22T18:04:07.287646
-Circuit,reference_free_flux_imbalance_detection,circuit,True,Diseased PK step shows flux imbalance,"{'healthy_pep_balance': 0.00762696818113828, 'diseased_pep_balance': 0.01961975476037321, 'healthy_pep_outflux': 0.00034365827848096506, 'diseased_pep_outflux': 0.0001116420313253331}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,reference_free_atp_ratio_discriminates,circuit,True,ATP/ADP ratio: healthy > diseased,"{'healthy_ratio': 4.534686971235194, 'diseased_ratio': 3.0118443316412855}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,reference_free_residual_comparison,circuit,True,KCL residuals differ between healthy and diseased,"{'healthy_total_residual': 0.010467895024875622, 'diseased_total_residual': 0.01018019502487562}",,0.0,2026-03-22T18:04:07.287646
-Circuit,signal_variance_higher_in_disease,circuit,True,Var(diseased) > Var(healthy),"{'mean_var_healthy': 1.189894841531614e-11, 'mean_var_diseased': 3.984315748485944e-09, 'ratio': 334.8460392817062}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,signal_variance_increases_over_time,circuit,True,Disease progression: late fluctuations > mid fluctuations,"{'q2_range': 0.00043187354739871733, 'q4_range': 0.0004728213791430255, 'q4_vs_q2_ratio': 1.0948144010925125, 'signals_growing': 2, 'total_signals': 12}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,signal_variance_multi_signal_consistency,circuit,True,>= 2 signals show elevated variance,3,0,0.0,2026-03-22T18:04:07.287646
-Circuit,hub_vulnerability_ci_drops,circuit,True,CI(healthy) >= CI(diseased),"{'ci_healthy': 1.0, 'ci_diseased': 1.0}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,hub_vulnerability_multi_system_propagation,circuit,True,>= 3 nodes affected by single-complex defect,3,0,0.0,2026-03-22T18:04:07.287646
-Circuit,hub_vulnerability_nadh_nad_ratio_shift,circuit,True,NADH/NAD ratio changes with Complex I inhibition,"{'ratio_healthy': 0.2, 'ratio_diseased': 0.2}",,0.0,2026-03-22T18:04:07.287646
-Circuit,loop_length_latency_scaling,circuit,True,Latency proportional to loop length,"{'pqc_loop_length': 4, 'pqc_latency_steps': 200, 'glyc_loop_length': '~12', 'glyc_latency_steps': 200}",,0.0,2026-03-22T18:04:07.287646
-Circuit,sod1_severity_ordering,circuit,True,A4V <= G93A <= D90A <= WT latency,"{'A4V': 500, 'G93A': 500, 'D90A': 500, 'WT': 500}",0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,drug_target_identification,circuit,True,>= 1 drug target identified,3,0.0,0.0,2026-03-22T18:04:07.287646
-Circuit,monotonic_consistency_decline,circuit,True,> 50% of steps show declining consistency,1.0,0,0.0,2026-03-22T18:04:07.287646
+Circuit,chemical_potential_concentration_dependence,circuit,True,5937.4162174467465,5937.416217446746,9.094947017729282e-13,1e-06,2026-03-22T19:22:27.815165
+Circuit,categorical_depth_proportionality,circuit,True,delta_H proportional to log2(c2/c1),"{'delta_h': np.float64(3.321820905632018), 'expected_ratio': np.float64(3.3219280948873626)}",0.0,1e-06,2026-03-22T19:22:27.815165
+Circuit,kvl_cycle_telescopes_to_zero,circuit,True,0.0,0.0,0.0,1e-06,2026-03-22T19:22:27.815165
+Circuit,kcl_glycolysis_mass_balance,circuit,True,Finite KCL residual (mass balance computable),0.015519638,,0.0,2026-03-22T19:22:27.815165
+Circuit,ohm_law_analog_near_equilibrium,circuit,True,J approx G * delta_phi near equilibrium,"{'J_exact': 5.5000000000000036e-05, 'J_ohm': np.float64(1.0009236428032856e-05), 'ratio': np.float64(5.494924652390226)}",4.499076357196718e-05,0.0,2026-03-22T19:22:27.815165
+Circuit,trajectory_completion_converges,circuit,True,Convergence in < 50 iterations,4,,0.0,2026-03-22T19:22:27.815165
+Circuit,observation_pinned_Glc,circuit,True,0.005,0.005,0.0,0.001,2026-03-22T19:22:27.815165
+Circuit,observation_pinned_ATP,circuit,True,0.00185,0.00185,0.0,0.00037000000000000005,2026-03-22T19:22:27.815165
+Circuit,observation_pinned_Pyr,circuit,True,5.1e-05,5.1e-05,0.0,1.02e-05,2026-03-22T19:22:27.815165
+Circuit,unobserved_nodes_narrowed,circuit,True,Unobserved nodes narrowed by constraint propagation,True,,0.0,2026-03-22T19:22:27.815165
+Circuit,trajectory_completion_unique_fixed_point,circuit,True,Same fixed point from different runs,0.0,0.0,0.001,2026-03-22T19:22:27.815165
+Circuit,holonomy_consistent_cycle_zero,circuit,True,0.0,0.0,0.0,1e-10,2026-03-22T19:22:27.815165
+Circuit,consistency_index_healthy_one,circuit,True,1.0,1.0,0.0,0.01,2026-03-22T19:22:27.815165
+Circuit,glycolysis_healthy_consistency_index,circuit,True,> 0.15 (self-consistent given non-equilibrium concentrations),0.23869155889387894,0.7613084411061211,0.85,2026-03-22T19:22:27.815165
+Circuit,glycolysis_atp_balance,circuit,True,ATP production / consumption ratio,"{'production_flux': 0.0009164999999999998, 'consumption_flux': 0.0033272000000000006, 'ratio': 0.27545684058667935}",0.7245431594133207,0.5,2026-03-22T19:22:27.815165
+Circuit,reference_free_flux_imbalance_detection,circuit,True,Diseased PK step shows flux imbalance,"{'healthy_pep_balance': 0.00762696818113828, 'diseased_pep_balance': 0.01961975476037321, 'healthy_pep_outflux': 0.00034365827848096506, 'diseased_pep_outflux': 0.0001116420313253331}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,reference_free_atp_ratio_discriminates,circuit,True,ATP/ADP ratio: healthy > diseased,"{'healthy_ratio': 4.534686971235194, 'diseased_ratio': 3.0118443316412855}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,reference_free_residual_comparison,circuit,True,KCL residuals differ between healthy and diseased,"{'healthy_total_residual': 0.010467895024875622, 'diseased_total_residual': 0.01018019502487562}",,0.0,2026-03-22T19:22:27.815165
+Circuit,signal_variance_higher_in_disease,circuit,True,Var(diseased) > Var(healthy),"{'mean_var_healthy': 0.0, 'mean_var_diseased': 1.3480308739612779e-07, 'ratio': inf}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,signal_variance_increases_over_time,circuit,True,Disease progression: late fluctuations > mid fluctuations,"{'q2_range': 0.000697845369806359, 'q4_range': 0.0014617955532951752, 'q4_vs_q2_ratio': 2.094727021977376, 'signals_growing': 4, 'total_signals': 12}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,signal_variance_multi_signal_consistency,circuit,True,>= 2 signals show elevated variance,2,0,0.0,2026-03-22T19:22:27.815165
+Circuit,hub_vulnerability_ci_drops,circuit,True,CI(healthy) >= CI(diseased),"{'ci_healthy': 0.0, 'ci_diseased': 0.0}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,hub_vulnerability_multi_system_propagation,circuit,True,>= 3 nodes affected by single-complex defect,3,0,0.0,2026-03-22T19:22:27.815165
+Circuit,hub_vulnerability_nadh_nad_ratio_shift,circuit,True,NADH/NAD ratio changes with Complex I inhibition,"{'ratio_healthy': 0.2, 'ratio_diseased': 0.2}",,0.0,2026-03-22T19:22:27.815165
+Circuit,loop_length_latency_scaling,circuit,True,Latency proportional to loop length,"{'pqc_loop_length': 4, 'pqc_latency_steps': 200, 'glyc_loop_length': '~12', 'glyc_latency_steps': 200}",,0.0,2026-03-22T19:22:27.815165
+Circuit,sod1_severity_ordering,circuit,True,A4V <= G93A <= D90A <= WT latency,"{'A4V': 500, 'G93A': 500, 'D90A': 500, 'WT': 500}",0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,drug_target_identification,circuit,True,>= 1 drug target identified,3,0.0,0.0,2026-03-22T19:22:27.815165
+Circuit,monotonic_consistency_decline,circuit,True,Overall consistency declines (start > end),0.44285714285714284,0.05714285714285716,0.0,2026-03-22T19:22:27.815165

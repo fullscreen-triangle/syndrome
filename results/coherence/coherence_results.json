@@ -4,7 +4,7 @@
   "failed": 0,
   "total": 14,
   "pass_rate": 1.0,
-  "timestamp": "2026-03-22T18:04:07.270772",
+  "timestamp": "2026-03-22T19:22:27.789786",
   "results": [
     {
       "name": "universal_coherence_standard",
@@ -19,7 +19,7 @@
         "pi_opt": 1.0,
         "pi_deg": 0.0
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "universal_coherence_inverse",
@@ -35,7 +35,7 @@
         "k_deg": 16,
         "interpretation": "Lower is better (folding cycles)"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "universal_coherence_midpoint",
@@ -50,7 +50,7 @@
         "pi_opt": 1.0,
         "pi_deg": 0.0
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "coherence_boundary_conditions",
@@ -105,7 +105,7 @@
           ]
         ]
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "coherence_monotonicity",
@@ -155,7 +155,7 @@
           0.09999999999999998
         ]
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "protein_folding_coherence",
@@ -171,7 +171,7 @@
         "k_max": 16,
         "interpretation": "75% coherence at 13 cycles"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "enzyme_turnover_coherence",
@@ -186,7 +186,7 @@
         "k_cat_max": 1000000.0,
         "interpretation": "10% of maximum turnover"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "channel_open_probability_coherence",
@@ -201,7 +201,7 @@
         "p_o_opt": 0.5,
         "interpretation": "At optimal open probability"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "membrane_amplitude_coherence",
@@ -215,7 +215,7 @@
         "delta_v_obs": 80.0,
         "delta_v_max": 100.0
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "circadian_period_coherence",
@@ -230,7 +230,7 @@
         "t_0": 24.0,
         "interpretation": "10% period variation"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "cellular_coherence_weighted",
@@ -253,7 +253,7 @@
         ],
         "formula": "η_cell = Σ(w_i * η_i) / Σ(w_i)"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "therapeutic_efficacy_calculation",
@@ -269,7 +269,7 @@
         "eta_healthy": 1.0,
         "interpretation": "50% of coherence gap closed"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "predicted_coherence_after_treatment",
@@ -284,7 +284,7 @@
         "efficacy": 0.5,
         "formula": "η_treated = η_untreated + E(1 - η_untreated)"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     },
     {
       "name": "efficacy_prediction_consistency",
@@ -297,7 +297,7 @@
       "details": {
         "interpretation": "Efficacy recovered from predicted coherence matches original"
       },
-      "timestamp": "2026-03-22T18:04:07.270786"
+      "timestamp": "2026-03-22T19:22:27.789811"
     }
   ]
 }

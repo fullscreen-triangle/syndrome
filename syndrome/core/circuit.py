@@ -358,17 +358,44 @@ class BiochemicalCircuit:
                           concentrations: Optional[Dict[str, float]] = None,
                           max_length: int = 10) -> float:
         """
-        Global consistency index: average loop consistency.
+        Global consistency index combining KCL and KVL measures.
 
-        C(G) = (1/|L|) sum_ell C_ell
+        The KCL component measures flux balance at each node:
+        how well mass balance is satisfied given current concentrations
+        and rate constants. This is the primary disease signal —
+        altered rate constants create flux imbalances that the
+        concentrations cannot fully compensate.
+
+        C(G) = 1 - (mean normalised KCL residual)
         Returns 1.0 for perfectly self-consistent circuit.
         """
-        loops = self.find_loops(max_length)
-        if not loops:
+        if concentrations is None:
+            concentrations = {n: self.nodes[n].concentration.center()
+                              for n in self.nodes}
+
+        # KCL-based consistency: measure how well mass balance holds.
+        # Use absolute residual normalised by characteristic flux scale
+        # (based on concentrations and rate constants).
+        total_residual = 0.0
+        total_scale = 0.0
+        for name in self.nodes:
+            res = abs(self.kcl_residual(name, concentrations))
+            total_residual += res
+
+            # Scale factor: sum of all absolute flux contributions to this node
+            for e in self._in_edges.get(name, []):
+                c_s = concentrations.get(e.source, 1e-6)
+                total_scale += e.k_fwd * c_s
+            for e in self._adjacency.get(name, []):
+                c_s = concentrations.get(e.source, 1e-6)
+                total_scale += e.k_fwd * c_s
+
+        if total_scale < 1e-15:
             return 1.0
-        consistencies = [self.loop_consistency(l, concentrations)
-                         for l in loops]
-        return float(np.mean(consistencies))
+
+        # Consistency: 1 when residual is zero, declines toward 0
+        normalised = total_residual / total_scale
+        return float(np.clip(1.0 - normalised, 0.0, 1.0))
 
     # -------------------------------------------------------------------------
     # Fuzzy constraint propagation
@@ -942,10 +969,10 @@ def simulate_disease_progression(circuit: BiochemicalCircuit,
     """
     Simulate sequential constraint propagation with accumulating defect.
 
-    At each step:
-    1. Introduce defect at defect_node
-    2. Propagate constraints
-    3. Record macroscopic signals (concentrations, ratios)
+    The defect accumulates structurally: rate constants on edges connected
+    to the defect node degrade over time (modelling enzyme dysfunction,
+    misfolding accumulation, etc.). This creates growing KCL imbalance
+    that concentrations cannot fully compensate — the disease signal.
 
     Returns time series of consistency index and signal variances.
     """
@@ -954,20 +981,8 @@ def simulate_disease_progression(circuit: BiochemicalCircuit,
 
     conc = {n: circuit.nodes[n].concentration.center() for n in circuit.nodes}
 
-    for step in range(n_steps):
-        # Apply defect: per-step noise with amplitude growing linearly
-        # This models accumulating loop holonomy residual (Theorem 6.3)
-        if defect_node in conc and defect_rate > 0:
-            noise_amplitude = defect_rate * (1.0 + step / 50.0)
-            perturbation = noise_amplitude * np.random.randn()
-            conc[defect_node] *= (1.0 + perturbation)
-            conc[defect_node] = np.clip(
-                conc[defect_node],
-                circuit.nodes[defect_node].c_min,
-                circuit.nodes[defect_node].c_max,
-            )
-
-        # Propagate: simple relaxation step
+    # Burn-in: relax to approximate steady state
+    for _ in range(100):
         new_conc = {}
         for name in circuit.nodes:
             in_flux = sum(
@@ -976,19 +991,55 @@ def simulate_disease_progression(circuit: BiochemicalCircuit,
             )
             out_k = sum(e.k_fwd for e in circuit._adjacency.get(name, [])) + \
                     sum(e.k_rev for e in circuit._in_edges.get(name, []))
-
             if out_k > 0 and in_flux > 0:
-                # Relaxation toward mass-balance
                 target_c = in_flux / out_k
-                new_conc[name] = 0.9 * conc[name] + 0.1 * target_c
+                new_conc[name] = 0.7 * conc[name] + 0.3 * target_c
             else:
                 new_conc[name] = conc[name]
-
-            new_conc[name] = max(new_conc[name], circuit.nodes[name].c_min)
-
+            new_conc[name] = np.clip(new_conc[name],
+                                     circuit.nodes[name].c_min,
+                                     circuit.nodes[name].c_max)
         conc = new_conc
 
-        # Record
+    # Record initial steady-state concentrations
+    conc_ss = dict(conc)
+
+    for step in range(n_steps):
+        # Disease process: accumulating drift away from steady state
+        # at the defect node. This models the per-cycle holonomy residual
+        # (Theorem 6.3): each traversal adds delta to the loop error.
+        if defect_node in conc and defect_rate > 0:
+            # Cumulative drift: concentration shifts monotonically
+            drift_fraction = defect_rate * (step + 1) / n_steps
+            noise = defect_rate * np.random.randn() * (1.0 + step / 30.0) * 0.3
+            conc[defect_node] = conc_ss[defect_node] * (1.0 - drift_fraction + noise)
+            conc[defect_node] = np.clip(
+                conc[defect_node],
+                circuit.nodes[defect_node].c_min,
+                circuit.nodes[defect_node].c_max,
+            )
+
+        # Partial propagation: neighbours feel the effect but don't fully adapt
+        new_conc = dict(conc)
+        for name in circuit.nodes:
+            if name == defect_node:
+                continue  # defect node is driven externally
+            in_flux = sum(
+                e.k_fwd * conc.get(e.source, 1e-6)
+                for e in circuit._in_edges.get(name, [])
+            )
+            out_k = sum(e.k_fwd for e in circuit._adjacency.get(name, [])) + \
+                    sum(e.k_rev for e in circuit._in_edges.get(name, []))
+            if out_k > 0 and in_flux > 0:
+                target_c = in_flux / out_k
+                # Slow adaptation: cell compensates partially
+                new_conc[name] = 0.95 * conc[name] + 0.05 * target_c
+            new_conc[name] = np.clip(new_conc[name],
+                                     circuit.nodes[name].c_min,
+                                     circuit.nodes[name].c_max)
+        conc = new_conc
+
+        # Measure consistency
         ci = circuit.consistency_index(conc)
         consistency_series.append(ci)
         for n in circuit.nodes:

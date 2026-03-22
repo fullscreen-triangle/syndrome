@@ -4,7 +4,7 @@
   "failed": 0,
   "total": 20,
   "pass_rate": 1.0,
-  "timestamp": "2026-03-22T18:04:07.273553",
+  "timestamp": "2026-03-22T19:22:27.795381",
   "results": [
     {
       "name": "disease_vector_protein_class",
@@ -18,7 +18,7 @@
         "oscillator": "P",
         "coherence": 0.75
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "disease_vector_enzyme_class",
@@ -32,7 +32,7 @@
         "oscillator": "E",
         "coherence": 0.5
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "disease_vector_weighted_aggregation",
@@ -53,7 +53,7 @@
         ],
         "interpretation": "Weighted average of coherences"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_P",
@@ -68,7 +68,7 @@
         "background_value": 0.1,
         "class_name": "Misfolding"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_E",
@@ -83,7 +83,7 @@
         "background_value": 0.1,
         "class_name": "Metabolic"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_C",
@@ -98,7 +98,7 @@
         "background_value": 0.1,
         "class_name": "Channelopathy"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_M",
@@ -113,7 +113,7 @@
         "background_value": 0.1,
         "class_name": "Excitability"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_A",
@@ -128,7 +128,7 @@
         "background_value": 0.1,
         "class_name": "Mitochondrial"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_G",
@@ -143,7 +143,7 @@
         "background_value": 0.1,
         "class_name": "Expression"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_Ca",
@@ -158,7 +158,7 @@
         "background_value": 0.1,
         "class_name": "Signaling"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "classification_dominant_R",
@@ -173,7 +173,7 @@
         "background_value": 0.1,
         "class_name": "Rhythm"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "severity_uniform",
@@ -186,7 +186,7 @@
       "details": {
         "interpretation": "All classes at 50% disease index"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "severity_weighted",
@@ -208,7 +208,7 @@
           1.0
         ]
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "severity_healthy_zero",
@@ -221,7 +221,7 @@
       "details": {
         "interpretation": "Healthy state has zero severity"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "healthy_vector_all_zeros",
@@ -243,7 +243,7 @@
       "details": {
         "interpretation": "Healthy = full coherence = zero disease"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "disease_vector_bounds",
@@ -308,7 +308,7 @@
           ]
         ]
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "signature_distance_self_zero",
@@ -321,7 +321,7 @@
       "details": {
         "interpretation": "Distance to self is zero"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "signature_distance_symmetry",
@@ -337,7 +337,7 @@
       "details": {
         "interpretation": "Distance is symmetric"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "signature_distance_triangle",
@@ -355,7 +355,7 @@
       "details": {
         "interpretation": "Triangle inequality holds"
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     },
     {
       "name": "disease_profile_generation",
@@ -418,7 +418,7 @@
         "severity": 0.8,
         "spread": 0.1
       },
-      "timestamp": "2026-03-22T18:04:07.273566"
+      "timestamp": "2026-03-22T19:22:27.795403"
     }
   ]
 }
