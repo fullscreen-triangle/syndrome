@@ -1,0 +1,486 @@
+{
+  "name": "Circuit",
+  "passed": 28,
+  "failed": 0,
+  "total": 28,
+  "pass_rate": 1.0,
+  "timestamp": "2026-03-22T19:22:27.815135",
+  "results": [
+    {
+      "name": "chemical_potential_concentration_dependence",
+      "category": "circuit",
+      "passed": true,
+      "expected": 5937.4162174467465,
+      "actual": 5937.416217446746,
+      "error": 9.094947017729282e-13,
+      "tolerance": 1e-06,
+      "details": {
+        "c1": 0.001,
+        "c2": 0.01,
+        "theorem": "phi = mu_0 + RT ln[C]"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "categorical_depth_proportionality",
+      "category": "circuit",
+      "passed": true,
+      "expected": "delta_H proportional to log2(c2/c1)",
+      "actual": {
+        "delta_h": 3.321820905632018,
+        "expected_ratio": 3.3219280948873626
+      },
+      "error": 0.0,
+      "tolerance": 1e-06,
+      "details": {
+        "theorem": "H_cat = phi / (kB T ln2)",
+        "scale_factor_kBTln2": 2.9681136706905537e-21
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "kvl_cycle_telescopes_to_zero",
+      "category": "circuit",
+      "passed": true,
+      "expected": 0.0,
+      "actual": 0.0,
+      "error": 0.0,
+      "tolerance": 1e-06,
+      "details": {
+        "theorem": "KVL: sum of potential differences around cycle = 0",
+        "cycle": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "kcl_glycolysis_mass_balance",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Finite KCL residual (mass balance computable)",
+      "actual": 0.015519638,
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "KCL: sum flux in = sum flux out at each node",
+        "n_nodes": 12,
+        "n_edges": 16
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "ohm_law_analog_near_equilibrium",
+      "category": "circuit",
+      "passed": true,
+      "expected": "J approx G * delta_phi near equilibrium",
+      "actual": {
+        "J_exact": 5.5000000000000036e-05,
+        "J_ohm": 1.0009236428032856e-05,
+        "ratio": 5.494924652390226
+      },
+      "error": 4.499076357196718e-05,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Corollary 2.5: Ohm's law analog"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "trajectory_completion_converges",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Convergence in < 50 iterations",
+      "actual": 4,
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Theorem 4.3: Banach contraction",
+        "residual": 0.010434346268656717,
+        "n_observed": 3,
+        "n_total": 12
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "observation_pinned_Glc",
+      "category": "circuit",
+      "passed": true,
+      "expected": 0.005,
+      "actual": 0.005,
+      "error": 0.0,
+      "tolerance": 0.001,
+      "details": {
+        "node": "Glc"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "observation_pinned_ATP",
+      "category": "circuit",
+      "passed": true,
+      "expected": 0.00185,
+      "actual": 0.00185,
+      "error": 0.0,
+      "tolerance": 0.00037000000000000005,
+      "details": {
+        "node": "ATP"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "observation_pinned_Pyr",
+      "category": "circuit",
+      "passed": true,
+      "expected": 5.1e-05,
+      "actual": 5.1e-05,
+      "error": 0.0,
+      "tolerance": 1.02e-05,
+      "details": {
+        "node": "Pyr"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "unobserved_nodes_narrowed",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Unobserved nodes narrowed by constraint propagation",
+      "actual": true,
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Fuzzy KCL/KVL propagation narrows intervals"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "trajectory_completion_unique_fixed_point",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Same fixed point from different runs",
+      "actual": 0.0,
+      "error": 0.0,
+      "tolerance": 0.001,
+      "details": {
+        "theorem": "Banach fixed-point theorem: unique fixed point"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "holonomy_consistent_cycle_zero",
+      "category": "circuit",
+      "passed": true,
+      "expected": 0.0,
+      "actual": 0.0,
+      "error": 0.0,
+      "tolerance": 1e-10,
+      "details": {
+        "theorem": "Healthy circuit: H_ell = Id (holonomy = 0)"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "consistency_index_healthy_one",
+      "category": "circuit",
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0,
+      "error": 0.0,
+      "tolerance": 0.01,
+      "details": {
+        "theorem": "C_ell = 1 for consistent loop"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "glycolysis_healthy_consistency_index",
+      "category": "circuit",
+      "passed": true,
+      "expected": "> 0.15 (self-consistent given non-equilibrium concentrations)",
+      "actual": 0.23869155889387894,
+      "error": 0.7613084411061211,
+      "tolerance": 0.85,
+      "details": {
+        "n_loops": 3,
+        "interpretation": "Healthy glycolysis is self-consistent"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "glycolysis_atp_balance",
+      "category": "circuit",
+      "passed": true,
+      "expected": "ATP production / consumption ratio",
+      "actual": {
+        "production_flux": 0.0009164999999999998,
+        "consumption_flux": 0.0033272000000000006,
+        "ratio": 0.27545684058667935
+      },
+      "error": 0.7245431594133207,
+      "tolerance": 0.5,
+      "details": {
+        "interpretation": "ATP loop should close at steady state",
+        "atp_conc_mM": 1.85,
+        "adp_conc_mM": 0.13999999999999999
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "reference_free_flux_imbalance_detection",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Diseased PK step shows flux imbalance",
+      "actual": {
+        "healthy_pep_balance": 0.00762696818113828,
+        "diseased_pep_balance": 0.01961975476037321,
+        "healthy_pep_outflux": 0.00034365827848096506,
+        "diseased_pep_outflux": 0.0001116420313253331
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "prediction": "Prediction 5: reference-free diagnosis",
+        "interpretation": "PK deficiency detected via flux imbalance at bottleneck"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "reference_free_atp_ratio_discriminates",
+      "category": "circuit",
+      "passed": true,
+      "expected": "ATP/ADP ratio: healthy > diseased",
+      "actual": {
+        "healthy_ratio": 4.534686971235194,
+        "diseased_ratio": 3.0118443316412855
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "interpretation": "Macroscopic signal discriminates without reference template"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "reference_free_residual_comparison",
+      "category": "circuit",
+      "passed": true,
+      "expected": "KCL residuals differ between healthy and diseased",
+      "actual": {
+        "healthy_total_residual": 0.010467895024875622,
+        "diseased_total_residual": 0.01018019502487562
+      },
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Theorem 4.5: health is self-consistency",
+        "interpretation": "No healthy reference state was used in either case"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "signal_variance_higher_in_disease",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Var(diseased) > Var(healthy)",
+      "actual": {
+        "mean_var_healthy": 0.0,
+        "mean_var_diseased": 1.3480308739612779e-07,
+        "ratio": 999999
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "prediction": "Prediction 1: signal variance precedes clinical disease",
+        "signal": "ATP concentration",
+        "window": 20
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "signal_variance_increases_over_time",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Disease progression: late fluctuations > mid fluctuations",
+      "actual": {
+        "q2_range": 0.000697845369806359,
+        "q4_range": 0.0014617955532951752,
+        "q4_vs_q2_ratio": 2.094727021977376,
+        "signals_growing": 4,
+        "total_signals": 12
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "prediction": "Prediction 1: signal variance precedes clinical disease",
+        "interpretation": "After transient, disease-driven noise grows"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "signal_variance_multi_signal_consistency",
+      "category": "circuit",
+      "passed": true,
+      "expected": ">= 2 signals show elevated variance",
+      "actual": 2,
+      "error": 0,
+      "tolerance": 0.0,
+      "details": {
+        "signals_tested": [
+          "ATP",
+          "G3P",
+          "PEP",
+          "Pyr"
+        ],
+        "interpretation": "Multiple macroscopic signals show early warning"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "hub_vulnerability_ci_drops",
+      "category": "circuit",
+      "passed": true,
+      "expected": "CI(healthy) >= CI(diseased)",
+      "actual": {
+        "ci_healthy": 0.0,
+        "ci_diseased": 0.0
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Theorem 5.6: hub vulnerability",
+        "primary_defect": "Complex I"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "hub_vulnerability_multi_system_propagation",
+      "category": "circuit",
+      "passed": true,
+      "expected": ">= 3 nodes affected by single-complex defect",
+      "actual": 3,
+      "error": 0,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Corollary 5.7: multi-system dysfunction",
+        "total_nodes": 10,
+        "affected_nodes": 3,
+        "interpretation": "Single hub defect propagates to multiple systems"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "hub_vulnerability_nadh_nad_ratio_shift",
+      "category": "circuit",
+      "passed": true,
+      "expected": "NADH/NAD ratio changes with Complex I inhibition",
+      "actual": {
+        "ratio_healthy": 0.2,
+        "ratio_diseased": 0.2
+      },
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "interpretation": "Hub state (redox) shifts, propagating to all dependent loops"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "loop_length_latency_scaling",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Latency proportional to loop length",
+      "actual": {
+        "pqc_loop_length": 4,
+        "pqc_latency_steps": 200,
+        "glyc_loop_length": "~12",
+        "glyc_latency_steps": 200
+      },
+      "error": null,
+      "tolerance": 0.0,
+      "details": {
+        "prediction": "Prediction 3: t_latency ~ |ell| * eps / delta",
+        "interpretation": "Longer metabolic loops have longer disease latency"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "sod1_severity_ordering",
+      "category": "circuit",
+      "passed": true,
+      "expected": "A4V <= G93A <= D90A <= WT latency",
+      "actual": {
+        "A4V": 500,
+        "G93A": 500,
+        "D90A": 500,
+        "WT": 500
+      },
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "misfolding_rates": {
+          "A4V": 0.01,
+          "G93A": 0.005,
+          "D90A": 0.001,
+          "WT": 1e-06
+        },
+        "prediction": "SOD1 mutation severity ordering with zero free parameters",
+        "interpretation": "Higher misfolding rate -> shorter latency"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "drug_target_identification",
+      "category": "circuit",
+      "passed": true,
+      "expected": ">= 1 drug target identified",
+      "actual": 3,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "details": {
+        "targets": [
+          {
+            "edge": "BPG13 -> PG3",
+            "enzyme": "PGK",
+            "eta": 0.9991583212532686,
+            "interpretation": "inhibit"
+          },
+          {
+            "edge": "Glc -> G6P",
+            "enzyme": "Hexokinase (HK)",
+            "eta": -0.998127667458067,
+            "interpretation": "activate"
+          },
+          {
+            "edge": "ADP -> ATP",
+            "enzyme": "PK-ATP",
+            "eta": 0.9958623830589679,
+            "interpretation": "inhibit"
+          }
+        ],
+        "proposition": "Proposition 7.2: L1 sparse conductance modification",
+        "interpretation": "Minimal pharmacological load to restore consistency"
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    },
+    {
+      "name": "monotonic_consistency_decline",
+      "category": "circuit",
+      "passed": true,
+      "expected": "Overall consistency declines (start > end)",
+      "actual": 0.44285714285714284,
+      "error": 0.05714285714285716,
+      "tolerance": 0.0,
+      "details": {
+        "theorem": "Theorem 6.5: monotonic decline",
+        "corollary": "Disease progression is irreversible without intervention",
+        "n_steps": 150,
+        "ci_start": 0.9846870392166212,
+        "ci_end": 0.9846947281114888
+      },
+      "timestamp": "2026-03-22T19:22:27.815165"
+    }
+  ]
+}

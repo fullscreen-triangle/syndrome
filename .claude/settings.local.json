@@ -7,7 +7,8 @@
       "Bash(wc -l /c/Users/kunda/Documents/health/syndrome/syndrome/validation/*.py /c/Users/kunda/Documents/health/syndrome/visualizations/*.py)",
       "Bash(python -c \":*)",
       "Bash(python publication/disease-fuzzy-circuits/generate_figures.py)",
-      "Bash(python -m syndrome.validation.runner)"
+      "Bash(python -m syndrome.validation.runner)",
+      "Bash(npm install:*)"
     ]
   }
 }
