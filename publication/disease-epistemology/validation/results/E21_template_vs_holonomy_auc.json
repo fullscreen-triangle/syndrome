@@ -1,0 +1,10 @@
+{
+  "experiment": "E21",
+  "description": "Holonomy-based detection AUC >> template-based AUC",
+  "n_per_class": 200,
+  "auc_template": 0.8956999999999999,
+  "auc_holonomy": 1.0,
+  "holonomy_advantage": 0.10430000000000006,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

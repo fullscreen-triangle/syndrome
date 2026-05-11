@@ -1,0 +1,35 @@
+{
+  "experiment": "E05",
+  "description": "Poisson shot noise validates beta_cell ~ sigma/sqrt(N)",
+  "sigma": 2.0,
+  "n_trials": 5000,
+  "per_N_results": {
+    "50": {
+      "empirical_floor": 0.28104870752994054,
+      "theoretical_floor": 0.282842712474619,
+      "relative_error": 0.006342765309321688
+    },
+    "200": {
+      "empirical_floor": 0.14108964109021319,
+      "theoretical_floor": 0.1414213562373095,
+      "relative_error": 0.0023455802993409924
+    },
+    "500": {
+      "empirical_floor": 0.0893523912808375,
+      "theoretical_floor": 0.08944271909999159,
+      "relative_error": 0.0010098957194392968
+    },
+    "2000": {
+      "empirical_floor": 0.04470629694030173,
+      "theoretical_floor": 0.044721359549995794,
+      "relative_error": 0.0003368101919447064
+    },
+    "5000": {
+      "empirical_floor": 0.028275971708983,
+      "theoretical_floor": 0.0282842712474619,
+      "relative_error": 0.00029343299695744953
+    }
+  },
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:26Z"
+}

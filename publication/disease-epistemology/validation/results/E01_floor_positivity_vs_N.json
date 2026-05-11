@@ -1,0 +1,24 @@
+{
+  "experiment": "E01",
+  "description": "Cellular floor beta = sigma/sqrt(N) > 0 for all finite N",
+  "sigma": 1.0,
+  "N_values": [
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000
+  ],
+  "beta_values": [
+    0.31622776601683794,
+    0.1,
+    0.03162277660168379,
+    0.01,
+    0.003162277660168379,
+    0.001
+  ],
+  "all_positive": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:25Z"
+}

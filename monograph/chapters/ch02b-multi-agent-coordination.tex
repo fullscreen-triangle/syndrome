@@ -1,0 +1,125 @@
+%% Chapter 2b — Multi-Agent Coordination and Collective Blindness
+%%
+%% Source material:
+%%   docs/sources/finite-agent-coordination.tex  (primary)
+%%
+%% This chapter extends the single-receiver theory to ensembles.  The central
+%% results are Group Blindness (cellular floors compound multiplicatively into
+%% an organ-level floor that is always positive) and Purpose as Fixed-Point
+%% (the ensemble's emergent goal is the omega-limit set of its dynamics, not
+%% a stored representation in any individual receiver).
+
+\chapter{Multi-Agent Coordination and Collective Blindness}
+\label{ch:coordination}
+
+\section{The Multi-Agent S-Functional}
+\label{sec:multi-agent-s}
+
+% Ensemble E = {R_1, ..., R_n} of n bounded receivers.
+% Joint S-functional:
+%   S(E, x; C) = (1/n) sum_{i=1}^n S(R_i, x; C_i)
+% where C_i is the projection of C onto receiver i's action space.
+%
+% Individual floors: beta_i = S_flat(R_i) > 0 for all i (Floor Positivity, Ch. 2).
+
+% TODO
+
+\section{Group Blindness Theorem}
+\label{sec:group-blindness}
+
+% Theorem (Group Blindness).
+%   For an organ ensemble E of n cells with individual floors beta_i > 0,
+%   the composite epistemic floor is:
+%       S_flat(E) = prod_{i=1}^n beta_i / (sum_{i=1}^n beta_i)^{n-1}  > 0.
+%
+% Proof sketch:
+%   The composite floor is the fixed point of the catalytic composition rule
+%   kappa(gamma_1 diamond gamma_2) = 1 - (1 - kappa_1)(1 - kappa_2).
+%   Since each kappa_i < 1, the product is strictly less than 1, and
+%   converting back to floor units gives the formula above.
+%
+% Consequence: Cellular blindness compounds multiplicatively.
+%   The organ does NOT magically know what individual cells do not know.
+%   An ensemble of blind receivers is still blind — the composite floor never
+%   vanishes for any finite n.
+%
+% Theorem (Asymptotic Floor).
+%   As n -> infinity with beta_i = b for all i,
+%       S_flat(E) = b^n / (nb)^{n-1} = b / n^{n-1} -> 0
+%   but remains strictly positive for all finite n.
+
+% TODO — full proof
+
+\section{Purpose as Fixed-Point}
+\label{sec:purpose-fixed-point}
+
+% The "purpose" of a biological ensemble cannot be a stored representation
+% (No Template Theorem, Ch. 8).  It is instead defined dynamically.
+%
+% Definition (Purpose Cell).
+%   The purpose cell C* of ensemble E is the attainable cell satisfying
+%       Phi_E(C*) = S_flat(E)
+%   where Phi_E is the ensemble dynamics map.
+%   Equivalently, C* is the omega-limit set of the ensemble trajectory.
+%
+% Theorem (Purpose Existence, Banach Fixed-Point).
+%   If the ensemble dynamics Phi_E: Omega -> Omega is a contraction
+%   (||Phi_E(x) - Phi_E(y)|| <= kappa ||x - y|| with kappa < 1), then
+%   there exists a unique fixed point C* = lim_{t->infty} Phi_E^t(x_0)
+%   for any initial state x_0.
+%
+% Theorem (Purpose as Attractor).
+%   C* is the unique globally stable fixed point.
+%   All trajectories converge to C* regardless of initial state.
+%
+% Interpretation:
+%   "Thriving" is not a template that cells possess — it is what the ensemble
+%   gravitates toward.  The blind CAN lead the blind to the destination
+%   precisely because the destination is not a memorised map but a dynamic
+%   equilibrium.
+
+% TODO
+
+\section{Motivation Heterogeneity Theorem}
+\label{sec:motivation-heterogeneity}
+
+% Theorem (Motivation Heterogeneity).
+%   S_flat(E) depends only on {beta_i}_{i=1}^n, not on the goal contents
+%   (G_i, A_i) of individual receivers.
+%
+% Proof: The composite floor formula (Section~\ref{sec:group-blindness})
+%   contains only beta_i.  Goal vectors G_i and action sets A_i enter
+%   only through the trajectory Phi_E but not through the floor.
+%
+% Corollary (No Molecular Specificity Argument).
+%   Richer molecular goals (more specific G_i) or more diverse action sets A_i
+%   cannot reduce S_flat(E).  The epistemic floor is thermodynamic, not
+%   representational.
+
+% TODO
+
+\section{Common-Cell Convergence and Belief Incompatibility}
+\label{sec:common-cell}
+
+% Theorem (Common-Cell Convergence).
+%   Two agents with representation-disjoint beliefs (incompatible internal
+%   models) can nonetheless attain the same action-cell C.
+%
+% Proof: By Mode Non-Privilege (Ch. 2), any mode achieving S < tau(C)
+%   reaches C.  Agents with incompatible beliefs use different modes;
+%   both can independently satisfy S < tau(C).
+%
+% Theorem (Belief Incompatibility).
+%   If two agents A_1, A_2 hold incompatible beliefs (their representation
+%   cells are disjoint: C_{A_1} cap C_{A_2} = emptyset), their S-values
+%   for a shared target C satisfy:
+%       S(A_1, x; C) and S(A_2, x; C) are independent.
+%
+% Theorem (Reachability Monotonicity).
+%   If C_1 subseteq C_2, then any ensemble reaching C_1 also reaches C_2.
+%
+% Theorem (Purpose Stability).
+%   C* is Lipschitz-stable under small perturbations of {beta_i}:
+%       ||C*(beta') - C*(beta)|| <= L ||beta' - beta||.
+
+% TODO

@@ -1,0 +1,30 @@
+{
+  "experiment": "E09",
+  "description": "Cell size (fraction of space indistinguishable) grows with beta",
+  "N": 500,
+  "per_sigma": {
+    "0.1": {
+      "beta": 0.00447213595499958,
+      "radius": 0.0447213595499958,
+      "fraction_inside": 0.0016
+    },
+    "0.5": {
+      "beta": 0.022360679774997897,
+      "radius": 0.22360679774997896,
+      "fraction_inside": 0.0388
+    },
+    "1.0": {
+      "beta": 0.044721359549995794,
+      "radius": 0.4472135954999579,
+      "fraction_inside": 0.1572
+    },
+    "2.0": {
+      "beta": 0.08944271909999159,
+      "radius": 0.8944271909999159,
+      "fraction_inside": 0.624
+    }
+  },
+  "monotone_in_sigma": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:26Z"
+}

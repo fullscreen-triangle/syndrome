@@ -1,0 +1,10 @@
+{
+  "experiment": "E11",
+  "description": "Composite organ floor S_flat(E) > 0 for all finite cell ensembles",
+  "n_trials": 500,
+  "min_composite_floor": 9.270688286528773e-29,
+  "max_composite_floor": 0.20715430783934932,
+  "all_positive": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

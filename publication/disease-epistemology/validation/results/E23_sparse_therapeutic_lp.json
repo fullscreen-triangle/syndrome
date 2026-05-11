@@ -1,0 +1,11 @@
+{
+  "experiment": "E23",
+  "description": "L1 LP therapeutic is feasible and produces sparse drug combinations",
+  "n_loops": 4,
+  "n_drugs": 20,
+  "n_trials": 100,
+  "feasibility_rate": 1.0,
+  "mean_drug_sparsity": 0.19899999999999998,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

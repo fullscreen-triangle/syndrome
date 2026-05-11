@@ -1,0 +1,14 @@
+{
+  "experiment": "E10",
+  "description": "No epistemic mode is privileged; all achieve cell with same rate",
+  "beta": 0.05,
+  "cell_tolerance": 0.2,
+  "mode_success_rates": {
+    "knowledge": 0.945,
+    "behaviour": 0.939,
+    "belief": 0.945
+  },
+  "max_mode_difference": 0.006000000000000005,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:26Z"
+}

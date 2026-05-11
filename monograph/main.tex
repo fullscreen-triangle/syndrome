@@ -1,0 +1,77 @@
+\documentclass[12pt,a4paper,openright]{book}
+
+%% Shared preamble: all packages, theorem environments, notation macros
+\input{preamble}
+
+\begin{document}
+
+%% -------------------------------------------------------------------------
+%% Front matter
+%% -------------------------------------------------------------------------
+\frontmatter
+
+\input{front/titlepage}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\input{front/preface}
+\input{front/notation}
+
+%% -------------------------------------------------------------------------
+%% Main matter
+%% -------------------------------------------------------------------------
+\mainmatter
+
+%%===========================================================================
+\part{Foundations}
+\label{part:foundations}
+%%===========================================================================
+
+\input{chapters/ch01-axiomatic-basis}
+\input{chapters/ch02-partition-algebra}
+\input{chapters/ch02b-multi-agent-coordination}
+
+%%===========================================================================
+\part{The Healthy Cell}
+\label{part:healthy}
+%%===========================================================================
+
+\input{chapters/ch03-cellular-state-equations}
+\input{chapters/ch04-observational-algebra}
+\input{chapters/ch05-poincare-computing}
+\input{chapters/ch06-multimodal-localization}
+
+%%===========================================================================
+\part{Disease}
+\label{part:disease}
+%%===========================================================================
+
+\input{chapters/ch07-disease-state-equations}
+\input{chapters/ch08-fuzzy-circuits}
+
+%%===========================================================================
+\part{Therapeutic Intervention}
+\label{part:therapy}
+%%===========================================================================
+
+\input{chapters/ch09-therapeutic-effect}
+\input{chapters/ch10-intervention-hierarchy}
+
+%%===========================================================================
+\part{Synthesis}
+\label{part:synthesis}
+%%===========================================================================
+
+\input{chapters/ch11-synthesis}
+
+%% -------------------------------------------------------------------------
+%% Back matter
+%% -------------------------------------------------------------------------
+\backmatter
+
+\bibliographystyle{plainnat}
+\bibliography{back/bibliography}
+
+\end{document}

@@ -1,0 +1,10 @@
+{
+  "experiment": "E16",
+  "description": "Contraction map has unique fixed point (Purpose as attractor)",
+  "dim": 6,
+  "n_cells": 8,
+  "composite_floor": 9.085601093016504e-09,
+  "fixed_point_residual": 1.1249336723058063e-12,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

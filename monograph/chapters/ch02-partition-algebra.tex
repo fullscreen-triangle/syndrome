@@ -1,0 +1,104 @@
+%% Chapter 2 — Epistemic Floors and Observational Algebra
+%%
+%% Source material:
+%%   docs/sources/epistemological-methodology.tex  (primary)
+%%   docs/sources/unconstrained-subtask-recursion.tex §4
+%%
+%% This chapter proves that every bounded receiver has a strictly positive
+%% epistemic floor, establishes the Cell-Truth theorem (truth is a cell, not
+%% a point), and derives Mode Non-Privilege.  It provides the epistemic
+%% foundations for why no cell can hold a healthy template (Ch. 8).
+
+\chapter{Epistemic Floors and Observational Algebra}
+\label{ch:epistemic}
+
+\section{Floor Positivity}
+\label{sec:floor-positivity}
+
+% Theorem (Floor Positivity).
+%   For every bounded receiver R (satisfying Axioms 1-2),
+%       S_flat(R) := inf_{x in Omega} S(R, x; C) = beta > 0.
+%
+% Proof sketch (residue persistence):
+%   By Axiom 2, the receiver partitions Omega into cells of positive measure.
+%   Any measurement maps x to its cell, incurring a resolution error >= epsilon.
+%   The infimum over all cells of this error is beta = epsilon > 0.
+%   Perfect alignment (S=0) would require an infinitely fine partition,
+%   violating Axiom 1 (finite energy).
+%
+% Corollary: No bounded receiver can achieve S = 0.
+%   Perfect knowledge of any state is impossible under boundedness.
+
+% TODO — full residue-persistence proof
+
+\section{Cell-Truth Theorem}
+\label{sec:cell-truth}
+
+% Theorem (Cell-Truth).
+%   For any bounded receiver R, the truth about a state x is not a point
+%   but an action-equivalence cell C with tau(C) > 0.
+%   All x' in C have S(R, x'; C) = beta (they are S-indistinguishable).
+%
+% Consequence for biological systems:
+%   The "healthy state" cannot be a point in phase space.
+%   It is an equivalence class — a positive-measure cell.
+%   This is the ontological foundation of the No Template Theorem (Ch. 8):
+%   there is no canonical representative to store, not merely no room to store it.
+%
+% Layered Receivers.
+%   A receiver hierarchy R_1 < R_2 < ... < R_k with floors beta_1 >= beta_2 >= ...
+%   The bottom layer sets the floor for all higher layers.
+
+% TODO
+
+\section{Methodological Floor and Catalytic Distance}
+\label{sec:method-floor}
+
+% Methodological floor for a catalytic receiver with power kappa in [0,1):
+%       sigma_{kappa} = sigma * kappa / (1 - kappa)
+%   where sigma is the base measurement uncertainty.
+%
+% Catalytic distance d_cat(x, C) = S(R, x; C) - beta.
+% Interpretation: excess S beyond the irreducible floor.
+
+% TODO
+
+\section{Mode Non-Privilege Theorem}
+\label{sec:mode-nonprovilege}
+
+% Theorem (Mode Non-Privilege).
+%   For any action-cell C and any epistemic mode M in
+%   {knowledge, behaviour, belief, computation, observation},
+%   if S(R_M, x; C) < tau(C) then x can reach C via mode M.
+%   No mode is uniquely privileged for reaching C.
+%
+% Theorem (Mode-Methodology Equivalence).
+%   For a layered receiver with catalytic power kappa, the set of states
+%   reachable by any mode of cardinality kappa is the same.
+%
+% Theorem (Distribution Theorem).
+%   The distribution of S-values across states is determined by the
+%   partition geometry, not by the observation modality.
+
+% TODO
+
+\section{Algebraic Structure of Partitions}
+\label{sec:algebra-structure}
+
+% Primitive operators: Project, Complete, Compose.
+% Closure properties.
+% Derived operators.
+% Algebraic laws (associativity, commutativity of Project,
+%   non-commutativity of Compose).
+%
+% The Cellular Partition Language (CPL):
+%   Language specification and constraint-satisfaction semantics.
+%   Example: photosynthesis as partition expression.
+%   No laws only constraints — relation to Poincaré computing (Ch. 5).
+%
+% Ternary Encoding:
+%   Trit-trajectory correspondence.
+%   Why ternary: {-1, 0, +1} maps naturally to oscillator states.
+%   Relation to S-entropy coordinates.
+
+% TODO

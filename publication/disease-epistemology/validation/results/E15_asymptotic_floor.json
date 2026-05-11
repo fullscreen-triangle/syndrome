@@ -1,0 +1,160 @@
+{
+  "experiment": "E15",
+  "description": "Composite floor -> 0 as beta -> 0 but is always > 0 for finite beta",
+  "n_cells": 10,
+  "results": [
+    {
+      "beta": 0.1,
+      "composite_floor": 1.0000000000000006e-10,
+      "positive": true
+    },
+    {
+      "beta": 0.06723357536499334,
+      "composite_floor": 6.723357536499342e-11,
+      "positive": true
+    },
+    {
+      "beta": 0.04520353656360243,
+      "composite_floor": 4.5203536563602446e-11,
+      "positive": true
+    },
+    {
+      "beta": 0.03039195382313198,
+      "composite_floor": 3.0391953823131984e-11,
+      "positive": true
+    },
+    {
+      "beta": 0.020433597178569417,
+      "composite_floor": 2.0433597178569433e-11,
+      "positive": true
+    },
+    {
+      "beta": 0.013738237958832623,
+      "composite_floor": 1.3738237958832633e-11,
+      "positive": true
+    },
+    {
+      "beta": 0.009236708571873866,
+      "composite_floor": 9.236708571873869e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.006210169418915616,
+      "composite_floor": 6.210169418915613e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.0041753189365604,
+      "composite_floor": 4.175318936560396e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.0028072162039411755,
+      "composite_floor": 2.8072162039411776e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.0018873918221350957,
+      "composite_floor": 1.8873918221350975e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.0012689610031679222,
+      "composite_floor": 1.268961003167923e-12,
+      "positive": true
+    },
+    {
+      "beta": 0.0008531678524172806,
+      "composite_floor": 8.531678524172797e-13,
+      "positive": true
+    },
+    {
+      "beta": 0.0005736152510448676,
+      "composite_floor": 5.736152510448676e-13,
+      "positive": true
+    },
+    {
+      "beta": 0.00038566204211634724,
+      "composite_floor": 3.8566204211634754e-13,
+      "positive": true
+    },
+    {
+      "beta": 0.0002592943797404667,
+      "composite_floor": 2.592943797404667e-13,
+      "positive": true
+    },
+    {
+      "beta": 0.00017433288221999874,
+      "composite_floor": 1.743328822199987e-13,
+      "positive": true
+    },
+    {
+      "beta": 0.00011721022975334794,
+      "composite_floor": 1.1721022975334814e-13,
+      "positive": true
+    },
+    {
+      "beta": 7.880462815669905e-05,
+      "composite_floor": 7.880462815669914e-14,
+      "positive": true
+    },
+    {
+      "beta": 5.298316906283702e-05,
+      "composite_floor": 5.298316906283702e-14,
+      "positive": true
+    },
+    {
+      "beta": 3.562247890262437e-05,
+      "composite_floor": 3.562247890262433e-14,
+      "positive": true
+    },
+    {
+      "beta": 2.3950266199874812e-05,
+      "composite_floor": 2.39502661998748e-14,
+      "positive": true
+    },
+    {
+      "beta": 1.610262027560939e-05,
+      "composite_floor": 1.6102620275609374e-14,
+      "positive": true
+    },
+    {
+      "beta": 1.082636733874054e-05,
+      "composite_floor": 1.0826367338740537e-14,
+      "positive": true
+    },
+    {
+      "beta": 7.2789538439831465e-06,
+      "composite_floor": 7.278953843983144e-15,
+      "positive": true
+    },
+    {
+      "beta": 4.893900918477489e-06,
+      "composite_floor": 4.893900918477486e-15,
+      "positive": true
+    },
+    {
+      "beta": 3.290344562312664e-06,
+      "composite_floor": 3.2903445623126634e-15,
+      "positive": true
+    },
+    {
+      "beta": 2.2122162910704457e-06,
+      "composite_floor": 2.212216291070443e-15,
+      "positive": true
+    },
+    {
+      "beta": 1.487352107293512e-06,
+      "composite_floor": 1.4873521072935127e-15,
+      "positive": true
+    },
+    {
+      "beta": 1e-06,
+      "composite_floor": 9.999999999999989e-16,
+      "positive": true
+    }
+  ],
+  "all_positive": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

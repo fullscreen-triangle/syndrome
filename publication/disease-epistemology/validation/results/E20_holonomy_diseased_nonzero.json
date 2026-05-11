@@ -1,0 +1,8 @@
+{
+  "experiment": "E20",
+  "description": "Diseased circuits yield non-zero Wegscheider holonomy",
+  "n_circuits": 200,
+  "nonzero_holonomy_fraction": 1.0,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

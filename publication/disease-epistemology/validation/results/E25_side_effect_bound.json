@@ -1,0 +1,10 @@
+{
+  "experiment": "E25",
+  "description": "L1 minimisation concentrates drug action; side effects bounded",
+  "n_drugs_total": 15,
+  "n_drugs_target": 3,
+  "n_trials": 200,
+  "mean_target_drug_ratio": 0.19866620736236423,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:28Z"
+}

@@ -1,0 +1,9 @@
+{
+  "experiment": "E22",
+  "description": "Local edge checks mostly pass; global holonomy detects disease",
+  "n_circuits": 300,
+  "local_pass_rate": 1.0,
+  "global_detection_rate": 1.0,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

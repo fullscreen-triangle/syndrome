@@ -1,0 +1,17 @@
+{
+  "experiment": "E14",
+  "description": "Composite floor is goal-content-invariant (depends only on beta_i)",
+  "betas": [
+    0.1,
+    0.2,
+    0.15,
+    0.05,
+    0.3
+  ],
+  "floor": 0.00010986328125,
+  "n_goal_configs": 1000,
+  "floor_variance_across_configs": 7.346839692639297e-40,
+  "all_same": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

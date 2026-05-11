@@ -1,0 +1,9 @@
+{
+  "experiment": "E24",
+  "description": "det(H)!=0 <=> pharmacologically salvageable; det=0 => structural repair",
+  "n_per_type": 250,
+  "salvageable_rate_nonzero_det": 1.0,
+  "unsalvageable_rate_zero_det": 1.0,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

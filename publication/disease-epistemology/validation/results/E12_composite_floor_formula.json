@@ -1,0 +1,8 @@
+{
+  "experiment": "E12",
+  "description": "Formula prod(beta_i)/sum(beta_i)^(n-1) is numerically consistent",
+  "n_trials": 1000,
+  "max_relative_error": 0.0,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

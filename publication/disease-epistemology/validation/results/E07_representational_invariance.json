@@ -1,0 +1,8 @@
+{
+  "experiment": "E07",
+  "description": "Agents with disjoint encodings agree on inside/outside cell membership",
+  "n_trials": 400,
+  "pass_rate": 1.0,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:26Z"
+}

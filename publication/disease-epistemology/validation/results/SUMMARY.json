@@ -1,0 +1,146 @@
+{
+  "groups": {
+    "E01-E05  Floor Positivity": {
+      "pass": 5,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E01_floor_positivity_vs_N",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E02_floor_monotone_sigma",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E03_s_functional_floor_equals_beta",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E04_s_functional_grows_outside",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E05_poisson_shot_noise",
+          "conclusion": "PASS"
+        }
+      ]
+    },
+    "E06-E10  Cell-Truth & Representational Invariance": {
+      "pass": 5,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E06_cell_truth_s_indistinguishable",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E07_representational_invariance",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E08_no_canonical_point",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E09_cell_size_vs_beta",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E10_mode_nonprivilege",
+          "conclusion": "PASS"
+        }
+      ]
+    },
+    "E11-E15  Group Blindness": {
+      "pass": 5,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E11_composite_floor_positive",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E12_composite_floor_formula",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E13_floor_compounds_with_n",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E14_floor_independent_of_goals",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E15_asymptotic_floor",
+          "conclusion": "PASS"
+        }
+      ]
+    },
+    "E16-E18  Purpose as Fixed-Point": {
+      "pass": 3,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E16_purpose_fixed_point",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E17_motivation_heterogeneity",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E18_purpose_stability",
+          "conclusion": "PASS"
+        }
+      ]
+    },
+    "E19-E22  Self-Consistency vs Template": {
+      "pass": 4,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E19_holonomy_healthy_zero",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E20_holonomy_diseased_nonzero",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E21_template_vs_holonomy_auc",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E22_local_invisibility",
+          "conclusion": "PASS"
+        }
+      ]
+    },
+    "E23-E25  Therapeutic": {
+      "pass": 3,
+      "fail": 0,
+      "experiments": [
+        {
+          "name": "E23_sparse_therapeutic_lp",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E24_reversibility_criterion",
+          "conclusion": "PASS"
+        },
+        {
+          "name": "E25_side_effect_bound",
+          "conclusion": "PASS"
+        }
+      ]
+    }
+  },
+  "overall": {
+    "pass": 25,
+    "fail": 0,
+    "total": 25
+  },
+  "_timestamp": "2026-05-11T02:38:28Z"
+}

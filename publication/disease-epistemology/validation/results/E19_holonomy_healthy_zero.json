@@ -1,0 +1,9 @@
+{
+  "experiment": "E19",
+  "description": "Wegscheider log-holonomy = 0 for healthy (detailed-balance) circuits",
+  "n_circuits": 200,
+  "n_nodes": 8,
+  "max_holonomy_observed": 1.3322676295501878e-15,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

@@ -1,0 +1,11 @@
+{
+  "experiment": "E03",
+  "description": "S(R,x;C)=beta for all x inside C (dist=0 branch)",
+  "beta": 0.05,
+  "cell_radius": 1.0,
+  "n_samples": 200,
+  "max_deviation_from_beta": 0.0,
+  "all_equal_beta": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:25Z"
+}

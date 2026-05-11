@@ -8,7 +8,10 @@
       "Bash(python -c \":*)",
       "Bash(python publication/disease-fuzzy-circuits/generate_figures.py)",
       "Bash(python -m syndrome.validation.runner)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }

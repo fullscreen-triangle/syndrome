@@ -1,0 +1,24 @@
+{
+  "experiment": "E08",
+  "description": "min_x S(R,x;C) = beta > 0; no x achieves S=0",
+  "per_beta_results": {
+    "0.01": {
+      "min_S_achieved": 0.01,
+      "equals_beta": true
+    },
+    "0.05": {
+      "min_S_achieved": 0.05,
+      "equals_beta": true
+    },
+    "0.1": {
+      "min_S_achieved": 0.1,
+      "equals_beta": true
+    },
+    "0.5": {
+      "min_S_achieved": 0.5,
+      "equals_beta": true
+    }
+  },
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:26Z"
+}

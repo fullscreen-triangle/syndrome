@@ -1,0 +1,9 @@
+{
+  "experiment": "E17",
+  "description": "Tiny goal perturbations produce tiny fixed-point shifts (floor dominates)",
+  "composite_floor": 0.00010986328125,
+  "goal_perturbation_scale": 0.001,
+  "fixed_point_variance_from_goals": 1.4109209941375256e-06,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:27Z"
+}

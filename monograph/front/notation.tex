@@ -1,0 +1,77 @@
+%% front/notation.tex — notation table shown before Chapter 1
+
+\chapter*{Notation}
+\addcontentsline{toc}{chapter}{Notation}
+
+Throughout this monograph, all symbols are defined at first use and listed
+here for reference.
+
+\section*{Sets and Spaces}
+
+\begin{tabular}{ll}
+$\Omega$ & phase space of the system \\
+$\mu(\Omega)$ & Liouville measure of $\Omega$ \\
+$\Partition$ & categorical partition of $\Omega$ \\
+$\Sspace = [0,1]^3$ & S-entropy space \\
+$\Gcond = (V,E,w)$ & cellular biochemical circuit graph \\
+\end{tabular}
+
+\section*{Partition Coordinates}
+
+\begin{tabular}{ll}
+$\pn \in \{1,2,3,\ldots\}$ & principal depth \\
+$\pl \in \{0,\ldots,\pn-1\}$ & angular complexity \\
+$m \in \{-\pl,\ldots,+\pl\}$ & orientation \\
+$s \in \{-\tfrac{1}{2},+\tfrac{1}{2}\}$ & chirality \\
+$\Sigma = (\pn,\pl,m,s)$ & partition state \\
+$\SigmaField$ & partition field at spatial point $\mathbf{r}$ \\
+$\Capacity(\pn) = 2\pn^2$ & partition capacity at depth $\pn$ \\
+$\Depth$ & partition depth $= \sum_i \log_b k_i$ \\
+\end{tabular}
+
+\section*{S-Entropy}
+
+\begin{tabular}{ll}
+$\Scoord = (\Sk,\St,\Se)$ & S-entropy coordinate triple \\
+$\Sk$ & knowledge entropy (state identification uncertainty) \\
+$\St$ & temporal entropy (timing uncertainty) \\
+$\Se$ & evolution entropy (trajectory uncertainty) \\
+$\dcat$ & categorical distance on $\Partition$ \\
+$\dS$ & S-entropy distance \\
+\end{tabular}
+
+\section*{Biochemical Circuit}
+
+\begin{tabular}{ll}
+$\varpotential_i = \mu_i^\circ + RT\ln[C_i]$ & node potential (chemical potential) \\
+$G_{ij} = k_{ij}[C_i]/(RT)$ & edge conductance \\
+$\HolL$ & loop holonomy of cycle $\ell$ \\
+$\det(\HolL)$ & holonomy determinant (reversibility indicator) \\
+\end{tabular}
+
+\section*{Oscillators and Coherence}
+
+\begin{tabular}{ll}
+$\eta \in [0,1]$ & oscillator coherence index \\
+$\etacell$ & weighted cellular coherence \\
+$\Vcell \in [0,1]$ & multi-ray interference visibility \\
+$R$ & Kuramoto order parameter \\
+$\Dvec \in [0,1]^8$ & disease vector (one component per oscillator class) \\
+\end{tabular}
+
+\section*{Therapeutic}
+
+\begin{tabular}{ll}
+$\drugvec \in [-1,1]^{|E|}$ & drug perturbation vector \\
+$\sigma^2(\varphi)$ & phase variance \\
+$F = \kB T \cdot \sigma^2(\varphi)$ & variance--free energy \\
+$T(\drugvec)$ & therapeutic score \\
+\end{tabular}
+
+\section*{Physical Constants}
+
+\begin{tabular}{ll}
+$\kB$ & Boltzmann constant \\
+$T = 310\,\mathrm{K}$ & physiological temperature (unless stated) \\
+$R = N_A \kB$ & gas constant \\
+\end{tabular}

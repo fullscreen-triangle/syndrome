@@ -1,0 +1,9 @@
+{
+  "experiment": "E04",
+  "description": "S(R,x;C) > beta strictly when x is outside C",
+  "beta": 0.05,
+  "min_S_outside": 0.15000000000000008,
+  "all_greater_than_beta": true,
+  "conclusion": "PASS",
+  "_timestamp": "2026-05-11T02:38:25Z"
+}

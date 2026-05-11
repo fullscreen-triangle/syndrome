@@ -1,0 +1,130 @@
+%% preamble.tex — unified packages and notation for the monograph
+%%
+%% All macros defined here; do not redefine in chapter files.
+
+%% -------------------------------------------------------------------------
+%% Core packages
+%% -------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% Mathematics
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{physics}   % \dd, \dv, \pdv, \abs, \norm etc.
+\usepackage{siunitx}
+
+%% Theorem environments (shared numbering across the monograph)
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}{Axiom}           % global numbering, not per-chapter
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+%% Figures, tables, layout
+\usepackage{graphicx}
+\graphicspath{{figures/}{../docs/}}
+\usepackage{booktabs,array,multirow}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[margin=2.5cm]{geometry}
+
+%% Code listings
+\usepackage{listings,xcolor}
+\lstdefinestyle{glsl}{
+  language=C,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!60!black},
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=5pt,
+  frame=single, breaklines=true, columns=fullflexible,
+  morekeywords={vec2,vec3,vec4,mat3,mat4,sampler3D,uniform,in,out,layout,
+    texture,void,float,int,bool,for,if,return}
+}
+\lstdefinestyle{python}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!60!black},
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=5pt,
+  frame=single, breaklines=true
+}
+
+%% Cross-references and bibliography
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
+            pdftitle={Categorical Resolution of Biological Dynamics},
+            pdfauthor={Kundai Farai Sachikonye}}
+
+%% Boxes for key equations
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems}
+
+%% -------------------------------------------------------------------------
+%% Unified notation
+%% -------------------------------------------------------------------------
+
+%% Physical constants
+\newcommand{\kB}{k_{\mathrm{B}}}          % Boltzmann constant
+
+%% Partition coordinates
+\newcommand{\pn}{n}                        % principal depth
+\newcommand{\pl}{\ell}                     % angular complexity
+\newcommand{\pm}{m}                        % orientation
+\newcommand{\ps}{s}                        % chirality
+\newcommand{\Sigma}{\boldsymbol{\Sigma}}   % partition state (n,l,m,s)
+\newcommand{\SigmaField}{\Sigma(\mathbf{r})} % spatial partition field
+
+%% Partition structures
+\newcommand{\Partition}{\mathcal{P}}       % partition set
+\newcommand{\Depth}{\mathcal{M}}           % partition depth
+\newcommand{\Capacity}{C}                  % partition capacity C(n) = 2n^2
+
+%% S-entropy space
+\newcommand{\Sspace}{\mathcal{S}}          % S-entropy space [0,1]^3
+\newcommand{\Scoord}{\mathbf{S}}           % S-coordinate triple
+\newcommand{\Sk}{S_k}                      % knowledge entropy
+\newcommand{\St}{S_t}                      % temporal entropy
+\newcommand{\Se}{S_e}                      % evolution entropy
+
+%% Categorical distance
+\newcommand{\dcat}{d_{\mathrm{cat}}}       % categorical distance
+\newcommand{\dS}{d_S}                      % S-entropy distance
+
+%% Biochemical circuit
+\newcommand{\Gcond}{\mathcal{G}}           % circuit graph / conductance
+\newcommand{\varpotential}{\varphi}        % chemical potential node voltage
+
+%% Holonomy
+\newcommand{\Hol}{H}                       % loop holonomy
+\newcommand{\HolL}{H_\ell}                 % holonomy of loop \ell
+
+%% Trajectory and completion
+\newcommand{\Traj}{\gamma}                 % trajectory
+\newcommand{\Back}{\mathcal{B}}            % backward propagator
+
+%% Oscillators and coherence
+\newcommand{\etacell}{\eta_{\mathrm{cell}}}  % cellular coherence index
+\newcommand{\Vcell}{V_{\mathrm{cell}}}       % multi-ray interference visibility
+\newcommand{\Dvec}{\mathbf{D}}               % disease vector
+
+%% Drug / therapeutic
+\newcommand{\drugvec}{\boldsymbol{\eta}}     % drug perturbation vector
+
+%% Abbreviations
+\newcommand{\ie}{i.e.\@}
+\newcommand{\eg}{e.g.\@}
+\newcommand{\cf}{cf.\@}
+\newcommand{\aka}{a.k.a.\@}

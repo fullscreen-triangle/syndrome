@@ -1,0 +1,120 @@
+%% Chapter 1 — Axiomatic Basis and S-Entropy Calculus
+%%
+%% Source material:
+%%   docs/sources/unconstrained-subtask-recursion.tex  (primary)
+%%   README.md §2
+%%
+%% This chapter states the two axioms, derives the S-functional and
+%% all its structural properties, proves the Triple Equivalence via
+%% explicit functors, and establishes the Unconstrained Subtask Theorem
+%% and Circular Validation.  Everything downstream builds on this chapter
+%% without re-deriving.
+
+\chapter{Axiomatic Basis and S-Entropy Calculus}
+\label{ch:axioms}
+
+\section{The Two Axioms}
+\label{sec:axioms}
+
+% Axiom 1 (Bounded Phase Space).
+%   Every physical system with finite energy E and spatial extent R has a
+%   phase space Omega of finite measure mu(Omega) < infty.
+%
+% Axiom 2 (Categorical Observation).
+%   Any observer R with finite resolution epsilon partitions Omega into a
+%   finite collection of cells Pi(Omega) with |Pi(Omega)| < infty.
+%
+% These two axioms together imply all results in the monograph.
+% No additional metaphysical assumptions are made.
+
+% TODO — full derivation
+
+\section{Partition Geometry}
+\label{sec:partition-geometry}
+
+% From Axiom 2: forced partitioning theorem.
+% Partition coordinates (n, ell, m, s):
+%   n = depth  (number of levels),
+%   ell = level index,
+%   m = cell index at level ell,
+%   s = sub-cell selector.
+% Capacity formula: C(n) = 2n^2.
+% Monotone refinement: Pi_1 <= Pi_2 iff Pi_2 refines Pi_1.
+
+% TODO
+
+\section{The S-Functional}
+\label{sec:s-functional}
+
+% S(R, x; C) = inf_{x' in Pi(D(x))} d(x', C) + beta
+%
+% where D(x) is the resolution cell containing x,
+% beta > 0 is the irreducible floor (derived in Ch. 2),
+% and d is the categorical distance d_cat.
+%
+% S-entropy space: S = (S_k, S_t, S_e) in [0,1]^3.
+% Entropy identity: S = k_B M ln n where M = partition depth.
+% Three components: kinematic (S_k), thermodynamic (S_t), epistemic (S_e).
+
+% TODO
+
+\section{The Triple Equivalence}
+\label{sec:triple-equivalence}
+
+% Theorem (Triple Equivalence).
+%   There exist functors F_OC, F_CP, F_PO forming a commutative triangle of
+%   category equivalences:
+%       Oscillatory(Omega) <---> Categorical(Omega) <---> Partition(Omega)
+%
+% Proof sketch:
+%   F_OC maps an oscillatory trajectory gamma to the sequence of cells it
+%   visits; F_CP maps a categorical sequence to its partition refinement;
+%   F_PO maps a partition to the minimal-energy oscillation consistent with it.
+%   All three functors are fully faithful and essentially surjective.
+%
+% Corollary (Opacity Independence).
+%   d_cat is independent of spatial distance and optical opacity.
+%   States categorically proximate remain measurable across optical barriers.
+%
+% Corollary (Computational-Observational Identity).
+%   Computed trajectories have the same epistemic status as observed ones.
+%   There is no privileged mode of accessing a state.
+
+% TODO — formal functor definitions, proof of equivalences
+
+\section{The Unconstrained Subtask Theorem}
+\label{sec:unconstrained-subtask}
+
+% Theorem (Unconstrained Subtask).
+%   Let T = {t_1, ..., t_n} be subtasks composing a global task with
+%   global S-value S_global.  Then for any target S-values s_i in [0,1],
+%   there exist receiver configurations R_i such that S(R_i, x; t_i) = s_i
+%   and the composed expression achieves S_global.
+%
+% Interpretation: global feasibility places NO constraint on individual
+%   subtask S-values.  A locally infeasible step can appear in a globally
+%   feasible composition — the "miracle principle" for biological cascades.
+%
+% Information Catalysts.
+%   kappa(gamma) in [0,1]: catalytic power of receiver gamma.
+%   Multiplicative under composition:
+%       kappa(gamma_1 diamond gamma_2) = 1 - (1 - kappa_1)(1 - kappa_2).
+%   Interpretation: catalysts amplify information flow without being consumed.
+
+% TODO — formal proof via partition algebra
+
+\section{Circular Validation and Foundational Coherence}
+\label{sec:circular-validation}
+
+% Theorem (Circular Validation).
+%   A size-3 mutually supporting collection at threshold > 0.5 is both
+%   necessary and sufficient for foundational coherence.
+%   Linear justification chains fail by Floor Positivity (Ch. 2):
+%   each step incurs floor beta > 0, so the chain diverges.
+%
+% The framework is therefore grounded by three mutually validating pillars:
+%   (i) Bounded Phase Space,
+%   (ii) Categorical Observation,
+%   (iii) Triple Equivalence.
+
+% TODO
