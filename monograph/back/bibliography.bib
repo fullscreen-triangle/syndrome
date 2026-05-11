@@ -1,194 +1,73 @@
-%% back/bibliography.bib
-%%
-%% Consolidated bibliography for the monograph.
-%% Merge all .bib files from individual papers here,
-%% deduplicating entries by key.
+%% Consolidated bibliography for the monograph
+%% "Blind Leading the Blind: ..."
+%% All entries deduped; keys unified across chapters.
 
-%% --- Foundational mathematics and physics ---
+%% =========================================================
+%% Part I — Foundations
+%% =========================================================
 
-@article{poincare1890,
-  author  = {Poincar\'{e}, Henri},
-  title   = {Sur le probl\`{e}me des trois corps et les \'{e}quations de la dynamique},
-  journal = {Acta Mathematica},
-  year    = {1890},
-  volume  = {13},
-  pages   = {1--270}
+%% Fixed-point and functional analysis
+@article{Banach1922,
+  author  = {Banach, Stefan},
+  title   = {Sur les op{\'e}rations dans les ensembles abstraits et leur
+             application aux {\'e}quations int{\'e}grales},
+  journal = {Fundamenta Mathematicae},
+  year    = {1922},
+  volume  = {3},
+  pages   = {133--181}
 }
-
-@book{maslov1981,
-  author    = {Maslov, Viktor P.},
-  title     = {Semi-Classical Approximation in Quantum Mechanics},
-  publisher = {D.\ Reidel},
-  year      = {1981}
-}
-
-@book{kuramoto_1975,
-  author    = {Kuramoto, Yoshiki},
-  title     = {Chemical Oscillations, Waves, and Turbulence},
+@book{Granas2003,
+  author    = {Granas, Andrzej and Dugundji, James},
+  title     = {Fixed Point Theory},
   publisher = {Springer},
-  year      = {1984}
-}
-
-@article{jaynes1957,
-  author  = {Jaynes, Edwin T.},
-  title   = {Information theory and statistical mechanics},
-  journal = {Physical Review},
-  year    = {1957},
-  volume  = {106},
-  pages   = {620--630}
-}
-
-%% --- Holonomy and geometry ---
-
-@book{nakahara2003,
-  author    = {Nakahara, Mikio},
-  title     = {Geometry, Topology and Physics},
-  edition   = {2nd},
-  publisher = {Institute of Physics Publishing},
+  address   = {New York},
   year      = {2003}
 }
 
-@book{baez_muniain_1994,
+%% Measure theory and probability
+@book{Billingsley1995,
+  author    = {Billingsley, Patrick},
+  title     = {Probability and Measure},
+  edition   = {3rd},
+  publisher = {Wiley},
+  address   = {New York},
+  year      = {1995}
+}
+@book{Halmos1950,
+  author    = {Halmos, Paul R.},
+  title     = {Measure Theory},
+  publisher = {Van Nostrand},
+  address   = {New York},
+  year      = {1950}
+}
+
+%% Category theory
+@book{MacLane1998,
+  author    = {Mac Lane, Saunders},
+  title     = {Categories for the Working Mathematician},
+  edition   = {2nd},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {1998}
+}
+@article{Baez2010,
+  author  = {Baez, John C. and Stay, Michael},
+  title   = {Physics, topology, logic and computation: a {Rosetta} stone},
+  journal = {New Structures for Physics, Lecture Notes in Physics},
+  year    = {2010},
+  volume  = {813},
+  pages   = {95--172}
+}
+@book{BaezMuniain1994,
   author    = {Baez, John C. and Muniain, Javier P.},
   title     = {Gauge Fields, Knots and Gravity},
   publisher = {World Scientific},
+  address   = {Singapore},
   year      = {1994}
 }
 
-@article{berry_1984,
-  author  = {Berry, Michael V.},
-  title   = {Quantal phase factors accompanying adiabatic changes},
-  journal = {Proceedings of the Royal Society of London A},
-  year    = {1984},
-  volume  = {392},
-  pages   = {45--57}
-}
-
-@book{hall2015,
-  author    = {Hall, Brian C.},
-  title     = {Lie Groups, Lie Algebras, and Representations},
-  edition   = {2nd},
-  publisher = {Springer},
-  year      = {2015}
-}
-
-%% --- Compressed sensing and sparse optimisation ---
-
-@article{tibshirani_1996,
-  author  = {Tibshirani, Robert},
-  title   = {Regression shrinkage and selection via the lasso},
-  journal = {Journal of the Royal Statistical Society B},
-  year    = {1996},
-  volume  = {58},
-  pages   = {267--288}
-}
-
-@article{candes_tao_2005,
-  author  = {Cand\`{e}s, Emmanuel J. and Tao, Terence},
-  title   = {Decoding by linear programming},
-  journal = {IEEE Transactions on Information Theory},
-  year    = {2005},
-  volume  = {51},
-  pages   = {4203--4215}
-}
-
-@article{donoho_2006,
-  author  = {Donoho, David L.},
-  title   = {Compressed sensing},
-  journal = {IEEE Transactions on Information Theory},
-  year    = {2006},
-  volume  = {52},
-  pages   = {1289--1306}
-}
-
-@article{candes_romberg_tao_2006,
-  author  = {Cand\`{e}s, Emmanuel J. and Romberg, Justin and Tao, Terence},
-  title   = {Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information},
-  journal = {IEEE Transactions on Information Theory},
-  year    = {2006},
-  volume  = {52},
-  pages   = {489--509}
-}
-
-%% --- Linear programming ---
-
-@book{dantzig_1963,
-  author    = {Dantzig, George B.},
-  title     = {Linear Programming and Extensions},
-  publisher = {Princeton University Press},
-  year      = {1963}
-}
-
-@article{karmarkar_1984,
-  author  = {Karmarkar, Narendra},
-  title   = {A new polynomial-time algorithm for linear programming},
-  journal = {Combinatorica},
-  year    = {1984},
-  volume  = {4},
-  pages   = {373--395}
-}
-
-%% --- Network pharmacology ---
-
-@article{hopkins_2008,
-  author  = {Hopkins, Andrew L.},
-  title   = {Network pharmacology: the next paradigm in drug discovery},
-  journal = {Nature Chemical Biology},
-  year    = {2008},
-  volume  = {4},
-  pages   = {682--690}
-}
-
-@article{yildirim_2007,
-  author  = {Yildirim, Muhammed A. and others},
-  title   = {Drug-target network},
-  journal = {Nature Biotechnology},
-  year    = {2007},
-  volume  = {25},
-  pages   = {1119--1126}
-}
-
-%% --- Oscillators and coherence ---
-
-@book{strogatz_2000,
-  author    = {Strogatz, Steven H.},
-  title     = {Nonlinear Dynamics and Chaos},
-  publisher = {Westview Press},
-  year      = {2000}
-}
-
-@article{acebron_2005,
-  author  = {Acebr\'{o}n, Juan A. and others},
-  title   = {The Kuramoto model: a simple paradigm for synchronization phenomena},
-  journal = {Reviews of Modern Physics},
-  year    = {2005},
-  volume  = {77},
-  pages   = {137--185}
-}
-
-%% --- Biological complexity and variance ---
-
-@article{goldberger_2002,
-  author  = {Goldberger, Ary L. and others},
-  title   = {Fractal dynamics in physiology: alterations with disease and aging},
-  journal = {Proceedings of the National Academy of Sciences},
-  year    = {2002},
-  volume  = {99},
-  pages   = {2466--2472}
-}
-
-@article{scheffer_2009,
-  author  = {Scheffer, Marten and others},
-  title   = {Early-warning signals for critical transitions},
-  journal = {Nature},
-  year    = {2009},
-  volume  = {461},
-  pages   = {53--59}
-}
-
-%% --- Information theory ---
-
-@article{shannon_1948,
+%% Information theory
+@article{Shannon1948,
   author  = {Shannon, Claude E.},
   title   = {A mathematical theory of communication},
   journal = {Bell System Technical Journal},
@@ -196,36 +75,251 @@
   volume  = {27},
   pages   = {379--423}
 }
-
-@article{landauer_1961,
+@article{Jaynes1957,
+  author  = {Jaynes, Edwin T.},
+  title   = {Information theory and statistical mechanics},
+  journal = {Physical Review},
+  year    = {1957},
+  volume  = {106},
+  number  = {4},
+  pages   = {620--630}
+}
+@article{Landauer1961,
   author  = {Landauer, Rolf},
   title   = {Irreversibility and heat generation in the computing process},
   journal = {IBM Journal of Research and Development},
   year    = {1961},
   volume  = {5},
+  number  = {3},
   pages   = {183--191}
 }
 
-%% --- Holographic imaging ---
+%% Fuzzy set theory
+@article{Zadeh1965,
+  author  = {Zadeh, Lotfi A.},
+  title   = {Fuzzy sets},
+  journal = {Information and Control},
+  year    = {1965},
+  volume  = {8},
+  number  = {3},
+  pages   = {338--353}
+}
+@article{Zadeh1978,
+  author  = {Zadeh, Lotfi A.},
+  title   = {Fuzzy sets as a basis for a theory of possibility},
+  journal = {Fuzzy Sets and Systems},
+  year    = {1978},
+  volume  = {1},
+  number  = {1},
+  pages   = {3--28}
+}
 
-@book{goodman_fourier_optics,
+%% Convex analysis and optimisation
+@book{Boyd2004,
+  author    = {Boyd, Stephen and Vandenberghe, Lieven},
+  title     = {Convex Optimization},
+  publisher = {Cambridge University Press},
+  address   = {Cambridge},
+  year      = {2004}
+}
+@book{Rockafellar1970,
+  author    = {Rockafellar, R. Tyrrell},
+  title     = {Convex Analysis},
+  publisher = {Princeton University Press},
+  address   = {Princeton},
+  year      = {1970}
+}
+
+%% =========================================================
+%% Part II — The Healthy Cell
+%% =========================================================
+
+%% Dynamical systems and oscillators
+@book{Poincare1892,
+  author    = {Poincar{\'e}, Henri},
+  title     = {Les m{\'e}thodes nouvelles de la m{\'e}canique c{\'e}leste},
+  publisher = {Gauthier-Villars},
+  address   = {Paris},
+  year      = {1892},
+  volume    = {1}
+}
+@article{poincare1890,
+  author  = {Poincar{\'e}, Henri},
+  title   = {Sur le probl{\`e}me des trois corps et les {\'e}quations de la dynamique},
+  journal = {Acta Mathematica},
+  year    = {1890},
+  volume  = {13},
+  pages   = {1--270}
+}
+@book{Kuramoto1984,
+  author    = {Kuramoto, Yoshiki},
+  title     = {Chemical Oscillations, Waves, and Turbulence},
+  publisher = {Springer},
+  address   = {Berlin},
+  year      = {1984}
+}
+@article{Strogatz2000,
+  author  = {Strogatz, Steven H.},
+  title   = {From {Kuramoto} to {Crawford}: exploring the onset of
+             synchronization in populations of coupled oscillators},
+  journal = {Physica D: Nonlinear Phenomena},
+  year    = {2000},
+  volume  = {143},
+  pages   = {1--20}
+}
+@article{Acebron2005,
+  author  = {Acebr{\'o}n, Juan A. and Bonilla, Luis L. and
+             P{\'e}rez~Vicente, Conrad J. and Ritort, F{\'e}lix and
+             Spigler, Renato},
+  title   = {The {Kuramoto} model: a simple paradigm for synchronization phenomena},
+  journal = {Reviews of Modern Physics},
+  year    = {2005},
+  volume  = {77},
+  number  = {1},
+  pages   = {137--185}
+}
+@book{Strogatz2000book,
+  author    = {Strogatz, Steven H.},
+  title     = {Nonlinear Dynamics and Chaos},
+  publisher = {Westview Press},
+  address   = {Boulder},
+  year      = {2000}
+}
+
+%% Thermodynamics and biophysics
+@book{Callen1985,
+  author    = {Callen, Herbert B.},
+  title     = {Thermodynamics and an Introduction to Thermostatistics},
+  edition   = {2nd},
+  publisher = {Wiley},
+  address   = {New York},
+  year      = {1985}
+}
+@book{Nelson2004,
+  author    = {Nelson, Philip},
+  title     = {Biological Physics: Energy, Information, Life},
+  publisher = {W. H. Freeman},
+  address   = {New York},
+  year      = {2004}
+}
+@book{Hill1960,
+  author    = {Hill, Terrell L.},
+  title     = {An Introduction to Statistical Thermodynamics},
+  publisher = {Addison-Wesley},
+  address   = {Reading},
+  year      = {1960}
+}
+
+%% Cellular and molecular biology
+@book{Alberts2002,
+  author    = {Alberts, Bruce and Johnson, Alexander and Lewis, Julian and
+               Raff, Martin and Roberts, Keith and Walter, Peter},
+  title     = {Molecular Biology of the Cell},
+  edition   = {4th},
+  publisher = {Garland Science},
+  address   = {New York},
+  year      = {2002}
+}
+@book{Stryer2002,
+  author    = {Stryer, Lubert and Berg, Jeremy M. and Tymoczko, John L.},
+  title     = {Biochemistry},
+  edition   = {5th},
+  publisher = {W. H. Freeman},
+  address   = {New York},
+  year      = {2002}
+}
+@article{Goldberger2002,
+  author  = {Goldberger, Ary L. and Amaral, Lu{\'i}s A. N. and
+             Hausdorff, Jeffrey M. and Ivanov, Plamen Ch. and
+             Peng, Chung-Kang and Stanley, H. Eugene},
+  title   = {Fractal dynamics in physiology: alterations with disease and aging},
+  journal = {Proceedings of the National Academy of Sciences},
+  year    = {2002},
+  volume  = {99},
+  number  = {suppl~1},
+  pages   = {2466--2472}
+}
+
+%% Metabolic networks
+@book{Palsson2006,
+  author    = {Palsson, Bernhard O.},
+  title     = {Systems Biology: Properties of Reconstructed Networks},
+  publisher = {Cambridge University Press},
+  address   = {Cambridge},
+  year      = {2006}
+}
+@article{Jeong2000,
+  author  = {Jeong, Hawoong and Tombor, B{\'a}lint and Albert, R{\'e}ka and
+             Oltvai, Zolt{\'a}n N. and Barab{\'a}si, Albert-L{\'a}szl{\'o}},
+  title   = {The large-scale organization of metabolic networks},
+  journal = {Nature},
+  year    = {2000},
+  volume  = {407},
+  pages   = {651--654}
+}
+@article{Schuster2000,
+  author  = {Schuster, Stefan and Fell, David A. and Dandekar, Thomas},
+  title   = {A general definition of metabolic pathways useful for systematic
+             organization and analysis of complex metabolic networks},
+  journal = {Nature Biotechnology},
+  year    = {2000},
+  volume  = {18},
+  pages   = {326--332}
+}
+@article{Yildirim2004,
+  author  = {Yildirim, Nese and Mackey, Michael C.},
+  title   = {Feedback dynamics and bifurcations in the {Lac} operon},
+  journal = {Biophysical Journal},
+  year    = {2004},
+  volume  = {84},
+  pages   = {2841--2851}
+}
+
+%% Proton transport and membrane biophysics
+@article{Mitchell1961,
+  author  = {Mitchell, Peter},
+  title   = {Coupling of phosphorylation to electron and hydrogen transfer
+             by a chemi-osmotic type of mechanism},
+  journal = {Nature},
+  year    = {1961},
+  volume  = {191},
+  pages   = {144--148}
+}
+@article{Agmon1995,
+  author  = {Agmon, Noam},
+  title   = {The {Grotthuss} mechanism},
+  journal = {Chemical Physics Letters},
+  year    = {1995},
+  volume  = {244},
+  pages   = {456--462}
+}
+@article{Decoursey2003,
+  author  = {DeCoursey, Thomas E.},
+  title   = {Voltage-gated proton channels and other proton transfer pathways},
+  journal = {Physiological Reviews},
+  year    = {2003},
+  volume  = {83},
+  pages   = {475--579}
+}
+
+%% Multimodal imaging
+@book{GoodmanFourier,
   author    = {Goodman, Joseph W.},
   title     = {Introduction to Fourier Optics},
   edition   = {4th},
-  publisher = {W.\ H.\ Freeman},
+  publisher = {W. H. Freeman},
+  address   = {New York},
   year      = {2017}
 }
-
-@article{schnars_juptner_2002,
-  author  = {Schnars, Ulf and J\"{u}ptner, Werner P.O.},
+@article{Schnars2002,
+  author  = {Schnars, Ulf and J{\"u}ptner, Werner P.O.},
   title   = {Digital recording and numerical reconstruction of holograms},
   journal = {Measurement Science and Technology},
   year    = {2002},
   volume  = {13},
   pages   = {R85--R101}
 }
-
-@article{kim_2010,
+@article{Kim2010,
   author  = {Kim, Myung K.},
   title   = {Principles and techniques of digital holographic microscopy},
   journal = {SPIE Reviews},
@@ -234,17 +328,168 @@
   pages   = {018005}
 }
 
-%% --- GPU and ray tracing ---
+%% =========================================================
+%% Part III — Disease
+%% =========================================================
 
-@book{pharr_jakob_humphreys_2023,
+%% Graph theory
+@book{Bollobas1998,
+  author    = {Bollob{\'a}s, B{\'e}la},
+  title     = {Modern Graph Theory},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {1998}
+}
+@article{Kirchhoff1847,
+  author  = {Kirchhoff, Gustav},
+  title   = {{\"U}ber die Aufl{\"o}sung der Gleichungen, auf welche man bei
+             der Untersuchung der linearen {Vertheilung} galvanischer
+             {Str{\"o}me} gef{\"u}hrt wird},
+  journal = {Annalen der Physik und Chemie},
+  year    = {1847},
+  volume  = {148},
+  pages   = {497--508}
+}
+
+%% Topology and geometry
+@book{Nakahara2003,
+  author    = {Nakahara, Mikio},
+  title     = {Geometry, Topology and Physics},
+  edition   = {2nd},
+  publisher = {Institute of Physics Publishing},
+  address   = {Bristol},
+  year      = {2003}
+}
+@book{Maslov1981,
+  author    = {Maslov, Victor P. and Fedoriuk, Mikhail V.},
+  title     = {Semi-Classical Approximation in Quantum Mechanics},
+  publisher = {Reidel},
+  address   = {Dordrecht},
+  year      = {1981}
+}
+@article{Berry1984,
+  author  = {Berry, Michael V.},
+  title   = {Quantal phase factors accompanying adiabatic changes},
+  journal = {Proceedings of the Royal Society of London, Series A},
+  year    = {1984},
+  volume  = {392},
+  pages   = {45--57}
+}
+
+%% Disease and critical transitions
+@article{Scheffer2009,
+  author  = {Scheffer, Marten and Bascompte, Jordi and Brock, William A. and
+             Brovkin, Victor and Carpenter, Stephen R. and Dakos, Vasilis and
+             Held, Hermann and van Nes, Egbert H. and Rietkerk, Max and
+             Sugihara, George},
+  title   = {Early-warning signals for critical transitions},
+  journal = {Nature},
+  year    = {2009},
+  volume  = {461},
+  pages   = {53--59}
+}
+
+%% =========================================================
+%% Part IV — Therapeutic Intervention
+%% =========================================================
+
+%% Sparse optimisation and compressed sensing
+@article{Tibshirani1996,
+  author  = {Tibshirani, Robert},
+  title   = {Regression shrinkage and selection via the lasso},
+  journal = {Journal of the Royal Statistical Society, Series B},
+  year    = {1996},
+  volume  = {58},
+  pages   = {267--288}
+}
+@article{Candes2006,
+  author  = {Cand{\`e}s, Emmanuel J. and Romberg, Justin K. and Tao, Terence},
+  title   = {Robust uncertainty principles: exact signal reconstruction from
+             highly incomplete frequency information},
+  journal = {IEEE Transactions on Information Theory},
+  year    = {2006},
+  volume  = {52},
+  pages   = {489--509}
+}
+@article{CandesToo2005,
+  author  = {Cand{\`e}s, Emmanuel J. and Tao, Terence},
+  title   = {Decoding by linear programming},
+  journal = {IEEE Transactions on Information Theory},
+  year    = {2005},
+  volume  = {51},
+  pages   = {4203--4215}
+}
+@article{Donoho2006,
+  author  = {Donoho, David L.},
+  title   = {Compressed sensing},
+  journal = {IEEE Transactions on Information Theory},
+  year    = {2006},
+  volume  = {52},
+  pages   = {1289--1306}
+}
+
+%% Linear programming
+@book{Dantzig1963,
+  author    = {Dantzig, George B.},
+  title     = {Linear Programming and Extensions},
+  publisher = {Princeton University Press},
+  address   = {Princeton},
+  year      = {1963}
+}
+@article{Karmarkar1984,
+  author  = {Karmarkar, Narendra},
+  title   = {A new polynomial-time algorithm for linear programming},
+  journal = {Combinatorica},
+  year    = {1984},
+  volume  = {4},
+  pages   = {373--395}
+}
+
+%% Network pharmacology and drug design
+@article{Hopkins2008,
+  author  = {Hopkins, Andrew L.},
+  title   = {Network pharmacology: the next paradigm in drug discovery},
+  journal = {Nature Chemical Biology},
+  year    = {2008},
+  volume  = {4},
+  pages   = {682--690}
+}
+@article{Hopkins2002,
+  author  = {Hopkins, Andrew L. and Groom, Colin R.},
+  title   = {The druggable genome},
+  journal = {Nature Reviews Drug Discovery},
+  year    = {2002},
+  volume  = {1},
+  pages   = {727--730}
+}
+@article{Yildirim2007,
+  author  = {Yildirim, Muhammed A. and Goh, Kwang-Il and Cusick, Michael E. and
+             Barab{\'a}si, Albert-L{\'a}szl{\'o} and Vidal, Marc},
+  title   = {Drug-target network},
+  journal = {Nature Biotechnology},
+  year    = {2007},
+  volume  = {25},
+  pages   = {1119--1126}
+}
+@article{Bhaskaran2019,
+  author  = {Bhaskaran, Sreejit and Bhatt, Dileep L.},
+  title   = {Carbonic anhydrase inhibitors in cardiovascular disease},
+  journal = {JACC: Basic to Translational Science},
+  year    = {2019},
+  volume  = {4},
+  pages   = {292--295}
+}
+
+%% GPU rendering and volumetric computation
+@book{Pharr2023,
   author    = {Pharr, Matt and Jakob, Wenzel and Humphreys, Greg},
   title     = {Physically Based Rendering: From Theory to Implementation},
   edition   = {4th},
   publisher = {MIT Press},
+  address   = {Cambridge},
   year      = {2023}
 }
-
-@article{kajiya_1986,
+@article{Kajiya1986,
   author  = {Kajiya, James T.},
   title   = {The rendering equation},
   journal = {ACM SIGGRAPH Computer Graphics},
@@ -252,12 +497,58 @@
   volume  = {20},
   pages   = {143--150}
 }
-
-@article{levoy_1988,
+@article{Levoy1988,
   author  = {Levoy, Marc},
   title   = {Display of surfaces from volume data},
   journal = {IEEE Computer Graphics and Applications},
   year    = {1988},
   volume  = {8},
   pages   = {29--37}
+}
+
+%% =========================================================
+%% Part V — Synthesis and Statistics
+%% =========================================================
+
+%% Quantum measurement
+@book{Hall2013,
+  author    = {Hall, Brian C.},
+  title     = {Quantum Theory for Mathematicians},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2013}
+}
+@book{Hall2015,
+  author    = {Hall, Brian C.},
+  title     = {Lie Groups, Lie Algebras, and Representations},
+  edition   = {2nd},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2015}
+}
+@book{vonNeumann1932,
+  author    = {von Neumann, John},
+  title     = {Mathematische Grundlagen der Quantenmechanik},
+  publisher = {Springer},
+  address   = {Berlin},
+  year      = {1932}
+}
+
+%% Statistical testing
+@article{Hanley1982,
+  author  = {Hanley, James A. and McNeil, Barbara J.},
+  title   = {The meaning and use of the area under a receiver operating
+             characteristic ({ROC}) curve},
+  journal = {Radiology},
+  year    = {1982},
+  volume  = {143},
+  pages   = {29--36}
+}
+@book{Lehmann2005,
+  author    = {Lehmann, Erich L. and Romano, Joseph P.},
+  title     = {Testing Statistical Hypotheses},
+  edition   = {3rd},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2005}
 }

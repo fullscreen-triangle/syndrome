@@ -8,6 +8,31 @@
 \chapter{Therapeutic Effect as Loop Closure Restoration}
 \label{ch:therapeutic}
 
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/part4_therapeutic.png}
+  \caption{\textbf{Part~IV summary: Therapeutic Intervention.}
+  \textbf{(A)}~$\ell_1$ versus $\ell_2$ norm balls in $\mathbb{R}^2$.
+  The constraint hyperplane (red dotted) is tangent to the $\ell_1$ ball
+  at a coordinate-axis vertex (sparse solution, blue dot), while the
+  $\ell_2$ solution (red dot) is dense, illustrating why the $\ell_1$ LP
+  recovers sparse drug combinations.
+  \textbf{(B)}~Mean LP solution sparsity versus number of therapeutic
+  constraints (loops), averaged over 30 trials per point.
+  Sparsity increases with constraints as the feasible set shrinks,
+  confirming that more targeted therapy is achievable with more holonomy
+  constraints.
+  \textbf{(C)}~Reversibility scatter: $\log|\det H|$ versus $\log$ LP
+  residual.  Invertible circuits (green, $\det H \neq 0$) achieve zero
+  residual; singular circuits (red, $\det H = 0$) cannot be restored by
+  any drug combination (\Cref{thm:reversibility}).
+  \textbf{(D)}~Three-dimensional restoration surface: therapeutic quality
+  versus drug count $n_\mathrm{drugs}$ and total drug load $\|\drugvec\|$.
+  Restoration saturates near $1$ with sufficient drug count, confirming
+  the adequacy of the sparse LP solution.}
+  \label{fig:part4-therapeutic}
+\end{figure}
+
 \section{Drug as Sparse Conductance Perturbation}
 \label{sec:drug-perturbation}
 
