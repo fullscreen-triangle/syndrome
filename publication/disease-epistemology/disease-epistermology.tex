@@ -419,28 +419,73 @@ positive limit. For finite $n$, positivity is immediate.
 
 \begin{figure*}[!htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/panel_1_blindness.png}
-    \caption{\textbf{Individual and Group Blindness.}
-    (\textbf{A})~S-functional $S(\receiver, x; \Cell_{\mathrm{health}})$ on the
-    linear $y$-axis versus state $|x|$ on the linear $x$-axis, for $1{,}000$
-    states drawn from a simulated cellular phase space with floor $\beta = 0.1\,\Sigma$.
-    States inside the health cell (seagreen, $d(x,\Cell)=0$) all collapse to the floor
-    $S=\beta$ (crimson dashed), confirming Cell-Truth (\Cref{thm:cell-truth}): there is
-    no pointwise discrimination within the cell.
-    (\textbf{B})~Composite organ floor $\Sfloor(E)=\prod_i\beta_i/\Sigma^{n-1}$ on the
-    log $y$-axis versus cell count $n$ on the linear $x$-axis ($1$ to $50$), for three
-    per-cell floors $\beta\in\{0.5, 1.0, 2.0\}\,\Sigma/100$. All curves decrease
-    geometrically but remain strictly positive, confirming Group Blindness
-    (\Cref{thm:group-blindness}).
-    (\textbf{C})~Composite floor as a function of ensemble size for an inhomogeneous
-    organ (floors drawn uniformly from $[0.5, 5.0]$), $200$ Monte Carlo trials.
-    The floor decays but always exceeds the theoretical minimum
-    $\Sigma\cdot(5/100)^n$; the shaded band is the $[10\%, 90\%]$ quantile.
-    (\textbf{D})~Three-dimensional surface of composite floor over
-    $(n, \beta_{\mathrm{cell}})\in\{1,\dots,20\}\times[0.1,5]$, viridis colourmap.
-    The surface is strictly positive throughout, with zero reachable only in the limit
-    $n\to\infty$, confirming \Cref{thm:asymp}.}
+    \includegraphics[width=\textwidth]{figures/panel_1_floor_positivity.png}
+    \caption{\textbf{Floor Positivity: the irreducible epistemic floor of a bounded receiver.}
+    (\textbf{A})~Cellular floor $\beta = \sigma/\!\sqrt{N}$ versus $N$ (log--log).
+    Blue circles are exact theoretical values; the grey dashed line is $N^{-1/2}$.
+    All six points are strictly positive across six decades of $N$, confirming
+    \Cref{thm:floor-positivity}.
+    (\textbf{B})~Floor $\beta(\sigma)$ versus spread $\sigma$ at $N = 1000$ (linear axes).
+    The filled region quantifies the irreducible uncertainty at each noise level.
+    (\textbf{C})~Empirical (blue) versus theoretical (grey) floors from Poisson
+    shot-noise Monte Carlo (5\,000 trials per $N$); relative error $< 0.7\%$ at all
+    sample sizes (E05).
+    (\textbf{D})~Three-dimensional surface $S(x_1, x_2;\Cell)$ over a two-dimensional
+    state slice.
+    Inside the action cell ($R=1$, $\beta=0.05$) the surface is a flat plateau at
+    $S = \beta$; outside, $S$ rises as $\max(0,r-R)+\beta$.
+    The plateau encodes Cell-Truth (\Cref{thm:cell-truth}): no pointwise discrimination
+    exists within $\Cell$.}
     \label{fig:panel1}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel_2_cell_truth.png}
+    \caption{\textbf{Cell-Truth and representational invariance.}
+    (\textbf{A})~Fraction of state space inside the action cell versus floor $\beta$
+    for $\sigma \in \{0.1, 0.5, 1.0, 2.0\}$ at $N = 500$.
+    Bubble area is proportional to the fraction; colour encodes $\sigma$.
+    The monotone growth confirms that a larger floor implies a coarser, larger cell
+    (\Cref{thm:cell-truth}).
+    (\textbf{B})~Polar bar chart of success rates for three epistemic modes
+    (knowledge, behaviour, belief) over 1\,000 agents each.
+    All three modes achieve success rate $\in [0.939, 0.945]$, maximum spread $0.006$,
+    confirming Mode Non-Privilege (\Cref{thm:mode-nonprovilege}; E10).
+    (\textbf{C})~Distribution of $\mathrm{dist}(x,\Cell)$ for states outside the action cell.
+    The vertical blue line at $\mathrm{dist}=0$ marks the cell boundary; all inside states
+    have $S = \beta$ exactly (E06), while outside states have a continuous excess distance.
+    (\textbf{D})~Three-dimensional S-landscape.
+    The flat plateau (dark blue, $S = \beta$) is bounded by the cell edge (orange ring at
+    $R=1$); $S$ rises linearly beyond.
+    No interior point is distinguished, so no template can be stored
+    (\Cref{thm:no-template}).}
+    \label{fig:panel2}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel_3_group_blindness.png}
+    \caption{\textbf{Group Blindness: multiplicative compounding of cellular epistemic floors.}
+    (\textbf{A})~Composite organ floor $\Sfloor(E) = \beta^n/(n\beta)^{n-1}$ (log $y$)
+    versus cell count $n = 1$ to $20$ for a homogeneous ensemble ($\beta_i = 0.1$).
+    Every value is strictly positive; the floor decays super-exponentially but never
+    vanishes (\Cref{thm:group-blindness}; E13).
+    (\textbf{B})~$\Sfloor(E)$ (log--log) versus individual floor $\beta$ for a 10-cell
+    ensemble.
+    Purple circles track the formula; the grey dashed diagonal is the single-cell limit
+    $\Sfloor = \beta$.
+    The composite floor lies far below, quantifying organ-level blindness (E15).
+    (\textbf{C})~Distribution of $\log_{10}\Sfloor(E)$ over 500 randomly drawn
+    ensembles with $n \sim \mathrm{Uniform}\{2,\ldots,19\}$,
+    $\beta_i \sim \mathrm{Uniform}[10^{-3}, 0.5]$.
+    The distribution spans 28 orders of magnitude; all values are positive,
+    confirming the universality of Group Blindness (E11).
+    (\textbf{D})~Three-dimensional surface $\log_{10}\Sfloor(n, \beta)$ over
+    $n \in \{2,\ldots,11\}$ and $\log_{10}\beta \in [-2, -0.3]$.
+    The surface is everywhere finite and negative, consistent with
+    $0 < \Sfloor \ll 1$ across the full parameter range.}
+    \label{fig:panel3-blindness}
 \end{figure*}
 
 %=============================================================
@@ -737,26 +782,25 @@ metric that follows from first principles without clinical parameters.
 
 \begin{figure*}[!htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/panel_2_selfconsistency.png}
-    \caption{\textbf{Self-Consistency Versus Template Comparison.}
-    (\textbf{A})~S-functional evaluated by template comparison on $500$ healthy and
-    $500$ diseased synthetic circuits. Both populations have $S = \beta$ (template
-    comparison returns floor for all states inside the health cell), confirming that
-    template-based diagnosis cannot distinguish healthy from diseased
-    (\Cref{thm:no-template}).
-    (\textbf{B})~Loop holonomy magnitude $\|\HolL - \mathrm{Id}\|_F$ for the same
-    circuits. Healthy circuits (seagreen) cluster at $0$; diseased circuits (orange)
-    are separated by a clear gap. The holonomy test detects disease where template
-    comparison fails (\Cref{thm:primacy}).
-    (\textbf{C})~ROC curve for holonomy-based diagnosis (steelblue) versus template
-    comparison (crimson dashed, AUC$=0.50$, random classifier). Holonomy achieves
-    AUC$=1.00$ across all disease severity levels.
-    (\textbf{D})~Convergence of sparse $\ell_1$ LP drug design: holonomy residual
-    $\|\HolL^{\mathrm{treated}} - \mathrm{Id}\|_F$ on the log $y$-axis versus
-    LP iteration count on the linear $x$-axis. The solver reaches zero residual within
-    $\sim 30$ iterations; the $\ell_1$-optimal solution recovers exactly the planted
-    sparse support.}
-    \label{fig:panel2}
+    \includegraphics[width=\textwidth]{figures/panel_4_purpose_attractor.png}
+    \caption{\textbf{Purpose as Fixed-Point: the organ's healthy regime as an emergent attractor.}
+    (\textbf{A})~Convergence of $\|x_t - x^*\|$ (log $y$) versus iteration $t$ for
+    ensemble dynamics $x_{t+1} = Ax_t + b$ in $\mathbb{R}^5$, contraction ratio
+    $\|A\| < 1/1.1$.
+    The trajectory reaches machine precision ($< 10^{-14}$) within 65 iterations (E16).
+    (\textbf{B})~Scatter of 200 fixed points $x^* = (I-A)^{-1}b$ under small goal
+    perturbations ($\|\delta b\| \leq 10^{-3}$).
+    Purple dots cluster tightly around the true fixed point (red disc),
+    confirming Purpose Stability (\Cref{thm:purpose-stability}; E17).
+    (\textbf{C})~Residual $\|x_\infty - x^*\|$ (log $y$) versus initial perturbation
+    norm $\|\varepsilon\|$ (log $x$) across 30 perturbation scales from $10^{-3}$ to $1$.
+    All residuals fall below $10^{-12}$ (grey dashed), confirming global convergence
+    from any starting point (\Cref{thm:purpose-attractor}; E18).
+    (\textbf{D})~Three-dimensional phase portrait: twelve trajectories from diverse
+    initial conditions ($\|x_0 - x^*\| \approx 1.5$) converge to the fixed point (red disc)
+    in the $(x_1, x_2, x_3)$ subspace, illustrating that purpose is an attractor, not
+    a stored representation (\Cref{thm:purpose-existence}).}
+    \label{fig:panel4}
 \end{figure*}
 
 %=============================================================
@@ -826,102 +870,149 @@ unless $\Sfloor(E)$ exceeds $\tau(\Cell_{\mathrm{health}})$.
 \label{sec:validation}
 %=============================================================
 
-Twenty-five experiments validate the principal theorems. Code is in
-\texttt{validation/blind\_receiver\_validation.py}; results are in
-\texttt{validation/results/}. All experiments report relative error
-against the theoretical value.
+Twenty-five experiments validate the principal theorems.
+Code: \texttt{validation/blind\_receiver\_validation.py};
+results: \texttt{validation/results/} (JSON).
+All 25 experiments pass; key numerical outcomes are quoted below from
+the result files.
 
-\subsection{Experiment groups}
+\subsection{E01--E05: Floor Positivity}
 
-\textbf{E01--E05: Floor Positivity.}
-Synthetic cellular receivers with varying $N$ and $T$.
-Show $S_{\flat}(\receiver) = \beta \sim \Sigma/\sqrt{N} > 0$;
-verify attainment inside the health cell. All 5 pass at relative
-error $< 10^{-14}$.
+(E01)~The cellular floor $\beta = \sigma/\!\sqrt{N}$ is strictly positive
+for $N \in \{10, 10^2, 10^3, 10^4, 10^5, 10^6\}$; minimum observed value
+$\beta_{\min} = 10^{-3}$ at $N = 10^6$.
+(E02)~$\beta(\sigma)$ is monotone increasing in $\sigma$ at $N = 1000$
+(50 values from $\sigma = 0.1$ to $5.0$; all differences positive).
+(E03)~For 200 states sampled uniformly inside the action cell (ball of
+radius $0.9$), $\max|S - \beta| = 0.00$ exactly (machine precision).
+(E04)~For 100 states outside the cell, $\min S = 0.15 > \beta = 0.05$;
+all exterior states satisfy $S > \beta$ strictly.
+(E05)~Poisson shot-noise Monte Carlo (5\,000 trials per $N$) matches
+$\sigma/\!\sqrt{N}$ with relative error $< 0.7\%$ at every
+$N \in \{50, 200, 500, 2000, 5000\}$.
 
-\textbf{E06--E10: Cell-Truth.}
-Construct $\Cell_{\mathrm{health}}$ as a ball of radius $r$ in a
-simulated phase space. Show $S = \beta$ for all states inside
-the cell ($200$ inside, $200$ outside). Verify representational
-invariance under oscillatory, categorical, and partition encodings.
-All 5 pass at relative error $0.00$.
+\subsection{E06--E10: Cell-Truth and Representational Invariance}
 
-\textbf{E11--E15: Group Blindness.}
-Ensembles of $n = 1$ to $50$ cells. Verify composite floor formula
-$\Sfloor(E) = \prod_i \beta_i / \Sigma^{n-1}$ against numerical
-min-aggregation. Show strict positivity for all finite $n$.
-Maximum relative error $< 2\times 10^{-15}$.
+(E06)~Among 2\,000 states sampled inside the action cell,
+$\max|S - \beta| = 0.00$: all states are $S$-indistinguishable.
+(E07)~Pass rate $= 1.00$ (400 trials): agents using disjoint encodings
+(opposite halves of the state vector) agree unanimously on inside/outside
+membership.
+(E08)~$\min_x S(\receiver, x; \Cell) = \beta$ exactly for all four test
+values $\beta \in \{0.01, 0.05, 0.1, 0.5\}$; no state achieves $S = 0$.
+(E09)~The fraction of state space inside the action cell grows
+monotonically with $\sigma$:
+$\{0.16\%, 3.9\%, 15.7\%, 62.4\%\}$ for $\sigma \in \{0.1, 0.5, 1.0, 2.0\}$.
+(E10)~Mode success rates: knowledge $0.945$, behaviour $0.939$,
+belief $0.945$; maximum spread $0.006$.
 
-\textbf{E16--E18: Purpose as Fixed-Point.}
-Simulate agent flow on a synthetic ensemble; show convergence to
-the health cell $\Cell^*$ from five distinct starting points.
-Verify Motivation Heterogeneity: permuting goal-content leaves
-$\Sfloor(E)$ unchanged.
+\subsection{E11--E15: Group Blindness}
 
-\textbf{E19--E22: Self-Consistency Superiority.}
-Construct $1{,}000$ healthy and $1{,}000$ diseased synthetic circuits
-(plant holonomy defects on 10\%--80\% of loops).
-(E19) Template comparison returns $S = \beta$ for all circuits, AUC $= 0.50$.
-(E20) Holonomy test returns $\|\HolL - \mathrm{Id}\|_F > 0$ for all
-diseased circuits, AUC $= 1.00$.
-(E21) Local edge inspection misses all defects (Local Invisibility).
-(E22) Holonomy test is robust to $\pm 10\%$ parameter noise.
+(E11)~Over 500 randomly drawn ensembles with $n \in \{2,\ldots,19\}$,
+all composite floors are positive; minimum $= 9.27 \times 10^{-29}$.
+(E12)~Maximum relative error of the closed-form formula
+$\Sfloor(E) = \prod_i\beta_i / (\sum_i\beta_i)^{n-1}$: $0.00$ exactly
+(numerical round-off below $10^{-15}$), 1\,000 trials.
+(E13)~For the homogeneous ensemble ($\beta_i = 0.1$, $n = 1$ to $20$),
+composite floors span $\{0.1, 5.0\times10^{-2}, 1.1\times10^{-2},
+\ldots, 1.9\times10^{-26}\}$; all positive.
+(E14)~Goal-content variance of the composite floor across 1\,000 random
+goal configurations: $7.35 \times 10^{-40} \approx 0$.
+(E15)~All 30 values of $\beta$ from $10^{-1}$ to $10^{-6}$ yield
+positive composite floors for a 10-cell ensemble.
 
-\textbf{E23--E25: Therapeutic Validation.}
-(E23) $\ell_1$ LP solver restores $\HolL = \mathrm{Id}$ within
-$< 0.01\%$ tolerance on $100$ diseased circuits; planted sparse
-support recovered exactly.
-(E24) Reversibility test: $\det(\HolL) = 0$ correctly classifies
-singular circuits as irreversible.
-(E25) Side-effect bound: $\|\drugvec^*\|_1$ is a tight upper bound on
-the number of perturbed edges in all test circuits.
+\subsection{E16--E18: Purpose as Fixed-Point}
+
+(E16)~Fixed-point residual $\|x_\infty - x^*\| = 1.12 \times 10^{-12}$
+for a 5-dimensional contraction map (2\,000 iterations); convergence
+confirmed to near-machine precision.
+(E17)~Variance of fixed point across 100 goal perturbations
+($\|\delta b\| \leq 10^{-3}$): $1.41 \times 10^{-6}$; goal content
+does not move the attractor (\Cref{thm:motivation-het}).
+(E18)~All 30 trajectories with perturbation norms spanning $[10^{-3}, 1]$
+converge to $\|x_\infty - x^*\| < 10^{-12}$; global stability confirmed
+(\Cref{thm:purpose-attractor}).
+
+\subsection{E19--E22: Self-Consistency vs.\ Template Detection}
+
+(E19)~Maximum Wegscheider log-holonomy over 200 healthy circuits
+(2\,000 loops): $1.33 \times 10^{-15} \approx 0$ (machine precision).
+Healthy circuits satisfy detailed balance exactly.
+(E20)~Fraction of diseased circuits with non-zero holonomy on at least
+one loop: $1.00$ (200/200); holonomy detects every instance of broken
+detailed balance.
+(E21)~AUC: template comparison $= 0.896$, Wegscheider holonomy $= 1.00$.
+Holonomy advantage $= 0.104$.
+The holonomy test achieves perfect discrimination while requiring no
+stored reference; the template achieves only partial discrimination and
+requires a pre-stored healthy example (\Cref{thm:primacy}).
+(E22)~Local edge-level pass rate $= 1.00$; global holonomy detection rate
+$= 1.00$.
+Local checks are universally fooled; the loop test is universally successful
+--- confirming Local Invisibility (\Cref{thm:local-invis}).
+
+\subsection{E23--E25: Therapeutic Design}
+
+(E23)~$\ell_1$ LP feasibility rate $= 1.00$ (100/100 circuits);
+mean drug sparsity $= 0.199$ (4/20 drugs active on average),
+confirming the Sparse Therapeutic Optimum (\Cref{thm:sparse-therapeutic}).
+(E24)~Salvageable classification rate for invertible holonomy matrices
+($\det H \neq 0$): $1.00$.
+Unsalvageable classification rate for singular matrices ($\det H = 0$):
+$1.00$.
+Reversibility criterion is perfectly predictive (\Cref{thm:reversibility}).
+(E25)~Mean target-drug ratio $= 0.199$; side-effect bound
+$\|\drugvec^*_{\mathrm{off}}\|_1 = \|\drugvec^*\|_1 - \|\drugvec^*_{\mathrm{on}}\|_1$
+verified to machine precision in all 200 trials.
 
 \subsection{Summary}
 
 \begin{table}[h!]\centering
 \footnotesize
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-\textbf{Experiment group} & \textbf{Max rel.\ error} & \textbf{Verdict}\\
+\textbf{Group} & \textbf{Key result} & \textbf{Value} & \textbf{Verdict}\\
 \midrule
-Floor Positivity (E01--E05)        & $< 10^{-14}$              & 5/5 PASS \\
-Cell-Truth (E06--E10)              & $0.00$                    & 5/5 PASS \\
-Group Blindness (E11--E15)         & $< 2\times 10^{-15}$      & 5/5 PASS \\
-Purpose Fixed-Point (E16--E18)     & $< 10^{-12}$              & 3/3 PASS \\
-Self-Consistency (E19--E22)        & AUC $=1.00$ vs $0.50$     & 4/4 PASS \\
-Therapeutic (E23--E25)             & $< 10^{-4}$ (LP tol.)     & 3/3 PASS \\
+Floor Positivity (E01--E05)    & $\max|S-\beta|$ inside cell & $0.00$                       & 5/5 \\
+Cell-Truth (E06--E10)          & mode spread                 & $0.006$                      & 5/5 \\
+Group Blindness (E11--E15)     & formula rel.\ err.          & $0.00$                       & 5/5 \\
+Purpose (E16--E18)             & fixed-point residual        & $1.1\times10^{-12}$          & 3/3 \\
+Self-Consistency (E19--E22)    & holonomy AUC                & $1.00$ vs $0.896$ (template) & 4/4 \\
+Therapeutic (E23--E25)         & LP feasibility              & $1.00$, sparsity $0.199$     & 3/3 \\
 \midrule
-\textbf{Total}                     & ---                       & \textbf{25/25 PASS} \\
+\textbf{Total} & & & \textbf{25/25 PASS}\\
 \bottomrule
 \end{tabular}
-\caption{Validation summary. All 25 experiments pass. Template comparison
-(E19) achieves AUC$=0.50$ (random classifier); holonomy (E20) achieves
-AUC$=1.00$.}
+\caption{Numerical validation summary (25/25 experiments pass).
+All values are from \texttt{validation/results/}.}
 \label{tab:validation}
 \end{table}
 
 \begin{figure*}[!htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/panel_3_validation.png}
-    \caption{\textbf{Validation Summary.}
-    (\textbf{A})~Floor vs.\ cell count $N$: measured cellular floor $\beta$ (steelblue
-    circles) versus theoretical $\Sigma/\sqrt{N}$ (crimson line) for $N\in[10^4,
-    10^{10}]$. All 20 measurements coincide with theory; relative error $< 10^{-14}$
-    (experiments E01--E04).
-    (\textbf{B})~Group Blindness: composite floor $\Sfloor(E)$ (steelblue) versus
-    predicted $\prod_i\beta_i/\Sigma^{n-1}$ (crimson dashed) for $n=1$ to $30$.
-    Predictions and measurements coincide exactly across five orders of magnitude
-    (experiments E11--E14).
-    (\textbf{C})~ROC curves for three diagnostic strategies applied to $2{,}000$
-    circuits ($1{,}000$ healthy, $1{,}000$ diseased): template comparison (crimson
-    dashed, AUC$=0.50$), local edge inspection (orange, AUC$=0.51$), holonomy test
-    (steelblue, AUC$=1.00$). Holonomy is the unique effective diagnostic
-    (experiments E19--E21).
-    (\textbf{D})~Sparse LP drug design: $\ell_1$-recovered edge perturbation
-    $\drugvec^*$ (blue bars) versus planted ground-truth support (crimson markers)
-    across $100$ test circuits. Recovery is exact in all cases; off-support
-    perturbations are zero to machine precision (experiment E23).}
-    \label{fig:panel3}
+    \includegraphics[width=\textwidth]{figures/panel_5_self_consistency.png}
+    \caption{\textbf{Self-consistency superiority and sparse therapeutic design.}
+    (\textbf{A})~ROC curves for template comparison (grey, AUC$=0.896$) and
+    Wegscheider log-holonomy (green, AUC$=1.00$) applied to 200 healthy and
+    200 diseased synthetic circuits.
+    The holonomy test achieves perfect discrimination while requiring no stored reference
+    (\Cref{thm:primacy}; E21).
+    (\textbf{B})~Distribution of $\log_{10}|\HolL|$ for healthy (blue) and diseased (red)
+    circuits.
+    Healthy circuits cluster near machine precision ($\approx -15$); diseased circuits
+    cluster near $0$ ($|\HolL| \approx O(1)$).
+    The populations are completely separated (E19, E20).
+    (\textbf{C})~$\ell_1$ LP solution $\drugvec^*$ for a representative 20-drug,
+    4-loop circuit.
+    Only 4 of 20 drug slots receive non-zero weight (sparsity $= 0.20$); remaining 16
+    are zeroed, confirming the Sparse Therapeutic Optimum (\Cref{thm:sparse-therapeutic};
+    E23).
+    (\textbf{D})~Three-dimensional holonomy landscape $|\HolL(\Delta k_1, \Delta k_2)|$
+    over rate-constant perturbation axes $\Delta k_1, \Delta k_2 \in [-2,2]$.
+    The zero-holonomy valley at $(0,0)$ is the detailed-balance manifold; any deviation
+    increases $|\HolL|$ monotonically.
+    Therapeutic LP finds the minimum-norm perturbation restoring this valley.}
+    \label{fig:panel5}
 \end{figure*}
 
 %=============================================================
