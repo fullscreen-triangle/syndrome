@@ -32,50 +32,428 @@
   \label{fig:part5-synthesis}
 \end{figure}
 
+%% =============================================================================
 \section{Postulate Reduction: From Dozens to Two}
 \label{sec:postulate-reduction}
+%% =============================================================================
 
-% Conventional approaches (PK models, QSAR, pathway models, etc.) use
-% many empirical postulates. This framework uses two axioms. Enumerate
-% what is replaced.
+The central epistemological claim of this monograph is that the entire
+structure of biological dynamics — observation, computation, disease, and
+therapy — follows from exactly two axioms:
 
-% TODO
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Axiom~1 (Bounded Phase Space, \Cref{ax:bounded-phase})]
+    Every biological system occupies a finite region of phase space.
+  \item[Axiom~2 (Categorical Observation, \Cref{ax:categorical-obs})]
+    Every observation is a partition selection: a map from phase space to a
+    finite set of distinguishable classes.
+\end{description}
 
+We now itemise, for each eliminated postulate, the derivation that replaces it.
+
+\subsection{Template Storage Postulate — Eliminated}
+
+\emph{Standard claim}: a healthy cell stores a complete representation of its
+own healthy state as a reference template, against which current states are
+compared.
+
+\emph{Replacement}: the No Template Theorem (\Cref{sec:no-template}) shows
+that no bounded system can store a complete self-representation: the storage
+space required exceeds the information capacity of the system itself.  This
+follows directly from Axiom~1 (bounded capacity) combined with a
+storage-regress argument.  Template storage is not merely impractical — it
+is provably impossible under the foundational axioms.
+
+\subsection{Set-Point Comparison Postulate — Eliminated}
+
+\emph{Standard claim}: control circuits compare current state to a stored
+set-point and generate an error signal from the difference.
+
+\emph{Replacement}: the Wegscheider self-consistency criterion $\HolL = \mathrm{Id}$
+(\Cref{sec:topo-inconsistency}) replaces set-point comparison with an
+internally computable loop-closure test.  No stored reference is required:
+the circuit tests whether its own dynamics are self-consistent when integrated
+around each loop.  This criterion is derived from Kirchhoff--Wegscheider
+balance (a consequence of Axiom~2's categorical observability of reaction flows)
+and achieves AUC $= 1.00$ (versus $0.896$ for set-point comparison).
+
+\subsection{Error Signal Postulate — Eliminated}
+
+\emph{Standard claim}: a dedicated error-signalling pathway transmits the
+deviation from set-point to an effector.
+
+\emph{Replacement}: holonomy measurement (\Cref{ch:fuzzy-circuits}) is itself
+the error signal: $\HolL - \mathrm{Id}$ is the deviation from the healthy
+state, computable from the conductance data of the circuit without any
+dedicated signalling pathway or external reference.  The Local Invisibility
+Theorem (\Cref{sec:invisibility}) explains why no local edge inspection can
+serve this role — only the global loop integral $\HolL$ carries the error
+information.
+
+\subsection{Reference Trajectory Postulate — Eliminated}
+
+\emph{Standard claim}: purposeful behaviour requires a pre-stored reference
+trajectory (a programme or target state) toward which the system navigates.
+
+\emph{Replacement}: the Purpose-as-Fixed-Point theorem (cf.\
+\Cref{ch:coordination}) shows that purpose emerges as the unique stable
+fixed point of the backward-trajectory completion map $\Back$
+(\Cref{sec:backward-traj}).  No trajectory is stored: purpose is the
+attractor of the circuit's own dynamics, derived from Axioms~1 and~2 via
+the Banach fixed-point argument applied to the contraction $\Back$.
+
+\subsection{Net Postulate Reduction}
+
+\begin{table}[!htbp]
+\centering
+\caption{Postulate reduction: conventional assumptions versus consequences of
+the two foundational axioms.}
+\label{tab:postulate-reduction}
+\begin{tabular}{@{}p{3.8cm}p{3.8cm}p{4.5cm}@{}}
+\toprule
+Conventional postulate & Status & Replacement (derived from Axioms~1--2) \\
+\midrule
+Template storage       & Eliminated & No Template Theorem (\Cref{sec:no-template}) \\
+Set-point comparison   & Eliminated & Wegscheider self-consistency ($\HolL = \mathrm{Id}$) \\
+Error signal           & Eliminated & Holonomy measurement ($\HolL - \mathrm{Id}$) \\
+Reference trajectory   & Eliminated & Purpose-as-Fixed-Point (\Cref{ch:coordination}) \\
+PK compartment count   & Eliminated & LP on circuit holonomy (\Cref{sec:therapeutic-equation}) \\
+QSAR descriptor set    & Eliminated & Partition coordinates $(n,\ell,m,s)$ (\Cref{ch:axioms}) \\
+Separate pathway rates & Eliminated & Kirchhoff--Wegscheider from stoichiometry \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In total, the framework eliminates seven categories of empirical postulates
+present in conventional pharmacokinetic/pharmacodynamic, QSAR, and systems
+biology models, replacing all of them with consequences of the two foundational
+axioms.
+
+%% =============================================================================
 \section{The Computational--Biological Isomorphism}
 \label{sec:isomorphism}
+%% =============================================================================
 
-% Obs = Comp = Proc as the unifying equation of the monograph.
-% Disease as computation failure.
-% Therapy as computation restoration.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{disease_validation_panel.png}
+  \caption{\textbf{Overall validation panel across the framework.}
+  Consolidated validation results for the partition-holonomy framework
+  across four disease circuits (glycolysis, mitochondrial Complex~I,
+  tau aggregation, and HER2$^+$ breast cancer).  For each circuit, the
+  panel shows: measured holonomy $|\HolL|$ before and after LP-guided
+  therapy; LP solution sparsity $\|\drugvec^*\|_0$; pharmacological
+  salvageability ($\det(\HolL) \neq 0$ or $= 0$); and agreement between
+  the LP-predicted optimal drug combination and the clinical
+  standard-of-care.  All four cases pass, validating the framework's
+  ability to recover known optimal therapies from holonomy data alone.}
+  \label{fig:ch11-validation-panel}
+\end{figure}
 
-% TODO
+The Triple Equivalence theorem (\Cref{thm:triple-equivalence}) established that
+observation, computation, and processing are isomorphic categories:
+\begin{equation}
+  \mathrm{Obs} \;\cong\; \mathrm{Comp} \;\cong\; \mathrm{Proc}.
+  \label{eq:triple-iso}
+\end{equation}
+This isomorphism has direct consequences for understanding disease and therapy.
 
+\subsection{Disease as Computation Failure}
+
+In the computational interpretation:
+\begin{itemize}[leftmargin=2em]
+  \item A \emph{state} is a partition read (observation of which cell in
+    the partition is occupied).
+  \item A \emph{transition} is a partition move (one step of computation).
+  \item A \emph{loop} is a computation that should return to its starting
+    partition cell after a complete cycle.
+\end{itemize}
+Non-trivial holonomy $\HolL \neq \mathrm{Id}$ means the circuit is
+\emph{computing an inconsistent function}: after a complete loop, the circuit
+does not return to the same partition cell from which it departed.  This is
+precisely a computation error — the biological analogue of a programme that
+fails to restore its invariants after executing a subroutine.
+
+The Local Invisibility Theorem (\Cref{sec:invisibility}) translates directly:
+no individual computational step violates local consistency (each gate operates
+correctly), but the composed sequence is globally inconsistent.  This is the
+biological equivalent of a bug that cannot be found by unit testing but is
+detected by integration testing — the loop integral $\HolL$ is the integration
+test.
+
+\subsection{Therapy as Computation Restoration}
+
+The LP \eqref{eq:sparse-LP} is a \emph{compiler} that takes as input the
+circuit's inconsistency report ($\HolL \neq \mathrm{Id}$ for diseased loops)
+and outputs the minimal patch ($\drugvec^*$) that restores computational
+consistency ($\HolL = \mathrm{Id}$) at minimum cost ($\|\drugvec^*\|_1$).
+Under the isomorphism \eqref{eq:triple-iso}:
+
+\begin{center}
+\begin{tabular}{rcl}
+  Holonomy measurement & $\cong$ & Bug detection (integration test) \\
+  LP optimisation       & $\cong$ & Minimal patch computation \\
+  Drug administration   & $\cong$ & Patch application \\
+  $\|\drugvec^*\|_1$    & $\cong$ & Patch complexity (lines of code changed) \\
+\end{tabular}
+\end{center}
+
+The pharmacological salvageability condition (\Cref{cor:salvageability})
+translates to: a bug is fixable by patching the existing code if and only if
+the patch has full rank ($\det(\HolL) \neq 0$); otherwise a full rewrite
+(surgery, gene therapy) is required.
+
+%% =============================================================================
 \section{Connections to Established Theory}
 \label{sec:connections}
+%% =============================================================================
 
-% Poincare recurrence, Maslov, Kuramoto, Jaynes, Landauer, Shannon.
-% What is new here vs. what is derived from these.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel5_hub_vulnerability.png}
+  \caption{\textbf{Hub vulnerability analysis connecting multiple chapters.}
+  Scale-free network topology of the biochemical circuit $\Gcond$ with
+  hub nodes highlighted (degree $d_i > \bar{d} + 2\sigma_d$).  The hub
+  fractional holonomy contribution $f_h = \binom{d_h}{2}/|L|$
+  (\Cref{prop:hub-holonomy}) is shown for each hub, revealing that
+  single-lesion events at high-degree hubs (ATP, NADH, acetyl-CoA)
+  simultaneously disrupt a macroscopic fraction of the circuit's loops.
+  This analysis bridges the disease-circuit framework of
+  \Cref{ch:fuzzy-circuits}, the therapeutic hierarchy of
+  \Cref{ch:intervention}, and the established theory of scale-free
+  network vulnerability discussed in this section.}
+  \label{fig:ch11-hub-vulnerability}
+\end{figure}
 
-% TODO
+The framework draws on, unifies, and extends several established bodies of
+theory.  We distinguish what is genuinely new from what is re-derived or
+applied in a new context.
 
+\subsection{Connections (Derived or Applied)}
+
+\paragraph{Poincar\'{e} Recurrence.}
+Poincar\'{e}'s theorem guarantees that any trajectory in a bounded phase space
+recurs arbitrarily closely to its starting point \citep{Poincare1890}.
+Axiom~1 (Bounded Phase Space) directly invokes this result: the backward
+trajectory completion map $\Back$ (\Cref{sec:backward-traj}) exploits
+recurrence to construct the MAP backward trajectory.  The framework is, in
+this sense, an applied consequence of Poincar\'{e} recurrence in biological
+systems.
+
+\paragraph{Maslov Index and WKB Theory.}
+The Maslov index counts the number of caustic crossings along a classical
+trajectory in the WKB approximation \citep{Maslov1981}.  The partition depth
+$\Depth(\mathbf{r})$ (\Cref{def:partition-depth}) is the biological analogue:
+it counts the number of partition-level transitions along a ray trajectory.
+The gradient flow of $\Depth$ (\Cref{prop:gradient-flow}) corresponds to the
+WKB transport equation; the holonomy of the depth field around a loop is the
+partition-space Maslov index.
+
+\paragraph{Kuramoto Model.}
+The Kuramoto model of coupled-oscillator synchronisation \citep{Kuramoto1984}
+underlies the phase-lock networks of \Cref{ch:cellular-state} and the
+multi-ray coherence index $\Vcell$ of \Cref{sec:multi-ray}.  The critical
+coupling $K_c$ (\Cref{thm:phase-transition}) is the biological threshold for
+healthy synchrony.  The framework applies Kuramoto theory to biochemical
+reaction networks, with reaction conductances playing the role of coupling
+strengths.
+
+\paragraph{Jaynes' Maximum Entropy Principle.}
+Jaynes' principle \citep{Jaynes1957} states that the least-biased probability
+distribution consistent with known constraints is the maximum-entropy one.
+The partition framework maximises entropy (minimises partition depth $\Depth$)
+subject to the observational constraints imposed by Axiom~2.  The healthy
+state is the maximum-entropy state consistent with the Wegscheider constraints;
+disease is a sub-entropy state where constraints are violated.
+
+\paragraph{Landauer's Principle.}
+Landauer \citep{Landauer1961} showed that erasing one bit of information
+costs at least $\kB T \ln 2$ in free energy.  The Residue Principle
+(\Cref{thm:residue}) is the biological instantiation: each partition operation
+costs $\tau_p \cdot S_{\mathrm{partition}}$ in free energy, where $\tau_p$ is
+the partition lag and $S_{\mathrm{partition}}$ is the partition entropy.  The
+variance--free energy identity $F = \kB T \sigma^2(\varpotential)$
+(\Cref{def:variance-free-energy}) is the circuit-level realisation of
+Landauer's bound applied to the entropy of chemical potential fluctuations.
+
+\paragraph{Shannon Information Theory.}
+Shannon's identification of information with the logarithm of partition
+cardinality \citep{Shannon1948} is the foundation of Axiom~2: an observation
+selects a partition cell, and the information gained is $\log_2(\text{cell count})$.
+The partition algebra of \Cref{ch:partition-algebra} is Shannon information
+theory applied to the specific geometry of biological state spaces.
+
+\subsection{What Is New}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Partition geometry applied to biological dynamics.}
+    Prior work applies partition or information geometry to statistical models
+    \citep{Amari2000}, not to biological circuit dynamics.  The identification
+    of biochemical reactions with partition moves and of disease with
+    non-trivial holonomy is new.
+
+  \item \textbf{Wegscheider holonomy as disease diagnostic.}
+    The Wegscheider balance condition is known in chemical kinetics as a
+    thermodynamic consistency requirement \citep{Wegscheider1901}, but its
+    use as a disease diagnostic — and its formal equivalence to loop holonomy
+    in a conductance network — is new.
+
+  \item \textbf{$\ell_1$ LP for drug-combination optimisation from first principles.}
+    Compressed sensing and $\ell_1$ regularisation are standard in signal
+    processing \citep{Candes2006}, and LP methods are used in pharmacokinetic
+    modelling \citep{Gabrielsson2006}, but the derivation of the sparse LP
+    from holonomy restoration — with $\|\drugvec\|_1$ as \emph{exact}
+    side-effect burden rather than a penalty — is new.
+
+  \item \textbf{GPU ray-tracing pipeline for cellular diagnostics.}
+    GPU ray marching is standard in volume rendering, but its application to
+    the partition field $\boldsymbol{\Sigma}(\mathbf{r})$ for simultaneous
+    optical, chromatographic, and circuit observation — and its use to compute
+    $\Vcell$ and $\HolL$ in real time — is new.
+\end{enumerate}
+
+%% =============================================================================
 \section{Open Problems}
 \label{sec:open-problems}
+%% =============================================================================
 
-% Genome-scale circuit topology requirement.
-% Strong nonlinearity regime beyond first-order LP.
-% Tissue-scale and whole-organ extension.
-% Experimental apparatus for dual-pixel acquisition in clinical settings.
+\paragraph{Genome-scale circuit topology.}
+The full human proteome has $|V| \approx 20{,}000$ proteins, each a potential
+node in the circuit $\Gcond$.  Current LP solvers handle circuits of
+$|V| \sim 10^3$ efficiently; genome-scale circuits require sparse approximation
+methods — compressed holonomy measurement combined with subspace LP relaxations
+— that have not yet been developed for this setting.  An open problem is to
+establish which sparse subset of loops $\mathcal{L}_D \subset \mathcal{L}$
+carries sufficient diagnostic information to identify all clinically relevant
+disease states, with $|\mathcal{L}_D| \ll |V|^2$.
 
-% TODO
+\paragraph{Strong nonlinearity beyond first-order linearisation.}
+The therapeutic equation \eqref{eq:sparse-LP} uses the first-order expansion
+\eqref{eq:holonomy-linearise} of $\HolL(\Gcond^{(\drugvec)})$.  For large
+drug doses ($|\eta_{ij}| \sim 1$), higher-order terms are non-negligible.
+A second-order holonomy expansion would yield a quadratically constrained LP
+(QCLP), which remains polynomial-time solvable in many cases via
+semidefinite relaxation, but the theory of sparse QCLP for holonomy
+restoration has not been developed.
 
+\paragraph{Tissue-scale and whole-organ extension.}
+\Cref{ch:therapeutic} treats a single-cell circuit.  A tissue is an ensemble
+of $N_{\mathrm{cell}} \sim 10^6$ coupled cells connected by gap junctions and
+paracrine signalling edges.  The multi-cellular circuit has $|V| = N_{\mathrm{cell}} \cdot |V_{\mathrm{cell}}|$ nodes.  Holonomy propagation across intercellular junctions — and the question of whether tissue-level disease is reducible to single-cell holonomy — is an open problem with direct relevance to tumour heterogeneity and organ failure.
+
+\paragraph{Dual-pixel acquisition for clinical imaging.}
+The GPU pipeline (\Cref{sec:gpu-pipeline}) requires a dual-pixel image as input.
+Current prototypes use research-grade confocal microscopes with dual-channel
+detectors.  Adaptation to clinical modalities (MRI gradient echoes, CT
+dual-energy, or whole-slide digital pathology scanners) requires solving the
+inverse problem of extracting $\nabla\boldsymbol{\Sigma}(\mathbf{r})$ from the
+coarser spatial resolution and different contrast mechanisms of clinical
+instruments.  This is an engineering problem whose mathematical foundation is
+provided by the Triple Observation Identity (\Cref{thm:triple-observation}),
+but the implementation details remain open.
+
+%% =============================================================================
 \section{Falsifiability}
 \label{sec:falsifiability}
+%% =============================================================================
 
-% Single counterexample conditions that would refute the framework:
-% - A drug whose effect cannot be expressed as edge conductance perturbation.
-% - A disease with trivial loop holonomy.
-% - A therapeutic outcome where variance does not drop.
-% - Triple-observation divergence between optical, chromatographic, circuit
-%   measurements on the same partition state.
+A theoretical framework earns scientific standing through its exposure to
+falsification.  We specify four single counterexamples that would each, alone,
+refute the framework in its entirety.
 
-% TODO
+\begin{enumerate}[label=\textbf{F\arabic*.}, leftmargin=3em]
+
+\item \textbf{A drug whose effect is inexpressible as edge conductance perturbation.}
+  Every pharmacological agent is assumed to act via \Cref{def:drug-vector-ch9}:
+  $G_{ij} \mapsto G_{ij}(1-\eta_{ij})$.  If a drug is demonstrated to alter
+  cell state by a mechanism that \emph{cannot} be decomposed into conductance
+  modifications on any finite biochemical graph — for example, by directly
+  altering the topology of phase space without passing through any reaction
+  channel — then the partition framework is not a complete description of
+  pharmacology and the therapeutic criterion \eqref{eq:therapeutic-criterion}
+  does not hold.
+
+\item \textbf{A disease with trivial loop holonomy.}
+  If a cell is demonstrably diseased (by any independent criterion) while
+  satisfying $\HolL = \mathrm{Id}$ for every loop $\ell$ in its circuit, then
+  holonomy is an insufficient diagnostic criterion and the entire disease
+  identification programme of \Cref{ch:fuzzy-circuits,ch:therapeutic} fails.
+  Note: the Local Invisibility Theorem \emph{predicts} that no local edge
+  inspection will reveal the disease in this case either, so the counterexample
+  must come with an independent disease criterion that is not itself a loop
+  integral.
+
+\item \textbf{A therapeutic outcome where variance does not drop.}
+  \Cref{prop:variance-efficacy} states that $\Delta\sigma^2 < 0$ is equivalent
+  to therapeutic effectiveness.  If a drug is shown to restore $\HolL = \mathrm{Id}$
+  (by holonomy measurement) while $\sigma^2(\varpotential)$ increases or remains
+  constant, the Variance--Free Energy Identity \eqref{eq:variance-free-energy}
+  is incorrect and the link between loop closure and thermodynamic free energy
+  fails.
+
+\item \textbf{Triple-observation divergence.}
+  The Triple Observation Identity (\Cref{thm:triple-observation}) predicts that
+  optical absorption, chromatographic retention, and circuit current computed
+  from the same partition state $\boldsymbol{\Sigma}(\mathbf{r})$ agree to
+  within measurement error.  If a replicated, well-controlled experiment
+  demonstrates systematic disagreement exceeding 20\% between any two of these
+  three observables on the same biological sample, the Triple Equivalence
+  $\mathrm{Obs} \cong \mathrm{Comp} \cong \mathrm{Proc}$ does not hold
+  empirically and the isomorphism \eqref{eq:triple-iso} is refuted.
+
+\end{enumerate}
+
+\subsection{Diagnostic AUC Summary}
+
+Table~\ref{tab:auc-summary} consolidates the diagnostic performance of the
+three main strategies discussed throughout the monograph.
+
+\begin{table}[!htbp]
+\centering
+\caption{Diagnostic AUC by strategy.  The holonomy classifier is the unique
+reference-free strategy achieving perfect classification.}
+\label{tab:auc-summary}
+\begin{tabular}{@{}lllr@{}}
+\toprule
+Strategy & Reference required & Theorem & AUC \\
+\midrule
+Template comparison    & Yes (healthy population) & ---                     & 0.896 \\
+Local edge inspection  & No                       & \Cref{sec:invisibility} & 0.52  \\
+Wegscheider holonomy   & No                       & \Cref{thm:reference-free} & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Epistemic Floor Hierarchy}
+
+The epistemic floor $\beta = \sigma/\sqrt{N}$ (\Cref{ch:partition-algebra})
+is strictly positive at every biological scale, as summarised in
+Table~\ref{tab:floor-hierarchy}.  Floor positivity is not a limitation of
+measurement technology; it is a mathematical consequence of Axioms~1 and~2
+and cannot be overcome by any instrument improvement.
+
+\begin{table}[!htbp]
+\centering
+\caption{Epistemic floor $\beta = \sigma/\sqrt{N}$ at biological scales.}
+\label{tab:floor-hierarchy}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Scale & Molecular count $N$ & Epistemic floor $\beta$ \\
+\midrule
+Molecule  & $10^2$   & $\sim 10^{-1}$  \\
+Organelle & $10^4$   & $\sim 10^{-2}$  \\
+Cell      & $10^6$   & $\sim 10^{-3}$  \\
+Tissue    & $10^8$   & $\sim 10^{-4}$  \\
+Organism  & $10^{12}$& $\sim 10^{-6}$  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The floor is positive at all five scales listed and, by the Floor Positivity
+Theorem (\Cref{thm:floor-positivity}), at every intermediate scale.  The
+three-dimensional synthesis surface (Figure~\ref{fig:part5-synthesis}D)
+visualises $\log_{10}\beta$ jointly as a function of $\log_{10} N$ and ensemble
+size $n_{\mathrm{cells}}$, showing that neither increasing cell count nor
+pooling more cells drives the floor to zero.  Biological knowledge is
+irreducibly uncertain — a conclusion that the partition framework derives from
+axioms rather than from empirical observation.

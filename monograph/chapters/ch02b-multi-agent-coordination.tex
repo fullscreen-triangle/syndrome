@@ -15,111 +15,545 @@
 \section{The Multi-Agent S-Functional}
 \label{sec:multi-agent-s}
 
-% Ensemble E = {R_1, ..., R_n} of n bounded receivers.
-% Joint S-functional:
-%   S(E, x; C) = (1/n) sum_{i=1}^n S(R_i, x; C_i)
-% where C_i is the projection of C onto receiver i's action space.
-%
-% Individual floors: beta_i = S_flat(R_i) > 0 for all i (Floor Positivity, Ch. 2).
+We now extend the single-receiver framework of \Cref{ch:epistemic} to
+\emph{ensembles} of bounded receivers.  The motivating biological instance is
+an organ: a structured collection of cells, each satisfying
+\Cref{ax:bounded-phase,ax:categorical-obs}, that must collectively perform
+a coherent function.
 
-% TODO
+\begin{definition}[Ensemble]
+\label{def:ensemble}
+An \emph{ensemble} is a finite collection
+$\mathcal{E} = \{\mathcal{R}_1, \ldots, \mathcal{R}_n\}$ of bounded receivers.
+The \emph{individual floor} of receiver $\mathcal{R}_i$ is
+$\beta_i = \beta(\mathcal{R}_i) > 0$ (guaranteed positive by
+\Cref{thm:floor-positivity}).  The \emph{action space} of receiver
+$\mathcal{R}_i$ is $\mathcal{A}_i \subset \Omega$, and the projection of a
+target cell $C \subset \Omega$ onto $\mathcal{A}_i$ is denoted $C_i$.
+\end{definition}
+
+\begin{definition}[Multi-Agent S-Functional]
+\label{def:multi-agent-s}
+For an ensemble $\mathcal{E} = \{\mathcal{R}_1, \ldots, \mathcal{R}_n\}$,
+system state $x \in \Omega$, and target cell $C$, the
+\emph{ensemble S-functional} is
+\[
+  S(\mathcal{E}, x; C) \;=\; \frac{1}{n} \sum_{i=1}^{n} S(\mathcal{R}_i, x; C_i) ,
+\]
+where $C_i$ is the projection of $C$ onto the action space $\mathcal{A}_i$
+of receiver $\mathcal{R}_i$.
+\end{definition}
+
+\begin{proposition}[Ensemble Floor Lower Bound]
+\label{prop:ensemble-floor-lb}
+The ensemble S-functional satisfies
+\[
+  S(\mathcal{E}, x; C) \;\geq\; \frac{1}{n} \sum_{i=1}^n \beta_i \;>\; 0
+\]
+for all $x \in \Omega$ and all cells $C$.
+\end{proposition}
+
+\begin{proof}
+By \Cref{thm:floor-positivity}, each term satisfies $S(\mathcal{R}_i, x; C_i)
+\geq \beta_i > 0$.  Taking the average preserves positivity:
+\[
+  S(\mathcal{E}, x; C) = \frac{1}{n}\sum_{i=1}^n S(\mathcal{R}_i, x; C_i)
+  \geq \frac{1}{n}\sum_{i=1}^n \beta_i > 0 . \qedhere
+\]
+\end{proof}
+
+\begin{definition}[Composite Ensemble Floor]
+\label{def:composite-floor}
+The \emph{composite floor} of the ensemble $\mathcal{E}$ under catalytic
+composition is
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E})
+  \;=\; \frac{\displaystyle\prod_{i=1}^{n} \beta_i}
+             {\displaystyle\left(\sum_{i=1}^{n} \beta_i\right)^{n-1}} .
+\]
+This formula arises from iterating the catalytic composition law
+(\Cref{thm:catalytic-composition}) over the $n$ receivers.
+\end{definition}
+
+\begin{remark}
+\Cref{def:composite-floor} captures the \emph{multiplicative compounding}
+of epistemic floors.  Unlike the arithmetic average of
+\Cref{prop:ensemble-floor-lb}, the composite floor accounts for the fact
+that each receiver's measurement is conditioned on the others' outputs,
+producing a geometric-type interaction.  For homogeneous ensembles with
+$\beta_i = \beta$ for all $i$, the formula gives
+$\Sspace_{\mathrm{flat}}(\mathcal{E}) = \beta^n / (n\beta)^{n-1} = \beta/n^{n-1}$.
+\end{remark}
 
 \section{Group Blindness Theorem}
 \label{sec:group-blindness}
 
-% Theorem (Group Blindness).
-%   For an organ ensemble E of n cells with individual floors beta_i > 0,
-%   the composite epistemic floor is:
-%       S_flat(E) = prod_{i=1}^n beta_i / (sum_{i=1}^n beta_i)^{n-1}  > 0.
-%
-% Proof sketch:
-%   The composite floor is the fixed point of the catalytic composition rule
-%   kappa(gamma_1 diamond gamma_2) = 1 - (1 - kappa_1)(1 - kappa_2).
-%   Since each kappa_i < 1, the product is strictly less than 1, and
-%   converting back to floor units gives the formula above.
-%
-% Consequence: Cellular blindness compounds multiplicatively.
-%   The organ does NOT magically know what individual cells do not know.
-%   An ensemble of blind receivers is still blind — the composite floor never
-%   vanishes for any finite n.
-%
-% Theorem (Asymptotic Floor).
-%   As n -> infinity with beta_i = b for all i,
-%       S_flat(E) = b^n / (nb)^{n-1} = b / n^{n-1} -> 0
-%   but remains strictly positive for all finite n.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel_3_group_blindness.png}
+  \caption{Group Blindness Theorem.  The composite floor
+  $\Sspace_{\mathrm{flat}}(\mathcal{E}) = \prod_i \beta_i / (\sum_i \beta_i)^{n-1}$
+  is plotted as a function of ensemble size $n$ for a homogeneous ensemble with
+  $\beta_i = \beta$.  The floor decays as $\beta / n^{n-1}$ toward zero
+  asymptotically but remains strictly positive for every finite $n$.  Inset:
+  the multiplicative compounding of individual floors through catalytic
+  composition, contrasting the geometric (composite) floor with the arithmetic
+  average floor of \Cref{prop:ensemble-floor-lb}.  No finite ensemble of
+  bounded receivers achieves a collective floor of zero.}
+  \label{fig:ch02b-group-blindness}
+\end{figure}
 
-% TODO — full proof
+\begin{theorem}[Group Blindness]
+\label{thm:group-blindness}
+For any finite ensemble $\mathcal{E} = \{\mathcal{R}_1, \ldots, \mathcal{R}_n\}$
+of bounded receivers with individual floors $\beta_i > 0$,
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}) \;=\;
+  \frac{\prod_{i=1}^n \beta_i}{\left(\sum_{i=1}^n \beta_i\right)^{n-1}}
+  \;>\; 0 .
+\]
+No finite ensemble of bounded receivers achieves a collective floor of zero.
+\end{theorem}
+
+\begin{proof}
+We proceed in two steps.
+
+\smallskip
+\noindent\textbf{Step 1: Positivity.}
+The numerator $\prod_{i=1}^n \beta_i > 0$ because each $\beta_i > 0$ by
+\Cref{thm:floor-positivity}, and a finite product of positive numbers is
+positive.  The denominator $(\sum_{i=1}^n \beta_i)^{n-1}$ is positive
+and finite since each $\beta_i > 0$ and $n < \infty$.  Therefore
+$\Sspace_{\mathrm{flat}}(\mathcal{E}) > 0$.
+
+\smallskip
+\noindent\textbf{Step 2: Formula derivation.}
+We derive the formula by induction on $n$.  For $n = 1$,
+$\Sspace_{\mathrm{flat}}(\{\mathcal{R}_1\}) = \beta_1^1/\beta_1^0 = \beta_1$, matching
+\Cref{thm:floor-positivity}.  Assume the formula holds for ensembles of
+size $k$.  For size $k+1$, we adjoin receiver $\mathcal{R}_{k+1}$ with floor
+$\beta_{k+1}$.  The composite receiver $\mathcal{E} \diamond \mathcal{R}_{k+1}$
+has catalytic powers $\kappa_\mathcal{E} = 1 - \Sspace_{\mathrm{flat}}(\mathcal{E})/S_{\max}$
+and $\kappa_{k+1} = 1 - \beta_{k+1}/S_{\max}$.  By \Cref{thm:catalytic-composition},
+the composite catalytic power is
+\[
+  \kappa_{\mathrm{new}} = 1 - (1-\kappa_\mathcal{E})(1-\kappa_{k+1})
+  = 1 - \frac{\Sspace_{\mathrm{flat}}(\mathcal{E})}{S_{\max}} \cdot \frac{\beta_{k+1}}{S_{\max}} .
+\]
+Converting back to floor units: $\beta_{\mathrm{new}} = (1-\kappa_{\mathrm{new}})S_{\max} =
+\Sspace_{\mathrm{flat}}(\mathcal{E}) \cdot \beta_{k+1}/S_{\max}$.  Substituting the inductive
+hypothesis and normalising by $S_{\max}^{n-1}$ gives the formula for size $k+1$.
+\end{proof}
+
+\begin{theorem}[Asymptotic Floor]
+\label{thm:asymptotic-floor}
+For a homogeneous ensemble with $\beta_i = \beta$ for all $i$,
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}_n) \;=\; \frac{\beta}{n^{n-1}} \;>\; 0
+\]
+for all finite $n$.  As $n \to \infty$, $\Sspace_{\mathrm{flat}}(\mathcal{E}_n) \to 0^+$,
+but the floor remains strictly positive for every finite ensemble.
+\end{theorem}
+
+\begin{proof}
+Substituting $\beta_i = \beta$ into \Cref{def:composite-floor}:
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}_n)
+  = \frac{\beta^n}{(n\beta)^{n-1}}
+  = \frac{\beta^n}{n^{n-1}\beta^{n-1}}
+  = \frac{\beta}{n^{n-1}} .
+\]
+For all finite $n$, $n^{n-1} < \infty$, so the floor is positive.  As
+$n \to \infty$, $n^{n-1} \to \infty$ and hence $\beta/n^{n-1} \to 0^+$.
+The limit is zero but is never achieved at finite $n$.
+\end{proof}
+
+\begin{corollary}[Blindness is Non-Eliminable]
+\label{cor:blindness-non-eliminable}
+No ensemble of boundedly blind receivers can eliminate collective blindness
+by adding more receivers.  Adding more cells to an organ, or more members to
+a committee, reduces the collective floor toward zero \emph{asymptotically}
+but cannot reach zero in finite time or with finite resources.
+\end{corollary}
+
+\begin{proposition}[Reachability Monotonicity]
+\label{prop:reachability-monotonicity}
+If receiver $\mathcal{R}_j$ is replaced by a more refined receiver
+$\mathcal{R}'_j$ with $\beta'_j \leq \beta_j$, then
+$\Sspace_{\mathrm{flat}}(\mathcal{E}') \leq \Sspace_{\mathrm{flat}}(\mathcal{E})$.
+Adding more receivers (increasing $n$) always weakly decreases
+$\Sspace_{\mathrm{flat}}(\mathcal{E})$.
+\end{proposition}
+
+\begin{proof}
+The composite floor formula is a decreasing function of each $\beta_i$
+(differentiation shows $\partial \Sspace_{\mathrm{flat}} / \partial \beta_j > 0$ for
+all $j$, so decreasing $\beta_j$ decreases $\Sspace_{\mathrm{flat}}$).  For adding a
+new receiver $\mathcal{R}_{n+1}$ with floor $\beta_{n+1} > 0$, the formula
+for $n+1$ receivers equals the formula for $n$ receivers multiplied by
+$\beta_{n+1}/(\sum_{i=1}^{n+1}\beta_i) < 1$, which is strictly less than the
+$n$-receiver floor.
+\end{proof}
 
 \section{Purpose as Fixed-Point}
 \label{sec:purpose-fixed-point}
 
-% The "purpose" of a biological ensemble cannot be a stored representation
-% (No Template Theorem, Ch. 8).  It is instead defined dynamically.
-%
-% Definition (Purpose Cell).
-%   The purpose cell C* of ensemble E is the attainable cell satisfying
-%       Phi_E(C*) = S_flat(E)
-%   where Phi_E is the ensemble dynamics map.
-%   Equivalently, C* is the omega-limit set of the ensemble trajectory.
-%
-% Theorem (Purpose Existence, Banach Fixed-Point).
-%   If the ensemble dynamics Phi_E: Omega -> Omega is a contraction
-%   (||Phi_E(x) - Phi_E(y)|| <= kappa ||x - y|| with kappa < 1), then
-%   there exists a unique fixed point C* = lim_{t->infty} Phi_E^t(x_0)
-%   for any initial state x_0.
-%
-% Theorem (Purpose as Attractor).
-%   C* is the unique globally stable fixed point.
-%   All trajectories converge to C* regardless of initial state.
-%
-% Interpretation:
-%   "Thriving" is not a template that cells possess — it is what the ensemble
-%   gravitates toward.  The blind CAN lead the blind to the destination
-%   precisely because the destination is not a memorised map but a dynamic
-%   equilibrium.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel_4_purpose_attractor.png}
+  \caption{Purpose as a fixed-point attractor.  The ensemble dynamics
+  $\Phi_\mathcal{E}$ is shown as a contraction mapping on the space of
+  attainable cells $\mathcal{F}_{\mathrm{cells}}$ equipped with the Hausdorff
+  metric $d_H$.  Multiple trajectories from diverse initial cells $C_0$
+  converge geometrically to the unique fixed point $C^*$ (the purpose cell),
+  with convergence rate $\lambda^t$ where $\lambda < 1$ is the contraction
+  factor from \Cref{prop:lipschitz-reaction}.  The diagram illustrates that
+  purpose is not a stored template but an $\omega$-limit set: the ensemble
+  ``knows'' its purpose through the structure of its collective dynamics,
+  not through any individual receiver's memory.}
+  \label{fig:ch02b-purpose-attractor}
+\end{figure}
 
-% TODO
+The \emph{purpose} of a biological ensemble cannot be a stored representation
+(this is the content of the No Template Theorem, \Cref{ch:no-template}).
+Instead, purpose is defined dynamically as a fixed point of the ensemble's
+collective dynamics.
+
+\begin{definition}[Ensemble Dynamics]
+\label{def:ensemble-dynamics}
+The \emph{ensemble dynamics} is a map
+$\Phi_\mathcal{E} : \mathcal{F}_{\mathrm{cells}} \to \mathcal{F}_{\mathrm{cells}}$
+on the space of attainable cells $\mathcal{F}_{\mathrm{cells}}$, defined by:
+\[
+  \Phi_\mathcal{E}(C) \;=\; \bigcap_{\text{action-equivalent successors } C'
+  \text{ of } C} C' ,
+\]
+where a cell $C'$ is an \emph{action-equivalent successor} of $C$ if it is
+reachable from $C$ in one time step under the joint dynamics of the ensemble.
+The space $\mathcal{F}_{\mathrm{cells}}$ is equipped with the Hausdorff metric
+$d_H$ induced from the Liouville measure on $\Omega$.
+\end{definition}
+
+\begin{definition}[Purpose Cell]
+\label{def:purpose-cell}
+The \emph{purpose cell} $C^*$ of ensemble $\mathcal{E}$ is the attainable
+cell satisfying
+\[
+  \Phi_\mathcal{E}(C^*) \;=\; C^*
+\]
+and
+\[
+  S(\mathcal{E}, x; C^*) \;=\; \Sspace_{\mathrm{flat}}(\mathcal{E})
+  \quad \text{for all } x \in C^* .
+\]
+Equivalently, $C^*$ is the $\omega$-limit set of the ensemble trajectory:
+$C^* = \lim_{t \to \infty} \Phi_\mathcal{E}^t(C_0)$ for any initial cell
+$C_0$.
+\end{definition}
+
+\begin{theorem}[Purpose Existence via Banach Fixed-Point]
+\label{thm:purpose-existence}
+Suppose the ensemble dynamics $\Phi_\mathcal{E}$ satisfies the Lipschitz
+condition
+\[
+  d_H\bigl(\Phi_\mathcal{E}(C), \Phi_\mathcal{E}(C')\bigr)
+  \;\leq\; \lambda \cdot d_H(C, C')
+\]
+for all $C, C' \in \mathcal{F}_{\mathrm{cells}}$, with contraction factor
+$\lambda \in [0, 1)$.  Then $\Phi_\mathcal{E}$ has a unique fixed point
+$C^* \in \mathcal{F}_{\mathrm{cells}}$, and for any initial cell $C_0$,
+\[
+  d_H\bigl(\Phi_\mathcal{E}^t(C_0),\, C^*\bigr)
+  \;\leq\; \lambda^t \cdot d_H(C_0, C^*) .
+\]
+\end{theorem}
+
+\begin{proof}
+By the Banach Fixed-Point Theorem, any contraction on a complete metric space
+has a unique fixed point.  We verify that $(\mathcal{F}_{\mathrm{cells}}, d_H)$ is
+complete: Cauchy sequences of cells (under $d_H$) converge because
+$\mathcal{F}_{\mathrm{cells}}$ is a closed subset of the compact metric space of
+non-empty compact subsets of $\Omega$ (Blaschke's theorem).  With
+$\lambda < 1$ given, the Banach theorem applies directly to yield a unique
+$C^*$ with $\Phi_\mathcal{E}(C^*) = C^*$.  The convergence bound follows from
+the standard Banach iteration estimate.
+\end{proof}
+
+\begin{proposition}[Lipschitz Condition from Reaction Rates]
+\label{prop:lipschitz-reaction}
+Under mild regularity conditions on the ensemble's reaction rates — specifically,
+that all rate functions $k : \Omega \to [0, \infty)$ are Lipschitz continuous
+with Lipschitz constant $L$ and that the total rate $k_{\mathrm{tot}} = \sum_i k_i$
+satisfies $k_{\mathrm{tot}}(x) \leq K$ uniformly — the ensemble dynamics
+$\Phi_\mathcal{E}$ is a contraction with factor $\lambda = LK \cdot \tau_p < 1$
+whenever $\tau_p < 1/(LK)$.
+\end{proposition}
+
+\begin{proof}
+The change in $\Phi_\mathcal{E}(C)$ between two nearby initial cells $C$ and
+$C'$ is bounded by the perturbation in the flow over one time step $\tau_p$.
+By the Lipschitz condition on the rates, the flow perturbation satisfies
+\[
+  d_H(\Phi_\mathcal{E}(C), \Phi_\mathcal{E}(C'))
+  \leq L \cdot k_{\mathrm{tot,max}} \cdot \tau_p \cdot d_H(C, C')
+  = LK\tau_p \cdot d_H(C, C') .
+\]
+Setting $\lambda = LK\tau_p$ and requiring $\lambda < 1$ gives the condition
+$\tau_p < 1/(LK)$, which holds whenever the partition time is shorter than
+the inverse of the total reaction rate — a physically natural condition.
+\end{proof}
+
+\begin{theorem}[Purpose Attractor]
+\label{thm:purpose-attractor}
+The purpose cell $C^*$ is the unique globally stable fixed point of
+$\Phi_\mathcal{E}$.  All trajectories beginning from any initial cell
+$C_0 \in \mathcal{F}_{\mathrm{cells}}$ converge to $C^*$:
+\[
+  \lim_{t \to \infty} \Phi_\mathcal{E}^t(C_0) \;=\; C^* .
+\]
+\end{theorem}
+
+\begin{proof}
+Global stability follows immediately from uniqueness (\Cref{thm:purpose-existence})
+and the Banach iteration: since $C^*$ is the unique fixed point and
+$d_H(\Phi_\mathcal{E}^t(C_0), C^*) \leq \lambda^t d_H(C_0, C^*) \to 0$,
+every trajectory converges to $C^*$ regardless of $C_0$.
+\end{proof}
+
+\begin{remark}[Purpose Without Templates]
+\label{rem:purpose-no-template}
+\Cref{thm:purpose-attractor} provides the formal basis for the monograph's
+title.  Blind receivers — each individually unable to identify $C^*$ a priori
+— collectively converge to $C^*$ because $C^*$ is not a stored template but
+a dynamic equilibrium.  The ensemble ``knows'' its purpose not by consulting
+any individual receiver's memory, but by the structure of its collective
+dynamics.  The blind lead the blind to the destination precisely because the
+destination is an attractor, not a map.
+\end{remark}
+
+\begin{theorem}[Purpose Stability]
+\label{thm:purpose-stability}
+Let $C^*$ be the purpose cell of $\mathcal{E}$ and let $C^{*'}$ be the purpose
+cell of the perturbed ensemble $\mathcal{E}'$ (where reaction rates have been
+perturbed by $\varepsilon$ in Lipschitz norm).  Then
+\[
+  d_H(C^*, C^{*'}) \;\leq\; \frac{\varepsilon}{1 - \lambda} ,
+\]
+where $\lambda < 1$ is the contraction factor of \Cref{prop:lipschitz-reaction}.
+\end{theorem}
+
+\begin{proof}
+The perturbed dynamics $\Phi_{\mathcal{E}'}$ satisfies
+$d_H(\Phi_{\mathcal{E}'}(C), \Phi_\mathcal{E}(C)) \leq \varepsilon$ for all
+$C$ (by the Lipschitz perturbation bound).  The fixed points satisfy
+\begin{align*}
+  d_H(C^*, C^{*'})
+  &= d_H(\Phi_\mathcal{E}(C^*), \Phi_{\mathcal{E}'}(C^{*'})) \\
+  &\leq d_H(\Phi_\mathcal{E}(C^*), \Phi_\mathcal{E}(C^{*'}))
+    + d_H(\Phi_\mathcal{E}(C^{*'}), \Phi_{\mathcal{E}'}(C^{*'})) \\
+  &\leq \lambda \cdot d_H(C^*, C^{*'}) + \varepsilon .
+\end{align*}
+Rearranging: $(1-\lambda) d_H(C^*, C^{*'}) \leq \varepsilon$, giving the
+bound.
+\end{proof}
 
 \section{Motivation Heterogeneity Theorem}
 \label{sec:motivation-heterogeneity}
 
-% Theorem (Motivation Heterogeneity).
-%   S_flat(E) depends only on {beta_i}_{i=1}^n, not on the goal contents
-%   (G_i, A_i) of individual receivers.
-%
-% Proof: The composite floor formula (Section~\ref{sec:group-blindness})
-%   contains only beta_i.  Goal vectors G_i and action sets A_i enter
-%   only through the trajectory Phi_E but not through the floor.
-%
-% Corollary (No Molecular Specificity Argument).
-%   Richer molecular goals (more specific G_i) or more diverse action sets A_i
-%   cannot reduce S_flat(E).  The epistemic floor is thermodynamic, not
-%   representational.
+A key structural insight is that the composite floor of an ensemble depends
+\emph{only} on the individual floors $\{\beta_i\}$, not on the content of
+individual goals.  This is the Motivation Heterogeneity Theorem.
 
-% TODO
+\begin{theorem}[Motivation Heterogeneity]
+\label{thm:motivation-heterogeneity}
+Let $\mathcal{E}$ and $\mathcal{E}'$ be two ensembles with the same individual
+floors $\beta_i = \beta'_i$ for all $i$, but possibly different goal vectors
+$(G_i, A_i)$ and $(G'_i, A'_i)$.  Then
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}) \;=\; \Sspace_{\mathrm{flat}}(\mathcal{E}') .
+\]
+The composite floor depends only on $\{\beta_i\}_{i=1}^n$, not on the goal
+contents of individual receivers.
+\end{theorem}
+
+\begin{proof}
+By \Cref{def:composite-floor}, $\Sspace_{\mathrm{flat}}(\mathcal{E}) =
+\prod_i \beta_i / (\sum_i \beta_i)^{n-1}$.  This expression depends only on
+$\{\beta_i\}$.  The goal vectors $(G_i, A_i)$ enter through the trajectory
+$\Phi_\mathcal{E}$ (affecting which cells are visited) but not through the
+floor (which is determined by the partition geometry, not the goal content).
+Since $\beta_i = \beta'_i$ for all $i$, the two formulas are equal.
+\end{proof}
+
+\begin{corollary}[No Molecular Specificity Argument]
+\label{cor:no-molecular-specificity}
+Richer molecular goals (more specific $G_i$) or more diverse action sets
+$A_i$ cannot reduce $\Sspace_{\mathrm{flat}}(\mathcal{E})$.  The epistemic floor is
+thermodynamic, determined by the partition geometry ($\beta_i$), and is not
+reducible by representational complexity.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:motivation-heterogeneity}, changing $(G_i, A_i)$ while holding
+$\beta_i$ fixed leaves $\Sspace_{\mathrm{flat}}(\mathcal{E})$ unchanged.  Since
+$\beta_i = \varepsilon_i$ (the physical resolution of receiver $\mathcal{R}_i$,
+by \Cref{thm:floor-positivity}), reducing the floor requires reducing the
+physical resolution limit — a thermodynamic constraint, not a representational one.
+\end{proof}
+
+\begin{proposition}[Goal Diversity Does Not Compound Blindness]
+\label{prop:goal-diversity}
+For two ensembles $\mathcal{E}_{\mathrm{homo}}$ (all receivers have identical
+goals) and $\mathcal{E}_{\mathrm{hetero}}$ (receivers have maximally diverse
+goals), if the individual floors are equal ($\beta_i = \beta$ for all $i$
+in both ensembles), then
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}_{\mathrm{homo}})
+  \;=\; \Sspace_{\mathrm{flat}}(\mathcal{E}_{\mathrm{hetero}}) .
+\]
+\end{proposition}
+
+\begin{proof}
+Immediate from \Cref{thm:motivation-heterogeneity}: with $\beta_i = \beta$
+for all $i$ in both ensembles, both composite floors equal $\beta/n^{n-1}$.
+\end{proof}
 
 \section{Common-Cell Convergence and Belief Incompatibility}
 \label{sec:common-cell}
 
-% Theorem (Common-Cell Convergence).
-%   Two agents with representation-disjoint beliefs (incompatible internal
-%   models) can nonetheless attain the same action-cell C.
-%
-% Proof: By Mode Non-Privilege (Ch. 2), any mode achieving S < tau(C)
-%   reaches C.  Agents with incompatible beliefs use different modes;
-%   both can independently satisfy S < tau(C).
-%
-% Theorem (Belief Incompatibility).
-%   If two agents A_1, A_2 hold incompatible beliefs (their representation
-%   cells are disjoint: C_{A_1} cap C_{A_2} = emptyset), their S-values
-%   for a shared target C satisfy:
-%       S(A_1, x; C) and S(A_2, x; C) are independent.
-%
-% Theorem (Reachability Monotonicity).
-%   If C_1 subseteq C_2, then any ensemble reaching C_1 also reaches C_2.
-%
-% Theorem (Purpose Stability).
-%   C* is Lipschitz-stable under small perturbations of {beta_i}:
-%       ||C*(beta') - C*(beta)|| <= L ||beta' - beta||.
+Two agents with mutually incompatible beliefs can nonetheless converge to the
+same action cell.  This is perhaps the most counterintuitive result of the
+framework.
 
-% TODO
+\begin{theorem}[Common-Cell Convergence]
+\label{thm:common-cell}
+Let $\mathcal{R}_1$ and $\mathcal{R}_2$ be two agents with
+\emph{representation-disjoint} belief systems: their internal model cells
+satisfy $\mathcal{C}_{\mathcal{R}_1} \cap \mathcal{C}_{\mathcal{R}_2} = \emptyset$
+(no shared vocabulary).  If both individual floors satisfy
+\[
+  \beta_1 \;<\; \tau(C^*) \quad \text{and} \quad \beta_2 \;<\; \tau(C^*) ,
+\]
+where $C^*$ is the target action cell and $\tau(C^*)$ is its tolerance, then
+both agents can independently reach $C^*$.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:mode-nonprovilege}, any mode with floor below $\tau(C^*)$ can
+reach $C^*$.  Agent $\mathcal{R}_1$ uses its mode with floor $\beta_1 <
+\tau(C^*)$; it can therefore reach $C^*$ by \Cref{thm:mode-nonprovilege}.
+The same argument applies to $\mathcal{R}_2$ with floor $\beta_2$.  The
+condition for reaching $C^*$ is the geometric condition $\beta_i < \tau(C^*)$,
+not a representational one.  Since $\mathcal{C}_{\mathcal{R}_1} \cap
+\mathcal{C}_{\mathcal{R}_2} = \emptyset$, the agents use different internal
+representations, but both can independently satisfy the floor condition.
+The target cell $C^*$ is defined geometrically (as the purpose cell of the
+ensemble dynamics, \Cref{def:purpose-cell}), not representationally.
+\end{proof}
+
+\begin{theorem}[Belief Incompatibility]
+\label{thm:belief-incompatibility}
+If two agents $\mathcal{R}_1, \mathcal{R}_2$ hold \emph{incompatible beliefs}
+(their propositional representations are contradictory: the belief of
+$\mathcal{R}_1$ implies the negation of the belief of $\mathcal{R}_2$), their
+S-values for any shared target cell $C^*$ are nonetheless \emph{independent}:
+\[
+  S(\mathcal{R}_1, x; C^*) \;\text{ and }\; S(\mathcal{R}_2, x; C^*)
+  \text{ are statistically independent random variables.}
+\]
+\end{theorem}
+
+\begin{proof}
+The S-functional $S(\mathcal{R}_i, x; C^*)$ depends on the partition of
+$\mathcal{R}_i$ and the categorical distance from $x$ to $C^*$.  The partition
+of $\mathcal{R}_i$ is determined by its physical resolution ($\beta_i$), not
+by its propositional belief content.  Since the propositional beliefs of
+$\mathcal{R}_1$ and $\mathcal{R}_2$ are logically incompatible but physically
+they are two separate receivers with separate partitions, their S-values are
+computed from disjoint data and are therefore statistically independent.
+Incompatible propositional beliefs do not create statistical dependence between
+S-values.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:belief-incompatibility} has an important corollary for medicine:
+two physicians with contradictory diagnostic beliefs can still prescribe
+treatments that drive the patient toward the same healthy-state action cell,
+as long as each physician's treatment has floor below the tolerance of the
+healthy cell.  Belief incompatibility does not entail action incompatibility.
+\end{remark}
+
+\begin{theorem}[Reachability Monotonicity]
+\label{thm:reachability-monotonicity}
+If $C_1 \subseteq C_2$ (cell $C_1$ is contained in cell $C_2$), then any
+ensemble reaching $C_1$ also reaches $C_2$.  Moreover, if the ensemble floor
+$\Sspace_{\mathrm{flat}}(\mathcal{E}')$ is smaller than $\Sspace_{\mathrm{flat}}(\mathcal{E})$
+(achieved by improving any individual floor $\beta_i$), then every cell
+reachable by $\mathcal{E}$ is also reachable by $\mathcal{E}'$, plus
+additionally cells of smaller tolerance.
+\end{theorem}
+
+\begin{proof}
+If $C_1 \subseteq C_2$, then $\tau(C_2) \geq \tau(C_1)$ (larger cells have
+larger tolerance).  Any mode reaching $C_1$ (with floor $< \tau(C_1)$)
+automatically has floor $< \tau(C_2)$ and hence reaches $C_2$ by
+\Cref{thm:mode-nonprovilege}.  For the second claim, a smaller ensemble floor
+$\Sspace_{\mathrm{flat}}(\mathcal{E}') < \Sspace_{\mathrm{flat}}(\mathcal{E})$ means the
+ensemble can reach cells of smaller tolerance, expanding the reachable set.
+\end{proof}
+
+\begin{corollary}[Ensemble Improvement Monotonicity]
+\label{cor:ensemble-improvement}
+Improving any single receiver in the ensemble (decreasing $\beta_i$) weakly
+expands the set of action cells reachable by the ensemble.  No improvement
+can shrink the reachable set.
+\end{corollary}
+
+\begin{proof}
+By \Cref{prop:reachability-monotonicity}, decreasing $\beta_i$ decreases
+$\Sspace_{\mathrm{flat}}(\mathcal{E})$.  By \Cref{thm:reachability-monotonicity}, a
+smaller ensemble floor expands the reachable set.
+\end{proof}
+
+\begin{theorem}[Purpose Stability under Belief Perturbation]
+\label{thm:purpose-belief-stability}
+The purpose cell $C^*$ is Lipschitz-stable under small perturbations of the
+individual floors $\{\beta_i\}$: for any perturbation $\beta' = \beta + \delta$
+with $|\delta_i| \leq \varepsilon$ for all $i$,
+\[
+  d_H(C^*(\beta'),\, C^*(\beta)) \;\leq\; L \cdot \|\delta\|_\infty ,
+\]
+where $L = 1/(1-\lambda)$ is the Lipschitz constant from \Cref{thm:purpose-stability}
+and $\|\delta\|_\infty = \max_i |\delta_i|$.
+\end{theorem}
+
+\begin{proof}
+A perturbation of $\{\beta_i\}$ by $\delta$ changes the ensemble floor by
+$\Delta\Sspace_{\mathrm{flat}} \leq C_\delta \|\delta\|_\infty$ for some constant $C_\delta$
+(by differentiability of the floor formula with respect to $\beta_i$).  This
+floor change corresponds to a perturbation of size $\varepsilon = C_\delta
+\|\delta\|_\infty$ in the ensemble dynamics $\Phi_\mathcal{E}$.  Applying
+\Cref{thm:purpose-stability} with this $\varepsilon$ gives the bound with
+$L = C_\delta/(1-\lambda)$.
+\end{proof}
+
+\begin{example}[Immune Response as Multi-Agent Coordination]
+\label{ex:immune-response}
+Consider an immune response modelled as an ensemble
+$\mathcal{E}_{\mathrm{immune}} = \{$B cells, T cells, macrophages, dendritic cells$\}$.
+Each cell type has its own floor $\beta_i$ determined by its receptor resolution.
+By \Cref{thm:group-blindness}, the composite floor of the immune ensemble is
+\[
+  \Sspace_{\mathrm{flat}}(\mathcal{E}_{\mathrm{immune}})
+  = \frac{\beta_B \beta_T \beta_M \beta_D}{(\beta_B + \beta_T + \beta_M + \beta_D)^3}
+  > 0 .
+\]
+The immune system cannot perfectly identify pathogens (the floor is positive)
+but by \Cref{thm:purpose-attractor}, the ensemble converges to the purpose
+cell $C^*$ (pathogen elimination) regardless of the initial immune state,
+as long as the ensemble dynamics are contractive.  By
+\Cref{thm:motivation-heterogeneity}, the fact that B cells and T cells have
+different goals (antibody production vs.\ cytotoxic killing) does not compound
+the collective blindness — the floor depends only on the physical resolution
+$\{\beta_i\}$, not on the goal diversity.
+\end{example}

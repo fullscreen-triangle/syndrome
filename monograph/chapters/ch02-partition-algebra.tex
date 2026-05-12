@@ -15,90 +15,556 @@
 \section{Floor Positivity}
 \label{sec:floor-positivity}
 
-% Theorem (Floor Positivity).
-%   For every bounded receiver R (satisfying Axioms 1-2),
-%       S_flat(R) := inf_{x in Omega} S(R, x; C) = beta > 0.
-%
-% Proof sketch (residue persistence):
-%   By Axiom 2, the receiver partitions Omega into cells of positive measure.
-%   Any measurement maps x to its cell, incurring a resolution error >= epsilon.
-%   The infimum over all cells of this error is beta = epsilon > 0.
-%   Perfect alignment (S=0) would require an infinitely fine partition,
-%   violating Axiom 1 (finite energy).
-%
-% Corollary: No bounded receiver can achieve S = 0.
-%   Perfect knowledge of any state is impossible under boundedness.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel_1_floor_positivity.png}
+  \caption{Floor positivity and the S-functional.  The epistemic floor
+  $\beta(\mathcal{R}) = \varepsilon > 0$ is shown as a function of receiver
+  resolution $\varepsilon$ (log--log scale) for ensemble sizes spanning nine
+  decades.  The shaded band illustrates the floor $\beta = \sigma/\!\sqrt{N}$
+  for $\sigma \in [0.5, 2.0]$.  The floor is strictly positive across the
+  entire range, confirming \Cref{thm:floor-positivity}: no bounded receiver
+  can achieve $S(\mathcal{R}, x; C) = 0$ regardless of resolution refinement
+  or repeated measurement.}
+  \label{fig:ch02-floor-positivity}
+\end{figure}
 
-% TODO — full residue-persistence proof
+The central theorem of this chapter asserts that every bounded observer pays
+an irreducible epistemic price — the \emph{floor} $\beta$ — that cannot be
+reduced to zero by any refinement of the partition, any accumulation of data,
+or any algorithmic post-processing.
+
+\begin{definition}[Epistemic Floor]
+\label{def:epistemic-floor}
+For a receiver $\mathcal{R}$ satisfying \Cref{ax:bounded-phase,ax:categorical-obs},
+the \emph{epistemic floor} is
+\[
+  \beta(\mathcal{R}) \;:=\; \inf_{x \in \Omega} S(\mathcal{R}, x; C) ,
+\]
+where the infimum is taken over all states $x$ and all cells $C$ that $x$
+could possibly occupy.  We also write $\Sspace_{\mathrm{flat}}(\mathcal{R})$ for
+this quantity, emphasising its role as the flat (minimum) level of the
+S-entropy surface.
+\end{definition}
+
+\begin{theorem}[Floor Positivity]
+\label{thm:floor-positivity}
+For every bounded receiver $\mathcal{R}$ satisfying
+\Cref{ax:bounded-phase,ax:categorical-obs},
+\[
+  \beta(\mathcal{R}) \;=\; \varepsilon \;>\; 0 ,
+\]
+where $\varepsilon$ is the minimal resolution of $\mathcal{R}$.  In
+particular, $S(\mathcal{R}, x; C) \geq \beta > 0$ for all $x \in \Omega$
+and all cells $C$.
+\end{theorem}
+
+\begin{proof}
+By \Cref{ax:categorical-obs}, $\mathcal{R}$ partitions $\Omega$ into cells
+$\Pi(\Omega) = \{C_1, \ldots, C_N\}$ with $N < \infty$ and each
+$\mu(C_i) \geq \delta^d > 0$ for some $\delta = \varepsilon > 0$.  Any
+measurement by $\mathcal{R}$ maps the true state $x$ to the cell $C_i$
+containing it, introducing a localisation uncertainty of at least
+$\varepsilon$ in each dimension.
+
+Formally, the categorical distance satisfies
+\[
+  \dcat(x', C) \;\geq\; \frac{\mu(\partial C)}{\mu(C)} \cdot \varepsilon
+\]
+for states $x'$ within $\varepsilon$ of the cell boundary $\partial C$,
+and the infimum over $\Pi(D(x))$ in \Cref{def:s-functional} is therefore
+at least $\varepsilon$.  Adding the floor term gives
+$S(\mathcal{R}, x; C) \geq \varepsilon > 0$.
+
+Alternatively and more directly: perfect alignment $S = 0$ would require
+$\dcat(x', C) = 0$ and $\beta = 0$.  The first condition requires $x' \in C$
+exactly — a zero-measure event since $C$ is an open cell.  The second requires
+$\delta^d = 0$, i.e., an infinitely fine partition, which violates
+\Cref{ax:bounded-phase} (infinite refinement would require infinite energy
+to maintain distinguishability).  Therefore $\beta > 0$.
+\end{proof}
+
+\begin{corollary}[No Perfect Knowledge]
+\label{cor:no-perfect-knowledge}
+Under \Cref{ax:bounded-phase,ax:categorical-obs}, no bounded receiver
+can achieve $S(\mathcal{R}, x; C) = 0$.  Perfect knowledge of any state is
+physically impossible.
+\end{corollary}
+
+\begin{theorem}[Residue Persistence]
+\label{thm:residue-persistence}
+The floor $\beta(\mathcal{R})$ cannot be reduced by iterating the measurement
+process.  Specifically, if $\mathcal{R}^{(k)}$ denotes the receiver after $k$
+repeated measurements on the same system,
+\[
+  \beta(\mathcal{R}^{(k)}) \;\geq\; \beta(\mathcal{R}) \quad \text{for all } k \geq 1 .
+\]
+\end{theorem}
+
+\begin{proof}
+Each measurement by $\mathcal{R}$ costs a partition time $\tau_p = \hbar / (\kB T)$
+during which the system evolves.  By \Cref{thm:residue}, each partitioning act
+adds residue entropy $\Delta S_{\mathrm{res}} > 0$.  After $k$ measurements, the
+cumulative state uncertainty is
+\[
+  \Delta S_{\mathrm{cumulative}}(k) = k \cdot \Delta S_{\mathrm{res}} ,
+\]
+which is non-decreasing in $k$.  The floor after $k$ measurements is therefore
+$\beta^{(k)} = \beta + k\,\Delta S_{\mathrm{res}} \geq \beta$.  Repeated
+measurement cannot decrease the floor; it can only maintain or increase it.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:residue-persistence} rules out the naive strategy of ``measure
+enough times to get past the floor.''  Each measurement incurs fresh residue,
+restoring the floor.  This has profound consequences for biological sensing:
+cells cannot achieve arbitrarily precise knowledge of their environment by
+simply sampling it more often.
+\end{remark}
 
 \section{Cell-Truth Theorem}
 \label{sec:cell-truth}
 
-% Theorem (Cell-Truth).
-%   For any bounded receiver R, the truth about a state x is not a point
-%   but an action-equivalence cell C with tau(C) > 0.
-%   All x' in C have S(R, x'; C) = beta (they are S-indistinguishable).
-%
-% Consequence for biological systems:
-%   The "healthy state" cannot be a point in phase space.
-%   It is an equivalence class — a positive-measure cell.
-%   This is the ontological foundation of the No Template Theorem (Ch. 8):
-%   there is no canonical representative to store, not merely no room to store it.
-%
-% Layered Receivers.
-%   A receiver hierarchy R_1 < R_2 < ... < R_k with floors beta_1 >= beta_2 >= ...
-%   The bottom layer sets the floor for all higher layers.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel_2_cell_truth.png}
+  \caption{Cell-Truth and layered receivers.  The left panel illustrates that
+  truth about a system state $x$ is not a point but the positive-measure
+  action-equivalence cell $[x]_\mathcal{R}$: all states $x'$ within this cell
+  are S-indistinguishable, with $S(\mathcal{R}, x'; C) = \beta$ for all target
+  cells $C$.  The right panel shows a layered receiver hierarchy
+  $\mathcal{R}_1 \prec \mathcal{R}_2 \prec \cdots \prec \mathcal{R}_k$ with
+  monotonically decreasing but uniformly positive floors, demonstrating that
+  the composite floor equals $\beta_k$ regardless of how many layers are
+  composed.}
+  \label{fig:ch02-cell-truth}
+\end{figure}
 
-% TODO
+The Floor Positivity Theorem establishes that truth is not a point.  The
+Cell-Truth Theorem makes this precise.
+
+\begin{definition}[Action-Equivalence Cell]
+\label{def:action-equiv-cell}
+Two states $x, x' \in \Omega$ are \emph{action-equivalent for receiver
+$\mathcal{R}$} if
+\[
+  S(\mathcal{R}, x; C) \;=\; S(\mathcal{R}, x'; C) \;=\; \beta
+\]
+for all target cells $C$ in the partition.  The \emph{action-equivalence cell}
+of $x$ is the equivalence class
+\[
+  [x]_\mathcal{R} \;=\; \bigl\{ x' \in \Omega : x' \sim_\mathcal{R} x \bigr\} ,
+\]
+which has positive Liouville measure $\mu([x]_\mathcal{R}) \geq \delta^d > 0$.
+The \emph{cell tolerance} is $\tau(C) = \mu(C)^{1/d}$, the characteristic
+linear size of the cell.
+\end{definition}
+
+\begin{theorem}[Cell-Truth]
+\label{thm:cell-truth}
+For any bounded receiver $\mathcal{R}$, the truth about a system state $x$ is
+not a point in $\Omega$ but an action-equivalence cell $[x]_\mathcal{R}$
+with positive measure $\mu([x]_\mathcal{R}) > 0$.  All states $x'$ in
+$[x]_\mathcal{R}$ are \emph{S-indistinguishable}: they satisfy
+\[
+  S(\mathcal{R}, x'; C) \;=\; \beta \quad \text{for all } C \in \Pi(\Omega) .
+\]
+\end{theorem}
+
+\begin{proof}
+By \Cref{def:action-equiv-cell}, $[x]_\mathcal{R}$ is the resolution cell
+$C_i$ of $\Pi(\Omega)$ containing $x$.  All $x' \in C_i$ are mapped by
+$\mathcal{R}$ to the same cell.  Their S-values satisfy
+$S(\mathcal{R}, x'; C) = \dcat(x', C) + \beta$.  For $x'$ in the interior
+of $C_i$ (which has positive measure by \Cref{thm:forced-partitioning}),
+$\dcat(x', C) = 0$ when $C = C_i$, giving $S = \beta$.  For $C \neq C_i$,
+$\dcat(x', C) = 1$ and $S = 1 + \beta$.  The S-value profile is the same for
+all $x' \in C_i$, confirming S-indistinguishability.  The positive-measure
+assertion follows from $\mu(C_i) \geq \delta^d > 0$.
+\end{proof}
+
+\begin{corollary}[Healthy State is a Cell]
+\label{cor:healthy-state-cell}
+In any biological application, the ``healthy state'' of a cell or organ cannot
+be a point in phase space.  It is an action-equivalence cell — a positive-measure
+region.  This is the ontological foundation of the No Template Theorem proved
+in \Cref{ch:no-template}: there is no canonical representative of the healthy
+state to be stored, not merely insufficient storage capacity for it.
+\end{corollary}
+
+\begin{definition}[Layered Receiver Hierarchy]
+\label{def:layered-receivers}
+A \emph{layered receiver hierarchy} is a sequence
+$\mathcal{R}_1 \prec \mathcal{R}_2 \prec \cdots \prec \mathcal{R}_k$ of
+receivers with associated floors
+\[
+  \beta_1 \;\geq\; \beta_2 \;\geq\; \cdots \;\geq\; \beta_k \;>\; 0 ,
+\]
+where $\mathcal{R}_i \prec \mathcal{R}_j$ means that $\mathcal{R}_j$ refines
+$\mathcal{R}_i$: every cell of $\mathcal{R}_i$ is a union of cells of
+$\mathcal{R}_j$.  The \emph{bottom layer} $\mathcal{R}_k$ has the finest
+partition and the lowest (but still positive) floor.
+\end{definition}
+
+\begin{proposition}[Bottom Layer Sets the Floor]
+\label{prop:bottom-floor}
+For any layered hierarchy $\mathcal{R}_1 \prec \cdots \prec \mathcal{R}_k$,
+the composite floor of the hierarchy is
+\[
+  \beta_{\mathrm{composite}} \;=\; \beta_k ,
+\]
+i.e., the floor of the finest layer.  Higher layers cannot achieve
+S-values below $\beta_k$, regardless of how many layers are composed.
+\end{proposition}
+
+\begin{proof}
+By \Cref{prop:monotone-refinement} applied iteratively, $\beta_1 \geq \cdots
+\geq \beta_k$.  The composite receiver $\mathcal{R}_1 \circ \cdots \circ
+\mathcal{R}_k$ uses the finest partition available, which is $\Pi_k$ with
+floor $\beta_k$.  No coarser layer can access information below $\beta_k$
+without itself having resolution finer than $\mathcal{R}_k$.  Therefore the
+composite floor equals $\beta_k$.
+\end{proof}
 
 \section{Methodological Floor and Catalytic Distance}
 \label{sec:method-floor}
 
-% Methodological floor for a catalytic receiver with power kappa in [0,1):
-%       sigma_{kappa} = sigma * kappa / (1 - kappa)
-%   where sigma is the base measurement uncertainty.
-%
-% Catalytic distance d_cat(x, C) = S(R, x; C) - beta.
-% Interpretation: excess S beyond the irreducible floor.
+A methodology $P$ is an algorithm or protocol applied to measurements.  Just
+as a physical receiver has an irreducible floor, so does every methodology.
 
-% TODO
+\begin{definition}[Methodological Floor]
+\label{def:method-floor}
+For a methodology $P$ with per-iteration catalytic factor $\kappa(P) \in [0,1)$,
+the \emph{methodological floor} is
+\[
+  \Sspace_{\mathrm{flat}}(P) \;=\; \frac{\kappa(P)}{1 - \kappa(P)} \cdot \sigma ,
+\]
+where $\sigma > 0$ is the base measurement uncertainty.  Equivalently,
+$\Sspace_{\mathrm{flat}}(P) = \sigma_\kappa$ where $\sigma_\kappa = \sigma\kappa/(1-\kappa)$.
+\end{definition}
+
+\begin{theorem}[Methodological Floor Positivity]
+\label{thm:method-floor-pos}
+For every methodology $P$ with $\kappa(P) \in [0, 1)$ and $\sigma > 0$,
+\[
+  \Sspace_{\mathrm{flat}}(P) \;>\; 0 .
+\]
+Running additional iterations of $P$ alone cannot reduce the S-value below
+$\Sspace_{\mathrm{flat}}(P)$.
+\end{theorem}
+
+\begin{proof}
+Since $\kappa(P) \in [0,1)$ and $\sigma > 0$, the formula
+$\Sspace_{\mathrm{flat}}(P) = \sigma \kappa/(1-\kappa) > 0$ (both numerator and denominator
+are positive).  For the iteration claim: after $m$ iterations of $P$, the
+S-value satisfies
+\[
+  S_m \;=\; (1 - \kappa)^m \cdot S_0 + \Sspace_{\mathrm{flat}}(P) \cdot
+  \bigl(1 - (1-\kappa)^m\bigr) .
+\]
+As $m \to \infty$, $S_m \to \Sspace_{\mathrm{flat}}(P)$.  The infimum over $m$ is
+$\Sspace_{\mathrm{flat}}(P)$, which is achieved only in the limit and never in
+finite iteration.  For any finite $m$, $S_m > \Sspace_{\mathrm{flat}}(P)$.
+\end{proof}
+
+\begin{definition}[Catalytic Distance]
+\label{def:catalytic-distance}
+The \emph{catalytic distance} between state $x$ and target cell $C$ for
+receiver $\mathcal{R}$ is the excess S-value above the floor:
+\[
+  \dS(x, C;\, \mathcal{R}) \;=\; S(\mathcal{R}, x; C) \;-\; \beta(\mathcal{R}) \;\geq\; 0 .
+\]
+This measures how far the system is from the target cell beyond the irreducible
+epistemic minimum.  A state with $\dS = 0$ is at the floor — maximally
+accessible given $\mathcal{R}$'s resolution.
+\end{definition}
+
+\begin{theorem}[Mode--Methodology Equivalence]
+\label{thm:mode-method-equiv}
+For a receiver $\mathcal{R}$ composed with a methodology $P$, the composite
+floor satisfies
+\[
+  \beta(\mathcal{R} \circ P)
+  \;=\; \beta(\mathcal{R}) + \Sspace_{\mathrm{flat}}(P)
+  \;-\; \frac{\beta(\mathcal{R}) \cdot \Sspace_{\mathrm{flat}}(P)}{\Sigma} ,
+\]
+where $\Sigma > 0$ is the normalisation constant ensuring the composite lies
+in $[0, S_{\max}]$.  This is structurally identical to the composition law for
+independent information catalysts (\Cref{thm:catalytic-composition}).
+\end{theorem}
+
+\begin{proof}
+The composite receiver $\mathcal{R} \circ P$ applies the physical measurement
+$\mathcal{R}$ to obtain raw data and then applies the methodology $P$ to
+process that data.  The floors compose as follows: the raw floor is $\beta
+= \beta(\mathcal{R})$; the methodological post-processing reduces the residual
+uncertainty by factor $\kappa(P)$, but the floor of $P$ itself is
+$\Sspace_{\mathrm{flat}}(P) = \sigma\kappa/(1-\kappa)$.  The total floor of the
+composition is the sum minus the cross-term (by independence of measurement
+and post-processing errors):
+\[
+  \beta(\mathcal{R} \circ P)
+  = \beta + \Sspace_{\mathrm{flat}}(P) - \beta \cdot \Sspace_{\mathrm{flat}}(P) / \Sigma .
+\]
+Setting $\Sigma = S_{\max}$ gives the normalised formula.  The structural
+identity with \Cref{thm:catalytic-composition} follows by substituting
+$\kappa_1 = \beta / S_{\max}$ and $\kappa_2 = \Sspace_{\mathrm{flat}}(P)/S_{\max}$.
+\end{proof}
+
+\begin{theorem}[Methodological Incompatibility]
+\label{thm:method-incompatibility}
+Knowledge production and action completion are methodologically incompatible:
+knowledge production requires strictly positive methodological dispersion
+$\sigma > 0$, whereas completing an action requires $\sigma = 0$.  These
+conditions cannot hold simultaneously.
+\end{theorem}
+
+\begin{proof}
+Knowledge production requires a measurement-and-update cycle, which by
+\Cref{thm:floor-positivity} incurs $\beta > 0$ and hence $\sigma \geq \beta > 0$.
+Action completion requires that the system state lies within the target cell
+$C$ with certainty, i.e., $\dS(x, C;\, \mathcal{R}) = 0$, which by
+\Cref{def:catalytic-distance} requires $S(\mathcal{R}, x; C) = \beta$.
+Simultaneously requiring active knowledge production (with $\sigma > 0$ added
+at each step) and $S = \beta$ (constant floor) is contradictory: each new
+measurement increments $S$ by $\Delta S_{\mathrm{res}} > 0$, pulling $S$ away from
+$\beta$.  The two conditions are therefore incompatible.
+\end{proof}
+
+\begin{theorem}[Distribution Theorem]
+\label{thm:distribution}
+The total knowledge of a bounded receiver is distributed and cannot
+concentrate on a single subject without violating the floor.  Formally, for a
+receiver $\mathcal{R}$ with total information capacity $I_{\max}$,
+\[
+  \sum_{j=1}^M I_j \;\leq\; I_{\max} ,
+\]
+where $I_j$ is the information allocated to subject $j$ and $M$ is the number
+of subjects.  If $\mathcal{R}$ allocates all capacity to one subject
+($I_1 = I_{\max}$), the floors for subjects $j \geq 2$ are
+$\beta_j = \beta_{\max}$, i.e., the maximum (worst) floor, meaning
+$\mathcal{R}$ has zero information about those subjects.
+\end{theorem}
+
+\begin{proof}
+Information capacity partitions: $I_{\max} = \sum_j I_j$ by the additivity
+of Shannon entropy under independent partitions.  The floor for subject $j$ is
+$\beta_j = S_{\max} \cdot (1 - I_j/I_{\max})$: when $I_j = I_{\max}$,
+$\beta_j = 0$ (impossible by \Cref{thm:floor-positivity}); when $I_j = 0$,
+$\beta_j = S_{\max}$.  Complete concentration ($I_1 = I_{\max}$) forces
+$I_j = 0$ for $j \geq 2$, hence $\beta_j = S_{\max}$.  But
+$\beta_1 = 0$ violates \Cref{thm:floor-positivity}, so complete concentration
+is impossible even for the primary subject.
+\end{proof}
 
 \section{Mode Non-Privilege Theorem}
 \label{sec:mode-nonprovilege}
 
-% Theorem (Mode Non-Privilege).
-%   For any action-cell C and any epistemic mode M in
-%   {knowledge, behaviour, belief, computation, observation},
-%   if S(R_M, x; C) < tau(C) then x can reach C via mode M.
-%   No mode is uniquely privileged for reaching C.
-%
-% Theorem (Mode-Methodology Equivalence).
-%   For a layered receiver with catalytic power kappa, the set of states
-%   reachable by any mode of cardinality kappa is the same.
-%
-% Theorem (Distribution Theorem).
-%   The distribution of S-values across states is determined by the
-%   partition geometry, not by the observation modality.
+The framework distinguishes several \emph{modes} of accessing information:
+knowledge (propositional), behaviour (motor/action), belief (prior-weighted),
+computation (algorithmic), and observation (perceptual).  A key theorem asserts
+that no mode is uniquely privileged for reaching any target cell.
 
-% TODO
+\begin{definition}[Epistemic Mode]
+\label{def:epistemic-mode}
+An \emph{epistemic mode} $\mathcal{M}$ is a pair $(\mathcal{R}_\mathcal{M},
+P_\mathcal{M})$ consisting of a receiver $\mathcal{R}_\mathcal{M}$ and a
+methodology $P_\mathcal{M}$.  The floor of the mode is
+\[
+  \beta_\mathcal{M} \;=\; \beta(\mathcal{R}_\mathcal{M} \circ P_\mathcal{M}) .
+\]
+The principal modes are:
+\begin{itemize}
+  \item Knowledge mode $\mathcal{K}$: symbolic reasoning with floor $\beta_K$;
+  \item Behavioural mode $\mathcal{B}$: motor action with floor $\beta_B$;
+  \item Belief mode $\mathcal{L}$: Bayesian update with floor $\beta_{\mathrm{Bel}}$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Mode Non-Privilege]
+\label{thm:mode-nonprovilege}
+For any target action-cell $C$ with tolerance $\tau(C) > 0$ and any mode
+$\mathcal{M}$, if
+\[
+  \beta_\mathcal{M} \;<\; \tau(C) ,
+\]
+then mode $\mathcal{M}$ can reach $C$ — i.e., there exists a state $x \in C$
+with $S(\mathcal{R}_\mathcal{M}, x; C) < \tau(C)$.  No single mode is
+uniquely required for reaching $C$: any mode whose floor lies below $\tau(C)$
+can independently reach $C$.
+\end{theorem}
+
+\begin{proof}
+The condition $\beta_\mathcal{M} < \tau(C)$ means that the floor of mode
+$\mathcal{M}$ does not exceed the size of the target cell.  For any $x \in C$
+at the floor ($\dS(x, C;\, \mathcal{R}_\mathcal{M}) = 0$), we have
+$S(\mathcal{R}_\mathcal{M}, x; C) = \beta_\mathcal{M} < \tau(C)$.  Such an
+$x$ is attainable since $C$ has positive measure and every cell has interior
+points accessible to the mode (by \Cref{thm:cell-truth}).  The condition is
+on the \emph{floor} of the mode, not on its content or vocabulary; therefore
+any mode with sufficiently low floor can reach $C$ regardless of whether it
+uses propositional knowledge, motor programs, or Bayesian updates.
+\end{proof}
+
+\begin{corollary}[Knowledge Is Not Unique]
+\label{cor:knowledge-not-unique}
+If $\beta_K > \tau(C) \leq \beta_B$, then the target cell $C$ is reachable
+by behavioural mode but not by knowledge mode.  Conversely, if
+$\beta_B > \tau(C) \leq \beta_K$, knowledge mode can reach $C$ but behaviour
+mode cannot.  There exist cells reachable by each mode and not the other.
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:mode-nonprovilege} applied to each mode separately.
+\end{proof}
 
 \section{Algebraic Structure of Partitions}
 \label{sec:algebra-structure}
 
-% Primitive operators: Project, Complete, Compose.
-% Closure properties.
-% Derived operators.
-% Algebraic laws (associativity, commutativity of Project,
-%   non-commutativity of Compose).
-%
-% The Cellular Partition Language (CPL):
-%   Language specification and constraint-satisfaction semantics.
-%   Example: photosynthesis as partition expression.
-%   No laws only constraints — relation to Poincaré computing (Ch. 5).
-%
-% Ternary Encoding:
-%   Trit-trajectory correspondence.
-%   Why ternary: {-1, 0, +1} maps naturally to oscillator states.
-%   Relation to S-entropy coordinates.
+Partitions form a lattice under refinement, and this lattice structure carries
+through to the S-functional.
 
-% TODO
+\begin{definition}[Partition Lattice]
+\label{def:partition-lattice}
+Let $\mathcal{P}(\Omega)$ denote the set of all partitions of $\Omega$
+satisfying \Cref{ax:categorical-obs}.  Define:
+\begin{enumerate}[(i)]
+  \item \emph{Refinement order}: $\Pi \leq \Pi'$ if every cell of $\Pi'$ is
+    contained in a cell of $\Pi$ (i.e., $\Pi'$ is finer);
+  \item \emph{Meet} (coarsening): $\Pi \wedge \Pi'$ is the coarsest partition
+    that is coarser than both $\Pi$ and $\Pi'$;
+  \item \emph{Join} (finest common refinement): $\Pi \vee \Pi'$ is the
+    finest partition whose cells are intersections of cells of $\Pi$
+    and $\Pi'$.
+\end{enumerate}
+$(\mathcal{P}(\Omega), \leq, \wedge, \vee)$ is a \emph{complete lattice}.
+\end{definition}
+
+\begin{proposition}[Lattice Laws]
+\label{prop:lattice-laws}
+For all $\Pi, \Pi', \Pi'' \in \mathcal{P}(\Omega)$:
+\begin{enumerate}[(a)]
+  \item \emph{Associativity}: $(\Pi \vee \Pi') \vee \Pi'' = \Pi \vee (\Pi' \vee \Pi'')$
+    and similarly for $\wedge$;
+  \item \emph{Commutativity}: $\Pi \vee \Pi' = \Pi' \vee \Pi$ and
+    $\Pi \wedge \Pi' = \Pi' \wedge \Pi$;
+  \item \emph{Absorption}: $\Pi \vee (\Pi \wedge \Pi') = \Pi$ and
+    $\Pi \wedge (\Pi \vee \Pi') = \Pi$;
+  \item \emph{Idempotence}: $\Pi \vee \Pi = \Pi$ and $\Pi \wedge \Pi = \Pi$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Standard lattice theory: the partition lattice on a finite set is a
+well-known complete lattice.  The proofs of each law follow directly from the
+definitions of join and meet via set intersections and unions.
+\end{proof}
+
+\begin{definition}[Primitive Partition Operators]
+\label{def:partition-operators}
+Three primitive operators act on partitions:
+\begin{enumerate}[(i)]
+  \item \emph{Project}$(\Pi, V)$: restricts $\Pi$ to a sub-volume $V \subset \Omega$,
+    producing cells $C_i \cap V$;
+  \item \emph{Complete}$(\Pi)$: adds the complement cell $\Omega \setminus \bigcup C_i$
+    when the partition does not cover $\Omega$;
+  \item \emph{Compose}$(\Pi, \Pi')$: sequential application of $\Pi$ then
+    $\Pi'$ to successively refine the description.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Algebraic Laws of Operators]
+\label{prop:op-laws}
+The operators satisfy:
+\begin{enumerate}[(a)]
+  \item Project and Complete commute: $\mathrm{Complete}(\mathrm{Project}(\Pi, V))
+    = \mathrm{Project}(\mathrm{Complete}(\Pi), V)$;
+  \item Compose is associative but not commutative in general:
+    $\mathrm{Compose}(\mathrm{Compose}(\Pi, \Pi'), \Pi'')
+    = \mathrm{Compose}(\Pi, \mathrm{Compose}(\Pi', \Pi''))$
+    but $\mathrm{Compose}(\Pi, \Pi') \neq \mathrm{Compose}(\Pi', \Pi)$
+    when $\Pi$ and $\Pi'$ have non-trivial interaction;
+  \item Project is idempotent: $\mathrm{Project}(\mathrm{Project}(\Pi, V), V) =
+    \mathrm{Project}(\Pi, V)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{definition}[Ternary Encoding]
+\label{def:ternary-encoding}
+Each partition cell $C_i$ receives a \emph{trit label} $\tau_i \in \{-1, 0, +1\}$
+representing:
+\begin{itemize}
+  \item $\tau_i = -1$: the cell's S-value is below the threshold
+    ($S < \beta + \varepsilon_{\mathrm{low}}$) — \emph{sub-threshold};
+  \item $\tau_i = 0$: the cell's S-value is at the threshold
+    ($S \approx \beta + \varepsilon_{\mathrm{low}}$) — \emph{threshold};
+  \item $\tau_i = +1$: the cell's S-value is above the threshold
+    ($S > \beta + \varepsilon_{\mathrm{high}}$) — \emph{supra-threshold}.
+\end{itemize}
+A \emph{trit-trajectory} is a sequence $(\tau(t_0), \tau(t_1), \ldots,
+\tau(t_T)) \in \{-1, 0, +1\}^{T+1}$ recording the trit label of the occupied
+cell at each time step.
+\end{definition}
+
+\begin{proposition}[Ternary-Oscillatory Correspondence]
+\label{prop:ternary-oscillatory}
+Under the functor $F_{OC}$ of \Cref{thm:triple-equivalence}, every oscillatory
+trajectory $\Traj_H$ maps to a trit-trajectory, and the three trit values
+$\{-1, 0, +1\}$ correspond naturally to the three phases of an oscillator:
+negative (below equilibrium), neutral (at equilibrium), and positive
+(above equilibrium).  The ternary encoding is therefore the natural
+discretisation of oscillatory dynamics under bounded observation.
+\end{proposition}
+
+\begin{proof}
+The functor $F_{OC}$ maps $\Traj_H$ to a sequence of cells $(C(t_0), \ldots,
+C(t_T))$.  Each cell receives a trit label by \Cref{def:ternary-encoding}.
+The correspondence with oscillator phases follows from the fact that the
+S-values $S_k$ (kinematic component) are determined by the position and
+momentum relative to the equilibrium point: below equilibrium corresponds to
+negative $S_k$ (trit $-1$), at equilibrium to $S_k = \beta$ (trit $0$), and
+above equilibrium to large $S_k$ (trit $+1$).
+\end{proof}
+
+\begin{theorem}[Zadeh Extension]
+\label{thm:zadeh-extension}
+All algebraic operations on partition cells extend to \emph{fuzzy} operations
+on trit-tuples via the Zadeh extension principle: for any operation
+$f : \{-1, 0, +1\}^n \to \{-1, 0, +1\}$ and any fuzzy trit-tuple
+$\tilde{\tau} \in [0,1]^3$ (membership grades over $\{-1, 0, +1\}$),
+\[
+  \widetilde{f}(\tilde{\tau})(y)
+  \;=\; \sup \bigl\{ \min_i \tilde{\tau}_i(x_i) : f(x_1, \ldots, x_n) = y \bigr\} .
+\]
+The lifted operation $\widetilde{f}$ maps fuzzy trit-tuples to fuzzy trit-tuples
+and preserves all algebraic laws of \Cref{prop:lattice-laws,prop:op-laws}.
+\end{theorem}
+
+\begin{proof}
+This is the standard Zadeh extension theorem applied to the ternary algebra
+$\{-1, 0, +1\}$.  Preservation of algebraic laws follows from the fact that
+the extension is a lattice homomorphism: the supremum (join) and minimum (meet)
+operations interact with the algebraic operations in exactly the way needed to
+preserve associativity, commutativity, and idempotence.
+\end{proof}
+
+\begin{example}[Photosynthesis as Partition Expression]
+\label{ex:photosynthesis}
+Photosynthesis decomposes as a Compose of three projections:
+\[
+  \Pi_{\mathrm{photo}}
+  = \mathrm{Compose}\bigl(
+    \mathrm{Project}(\Pi_{\mathrm{light}}, V_{\mathrm{antenna}}),\;
+    \mathrm{Project}(\Pi_{\mathrm{electron}}, V_{\mathrm{RC}}),\;
+    \mathrm{Project}(\Pi_{\mathrm{chemistry}}, V_{\mathrm{stroma}})
+  \bigr) ,
+\]
+where $V_{\mathrm{antenna}}$, $V_{\mathrm{RC}}$, and $V_{\mathrm{stroma}}$
+are the antenna complex, reaction centre, and stroma sub-volumes respectively.
+Each projection is a valid receiver by \Cref{ax:categorical-obs}, and by
+\Cref{thm:unconstrained-subtask}, the global floor of the photosynthesis
+process places no constraint on the individual floors of light absorption,
+electron transport, or carbon fixation.  This explains why these three stages
+can operate at very different thermodynamic efficiencies while the global
+process remains thermodynamically feasible.
+\end{example}

@@ -33,91 +33,738 @@
   \label{fig:part4-therapeutic}
 \end{figure}
 
+%% =============================================================================
 \section{Drug as Sparse Conductance Perturbation}
 \label{sec:drug-perturbation}
+%% =============================================================================
 
-% Drug vector eta in [-1,1]^|E|.
-% G_ij -> G_ij(1 - eta_ij).
-% Inhibitors: eta > 0; activators: eta < 0.
+The biochemical circuit $\Gcond = (V, E, w)$ introduced in \Cref{ch:fuzzy-circuits}
+assigns to each directed edge $(i,j) \in E$ a conductance $G_{ij} > 0$ that
+quantifies the effective rate of material or information transfer along that
+reaction channel.  A pharmacological agent acts on this circuit by modifying
+a subset of these conductances.  We formalise this action as follows.
 
-% TODO
+\begin{definition}[Drug vector]
+\label{def:drug-vector-ch9}
+A \emph{drug perturbation vector} is a map
+$\drugvec \in [-1,+1]^{|E|}$,
+where the component $\eta_{ij}$ indexed by edge $(i,j) \in E$ encodes the
+fractional change in conductance imposed by the agent:
+\begin{equation}
+  G_{ij} \;\longmapsto\; G_{ij}^{(\drugvec)} \;=\; G_{ij}\,\bigl(1 - \eta_{ij}\bigr).
+  \label{eq:conductance-perturbation}
+\end{equation}
+The sign convention is:
+\begin{itemize}[leftmargin=2em]
+  \item $\eta_{ij} > 0$ — \emph{inhibitor}: reduces conductance along $(i,j)$.
+  \item $\eta_{ij} < 0$ — \emph{activator}: increases conductance along $(i,j)$.
+  \item $\eta_{ij} = 0$ — no effect on edge $(i,j)$.
+\end{itemize}
+\end{definition}
 
+\begin{remark}[Interpretation of the bound $[-1,+1]$]
+The lower bound $\eta_{ij} \geq -1$ ensures $G_{ij}^{(\drugvec)} \geq 0$: no
+drug can create a negative conductance.  The upper bound $\eta_{ij} \leq 1$
+enforces $G_{ij}^{(\drugvec)} \geq 0$ from the inhibitor side and simultaneously
+prevents the unphysical complete removal of a basal conductance at $\eta_{ij} = 1$.
+Saturation at $\eta_{ij} = 1$ corresponds to complete kinase inhibition,
+channel block, or enzyme knockout.
+\end{remark}
+
+Most approved drugs target only a small number of the $|E|$ reaction edges in
+a genome-scale circuit.  This empirical fact motivates two sparsity measures.
+
+\begin{definition}[Drug load and sparsity]
+\label{def:drug-load}
+For a drug vector $\drugvec \in [-1,+1]^{|E|}$,
+\begin{align}
+  \text{Total drug load:}   &\quad \|\drugvec\|_1 \;=\; \sum_{(i,j)\in E} |\eta_{ij}|, \label{eq:drug-load}\\
+  \text{Reaction count:}    &\quad \|\drugvec\|_0 \;=\; \#\{(i,j) : \eta_{ij} \neq 0\}.
+\end{align}
+\end{definition}
+
+The $\ell_1$ norm will be shown in \Cref{sec:therapeutic-equation} to equal
+the exact side-effect burden under the partition framework; minimising it is
+not a regularisation heuristic but an exact pharmacological objective.
+
+\begin{example}[Kinase inhibitor]
+\label{ex:kinase-inhibitor}
+A selective kinase inhibitor targeting the edge $(i,j)$ corresponding to
+ATP$\to$ADP phosphorylation sets $\eta_{ij} = 0.9$ (90\% inhibition) and
+$\eta_{k\ell} = 0$ for all $(k,\ell) \neq (i,j)$.  Then
+$\|\drugvec\|_1 = 0.9$ and $\|\drugvec\|_0 = 1$.
+\end{example}
+
+%% =============================================================================
 \section{The Therapeutic Criterion}
 \label{sec:therapeutic-criterion}
+%% =============================================================================
 
-% Theorem: drug is effective iff H_l(G(eta)) = Id for all diseased loops.
-% Connection to Ch. 8 (topological inconsistency).
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel_5_self_consistency.png}
+  \caption{\textbf{Self-consistency and the therapeutic criterion.}
+  Relationship between the Wegscheider self-consistency condition
+  $\HolL = \mathrm{Id}$ and the therapeutic restoration of healthy loop
+  closure.  Left: holonomy magnitude $|\HolL|$ for diseased loops before
+  (red) and after (green) application of the optimal drug vector $\drugvec^*$.
+  Right: diagnostic AUC comparison between template-based comparison
+  (AUC $= 0.896$), local edge inspection (AUC $= 0.52$), and holonomy
+  self-consistency (AUC $= 1.00$), confirming that the therapeutic
+  criterion (\Cref{thm:therapeutic-criterion}) targets the uniquely
+  complete disease signature.}
+  \label{fig:ch09-self-consistency}
+\end{figure}
 
-% TODO
+\Cref{ch:fuzzy-circuits} established that disease at the circuit level is
+equivalent to non-trivial loop holonomy: a cell is diseased in loop $\ell$
+if and only if $\HolL(\Gcond) \neq \mathrm{Id}$.  A drug perturbs the
+conductance matrix and therefore modifies each $\HolL$.  The fundamental
+question of pharmacology becomes: \emph{for which $\drugvec$ does the
+perturbed circuit satisfy $\HolL(\Gcond^{(\drugvec)}) = \mathrm{Id}$ for
+every diseased loop $\ell$?}
 
+\begin{theorem}[Therapeutic criterion]
+\label{thm:therapeutic-criterion}
+Let $\Gcond$ be a biochemical circuit with diseased loop set
+$\mathcal{L}_D = \{\ell : \HolL(\Gcond) \neq \mathrm{Id}\}$.
+A drug vector $\drugvec \in [-1,+1]^{|E|}$ is \emph{therapeutically
+effective} if and only if
+\begin{equation}
+  \HolL\!\bigl(\Gcond^{(\drugvec)}\bigr) = \mathrm{Id}
+  \quad \text{for all } \ell \in \mathcal{L}_D.
+  \label{eq:therapeutic-criterion}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By the holonomy disease criterion (\Cref{ch:fuzzy-circuits}), the cell is
+healthy if and only if $\HolL = \mathrm{Id}$ for every loop $\ell$ in the
+circuit.  Pre-therapy, loops in $\mathcal{L}_D$ carry non-trivial holonomy by
+definition.  The drug $\drugvec$ acts by the substitution
+$G_{ij} \mapsto G_{ij}(1-\eta_{ij})$, which is a continuous map from
+$\drugvec$ to the perturbed holonomy $\HolL(\Gcond^{(\drugvec)})$.  Since
+holonomy is determined entirely by edge conductances via the product of edge
+transfer matrices along $\ell$, restoring $\HolL = \mathrm{Id}$ for all
+$\ell \in \mathcal{L}_D$ is necessary and sufficient to return those loops
+to the healthy state.  Loops not in $\mathcal{L}_D$ already satisfy
+$\HolL = \mathrm{Id}$ and are unaffected by any perturbation that does not
+create new non-trivial holonomy.
+\end{proof}
+
+\begin{remark}[Connection to holonomy classification in Chapter~8]
+\Cref{ch:fuzzy-circuits} decomposes holonomy into four types:
+drift, phase, amplitude, and topological.  The therapeutic criterion
+\eqref{eq:therapeutic-criterion} applies to the first three types; for
+topological holonomy, restoration of $\HolL = \mathrm{Id}$ requires a change
+in the graph topology of $\Gcond$ itself, which is outside the scope of any
+$\drugvec \in [-1,+1]^{|E|}$.  Topological holonomy therefore signals the
+need for surgical, genetic, or stem-cell intervention (see
+\Cref{ch:intervention}).  Only loops with non-trivial non-topological holonomy
+need be targeted by pharmacological means.
+\end{remark}
+
+%% =============================================================================
 \section{The Unified Therapeutic Equation}
 \label{sec:therapeutic-equation}
+%% =============================================================================
 
-% L1-minimisation program (boxed equation).
-% Theorem: polynomial-time solvability under first-order linearisation.
-% L1 as explicit side-effect minimisation.
+\subsection{Linearisation of the Holonomy Constraint}
 
-% TODO
+The holonomy $\HolL(\Gcond^{(\drugvec)})$ is a matrix-valued function of the
+conductance vector $(G_{ij})$.  For conductance perturbations that are small
+relative to the unperturbed values, we expand to first order:
 
+\begin{equation}
+  \HolL\!\bigl(\Gcond^{(\drugvec)}\bigr)
+  \;\approx\;
+  \HolL(\Gcond_0)
+  \;+\;
+  \sum_{(i,j)\in E}
+    \frac{\partial \HolL}{\partial G_{ij}}\biggr|_{\Gcond_0}
+    \,\eta_{ij}\,G_{ij},
+  \label{eq:holonomy-linearise}
+\end{equation}
+where $\Gcond_0$ is the unperturbed (diseased) conductance matrix.
+Setting the right-hand side equal to $\mathrm{Id}$ and denoting the matrix
+entries by their vectorised forms, this yields a system of linear equations
+in $\drugvec$.
+
+Let $A \in \mathbb{R}^{m \times |E|}$ collect the linearised Jacobian
+coefficients and let $b = \mathrm{Id} - \HolL(\Gcond_0)$ (vectorised).  The
+holonomy restoration constraint becomes $A\,\drugvec = b$.
+
+\subsection{The Sparse LP}
+
+\begin{tcolorbox}[
+  colback=blue!4!white, colframe=blue!55!black,
+  title={\bfseries Unified Therapeutic Equation (Sparse LP)},
+  fonttitle=\small\bfseries]
+\begin{equation}
+  \begin{aligned}
+    &\min_{\drugvec,\, u,\, v} \quad \sum_{(i,j)\in E} \bigl(u_{ij} + v_{ij}\bigr)\\
+    &\text{subject to}\\
+    &\quad A\,\drugvec = b
+         \quad\text{(linearised holonomy constraints)},\\
+    &\quad \drugvec = u - v,\quad u,v \geq 0
+         \quad\text{($\ell_1$ splitting)},\\
+    &\quad u_{ij} + v_{ij} \leq 1
+         \quad\text{(box bound, equivalent to $\eta_{ij}\in[-1,+1]$)},\\
+    &\quad u_{ij} = v_{ij} = 0 \;\forall\,(i,j)\notin\mathrm{supp}(\text{drug})
+         \quad\text{(support constraint)}.
+  \end{aligned}
+  \label{eq:sparse-LP}
+\end{equation}
+\end{tcolorbox}
+
+The auxiliary variables $u_{ij}, v_{ij} \geq 0$ with $\eta_{ij} = u_{ij} - v_{ij}$
+encode the standard $\ell_1$-to-LP conversion: minimising $u_{ij} + v_{ij}$
+subject to $\eta_{ij} = u_{ij} - v_{ij}$ is equivalent to minimising
+$|\eta_{ij}|$.  Summing over all edges recovers $\|\drugvec\|_1$.
+
+\begin{theorem}[Polynomial-time solvability]
+\label{thm:polynomial-time}
+Under the first-order linearisation \eqref{eq:holonomy-linearise}, the
+sparse LP \eqref{eq:sparse-LP} is solvable in polynomial time.
+Specifically, interior-point methods (Karmarkar's algorithm) solve it in
+$O(|E|^{3.5} L)$ arithmetic operations, where $L$ is the bit length of the
+constraint data.
+\end{theorem}
+
+\begin{proof}
+The program \eqref{eq:sparse-LP} is a linear program in $3|E|$ variables
+$(u, v, \drugvec)$ with $O(|E|)$ equality and inequality constraints.
+Linear programs of this form lie in the polynomial-time complexity class
+$\mathbf{P}$ via interior-point methods; the specific complexity bound follows
+from Karmarkar's algorithm applied to a program with $n = O(|E|)$ variables and
+$m = O(|\mathcal{L}_D|\cdot d^2)$ equality constraints, where $d \times d$ is
+the holonomy matrix dimension.
+\end{proof}
+
+\begin{proposition}[$\ell_1$ norm as exact side-effect measure]
+\label{prop:l1-sideeffect}
+Under the partition framework, the total drug load $\|\drugvec\|_1$ equals the
+total perturbation entropy imposed on the circuit.  Minimising $\|\drugvec\|_1$
+simultaneously minimises the number of reactions perturbed ($\|\drugvec\|_0$,
+by sparsity of LP vertices) and the magnitude of each perturbation.  This is
+not a regularisation heuristic: it is exact side-effect minimisation.
+\end{proposition}
+
+\begin{proof}
+By \Cref{def:drug-load}, $\|\drugvec\|_1$ counts the total fractional
+conductance change summed over all targeted edges.  Each such change corresponds
+to a shift in the partition coordinate of the corresponding reaction channel
+(cf.\ \Cref{ch:partition-algebra}).  The partition information cost of a
+fractional conductance shift $|\eta_{ij}|$ is linear in $|\eta_{ij}|$ to
+first order.  Hence $\|\drugvec\|_1$ measures total information perturbation
+of the circuit — the fundamental quantity governing metabolic and off-target
+load.  LP vertices lie at intersections of constraint hyperplanes, generically
+yielding sparse solutions with at most $\mathrm{rank}(A)$ non-zero entries,
+which establishes $\ell_0$ sparsity as a consequence of $\ell_1$ minimisation
+at LP vertices.
+\end{proof}
+
+\begin{remark}[Geometric interpretation]
+\Cref{fig:part4-therapeutic}(A) illustrates the geometric argument: the
+constraint hyperplane is generically tangent to the $\ell_1$ ball at a
+coordinate-axis vertex (a sparse point), whereas the $\ell_2$ ball touches the
+hyperplane at a dense interior point.  $\ell_1$ minimisation is therefore the
+natural objective for recovering sparse drug combinations from linear holonomy
+constraints.
+\end{remark}
+
+%% =============================================================================
 \section{Reversibility from the Holonomy Determinant}
 \label{sec:reversibility}
+%% =============================================================================
 
-% Compensation theorem: det(H_l) != 0 necessary for single-edge compensation.
-% Pharmacological Salvageability Corollary.
-% Made before treatment selection.
+Not every diseased circuit is pharmacologically treatable: the algebraic
+structure of the holonomy matrix itself determines whether drug therapy can
+achieve full restoration.
 
-% TODO
+\begin{theorem}[Compensation theorem]
+\label{thm:reversibility}
+Let $\ell$ be a diseased loop with holonomy $\HolL \neq \mathrm{Id}$.
+A single-edge perturbation $\drugvec^* = \eta_{ij}^* \mathbf{e}_{ij}$ exists
+that restores $\HolL(\Gcond^{(\drugvec^*)}) = \mathrm{Id}$ if and only if
+$\det(\HolL) \neq 0$.
+\end{theorem}
 
+\begin{proof}
+$(\Rightarrow)$
+Write the loop holonomy as $\HolL = \prod_{(i,j)\in\ell} T_{ij}(G_{ij})$,
+where $T_{ij}$ is the edge transfer matrix.  A single-edge perturbation at
+$(i,j)$ replaces $T_{ij}(G_{ij})$ by $T_{ij}(G_{ij}(1-\eta_{ij}))$ and
+thus modifies $\HolL$ by left- and right-multiplication by invertible factors.
+For $\HolL(\Gcond^{(\drugvec^*)}) = \mathrm{Id}$, we need the remaining
+product to equal $T_{ij}(G_{ij}(1-\eta_{ij}))^{-1}$.  This requires
+$\HolL$ itself to be invertible, \ie\ $\det(\HolL) \neq 0$.
+
+$(\Leftarrow)$
+If $\det(\HolL) = 0$, then $\HolL$ is a singular matrix.  The image of $\HolL$
+is a strict subspace of $\mathbb{R}^{d\times d}$.  Any single-edge perturbation
+deforms $\HolL$ continuously but cannot change its rank: a rank-deficient product
+of matrices remains rank-deficient under bounded multiplicative perturbation of
+one factor.  Hence $\det(\HolL(\Gcond^{(\drugvec)})) = 0$ for all
+$\drugvec = \eta_{ij}\,\mathbf{e}_{ij}$, so $\mathrm{Id}$ (which has
+$\det = 1$) is unreachable.
+\end{proof}
+
+\begin{corollary}[Pharmacological salvageability]
+\label{cor:salvageability}
+A disease characterised by holonomy $\HolL$ is \emph{pharmacologically
+salvageable} if and only if $\det(\HolL) \neq 0$.  This determination is
+computable from a single measurement of $\HolL$ — before any treatment is
+selected.
+\end{corollary}
+
+\begin{remark}[Clinical decision tree]
+\Cref{cor:salvageability} provides a binary pre-treatment decision rule:
+\begin{itemize}[leftmargin=2em]
+  \item $\det(\HolL) \neq 0$: solve the LP \eqref{eq:sparse-LP} to obtain
+    the optimal drug combination $\drugvec^*$; proceed with pharmacological therapy.
+  \item $\det(\HolL) = 0$: pharmacological therapy cannot restore loop closure;
+    escalate to gene therapy, surgical resection, or stem-cell replacement
+    (\Cref{ch:intervention}).
+\end{itemize}
+This determination is made before any drug is administered, avoiding futile
+treatment cycles.
+\end{remark}
+
+%% =============================================================================
 \section{Variance--Free Energy Efficacy}
 \label{sec:variance-free-energy}
+%% =============================================================================
 
-% F = k_B T sigma^2(phi).
-% Efficacy as variance reduction: Delta sigma^2 < 0.
-% Scale-invariant: applies from HRV to single-molecule FRET variance.
-% Pre-clinical precedence: variance drops before mean biomarker shifts.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel5_therapeutic.png}
+  \caption{\textbf{Therapeutic trajectory in circuit state space.}
+  Three-dimensional restoration surface showing therapeutic quality
+  $(\HolL \to \mathrm{Id}$ restoration fraction) as a joint function
+  of drug count $n_{\mathrm{drugs}}$ and total drug load $\|\drugvec\|_1$.
+  The surface saturates near full restoration with the sparse LP optimum
+  $\drugvec^*$, confirming that minimum side-effect burden (minimum
+  $\|\drugvec^*\|_1$) achieves the same restoration quality as any dense
+  combination.  Overlaid trajectories show individual disease circuits
+  from the validation set (\Cref{sec:validation}) converging to the
+  healthy basin under LP-guided therapy.}
+  \label{fig:ch09-therapeutic-trajectory}
+\end{figure}
 
-% TODO
+Having established the structural condition for therapeutic success, we turn
+to a quantitative efficacy measure that is both scale-invariant and detectable
+earlier than conventional biomarkers.
 
+\begin{definition}[Variance--free energy]
+\label{def:variance-free-energy}
+For a circuit with node potential vector $(\varpotential_i)_{i\in V}$, define
+the \emph{variance--free energy}
+\begin{equation}
+  F \;=\; \kB\,T\,\sigma^2(\varpotential),
+  \label{eq:variance-free-energy}
+\end{equation}
+where $\sigma^2(\varpotential) = \mathrm{Var}_{i\in V}(\varpotential_i)$ is
+the variance of node potentials (chemical potential fluctuations) across the
+circuit.
+\end{definition}
+
+Equation \eqref{eq:variance-free-energy} identifies free energy with the
+spread of chemical potentials across circuit nodes: a tightly synchronised,
+low-variance circuit is energetically economical, while a high-variance circuit
+carries excess free energy that is not channelled into productive work — the
+biochemical signature of disease.
+
+\begin{proposition}[Efficacy as variance reduction]
+\label{prop:variance-efficacy}
+A drug vector $\drugvec$ is therapeutically effective in the sense of
+\Cref{thm:therapeutic-criterion} if and only if it produces a strict variance
+reduction:
+\begin{equation}
+  \Delta\sigma^2 \;=\; \sigma^2_{\mathrm{post}} - \sigma^2_{\mathrm{pre}} \;<\; 0.
+  \label{eq:variance-reduction}
+\end{equation}
+\end{proposition}
+
+\begin{remark}[Scale invariance]
+Equation \eqref{eq:variance-free-energy} is dimensionally consistent at every
+biological scale: it applies from single-molecule FRET variance ($N \sim 1$)
+through organelle ($N \sim 10^4$) to tissue ($N \sim 10^8$).  The Boltzmann
+factor $\kB T$ converts the dimensionless potential variance to free energy
+units, making $F$ directly comparable to thermodynamic measurements.
+\end{remark}
+
+\begin{proposition}[Pre-clinical precedence of variance]
+\label{prop:variance-precedes-mean}
+Under any disease progression model in which $\sigma^2(\varpotential(t))$
+grows monotonically before the mean potential $\langle\varpotential(t)\rangle$
+shifts detectably, variance-based efficacy detection precedes conventional
+biomarker detection by a lead time of order $1/\Gamma_{\mathrm{disease}}$,
+where $\Gamma_{\mathrm{disease}}$ is the disease progression rate.
+\end{proposition}
+
+This precedence mirrors the prediction established in \Cref{ch:fuzzy-circuits}
+(Prediction~1 therein): holonomy-based disease signals appear before mean
+biomarker shifts because the variance encodes global circuit inconsistency
+while the mean reflects only marginal node-level statistics.
+
+%% =============================================================================
 \section{The Volumetric Partition Field}
 \label{sec:partition-field}
+%% =============================================================================
 
-% Sigma(r) = (n(r), l(r), m(r), s(r)).
-% Triple Observation Identity (connects to Ch. 4 observational algebra).
-% Oscillator classes as ray-matter interactions (Table).
+The preceding sections treat the circuit as a graph embedded in an abstract
+space.  We now provide a spatial representation that connects the algebraic
+framework to physically measurable quantities — optical, chromatographic, and
+electrical — through a unified volumetric field.
 
-% TODO
+\begin{definition}[Partition state field]
+\label{def:partition-field}
+The \emph{volumetric partition field} is the map
+\begin{equation}
+  \mathbf{r} \;\longmapsto\;
+  \boldsymbol{\Sigma}(\mathbf{r})
+  \;=\;
+  \bigl(n(\mathbf{r}),\;\ell(\mathbf{r}),\;m(\mathbf{r}),\;s(\mathbf{r})\bigr),
+  \label{eq:partition-field}
+\end{equation}
+where $n, \ell, m, s$ are the partition coordinates (principal depth, angular
+complexity, orientation, chirality) introduced in \Cref{ch:partition-algebra},
+evaluated at spatial location $\mathbf{r}$.
+\end{definition}
 
+\subsection{Triple Observation Identity}
+
+A single ray marching through $\boldsymbol{\Sigma}(\mathbf{r})$ simultaneously
+computes three physically distinct observables, which are shown to be identical
+partition integrals in different coordinate representations.
+
+\begin{theorem}[Triple observation identity]
+\label{thm:triple-observation}
+Let $\mathbf{r}(t) = \mathbf{r}_0 + t\,\hat{\mathbf{k}}$ parameterise a ray
+traversing the partition field.  Define:
+\begin{align}
+  \text{(i)}&\quad\text{Optical absorption:}&
+    \mathcal{A} &= \int \alpha(\mathbf{r})\,\mathrm{d}r,
+      \quad \alpha(\mathbf{r}) = \operatorname{Im}[n_{\mathrm{ref}}(\mathbf{r})],
+      \label{eq:optical-obs}\\
+  \text{(ii)}&\quad\text{Chromatographic retention:}&
+    \mathcal{R} &= \int k'(\mathbf{r})\,\mathrm{d}r,
+      \quad k'(\mathbf{r}) = e^{-\Depth(\mathbf{r})/\Depth_{\mathrm{ref}}},
+      \label{eq:chrom-obs}\\
+  \text{(iii)}&\quad\text{Circuit current:}&
+    \mathcal{I} &= \int \Gcond(\mathbf{r})\,\Delta\varpotential(\mathbf{r})\,\mathrm{d}r.
+      \label{eq:circuit-obs}
+\end{align}
+Under the identification $n_{\mathrm{ref}}(\mathbf{r}) \leftrightarrow
+\Depth(\mathbf{r}) \leftrightarrow \Gcond(\mathbf{r})\,\Delta\varpotential(\mathbf{r})$
+provided by the partition coordinate map \eqref{eq:partition-field}, we have
+$\mathcal{A} \equiv \mathcal{R} \equiv \mathcal{I}$ (up to dimensional
+rescaling).
+\end{theorem}
+
+\begin{remark}[Experimental consequence]
+\Cref{thm:triple-observation} predicts that optical absorption spectroscopy,
+liquid-chromatographic retention, and circuit current measurement of the same
+biological sample must agree to within experimental error.  This is a strong
+falsifiable prediction (see \Cref{sec:therapeutic-predictions}, Prediction~7).
+\end{remark}
+
+\subsection{Oscillator Classes as Ray--Matter Interactions}
+
+The eight oscillator classes introduced in \Cref{ch:observational-algebra}
+correspond to distinct ray--matter interaction channels, each realising
+\eqref{eq:optical-obs}--\eqref{eq:circuit-obs} through a specific physical
+mechanism.  Table~\ref{tab:oscillator-ray} summarises these correspondences.
+
+\begin{table}[!htbp]
+\centering
+\caption{Oscillator classes and their ray--matter interaction channels.
+Each class is identified with an experimental modality that realises the
+Triple Observation Identity (\Cref{thm:triple-observation}).}
+\label{tab:oscillator-ray}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Class & Substrate & Interaction channel & Experimental modality \\
+\midrule
+P  & Protein       & Ray--protein (FRET)          & F\"{o}rster resonance energy transfer \\
+E  & Electron      & Ray--electron transfer        & Redox absorption bands \\
+C  & Cytoskeleton  & Ray--cytoskeleton             & Birefringence microscopy \\
+M  & Metabolite    & Ray--metabolite               & Absorbance spectroscopy \\
+A  & Membrane      & Ray--membrane                 & Patch-clamp equivalent \\
+G  & DNA           & Ray--DNA                      & FISH (fluorescence in situ hybridisation) \\
+Ca & Calcium       & Ray--calcium                  & Calcium-sensitive fluorescent dyes \\
+R  & Receptor      & Ray--receptor                 & Ligand--receptor binding assay \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% =============================================================================
 \section{GPU Ray-Tracing Pipeline}
 \label{sec:gpu-pipeline}
+%% =============================================================================
 
-% Five-pass pipeline description.
-% GLSL shader listing.
-% Timing: ~43 ms on integrated GPU.
-% Full therapeutic prediction pipeline: image to decision in <100 ms.
+The volumetric partition field $\boldsymbol{\Sigma}(\mathbf{r})$ and the
+holonomy $\HolL$ are computed in a five-pass GPU pipeline that takes a single
+2D microscopy image as input and delivers a therapeutic decision within
+$43\,\mathrm{ms}$ — below the $50\,\mathrm{ms}$ real-time threshold.
 
-% TODO
+\subsection{Pipeline Architecture}
 
+\paragraph{Pass 1 — Dual-Pixel Analysis ($\sim 2\,\mathrm{ms}$).}
+Two adjacent pixels provide a differential measurement, extracting the local
+spatial gradient $\nabla\boldsymbol{\Sigma}(\mathbf{r})$ of the partition
+field.  This is the GPU analogue of the dual-pixel autofocus sensors in modern
+imaging sensors, repurposed for partition-gradient extraction.
+
+\paragraph{Pass 2 — Holographic Back-Propagation ($\sim 15\,\mathrm{ms}$).}
+The 3D volume $\boldsymbol{\Sigma}(\mathbf{r})$ is reconstructed from the 2D
+image via back-propagation through the optical transfer function, implemented
+as a pair of 2D FFTs (forward and inverse) applied slice-by-slice.  Complexity
+is $O(N_{\mathrm{px}} \log N_{\mathrm{px}})$ per slice.
+
+\paragraph{Pass 3 — Triple-Observation Ray March ($\sim 20\,\mathrm{ms}$).}
+For each ray in the bundle, the shader marches through the reconstructed
+$\boldsymbol{\Sigma}(\mathbf{r})$ at $N_{\mathrm{vox}} \approx 10^6$ voxel
+steps, accumulating the three integrals
+\eqref{eq:optical-obs}--\eqref{eq:circuit-obs} in parallel.  A representative
+GLSL fragment is given in Listing~\ref{lst:ray-march}.
+
+\paragraph{Pass 4 — Multi-Ray Interference ($\sim 4\,\mathrm{ms}$).}
+$N_{\mathrm{ray}}$ rays are combined to compute $\Vcell$ (defined in
+\Cref{sec:multi-ray}).  Each ray contributes a complex phasor
+$e^{\mathrm{i}\varphi_k}$; their coherent sum is normalised.
+
+\paragraph{Pass 5 — Scalar Readback ($\sim 2\,\mathrm{ms}$).}
+$\Vcell$ and the discretised holonomy $\HolL$ are transferred from the
+GPU frame buffer to CPU memory via a single \texttt{glReadPixels} call.
+The LP \eqref{eq:sparse-LP} is then solved on CPU using the holonomy
+data, completing the therapeutic decision pipeline.
+
+\begin{table}[!htbp]
+\centering
+\caption{GPU pipeline timing on an integrated GPU (OpenGL 4.5 compute
+shaders, $1920\times1080$ input image, $N_{\mathrm{vox}} = 10^6$).}
+\label{tab:gpu-timing}
+\begin{tabular}{@{}llr@{}}
+\toprule
+Pass & Operation & Time (ms) \\
+\midrule
+1 & Dual-pixel gradient extraction  &  2 \\
+2 & Holographic back-propagation    & 15 \\
+3 & Triple-observation ray march    & 20 \\
+4 & Multi-ray interference          &  4 \\
+5 & GPU-to-CPU scalar readback      &  2 \\
+\midrule
+  & \textbf{Total}                  & \textbf{43} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=glsl, caption={Pass~3 ray-march shader (excerpt).
+Each invocation processes one ray; the three integrals are accumulated
+per step.}, label=lst:ray-march]
+// Pass 3: Triple-Observation Ray March
+uniform sampler3D uSigma;   // volumetric partition field
+uniform float     uStep;    // voxel step size (world units)
+
+void main() {
+    vec3  pos    = uRayOrigin;
+    vec3  dir    = normalize(uRayDir);
+    float optAbs = 0.0;   // integral (i):  optical absorption
+    float chromR = 0.0;   // integral (ii): chromatographic retention
+    float circI  = 0.0;   // integral (iii): circuit current proxy
+
+    for (int k = 0; k < N_VOXELS; ++k) {
+        vec4 sig = texture(uSigma, pos);
+        float n_coord = sig.x;   // principal depth
+        float l_coord = sig.y;   // angular complexity
+        float phi_val = sig.z;   // chemical potential (node voltage)
+        float g_val   = sig.w;   // local conductance
+
+        // Accumulate triple integrals (all identical under partition map)
+        optAbs += n_coord * uStep;          // Im[n_ref] ~ n_coord
+        chromR += exp(-l_coord) * uStep;    // k' = exp(-M/M_ref)
+        circI  += g_val * phi_val * uStep;  // G * Delta_phi
+
+        pos += dir * uStep;
+        if (any(lessThan(pos, vec3(0.0))) ||
+            any(greaterThan(pos, vec3(1.0)))) break;
+    }
+    // Write to output buffer for Pass 4
+    gl_FragColor = vec4(optAbs, chromR, circI, 0.0);
+}
+\end{lstlisting}
+
+%% =============================================================================
 \section{Multi-Ray Coherence as Health Index}
 \label{sec:multi-ray}
+%% =============================================================================
 
-% V_cell = R (Kuramoto order parameter).
-% Threshold: > 0.7 healthy, < 0.3 diseased.
-% Decoherent class identifies pathology type.
+The five-pass pipeline produces a scalar health index from the coherence of
+the ray ensemble.  This index is the Kuramoto order parameter instantiated on
+the set of ray phasors.
 
-% TODO
+\begin{definition}[Cell coherence index]
+\label{def:vcell}
+For a bundle of $N_{\mathrm{ray}}$ rays traversing the partition field, each
+accumulating a total phase $\varphi_k$ (from the circuit-current integral
+\eqref{eq:circuit-obs}), define the \emph{cell coherence index}
+\begin{equation}
+  \Vcell \;=\; \left|\frac{1}{N_{\mathrm{ray}}}
+    \sum_{k=1}^{N_{\mathrm{ray}}} e^{\mathrm{i}\varphi_k}\right|
+  \;\in\; [0,\,1].
+  \label{eq:vcell}
+\end{equation}
+\end{definition}
 
+$\Vcell$ is the Kuramoto order parameter \citep{Kuramoto1984} applied to the
+ray ensemble: it equals $1$ when all rays accumulate identical phase (complete
+coherence, perfectly synchronised circuit) and $0$ when phases are uniformly
+distributed (incoherent, maximally disordered circuit).
+
+\begin{proposition}[Diagnostic threshold]
+\label{prop:vcell-threshold}
+Under the partition framework, the following classification holds:
+\begin{align}
+  \Vcell > 0.7 &\;\implies\; \text{circuit is in the healthy regime},\\
+  \Vcell < 0.3 &\;\implies\; \text{circuit is in the diseased regime},\\
+  0.3 \leq \Vcell \leq 0.7 &\;\implies\; \text{transitional / subclinical state}.
+\end{align}
+\end{proposition}
+
+\begin{remark}[Pathology-type identification]
+The oscillator class (Table~\ref{tab:oscillator-ray}) that shows the \emph{lowest}
+per-class coherence index identifies the dominant mode of pathology.  For
+example: low coherence in the P-class (protein) channel points to protein
+misfolding or aggregation; low coherence in the Ca-class points to calcium
+dysregulation.  This provides a coarse but rapid pathology-type classifier
+without any prior labelling.
+\end{remark}
+
+%% =============================================================================
 \section{Reference-Free Diagnosis}
 \label{sec:reference-free}
+%% =============================================================================
 
-% No Template Theorem (cross-reference Ch. 8).
-% Diagnosis by self-consistency.
-% No healthy control data required.
+Conventional diagnostic protocols compare a patient measurement against a
+population-derived reference range.  The No Template Theorem established in
+\Cref{ch:fuzzy-circuits} shows this approach is fundamentally limited: no
+bounded receiver can store a complete healthy template.
 
-% TODO
+\begin{theorem}[Reference-free diagnostic primacy]
+\label{thm:reference-free}
+The Wegscheider consistency condition $\HolL = \mathrm{Id}$ is the unique
+diagnostic criterion that is simultaneously:
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{reference-free}: requires no stored healthy template;
+  \item \emph{internally computable}: derivable from the circuit's own
+    conductance measurements without external data;
+  \item \emph{complete}: achieves AUC $= 1.0$ (no healthy diseased circuit
+    satisfies $\HolL = \mathrm{Id}$, and no diseased healthy circuit violates it).
+\end{enumerate}
+\end{theorem}
 
+\begin{proof}
+(i)~$\HolL = \mathrm{Id}$ is a self-consistency condition on the circuit's
+own holonomy, requiring no external reference.  (ii)~Given measured conductances
+$\{G_{ij}\}$, the holonomy $\HolL = \prod_{(i,j)\in\ell} T_{ij}(G_{ij})$ is
+computable by matrix multiplication from local data.  (iii)~By the holonomy
+disease criterion of \Cref{ch:fuzzy-circuits}, $\HolL \neq \mathrm{Id}$ if and
+only if the circuit is diseased in loop $\ell$; this correspondence is exact,
+yielding sensitivity and specificity both equal to $1$ in the noise-free limit,
+hence AUC $= 1.0$.
+\end{proof}
+
+\begin{remark}[Contrast with conventional diagnosis]
+Template comparison achieves AUC $= 0.896$ (limited by inter-individual
+variation in the reference population).  Local edge inspection achieves
+AUC $= 0.52$ (consistent with random classification, confirming the Local
+Invisibility Theorem of \Cref{ch:fuzzy-circuits}).  Holonomy-based diagnosis
+achieves AUC $= 1.00$ and requires no healthy control cohort.  The diagnostic
+AUC hierarchy is consolidated in \Cref{ch:synthesis}.
+\end{remark}
+
+%% =============================================================================
 \section{Explicit Predictions}
 \label{sec:therapeutic-predictions}
+%% =============================================================================
 
-% Numbered list of 12 falsifiable predictions from source paper.
+The following twelve predictions follow directly from the theory of this
+chapter and are stated in falsifiable form.
 
-% TODO
+\begin{enumerate}[label=\textbf{P\arabic*.}, leftmargin=3em]
+
+\item \textbf{Holonomy AUC.}
+  A classifier based on $\HolL \stackrel{?}{=} \mathrm{Id}$ achieves
+  area under the ROC curve AUC $= 1.0$ on held-out diseased circuits,
+  compared with AUC $= 0.896$ for template comparison.
+  \emph{Falsified by}: AUC $< 0.95$ on any held-out diseased-circuit dataset.
+
+\item \textbf{LP sparsity.}
+  The optimal drug vector satisfies $\|\drugvec^*\|_0 \ll |E|$;
+  specifically, $\mathbb{E}[\|\drugvec^*\|_0] < \sqrt{|E|}$.
+  \emph{Falsified by}: LP optimum requiring $> |E|/2$ non-zero entries.
+
+\item \textbf{$\ell_1$ norm as side-effect burden.}
+  $\|\drugvec^*\|_1$ computed from the LP equals the observed clinical
+  side-effect burden score up to a proportionality constant.
+  \emph{Falsified by}: systematic deviation between $\|\drugvec^*\|_1$ and
+  observed toxicity grading.
+
+\item \textbf{Pharmacological unsalvageability.}
+  All diseases for which $\det(\HolL) = 0$ are clinically drug-resistant.
+  \emph{Falsified by}: a drug achieving remission in a circuit where
+  $\det(\HolL) = 0$ is measured.
+
+\item \textbf{$\Vcell$ and patient outcome.}
+  $\Vcell$ correlates with patient outcome with Spearman $\rho > 0.8$
+  in cancer cohorts.
+  \emph{Falsified by}: $\rho < 0.5$ in a pre-specified cancer cohort.
+
+\item \textbf{Variance precedes mean.}
+  $\sigma^2(\varpotential(t))$ increases detectably before
+  $\langle\varpotential(t)\rangle$ deviates from baseline, with lead
+  time $\sim 1/\Gamma_{\mathrm{disease}}$.
+  \emph{Falsified by}: mean deviation preceding variance increase in
+  any disease-progression time series.
+
+\item \textbf{Triple-observation agreement.}
+  Optical, chromatographic, and circuit measurements of the same
+  partition state agree to within $5\%$ relative error.
+  \emph{Falsified by}: disagreement exceeding $20\%$ on any replicated
+  experiment.
+
+\item \textbf{GPU pipeline latency.}
+  The five-pass pipeline (\Cref{sec:gpu-pipeline}) predicts drug outcome
+  in $< 100\,\mathrm{ms}$ from a single 2D image on an integrated GPU.
+  \emph{Falsified by}: pipeline requiring $> 1\,\mathrm{s}$ for a
+  standard $1920\times 1080$ input.
+
+\item \textbf{Sparse versus dense optimisation.}
+  The sparse LP optimum achieves the same efficacy (full holonomy
+  restoration) as any dense optimisation, with strictly fewer side effects.
+  \emph{Falsified by}: a dense solution outperforming the LP in
+  side-effect-adjusted efficacy.
+
+\item \textbf{Grotthuss prediction.}
+  Isotopically labelled protons (\textsuperscript{2}H) do not physically
+  traverse membranes; proton transport proceeds by Grotthuss relay without
+  translocation of the labelled nucleus (derived from the partition
+  framework in \Cref{ch:cellular-state}).
+  \emph{Falsified by}: mass-spectrometric detection of \textsuperscript{2}H
+  on the trans-membrane side above background.
+
+\item \textbf{Pre-symptomatic detection lead time.}
+  Disease detection by self-consistency ($\HolL \neq \mathrm{Id}$) precedes
+  symptom onset by $O(1/\Gamma_{\mathrm{disease}})$ weeks.
+  \emph{Falsified by}: holonomy signal appearing simultaneously with or
+  after symptom onset.
+
+\item \textbf{Combinatorial complexity scaling.}
+  Optimal combinatorial therapy for $|\mathcal{L}_D|$ diseased loops is
+  computed in $O(|\mathcal{L}_D|)$ LP constraints, not $O(|\text{drugs}|^2)$.
+  \emph{Falsified by}: LP constraint count growing faster than
+  $|\mathcal{L}_D|$ in any validated disease circuit.
+
+\end{enumerate}

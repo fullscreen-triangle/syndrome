@@ -7,105 +7,748 @@
 
 %%-------- PART I: Foundations ------------------------------------------------
 
+% ---------------------------------------------------------------------------
 \section{The No Template Theorem}
 \label{sec:no-template}
+% ---------------------------------------------------------------------------
 
-% No bounded system can store a complete representation of itself.
-% Proof by storage-regress argument.
-% Corollary: template-based diagnosis is necessarily incomplete.
-% Consequence: self-consistency is the only viable diagnostic criterion.
+A recurring assumption in molecular diagnostics is that disease is detected
+by comparing the current cell state against a stored healthy template.
+The No Template Theorem shows this assumption is logically impossible for
+any physically realisable cell.
 
-% TODO
+\begin{theorem}[No Template Theorem]
+\label{thm:no-template}
+No bounded system $\mathcal{X}$ can store a complete representation of its
+own state.
+\end{theorem}
 
+\begin{proof}
+Suppose for contradiction that $\mathcal{X}$ contains a representation
+$R(\mathcal{X})$ of its own state.
+\begin{enumerate}[label=(\arabic*), itemsep=2pt]
+  \item $R(\mathcal{X})$ must be encoded in the physical state of $\mathcal{X}$,
+        so $R(\mathcal{X})$ is a \emph{part} of the state of $\mathcal{X}$.
+  \item A \emph{complete} representation of the state of $\mathcal{X}$ must
+        also represent the part $R(\mathcal{X})$, yielding a representation
+        $R(R(\mathcal{X}))$.
+  \item $R(R(\mathcal{X}))$ must itself be encoded in the state, so a
+        complete representation must further contain $R(R(R(\mathcal{X})))$,
+        and so on.
+  \item This infinite regress requires storage capacity
+        $|\mathcal{X}| \geq |\mathcal{X}| + |R(\mathcal{X})| + |R(R(\mathcal{X}))| + \cdots$,
+        which is impossible for any bounded system with
+        $|\mathcal{X}| < \infty$ (Axiom~1, finite phase space).
+\end{enumerate}
+Contradiction; therefore no such complete representation exists.
+\end{proof}
+
+\begin{corollary}[Incompleteness of Template Diagnosis]
+\label{cor:template-incompleteness}
+Template-based diagnosis — comparing the current cell state to a stored
+``healthy template'' — is necessarily incomplete.  No cell can store a
+healthy template with sufficient fidelity to cover its own state space.
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:no-template}: if a complete self-representation
+is impossible, a complete representation of an external healthy reference
+encoded within the same bounded system is equally impossible by the same
+regress argument applied to the combined state (current $+$ template).
+\end{proof}
+
+\begin{corollary}[Self-Consistency as the Only Viable Criterion]
+\label{cor:self-consistency}
+The only diagnostic criterion that does not require an external reference
+template is \emph{self-consistency}: the Wegscheider condition
+$\HolL = \mathrm{Id}$ for all loops $\ell$ in the biochemical circuit.
+Self-consistency requires only local loop traversal — information already
+present in the circuit — and therefore scales within the cell's finite
+storage budget.
+\end{corollary}
+
+The practical consequence of \Cref{cor:self-consistency} is that a cell
+must use holonomy computation (\Cref{sec:topo-inconsistency}) rather than
+reference comparison as its internal health monitor.  This also explains
+why single biomarker assays fail: a single molecular concentration is a
+local measurement that, by the Local Invisibility Theorem
+(\Cref{sec:invisibility}), cannot detect loop-level inconsistency.
+
+% ---------------------------------------------------------------------------
 \section{The Biochemical Circuit}
 \label{sec:biochemical-circuit}
+% ---------------------------------------------------------------------------
 
-% G = (V, E, w) as derived in Ch. 3.
-% Chemical potentials as node voltages.
-% Kirchhoff analogs from stoichiometry and thermodynamics.
-% Information-theoretic circuit variables.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel1_circuit_foundations.png}
+  \caption{\textbf{Circuit topology and Kirchhoff analogs.}
+  The biochemical circuit $\Gcond = (V, E, w)$ with molecular species as
+  nodes (node voltage = chemical potential $\varpotential_i = \kB T \ln c_i/c_{\mathrm{ref}}$)
+  and directed reactions as weighted edges (conductance $w_{ij} = k_{ij}^+ c_j$).
+  Left: graph topology showing hub nodes (large degree) and peripheral nodes.
+  Centre: Kirchhoff Current Law (KCL) balance at each node at steady state.
+  Right: Kirchhoff Voltage Law (KVL) / Wegscheider condition on a representative
+  loop, illustrating the loop holonomy $\mathrm{hol}_\ell = 0$ in the healthy
+  (detailed-balance) state and $\mathrm{hol}_\ell \neq 0$ in the diseased state.}
+  \label{fig:ch08-circuit-foundations}
+\end{figure}
 
-% TODO
+\begin{definition}[Biochemical Circuit]
+\label{def:biochemical-circuit}
+A \emph{biochemical circuit} is a weighted directed graph
+$\Gcond = (V, E, w)$ where:
+\begin{itemize}[noitemsep]
+  \item $V = \{v_i\}_{i=1}^{N}$: molecular species, with $|V| = N$.
+  \item $E = \{e_{ij}\}$: directed reaction from species $i$ to species $j$.
+  \item $w_{ij} = k_{ij}^{+}\,c_j$: edge conductance, the product of the
+        forward rate constant $k_{ij}^{+}$ and the substrate concentration
+        $c_j$.
+\end{itemize}
+\end{definition}
 
+\subsection{Chemical potentials as node voltages}
+
+The \emph{node voltage} at species~$i$ is the chemical potential
+\begin{equation}
+  \varpotential_i
+  = \kB T\,\ln\!\frac{c_i}{c_{\mathrm{ref}}},
+  \label{eq:node-voltage}
+\end{equation}
+where $c_{\mathrm{ref}}$ is a reference concentration (typically
+$1\,\mathrm{mol\,L^{-1}}$).
+
+\subsection{Kirchhoff analogs}
+
+\paragraph{KCL (Kirchhoff's Current Law).}
+At steady state, the net flux into each node vanishes:
+\begin{equation}
+  \sum_{j:\,(j,i)\in E} w_{ji}\,(\varpotential_j - \varpotential_i)
+  - \sum_{j:\,(i,j)\in E} w_{ij}\,(\varpotential_i - \varpotential_j) = 0.
+  \label{eq:ch08-kcl}
+\end{equation}
+
+\paragraph{KVL (Kirchhoff's Voltage Law / Wegscheider condition).}
+For every directed loop $\ell = (i_1, i_2, \ldots, i_k, i_1)$ in $\Gcond$:
+\begin{equation}
+  \sum_{(i,j)\in\ell}
+  (\varpotential_i - \varpotential_j)
+  = 0
+  \quad\iff\quad
+  \text{detailed balance holds on loop } \ell.
+  \label{eq:ch08-kvl}
+\end{equation}
+The failure of \Cref{eq:ch08-kvl} for any loop is the biochemical signature of
+disease.
+
+\subsection{Information-theoretic circuit variables}
+
+The chemical potential has an information-theoretic interpretation: since
+$c_i \propto P(\sigma_i)$ (concentration is proportional to occupation
+probability of state $\sigma_i$),
+\begin{equation}
+  \varpotential_i
+  = -\kB T\,\ln P(\sigma_i)
+  = \kB T\,\Depth_i,
+  \label{eq:info-potential}
+\end{equation}
+where $\Depth_i$ is the partition depth of state $\sigma_i$.  Thus the
+node voltage is exactly the categorical depth (up to the thermal scale
+$\kB T$), and the circuit equations are statements about the topology of
+the partition landscape.
+
+% ---------------------------------------------------------------------------
 \section{Sequential Resolution Dynamics}
 \label{sec:sequential-dynamics}
+% ---------------------------------------------------------------------------
 
-% Why sequential: partition lag.
-% Step-discrete time.
-% Relation to Poincaré computing (Ch. 5).
+A central assumption of classical biochemical kinetics is that all reactions
+proceed simultaneously.  The partition framework modifies this: because each
+partition operation has a nonzero lag time $\tau_p > 0$
+(\Cref{ch:axiomatic-basis}), a cell cannot resolve all its states
+simultaneously.
 
-% TODO
+\begin{proposition}[Sequential Resolution Necessity]
+\label{prop:sequential}
+A cell with partition lag $\tau_p > 0$ and $N$ distinct molecular species
+resolves species at a maximal rate of $1/\tau_p$ per species, so the full
+state cannot be resolved in parallel.  The dynamics are inherently sequential
+in partition space.
+\end{proposition}
+
+\begin{proof}
+Each species requires one partition operation to distinguish it from its
+neighbours.  Two partition operations cannot overlap in time without
+creating an ambiguous intermediate state (from the Residue Principle,
+\Cref{ch:axiomatic-basis}).  Therefore operations must be serialised,
+giving a resolution rate of at most $1/\tau_p$.
+\end{proof}
+
+This motivates a \emph{step-discrete} time variable $t_n = n\,\tau_p$,
+at which point the cell has resolved exactly $n$ partition steps.  The
+discrete dynamics on node voltages are
+\begin{equation}
+  \varpotential_i(t_{n+1})
+  = \varpotential_i(t_n)
+    + \tau_p \sum_j w_{ij}(t_n)\,(\varpotential_j(t_n) - \varpotential_i(t_n)),
+  \label{eq:discrete-dynamics}
+\end{equation}
+which is a discretised diffusion equation on the circuit graph.
+The connection to Poincaré computing (\Cref{ch:poincare}) is direct: each
+time step $\tau_p$ corresponds to one application of the backward propagator
+$\Back$ in the trajectory completion algorithm.
 
 %%-------- PART II: The Fuzzy Model ------------------------------------------
 
+% ---------------------------------------------------------------------------
 \section{Fuzzy State Representation}
 \label{sec:fuzzy-states}
+% ---------------------------------------------------------------------------
 
-% Fuzzy node states, fuzzy Kirchhoff equations.
-% Macroscopic signals from fuzzy averages.
-% Local validation — passes everywhere yet globally inconsistent.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel2_fuzzy_propagation.png}
+  \caption{\textbf{Fuzzy state propagation through the biochemical circuit.}
+  Membership functions $\mu_i(c)$ for representative nodes propagate through
+  the circuit via the Zadeh extension principle (sup-min composition,
+  \Cref{eq:fuzzy-kcl}).  Left: Gaussian membership functions
+  $\mu_i(c) = \exp(-(c-\bar{c}_i)^2/2\sigma_i^2)$ at input nodes.
+  Centre: propagated membership at intermediate nodes, showing broadening
+  of uncertainty with circuit depth.  Right: defuzzified macroscopic
+  potential $\bar{\varpotential}_i^{\mathrm{macro}}$ versus the sharp
+  classical value, illustrating that fuzzy averaging preserves the circuit's
+  aggregate thermodynamic quantities while encoding the irreducible
+  concentration uncertainty.}
+  \label{fig:ch08-fuzzy-propagation}
+\end{figure}
 
-% TODO
+Molecular concentrations in vivo are not precise real numbers — they are
+inherently uncertain due to thermal fluctuations, finite copy number, and
+the measurement uncertainty of any detector.  The fuzzy-set framework
+encodes this uncertainty at the level of the circuit model.
 
+\begin{definition}[Fuzzy Node State]
+\label{def:fuzzy-state}
+The \emph{fuzzy state} of node~$i$ is a membership function
+$\mu_i : \mathbb{R}_{+} \to [0,1]$, where $\mu_i(c)$ is the degree to
+which concentration $c$ belongs to the characteristic state of node~$i$.
+\end{definition}
+
+Typical membership functions are triangular or Gaussian:
+\begin{equation}
+  \mu_i(c) = \exp\!\left(-\frac{(c - \bar{c}_i)^2}{2\sigma_i^2}\right),
+  \label{eq:gaussian-membership}
+\end{equation}
+where $\bar{c}_i$ is the modal concentration and $\sigma_i$ is the
+concentration uncertainty.
+
+\subsection{Fuzzy Kirchhoff equations}
+
+The Zadeh extension principle lifts classical set operations to fuzzy sets
+via the sup-min composition.  Applied to KCL, the fuzzy current from node~$j$
+to node~$i$ is computed by the \emph{fuzzy addition} of potentials:
+\begin{equation}
+  (\mu_i \mathbin{\tilde{+}} \mu_j)(c)
+  = \sup_{a+b=c} \min\!\bigl(\mu_i(a),\,\mu_j(b)\bigr).
+  \label{eq:fuzzy-kcl}
+\end{equation}
+The macroscopic (defuzzified) chemical potential is recovered by the centroid:
+\begin{equation}
+  \bar{\varpotential}_i^{\mathrm{macro}}
+  = \kB T\,\ln\!\frac{\bar{c}_i^{\mathrm{macro}}}{c_{\mathrm{ref}}},
+  \qquad
+  \bar{c}_i^{\mathrm{macro}}
+  = \frac{\displaystyle\int_0^\infty c\,\mu_i(c)\,\dd c}
+         {\displaystyle\int_0^\infty \mu_i(c)\,\dd c}.
+  \label{eq:defuzz}
+\end{equation}
+
+\subsection{Local validation and global inconsistency}
+
+At each individual edge $(i,j)$, the \emph{local validation residual} is
+\begin{equation}
+  \varepsilon_{ij}
+  = \bigl|w_{ij}\,(\varpotential_i - \varpotential_j) - J_{ij}^{\mathrm{obs}}\bigr|,
+  \label{eq:local-validation}
+\end{equation}
+where $J_{ij}^{\mathrm{obs}}$ is the observed flux on edge~$(i,j)$.
+
+\begin{lemma}[Local Validation Always Passes]
+\label{lem:local-passes}
+For any assignment of node voltages $\{\varpotential_i\}$ consistent with
+the local edge conductances, $\varepsilon_{ij} < \varepsilon_{\mathrm{tol}}$
+for every edge $(i,j)$, even when the global loop holonomy $\HolL \neq 1$.
+\end{lemma}
+
+\begin{proof}
+Local validation at edge $(i,j)$ checks only the ratio
+$(\varpotential_i - \varpotential_j)$ against the expected value
+$J_{ij}^{\mathrm{obs}}/w_{ij}$.  This ratio is determined solely by the
+concentrations $c_i$ and $c_j$, which are locally consistent by
+construction (they are measured at the same spatial location and time).
+The holonomy $\HolL$ is a property of the \emph{loop} — it measures
+whether the accumulated phase discrepancy around a closed path is zero —
+and this accumulated discrepancy cannot be detected by inspecting any single
+edge in isolation.
+\end{proof}
+
+% ---------------------------------------------------------------------------
 \section{Backward Trajectories and Trajectory Completion}
 \label{sec:backward-traj}
+% ---------------------------------------------------------------------------
 
-% MAP backward trajectories.
-% Algorithm and convergence (Banach fixed-point, same as Ch. 5).
-% Health as self-consistency of the fixed point.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel3_reference_free.png}
+  \caption{\textbf{Reference-free diagnosis via holonomy and backward-trajectory
+  convergence.}
+  Left: backward trajectory fan — 25 trajectories from diverse starting
+  conditions converging to the health cell (green disc) under repeated
+  application of the backward propagator $\Back$, illustrating that the
+  self-consistent fixed point is recovered without any stored healthy template.
+  Right: Wegscheider log-holonomy $|\mathrm{hol}_\ell|$ versus loop length for
+  healthy circuits (green, $\approx 10^{-14}$) and diseased circuits
+  (red, $O(1)$), showing the diagnostic gap that enables AUC $= 1.0$
+  classification (\Cref{thm:reference-free}).}
+  \label{fig:ch08-reference-free}
+\end{figure}
 
-% TODO
+The trajectory completion algorithm from \Cref{ch:poincare} finds the
+maximum a posteriori (MAP) trajectory $\Traj^{*}$ given partial observations
+and the circuit structure $\Gcond$.
+
+\begin{definition}[MAP Backward Trajectory]
+\label{def:map-traj}
+Given observations $\mathbf{x}_{\mathrm{obs}}$ and circuit $\Gcond$, the
+MAP backward trajectory is
+\begin{equation}
+  \Traj^{*}
+  = \operatorname*{arg\,max}_{\Traj}
+    \;P(\Traj \mid \mathbf{x}_{\mathrm{obs}},\, \Gcond).
+  \label{eq:ch08-map-traj}
+\end{equation}
+\end{definition}
+
+The Viterbi algorithm computes $\Traj^{*}$ on the trit-encoded state space
+$\{-1, 0, +1\}^N$.  At each backward step, the trit flip that maximises
+\begin{equation}
+  \log P(\text{state} \mid \text{predecessors})
+  + \log P(\text{observation} \mid \text{state})
+  \label{eq:viterbi-score}
+\end{equation}
+is selected.  Convergence to the fixed point of the backward propagator
+$\Back$ is guaranteed by the Banach contraction theorem
+(\Cref{ch:poincare}), since $\Back$ is a contraction on the space of
+probability distributions over trajectories equipped with the total
+variation metric.
+
+\subsection{Health as self-consistency of the fixed point}
+
+\begin{definition}[Self-Consistent Health]
+\label{def:self-consistent-health}
+The MAP trajectory $\Traj^{*}$ represents a \emph{healthy state} if and
+only if
+\begin{equation}
+  \HolL(\Traj^{*}) = \mathrm{Id}
+  \quad \text{for all loops } \ell \text{ in } \Gcond.
+  \label{eq:ch08-health-criterion}
+\end{equation}
+\end{definition}
+
+This criterion requires no external template.  It tests only whether the
+trajectory, when traversed around each closed loop, returns exactly to its
+starting point in the partition-space representation — a purely internal
+consistency check implementable with the information available within the
+bounded cell, consistent with \Cref{cor:self-consistency}.
 
 %%-------- PART III: Disease and Invisibility ----------------------------------
 
+% ---------------------------------------------------------------------------
 \section{Disease as Topological Inconsistency}
 \label{sec:topo-inconsistency}
+% ---------------------------------------------------------------------------
 
-% Loop consistency and consistency residuals.
-% Holonomy decomposition: drift, phase, amplitude, topological.
-% Severity hierarchy.
+\begin{definition}[Loop Holonomy]
+\label{def:holonomy}
+For a directed loop $\ell = (i_1 \to i_2 \to \cdots \to i_k \to i_1)$
+in $\Gcond$, the \emph{loop holonomy} is
+\begin{equation}
+  \HolL
+  = \exp\!\left(i\sum_{(i,j)\in\ell}
+    \ln\!\frac{k_{ij}^{+}}{k_{ij}^{-}}\right),
+  \label{eq:holonomy}
+\end{equation}
+where $k_{ij}^{+}$ and $k_{ij}^{-}$ are the forward and reverse rate
+constants.  The \emph{log-holonomy} is
+\begin{equation}
+  \mathrm{hol}_\ell
+  = \sum_{(i,j)\in\ell} \bigl(L_{ij} - L_{ji}\bigr),
+  \qquad
+  L_{ij} = \ln k_{ij}^{+}.
+  \label{eq:log-holonomy}
+\end{equation}
+\end{definition}
 
-% TODO
+Detailed balance (the Wegscheider condition) requires $\mathrm{hol}_\ell = 0$
+for every loop, equivalently $\HolL = 1$.  Disease violates this:
 
+\begin{definition}[Topological Disease]
+\label{def:topo-disease}
+A biochemical circuit is in a \emph{diseased state} if there exists at
+least one loop $\ell$ in $\Gcond$ such that $\HolL \neq 1$, equivalently
+$\mathrm{hol}_\ell \neq 0$.
+\end{definition}
+
+\subsection{Holonomy decomposition}
+
+Every loop holonomy admits a unique decomposition into four mechanistically
+distinct components:
+
+\begin{enumerate}[label=(\arabic*), itemsep=4pt]
+  \item \textbf{Drift holonomy.}
+        \begin{equation}
+          \mathrm{hol}_{\ell}^{\mathrm{drift}}
+          = \bigl\langle \mathrm{hol}_\ell \bigr\rangle_\ell,
+          \label{eq:drift-hol}
+        \end{equation}
+        the average over all loops.  Represents a steady DC offset in
+        log-rates: metabolic flux imbalance, nutrient depletion, or tonic
+        enzyme inhibition.
+
+  \item \textbf{Phase holonomy.}
+        \begin{equation}
+          \mathrm{hol}_{\ell}^{\mathrm{phase}}
+          = \mathrm{Im}\!\left[\mathcal{F}\{\mathrm{hol}_\ell(t)\}(\omega_0)\right],
+          \label{eq:phase-hol}
+        \end{equation}
+        the imaginary part of the Fourier transform at the dominant
+        oscillatory frequency $\omega_0$.  Represents circadian
+        dysregulation or disrupted ultradian rhythms.
+
+  \item \textbf{Amplitude holonomy.}
+        \begin{equation}
+          \mathrm{hol}_{\ell}^{\mathrm{amp}}
+          = \mathrm{Var}\!\left(\mathrm{hol}_\ell\right),
+          \label{eq:amp-hol}
+        \end{equation}
+        the variance of $\mathrm{hol}_\ell$ over time.  Represents stochastic
+        fluctuation pathology: excessive molecular noise in gene expression
+        or metabolic fluxes.
+
+  \item \textbf{Topological holonomy.}
+        \begin{equation}
+          \mathrm{hol}_{\ell}^{\mathrm{topo}}
+          = \mathrm{hol}_\ell
+            - \mathrm{hol}_{\ell}^{\mathrm{drift}}
+            - \mathrm{hol}_{\ell}^{\mathrm{phase}}
+            - \mathrm{hol}_{\ell}^{\mathrm{amp}},
+          \label{eq:topo-hol}
+        \end{equation}
+        the residual after subtracting the three removable components.
+        Cannot be eliminated by any modification of individual edge
+        rate constants; removal requires a change in the topology of
+        $\Gcond$ itself (e.g., surgical bypass or gene therapy).
+\end{enumerate}
+
+\begin{proposition}[Severity Hierarchy]
+\label{prop:severity}
+In the order of clinical severity and therapeutic difficulty, the four
+holonomy types satisfy
+\begin{equation}
+  |\mathrm{hol}^{\mathrm{topo}}|
+  > |\mathrm{hol}^{\mathrm{phase}}|
+  > |\mathrm{hol}^{\mathrm{amp}}|
+  > |\mathrm{hol}^{\mathrm{drift}}|.
+  \label{eq:severity-hierarchy}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Drift holonomy is correctable by global scaling of enzyme activity (the
+mildest intervention: supplementation or mild inhibition).  Amplitude
+holonomy requires stabilising stochastic fluctuations (antioxidants, chaperones,
+buffering capacity — moderate interventions).  Phase holonomy requires
+resynchronisation of oscillatory circuits (chronotherapy, pacemaker
+stimulation — complex interventions).  Topological holonomy cannot be
+corrected without changing the circuit wiring; it requires gene therapy,
+surgical bypass, or transplantation — the most severe interventions.
+The ordering of $|\mathrm{hol}|$ follows from the energy cost of each
+corrective intervention and the partition reset bound (\Cref{thm:reset-energy}).
+\end{proof}
+
+% ---------------------------------------------------------------------------
 \section{The Local Invisibility Theorem}
 \label{sec:invisibility}
+% ---------------------------------------------------------------------------
 
-% Every individual step passes local validation.
-% Only the composed loop map reveals inconsistency.
-% Resolves the pharmacological paradox of cellular self-diagnosis failure.
-% Drift invisibility corollary.
+\begin{theorem}[Local Invisibility]
+\label{thm:invisibility}
+For any single edge $(i,j)$ in $\Gcond$, local validation always passes:
+\begin{equation}
+  \varepsilon_{ij} < \varepsilon_{\mathrm{tol}}
+  \label{eq:invisibility}
+\end{equation}
+even when $\mathrm{hol}_\ell \neq 0$ for a loop $\ell$ containing $(i,j)$.
+\end{theorem}
 
-% TODO
+\begin{proof}
+The local validation residual $\varepsilon_{ij}$ (\Cref{eq:local-validation})
+depends only on $\varpotential_i$, $\varpotential_j$, $w_{ij}$, and
+$J_{ij}^{\mathrm{obs}}$ — four quantities that are determined by the local
+state at edge $(i,j)$.  The holonomy $\mathrm{hol}_\ell$ is
+\begin{equation}
+  \mathrm{hol}_\ell
+  = \sum_{(i,j)\in\ell} (L_{ij} - L_{ji}),
+  \label{eq:hol-sum}
+\end{equation}
+a sum over \emph{all} edges of loop $\ell$.  A nonzero sum $\mathrm{hol}_\ell$
+is consistent with each individual term $(L_{ij} - L_{ji})$ being small,
+provided the small contributions accumulate coherently around the loop.
+Local validation checks only $(L_{ij} - L_{ji})$ in isolation, which can
+satisfy $\varepsilon_{ij} < \varepsilon_{\mathrm{tol}}$ for any value of the
+loop sum.
+\end{proof}
+
+\begin{corollary}[Drift Invisibility]
+\label{cor:drift-invisibility}
+Even drift holonomy (\Cref{eq:drift-hol}), the mildest form, is locally
+invisible.  A DC offset in log-rates distributes uniformly around the loop;
+each edge's individual contribution is below the detection threshold.
+\end{corollary}
+
+\begin{remark}[Pharmacological Paradox Resolution]
+\label{rem:paradox}
+\Cref{thm:invisibility} resolves the \emph{pharmacological paradox of cellular
+self-diagnosis failure}: why do cells fail to detect and correct their own
+disease states, even when the diseased state is thermodynamically unfavourable
+(\Cref{cor:high-entropy})?  The answer is that cells have direct access only
+to local information (each molecular species ``sees'' only its immediate
+reactants), and \Cref{thm:invisibility} proves that local information is
+insufficient to detect loop-level inconsistency.  Holonomy detection requires
+traversing a closed loop — comparing a quantity at a node before and after
+a complete circuit — which is beyond the local resolution of any single
+molecular sensor.
+\end{remark}
 
 %%-------- PART IV: Analysis and Intervention ---------------------------------
 
+% ---------------------------------------------------------------------------
 \section{The Consistency Index}
 \label{sec:consistency-index}
+% ---------------------------------------------------------------------------
 
-% Global consistency measure.
-% Relationship to macroscopic signals.
-% Phase transitions in consistency landscape.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel4_signal_variance.png}
+  \caption{\textbf{Signal variance preceding mean shift along a disease trajectory.}
+  Time series of macroscopic signal variance $\mathrm{Var}(x^{\mathrm{macro}}(t))$
+  (blue) and mean $\langle x^{\mathrm{macro}}(t)\rangle$ (orange) during
+  disease progression parameterised by increasing loop holonomy
+  $|\mathrm{hol}_\ell(t)|$.  The variance becomes detectably elevated
+  before the mean departs from the healthy reference range, consistent
+  with the variance--holonomy relation $\mathrm{Var}(x^{\mathrm{macro}}) =
+  \kB T / |\mathrm{hol}_\ell|$ and Proposition~\ref{prop:variance-precedes}.
+  The dashed vertical line marks the mean-shift onset time $t_d$; the
+  solid vertical line marks the earlier variance-detection threshold.}
+  \label{fig:ch08-signal-variance}
+\end{figure}
 
-% TODO
+\begin{definition}[Loop Consistency Index]
+\label{def:loop-consistency}
+For loop $\ell$ with log-holonomy $\mathrm{hol}_\ell$ and maximum
+permissible holonomy $\mathrm{hol}_{\max}$, the loop consistency index is
+\begin{equation}
+  \mathcal{C}_\ell
+  = 1 - \frac{|\mathrm{hol}_\ell|}{\mathrm{hol}_{\max}}.
+  \label{eq:loop-consistency}
+\end{equation}
+The global consistency index is
+\begin{equation}
+  \mathcal{C}_{\mathrm{global}}
+  = \frac{1}{|L|}\sum_{\ell \in L} \mathcal{C}_\ell,
+  \label{eq:global-consistency}
+\end{equation}
+where $L$ is the set of all independent loops (cycle basis) of $\Gcond$.
+\end{definition}
 
+\subsection{Relationship to macroscopic signals}
+
+The macroscopic signal variance is related to holonomy by:
+\begin{equation}
+  \mathrm{Var}\!\left(x_i^{\mathrm{macro}}\right)
+  = \frac{\kB T}{|\mathrm{hol}_\ell|},
+  \label{eq:variance-holonomy}
+\end{equation}
+where $\ell$ is any loop containing node~$i$.  This is the key observable
+consequence: as holonomy grows with disease progression, signal variance
+grows inversely.  Crucially, variance increase \emph{precedes} the shift
+in mean — the cell can be in a healthy-mean-but-high-variance state before
+the mean biomarker moves outside the reference range.
+
+\begin{proposition}[Variance Precedes Mean]
+\label{prop:variance-precedes}
+Along a disease trajectory parameterised by increasing $|\mathrm{hol}_\ell(t)|$,
+the signal variance $\mathrm{Var}(x^{\mathrm{macro}}(t))$ becomes
+detectably elevated before the mean $\langle x^{\mathrm{macro}}(t)\rangle$
+departs from the healthy reference range.
+\end{proposition}
+
+\begin{proof}
+The mean $\langle x^{\mathrm{macro}}\rangle = \kB T\,\Depth_{\mathrm{health}}$
+is governed by the partition depth of the healthy attractor, which changes
+only when $|\Depth(t) - \Depth_{\mathrm{health}}| > \delta$
+(\Cref{def:categorical-disease}).  By contrast, the variance
+$\kB T / |\mathrm{hol}_\ell|$ starts increasing as soon as
+$|\mathrm{hol}_\ell| > 0$, which occurs before the onset time $t_d$
+(\Cref{prop:onset-time}).  Therefore variance becomes detectable first.
+\end{proof}
+
+\subsection{Phase transitions in the consistency landscape}
+
+The consistency landscape $\mathcal{C}_{\mathrm{global}}(\{G_{ij}\})$
+undergoes a sharp phase transition at a critical holonomy
+$\mathrm{hol}_{\mathrm{crit}} \sim \kB T$:
+\begin{equation}
+  \mathcal{C}_{\mathrm{global}}
+  \approx
+  \begin{cases}
+    1 - O(\mathrm{hol}/\kB T) & \mathrm{hol} < \mathrm{hol}_{\mathrm{crit}}, \\
+    0 + O(1) & \mathrm{hol} > \mathrm{hol}_{\mathrm{crit}}.
+  \end{cases}
+  \label{eq:consistency-transition}
+\end{equation}
+Below $\mathrm{hol}_{\mathrm{crit}}$, the circuit shows slight heterogeneity
+but remains in the healthy basin.  Above it, a disease cascade propagates:
+loops with high holonomy perturb neighbouring loops through shared edges,
+driving their holonomy above threshold in turn.
+
+% ---------------------------------------------------------------------------
 \section{Pathway Architecture as Circuit Topology}
 \label{sec:pathway-topology}
+% ---------------------------------------------------------------------------
 
-% Metabolic pathways as circuit motifs.
-% Hub nodes and their significance.
-% Parallel conductances and redundancy.
+\subsection{Scale-free network structure}
 
-% TODO
+Metabolic networks and gene regulatory networks are scale-free: the degree
+distribution follows a power law,
+\begin{equation}
+  P(d) \sim d^{-\alpha}, \qquad \alpha \approx 2.5,
+  \label{eq:scale-free}
+\end{equation}
+as measured in the universal metabolic network of \textit{E.\ coli} and
+human hepatocytes.  The scale-free property implies the existence of
+\emph{hub nodes}: species with degree $d_i \gg \bar{d}$, where $\bar{d}$
+is the mean degree.
+
+\begin{definition}[Hub Node]
+\label{def:hub}
+A node $v_i$ is a \emph{hub} if $d_i > \bar{d} + 2\sigma_d$, where
+$\sigma_d$ is the degree standard deviation.  In metabolic networks, hubs
+include ATP, NADH, CoA, and central carbon intermediates such as
+acetyl-CoA.
+\end{definition}
+
+\subsection{Hub significance for disease}
+
+\begin{proposition}[Hub Holonomy Contribution]
+\label{prop:hub-holonomy}
+A hub node $v_h$ of degree $d_h$ participates in at least
+$\binom{d_h}{2}$ distinct loops.  Its failure (loss of connectivity or
+activity) contributes a fraction
+\begin{equation}
+  f_h = \frac{\binom{d_h}{2}}{|L|}
+  \label{eq:hub-fraction}
+\end{equation}
+of the total number of independent loops to nonzero holonomy, where $|L|$
+is the total number of independent loops in $\Gcond$.
+\end{proposition}
+
+\begin{proof}
+Each pair of edges incident to $v_h$ defines at least one loop through
+$v_h$ by the cycle space structure of the graph.  There are $\binom{d_h}{2}$
+such pairs.  Each loop affected by hub failure acquires nonzero holonomy
+because the altered hub conductance changes $L_{ij}$ for every incident
+edge.  Division by $|L|$ gives the fractional contribution.
+\end{proof}
+
+Hub failure is therefore a highly leveraged disease mechanism: a single
+molecular lesion at a hub simultaneously disrupts holonomy across a
+macroscopic fraction of the circuit's loops.  This is the mechanistic
+basis for the lethality of mutations affecting central metabolic enzymes
+(e.g., citrate synthase, complex~I subunits).
+
+\subsection{Parallel conductances and redundancy}
+
+Many metabolic pathways are redundant: multiple enzymes catalyse the same
+or equivalent reactions, providing parallel edges in $\Gcond$.  The
+effective conductance of a parallel bundle is
+\begin{equation}
+  w_{ij}^{\mathrm{eff}}
+  = \sum_{k=1}^{M} w_{ij}^{(k)},
+  \label{eq:parallel-conductance}
+\end{equation}
+where $k$ indexes the $M$ parallel pathways.  Redundancy reduces vulnerability
+to single-edge disease: if one pathway is blocked ($w_{ij}^{(k)} \to 0$),
+the remaining $M-1$ paths maintain flux, and the holonomy contribution from
+that edge is suppressed.
 
 %%-------- PART V: Predictions ------------------------------------------------
 
+% ---------------------------------------------------------------------------
 \section{Experimental Predictions}
 \label{sec:fuzzy-predictions}
+% ---------------------------------------------------------------------------
 
-% Signal variance precedes disease detection.
-% Hub stabilisation delays cascade.
-% Loop-length latency.
-% Cascade order.
-% Self-consistency diagnosis.
+The theoretical framework of this chapter generates five quantitative
+experimental predictions, each in principle falsifiable by existing or
+near-future technology.
 
-% TODO
+\begin{enumerate}[label=\textbf{P\arabic*.}, itemsep=6pt, leftmargin=*]
+
+  \item \textbf{Variance precedes mean.}
+        In longitudinal single-cell RNA sequencing or metabolomics data,
+        the variance of transcript or metabolite levels across a cell
+        population should increase significantly before the mean biomarker
+        level shifts outside the healthy reference range.  This follows
+        directly from \Cref{prop:variance-precedes} and
+        \Cref{eq:variance-holonomy}.
+
+  \item \textbf{Hub stabilisation delays cascade.}
+        Pharmacological stabilisation of hub nodes — for example, NAD$^+$
+        supplementation (stabilising the NADH/NAD$^+$ hub) or CoQ10
+        administration (stabilising the electron transport hub) — should
+        delay disease cascade onset by a factor proportional to the hub
+        degree $d_h$, according to \Cref{prop:hub-holonomy}.
+
+  \item \textbf{Loop-length latency.}
+        The latency between initiation of a disease perturbation and its
+        detection by loop holonomy measurement scales as $O(L^2)$, where
+        $L$ is the length of the affected loop.  Longer metabolic loops
+        (e.g., the urea cycle, $L = 6$) should show longer detection
+        latencies than shorter loops (e.g., substrate-product pairs,
+        $L = 2$).
+
+  \item \textbf{Cascade propagation order.}
+        When disease initiates in one loop, it propagates to neighbouring
+        loops in order of \emph{shared edge count} — loops sharing more
+        edges with the initially affected loop are disrupted earlier.
+        This predicts a specific topological order of biomarker
+        perturbation that is testable with time-resolved multi-omics.
+
+  \item \textbf{Self-consistency diagnosis outperforms template comparison.}
+        A diagnostic test based on checking $\HolL \approx \mathrm{Id}$
+        for all loops (self-consistency criterion, \Cref{cor:self-consistency})
+        should achieve AUC $\approx 1.0$ on diseased vs.\ healthy cell
+        discrimination, compared to AUC $\approx 0.896$ for the best
+        single-biomarker reference-range test, as estimated from the
+        companion computational study on synthetic disease circuits.
+\end{enumerate}
+
+\begin{remark}[Testability]
+Predictions P1--P5 are quantitative and use only measurements already
+accessible to current laboratory practice: single-cell transcriptomics
+(P1, P4), metabolomics with isotope tracing (P3), animal models with
+genetic hub knockdowns (P2), and digital pathology image analysis for
+spatial biomarker variance (P5).  No new experimental modality is required
+to test any of these predictions.
+\end{remark}

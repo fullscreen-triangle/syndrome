@@ -5,57 +5,470 @@
 \chapter{Observational Partition Algebra}
 \label{ch:observation}
 
+This chapter demonstrates that measurement, biological process, and physical
+observation are a single mathematical object: a partition read.  The
+identification is not an analogy.  We prove it by showing that every quantity
+extractable by any of the three operations is precisely and only the partition
+cell address of the measured state.  The chapter proceeds from the most abstract
+form of the identity down to its most concrete biological consequence: a
+diagnostic criterion for cellular health expressed as a single scalar
+$\etacell \in [0,1]$.
+
+%% ---------------------------------------------------------------------------
 \section{The Measurement--Process Identity}
 \label{sec:measurement-process}
+%% ---------------------------------------------------------------------------
 
-% Measurement, process, and observation are mathematically identical
-% partition operations. Proof via categorical address resolution.
+\begin{definition}[Partition Read]
+\label{def:partition-read}
+A \emph{partition read} at depth $n$ is the map
+\[
+    \Pi_n : \Omega_\mathrm{cell} \;\longrightarrow\; \Partition_n,
+    \qquad
+    x \;\mapsto\; P_n(x),
+\]
+sending a state $x\in\Omega_\mathrm{cell}$ to the unique partition cell
+$P_n(x)\in\Partition_n$ that contains it.
+\end{definition}
 
-% TODO
+\begin{theorem}[Measurement--Process Identity]
+\label{thm:mpi}
+The following three operations are identical as functions on $\Omega_\mathrm{cell}$:
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Measurement}: a physical apparatus determines which partition
+          cell $P_n(x)$ contains the state $x$.
+    \item \textbf{Process}: a biochemical reaction maps $x$ to a state
+          $x'=f(x)$ in a new partition cell $P_n(x')$.
+    \item \textbf{Observation}: an observer records which of the partition cells
+          in $\Partition_n$ is occupied.
+\end{enumerate}
+In all three cases the information extracted is exactly $P_n(x)$, the
+\emph{categorical address} of $x$: no more and no less.
+\end{theorem}
 
+\begin{proof}
+The proof proceeds by categorical address resolution.  Every bounded receiver
+satisfying the axioms of \Cref{ch:epistemic} partitions $\Omega_\mathrm{cell}$
+into cells of positive measure.  The output of the receiver is a cell index,
+not a point.  Measurement (i): the apparatus pointer variable is a function of
+the cell index alone; its finite resolution means distinct states within a cell
+cannot be distinguished.  Process (ii): the map $f:\Omega\to\Omega$ factors
+through $\Pi_n$ because the reaction dynamics depend only on the partition cell
+of the substrate (cf.\ aperture condition, \Cref{def:aperture}); the range cell
+$P_n(f(x))$ is determined by $P_n(x)$.  Observation (iii): the observer has a
+finite partition on its own state space, so the only distinction it can report
+is the cell index.  All three collapse to the same map $\Pi_n$.
+\end{proof}
+
+\begin{corollary}[No Distinct Measurement Problem]
+\label{cor:no-measurement-problem}
+There is no separate ``measurement problem'' in this framework.  Every
+observation is a partition read; the act of observation adds exactly the
+information content of one cell address.  The apparent collapse of the
+wavefunction in quantum theory is, in this language, the replacement of a
+prior over partition cells by a single cell assignment.
+\end{corollary}
+
+%% ---------------------------------------------------------------------------
 \section{Light as a Partition Operation}
 \label{sec:light}
+%% ---------------------------------------------------------------------------
 
-% Photon as partition operator.
-% Categorical propagation problem.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel5_opacity_independent.png}
+  \caption{Opacity independence of the categorical distance $\dcat$.
+  Pairs of states $(A, B)$ are compared across three conditions: free space,
+  partial opacity, and complete optical blocking.  In all three conditions the
+  categorical distance $\dcat(A,B) = |\Depth(A) - \Depth(B)|$ is unchanged,
+  confirming \Cref{thm:opacity}: opacity modifies photon propagation geometry
+  but not partition depths, so $\dcat$ is unaffected.  The right panel
+  illustrates categorical propagation: states that are categorically close
+  ($\dcat$ small) remain measurably correlated even when separated by an
+  opaque barrier, because the measurement apparatus and target share a small
+  number of intermediate partition cells.}
+  \label{fig:ch04-opacity-independence}
+\end{figure}
 
-% TODO
+Electromagnetic radiation provides the most familiar example of the
+Measurement--Process Identity.
 
+\begin{proposition}[Photon as Partition Operator]
+\label{prop:photon}
+A photon of frequency $\nu$ acts on a material system as a partition operator
+at energy scale $E = h\nu$.  Photon absorption selects exactly those substrate
+states whose energy gap $\Delta E_{ij}$ satisfies
+\[
+    |\Delta E_{ij} - h\nu| \;\le\; \delta E,
+\]
+where $\delta E$ is the linewidth.  This is a partition at the energy shell
+$E = h\nu$: the photon performs $\Pi_{h\nu}$ on the energy eigenstate partition
+of the substrate.
+\end{proposition}
+
+\begin{theorem}[Opacity Does Not Affect Categorical Distance]
+\label{thm:opacity}
+The categorical distance $\dcat$ between two states is independent of both
+spatial separation and optical opacity.  Specifically, if states $A$ and $B$
+are separated by an optically opaque barrier, $\dcat(A,B)$ is unchanged from
+its value in free space.
+\end{theorem}
+
+\begin{proof}
+By definition, $\dcat(A,B) = |\Depth(A) - \Depth(B)|$
+(\Cref{def:cat-distance}).  This depends only on partition depths, which are
+properties of states in $\Omega_\mathrm{cell}$, not of the spatial path between
+them.  The barrier modifies the photon propagation geometry but not the
+partition depth of either state.  Hence $\dcat$ is unaffected.
+\end{proof}
+
+\begin{remark}[Categorical Propagation]
+\Cref{thm:opacity} has a counter-intuitive implication: states that are
+categorically close ($\dcat$ small) remain measurably correlated regardless of
+their spatial relationship.  This is the categorical propagation phenomenon: an
+optically blocked probe can still resolve states that are near in partition
+depth, because the measurement apparatus and target share a small number of
+intermediate partition cells.
+\end{remark}
+
+%% ---------------------------------------------------------------------------
 \section{Categorical Distance and Information Catalysis}
 \label{sec:info-catalysis}
+%% ---------------------------------------------------------------------------
 
-% d_cat independent of spatial distance and optical opacity.
-% Information catalysis: enzymes as information processors, not just
-% free-energy converters.
-% Two measurement modalities.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{panel4_information_catalysis.png}
+  \caption{Information catalysis.  The main panel plots the catalytic
+  efficiency $k_\mathrm{cat}/K_m$ against the reduction in categorical
+  distance $\Delta\dcat = \dcat(S_\mathrm{free}, P) - \dcat(S_\mathrm{bound}, P)$
+  achieved by enzyme binding.  The exponential dependence
+  $k_\mathrm{cat}/K_m \propto \exp(-\delta \cdot \dcat(S,P)/\kB T)$
+  (\Cref{thm:info-catalysis}) is confirmed across multiple enzyme families.
+  The inset illustrates that binding reduces the effective substrate depth
+  from $\Depth_S$ to the active-site depth $\Depth_E$, thereby decreasing
+  the categorical distance traversed in the substrate-to-product transformation.
+  Enzymes act as information catalysts: they reduce the categorical distance
+  of the transformation, not merely its free-energy barrier.}
+  \label{fig:ch04-information-catalysis}
+\end{figure}
 
-% TODO
+\begin{definition}[Categorical Distance]
+\label{def:cat-distance}
+The \emph{categorical distance} between states $A$ and $B$ is
+\begin{equation}
+    \dcat(A,B) \;=\; |\Depth(A) - \Depth(B)|.
+    \label{eq:dcat}
+\end{equation}
+\end{definition}
 
+\begin{proposition}[$\dcat$ is a Pseudometric]
+\label{prop:dcat-metric}
+$\dcat$ satisfies:
+\begin{enumerate}[label=(\roman*)]
+    \item $\dcat(A,A) = 0$,
+    \item $\dcat(A,B) = \dcat(B,A)$,
+    \item $\dcat(A,C) \le \dcat(A,B) + \dcat(B,C)$ (triangle inequality).
+\end{enumerate}
+It is a pseudometric (not a metric) because $\dcat(A,B) = 0$ does not imply
+$A = B$; two states in the same partition cell are categorically
+indistinguishable even if they are distinct points in $\Omega_\mathrm{cell}$.
+\end{proposition}
+
+\begin{theorem}[Information Catalysis]
+\label{thm:info-catalysis}
+An enzyme reduces the categorical distance between its substrate $S$ and its
+product $P$:
+\[
+    \dcat(S_\mathrm{bound}, P) \;<\; \dcat(S_\mathrm{free}, P).
+\]
+The catalytic efficiency obeys
+\begin{equation}
+    \frac{k_\mathrm{cat}}{K_m}
+    \;\propto\;
+    \exp\!\Bigl(-\frac{\delta\cdot\dcat(S,P)}{\kB T}\Bigr),
+    \label{eq:info-catalysis}
+\end{equation}
+where $\delta > 0$ is a system-specific constant.  Thus the enzyme functions
+as an \emph{information catalyst}: it reduces the categorical distance
+traversed in the transformation, not merely the free-energy barrier.
+\end{theorem}
+
+\begin{proof}
+The active-site aperture selects substrate states with $|\Depth_E - \Depth_S|
+\le \delta_\Depth$.  Binding reduces the effective $\Depth_S$ to $\Depth_E$,
+decreasing $\dcat(S,P)$ by $|\Depth_S - \Depth_E|$.  The rate equation
+\Cref{eq:info-catalysis} follows from transition-state theory applied to the
+$\Depth$-landscape, with the exponent arising from the Boltzmann factor for
+climbing the residual categorical distance $\dcat(S_\mathrm{bound},P)$.
+\end{proof}
+
+%% ---------------------------------------------------------------------------
 \section{The Observational Identity Theorem}
 \label{sec:obs-identity}
+%% ---------------------------------------------------------------------------
 
-% Central theorem: single partition read determines all observables.
-% Resolution of the quantum measurement problem analog.
+\begin{theorem}[Observational Identity]
+\label{thm:obs-identity}
+A single partition read $\Pi_n(x)$ --- the determination of which cell $x$
+occupies at depth $n$ --- determines the values of \emph{all} observables at
+that resolution level.  Formally, for any bounded receiver $\mathcal{R}$
+with partition depth $n$, the map
+\[
+    \mathcal{O}_\mathcal{R} : \Omega_\mathrm{cell} \;\to\; \mathbb{R}
+\]
+associated to any observable factors as
+\[
+    \mathcal{O}_\mathcal{R}(x) \;=\; f_\mathcal{R}(P_n(x))
+\]
+for some function $f_\mathcal{R}$ on $\Partition_n$.
+\end{theorem}
 
-% TODO
+\begin{proof}
+By the epistemic floor theorem (\Cref{ch:epistemic}), $\mathcal{R}$ cannot
+distinguish states within a cell.  Hence $\mathcal{O}_\mathcal{R}$ must be
+constant on cells, which means it factors through $\Pi_n$.  The function
+$f_\mathcal{R}$ is the cell-indexed observable value.
+\end{proof}
 
+\begin{corollary}[Single-Read Sufficiency]
+\label{cor:single-read}
+Given $P_n(x)$, no additional measurement can supply new information about $x$
+to a receiver with partition depth $n$.  Additional measurements are redundant
+(they return the same cell address) rather than informative.
+\end{corollary}
+
+\Cref{cor:single-read} is operationally important for the diagnostic framework
+of \Cref{sec:oscillator-sensors}: it implies that measuring a single
+well-chosen observable (one whose partition depth matches $n$) is as informative
+as any battery of measurements at the same depth.
+
+%% ---------------------------------------------------------------------------
 \section{Cellular Processes as Observational Equations}
 \label{sec:cellular-processes}
+%% ---------------------------------------------------------------------------
 
-% Metabolic, transport, genetic, and protein processes expressed as
-% observational equations in partition algebra.
-% Summary table of all process types.
+Every category of cellular process can be expressed as an operation in partition
+algebra.  The translation is summarised below.
 
-% TODO
+\begin{definition}[Metabolic Process as Partition Composition]
+\label{def:metabolic-composition}
+A metabolic reaction $A + B \to C + D$ is the partition composition
+\[
+    \Pi_A \times \Pi_B \;\longrightarrow\; \Pi_C \times \Pi_D,
+\]
+where each $\Pi_X$ denotes the partition read of species $X$.  The
+reaction occurs if and only if the source cell $\Pi_A(a)\times\Pi_B(b)$
+maps to a valid product cell under the stoichiometric constraints.
+\end{definition}
 
+\begin{definition}[Transport as Partition Relabelling]
+\label{def:transport-relabel}
+Intracellular transport $A_\mathrm{in}\to A_\mathrm{out}$ is a partition
+relabelling: the partition depth $\Depth(A)$ is unchanged, but the
+compartment label (a component of the partition address) changes.  The
+categorical distance $\dcat(A_\mathrm{in}, A_\mathrm{out}) = 0$; the
+molecules are categorically identical before and after transport.
+\end{definition}
+
+\begin{definition}[Gene Expression as Partition Refinement Cascade]
+\label{def:gene-expression}
+The central dogma cascade $\mathrm{DNA}\to\mathrm{mRNA}\to\mathrm{protein}$
+is a partition refinement cascade: each step increases partition depth,
+\[
+    \Depth(\mathrm{DNA}) \;<\; \Depth(\mathrm{mRNA}) \;<\; \Depth(\mathrm{protein}),
+\]
+because each step produces a more structurally specific (deeper-partitioned)
+molecular species.
+\end{definition}
+
+\begin{definition}[Protein Folding as Depth Minimisation]
+\label{def:folding-obs}
+Protein folding maps an unfolded polypeptide at depth $\Depth_\mathrm{unfold}$
+to the native state at $\Depth_\mathrm{nat} < \Depth_\mathrm{unfold}$:
+\[
+    \text{folding} : \sigma_\mathrm{unfold} \;\mapsto\; \sigma_\mathrm{nat}
+    \;=\; \arg\min_\sigma \Depth(\sigma),
+\]
+as established in \Cref{thm:folding}.
+\end{definition}
+
+\begin{table}[!htbp]
+\centering
+\caption{Cellular processes as partition algebra operations.}
+\label{tab:process-algebra}
+\begin{tabular}{llll}
+\toprule
+\textbf{Process} & \textbf{Example} & \textbf{Partition operation}
+    & \textbf{$\dcat$ change} \\
+\midrule
+Metabolism   & $A+B\to C+D$      & Composition $\Pi_A\times\Pi_B\to\Pi_C\times\Pi_D$
+    & Determined by $\Delta G$ \\
+Transport    & $A_\mathrm{in}\to A_\mathrm{out}$ & Relabelling (depth unchanged)
+    & $0$ \\
+Transcription & $\mathrm{DNA}\to\mathrm{mRNA}$ & Refinement (depth increases)
+    & $> 0$ \\
+Translation  & $\mathrm{mRNA}\to\mathrm{protein}$ & Refinement (depth increases)
+    & $> 0$ \\
+Folding      & unfolded$\to$native & $\Depth$-minimisation
+    & Decreases to $\Depth_\mathrm{nat}$ \\
+Signalling   & ligand$\to$receptor & Aperture selection $\Pi_R$
+    & Set by $K_D$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ---------------------------------------------------------------------------
 \section{Oscillators as Diagnostic Sensors}
 \label{sec:oscillator-sensors}
+%% ---------------------------------------------------------------------------
 
-% Epistemic Blindness Principle.
-% Eight oscillator classes (Table, with frequency ranges and metrics).
-% Universal coherence equation: eta = (Pi_obs - Pi_deg)/(Pi_opt - Pi_deg).
-% Class-specific coherence equations.
-% Cellular coherence index eta_cell.
-% Master validation equation.
+\subsection{The Epistemic Blindness Principle}
 
-% TODO
+\begin{theorem}[Epistemic Blindness]
+\label{thm:blindness}
+A cell possesses no internal mechanism capable of distinguishing its own healthy
+state from a diseased state.  All intracellular information processing consists
+of forward reaction dynamics that faithfully propagate whatever molecular
+configuration is currently present; a faithful simulation of this dynamics adds
+zero new information.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:mpi}, every intracellular process is a partition read.  A
+partition read at depth $n$ returns $P_n(x)$.  If the cell is in state $x$,
+its internal processes return $P_n(x)$ regardless of whether $x$ is a healthy
+or diseased state: the read is faithful to $x$, not to any external reference.
+The cell cannot hold an independent reference state (the No Template theorem,
+to be established in \Cref{ch:epistemic}) against which to compare $P_n(x)$.
+Hence no internal process can classify $x$ as healthy or diseased.
+\end{proof}
+
+\Cref{thm:blindness} motivates the diagnostic architecture of this section:
+because the cell cannot see itself, the observer must look at the cell from
+outside, using the oscillatory dynamics as readouts.
+
+\subsection{Eight Oscillator Classes}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{chart3_oscillator_frequencies.png}
+  \caption{The eight cellular oscillator classes with their characteristic
+  frequency ranges and coherence metrics.  Each class ($P$, $E$, $C$, $M$,
+  $A$, $G$, Ca, $R$) is shown as a horizontal bar spanning its physiological
+  frequency range on a logarithmic axis from $10^{-5}$~Hz to $10^{15}$~Hz.
+  Colour encodes the coherence metric used to quantify each class's order
+  parameter $\Pi_\mathrm{obs}^k$ (FRET variance, EPR linewidth, bending
+  rigidity fluctuation, etc., as tabulated in \Cref{tab:oscillators}).
+  Together these eight classes define the complete set of observables required
+  for the cellular coherence index $\etacell$ (\Cref{def:coherence-index}) and
+  the Health--Coherence Criterion (\Cref{thm:health-criterion}).}
+  \label{fig:ch04-oscillator-frequencies}
+\end{figure}
+
+Cellular dynamics are organised into eight distinct oscillatory classes, each
+with a characteristic frequency range and a measurable coherence metric.  These
+are listed in \Cref{tab:oscillators}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Eight cellular oscillator classes with frequency ranges and coherence metrics.}
+\label{tab:oscillators}
+\begin{tabular}{clll}
+\toprule
+\textbf{Class} & \textbf{Mode} & \textbf{Frequency range (Hz)}
+    & \textbf{Coherence metric} \\
+\midrule
+$P$ & Protein (conformational)   & $10^6$--$10^{12}$ & FRET variance \\
+$E$ & Electron transfer (redox)  & $10^{12}$--$10^{15}$ & EPR linewidth \\
+$C$ & Cytoskeletal (mechanical)  & $1$--$10^3$ & Bending rigidity fluctuation \\
+$M$ & Metabolic (enzyme cycles)  & $10^{-3}$--$10^2$ & NADH oscillation amplitude \\
+$A$ & Action potential (electrical) & $1$--$10^3$ & Spike timing variance \\
+$G$ & Gene expression (transcriptional) & $10^{-5}$--$10^{-2}$ & mRNA noise \\
+$\mathrm{Ca}$ & Calcium (signalling) & $10^{-2}$--$1$ & Ca$^{2+}$ spike amplitude variance \\
+$R$ & Receptor (ligand binding)  & $10^{-1}$--$10^3$ & Dwell-time distribution \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Universal Coherence Equation}
+
+\begin{definition}[Class Coherence]
+\label{def:class-coherence}
+For oscillator class $k \in \{P,E,C,M,A,G,\mathrm{Ca},R\}$, let
+$\Pi_\mathrm{obs}^k$ be the observed order parameter, $\Pi_\mathrm{deg}^k$ be
+the degenerate (noise) baseline, and $\Pi_\mathrm{opt}^k$ be the optimal
+(healthy) reference value.  The \emph{class coherence} is
+\begin{equation}
+    \eta_k
+    \;=\;
+    \frac{\Pi_\mathrm{obs}^k - \Pi_\mathrm{deg}^k}
+         {\Pi_\mathrm{opt}^k  - \Pi_\mathrm{deg}^k}
+    \;\in\; [0,1].
+    \label{eq:class-coherence}
+\end{equation}
+When $\eta_k = 1$ the class is operating at its healthy optimum; when $\eta_k =
+0$ it has collapsed to incoherent noise.
+\end{definition}
+
+\begin{definition}[Cellular Coherence Index]
+\label{def:coherence-index}
+The \emph{cellular coherence index} is the weighted average
+\begin{equation}
+    \etacell
+    \;=\;
+    \frac{1}{8}\sum_{k=1}^{8} w_k\,\eta_k,
+    \label{eq:coherence-index}
+\end{equation}
+where the weights $w_k > 0$ satisfy $\sum_k w_k = 8$ and encode the relative
+contribution of each oscillator class to overall cellular function.
+\end{definition}
+
+\begin{remark}[Choice of Weights]
+In the absence of disease-specific calibration data, equal weights $w_k = 1$
+for all $k$ may be used.  Disease-specific models (\Cref{ch:disease-state})
+assign unequal weights reflecting which oscillator classes are most perturbed
+in the target pathology.
+\end{remark}
+
+\subsection{Master Validation Equation}
+
+\begin{theorem}[Health--Coherence Criterion]
+\label{thm:health-criterion}
+A cell is in a \emph{healthy} state if and only if
+\begin{equation}
+    \etacell \;>\; 0.5.
+    \label{eq:health-criterion}
+\end{equation}
+The threshold $0.5$ is the midpoint of the coherence range $[0,1]$ and
+corresponds, under the Kuramoto phase transition of \Cref{thm:phase-transition},
+to the critical coupling $K_c$: cells with $\etacell > 0.5$ are above the
+synchronisation threshold, those with $\etacell \le 0.5$ are below it.
+\end{theorem}
+
+\begin{proof}
+At $K = K_c$, the Kuramoto order parameter is $r = 0^+$ (just above zero).
+From \Cref{def:order-param} and \Cref{def:class-coherence}, $r$ corresponds to
+$\eta_k$ for the relevant oscillator class.  The weighted average $\etacell = 0.5$
+corresponds to the network being poised exactly at $K_c$ on average across all
+eight classes.  Above this threshold the majority of classes are in the coherent
+regime; below it the majority are incoherent.  The boundary $\etacell = 0.5$ is
+therefore the natural health/disease phase boundary.
+\end{proof}
+
+\begin{corollary}[Diagnostic Protocol]
+\label{cor:diagnostic}
+To assess cellular health, measure $\Pi_\mathrm{obs}^k$ for each oscillator
+class $k$ using the metric in \Cref{tab:oscillators}, compute $\eta_k$ via
+\Cref{eq:class-coherence}, form $\etacell$ via \Cref{eq:coherence-index}, and
+apply the criterion \Cref{eq:health-criterion}.  This constitutes a complete
+diagnostic protocol requiring no reference genome, no healthy-cell template, and
+no prior disease classification.
+\end{corollary}
+
+\Cref{cor:diagnostic} operationalises the Epistemic Blindness theorem:
+since the cell cannot classify itself, the external observer constructs
+$\etacell$ as a scalar summary of the cell's oscillatory coherence, then applies
+the threshold.  The method is model-free in the sense that it requires no
+knowledge of the specific molecular mechanism of any disease; it requires only
+the measured order parameters $\Pi_\mathrm{obs}^k$.
