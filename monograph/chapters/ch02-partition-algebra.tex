@@ -1,4 +1,4 @@
-%% Chapter 2 — Epistemic Floors and Observational Algebra
+﻿%% Chapter 2 — Epistemic Floors and Observational Algebra
 %%
 %% Source material:
 %%   docs/sources/epistemological-methodology.tex  (primary)
@@ -11,6 +11,7 @@
 
 \chapter{Epistemic Floors and Observational Algebra}
 \label{ch:epistemic}
+\label{ch:partition-algebra}
 
 \section{Floor Positivity}
 \label{sec:floor-positivity}
@@ -437,7 +438,7 @@ satisfying \Cref{ax:categorical-obs}.  Define:
     finest partition whose cells are intersections of cells of $\Pi$
     and $\Pi'$.
 \end{enumerate}
-$(\mathcal{P}(\Omega), \leq, \wedge, \vee)$ is a \emph{complete lattice}.
+$(\mathcal{P}(\Omega), \leq, \wedge, \vee)$ is a \emph{complete lattice}~\citep{Halmos1950,Billingsley1995}.
 \end{definition}
 
 \begin{proposition}[Lattice Laws]
@@ -526,10 +527,10 @@ negative $S_k$ (trit $-1$), at equilibrium to $S_k = \beta$ (trit $0$), and
 above equilibrium to large $S_k$ (trit $+1$).
 \end{proof}
 
-\begin{theorem}[Zadeh Extension]
+\begin{theorem}[Zadeh Extension~\citep{Zadeh1965}]
 \label{thm:zadeh-extension}
 All algebraic operations on partition cells extend to \emph{fuzzy} operations
-on trit-tuples via the Zadeh extension principle: for any operation
+on trit-tuples via the Zadeh extension principle~\citep{Zadeh1965,Zadeh1978}: for any operation
 $f : \{-1, 0, +1\}^n \to \{-1, 0, +1\}$ and any fuzzy trit-tuple
 $\tilde{\tau} \in [0,1]^3$ (membership grades over $\{-1, 0, +1\}$),
 \[
@@ -568,3 +569,1870 @@ electron transport, or carbon fixation.  This explains why these three stages
 can operate at very different thermodynamic efficiencies while the global
 process remains thermodynamically feasible.
 \end{example}
+
+%% ============================================================
+\section{Formal Outcome Space and Action-Cell Framework}
+\label{sec:outcome-action-cell}
+%% ============================================================
+
+The preceding sections employed the S-functional and partition lattice
+informally.  This section makes the foundations fully explicit: we define
+the outcome space and action-cell from first principles, give the complete
+receiver definition with a proof that the noise floor is strictly positive,
+and establish four basic properties of the S-functional that are used
+throughout the monograph.
+
+\begin{definition}[Outcome space]
+\label{def:outcome-space}
+An \emph{outcome space} is a triple $(\mathcal{X}, d, \Sigma)$ where
+$\mathcal{X}$ is a nonempty set, $d : \mathcal{X} \times \mathcal{X}
+\to [0, \Sigma]$ is a bounded pseudo-metric satisfying $d(x,x) = 0$,
+$d(x,y) = d(y,x)$, and $d(x,z) \leq d(x,y) + d(y,z)$, and
+$\Sigma \in (0, \infty)$ is the \emph{maximal semantic distance}.  We adopt
+$\Sigma = 100$ as the canonical normalisation but never depend on the numerical
+value.
+\end{definition}
+
+\begin{definition}[Action-cell]
+\label{def:action-cell-formal}
+An \emph{action-cell} is a nonempty subset $\mathcal{C} \subseteq \mathcal{X}$
+with positive \emph{tolerance}
+\[
+  \tau(\mathcal{C}) \;:=\; \sup_{x \in \mathcal{X}} \inf_{c \in \mathcal{C}}
+  d(x, c) \;>\; 0
+\]
+and finite \emph{diameter} $\mathrm{diam}(\mathcal{C}) =
+\sup_{c, c' \in \mathcal{C}} d(c, c') < \Sigma$.  The \emph{cell distance} of
+$x \in \mathcal{X}$ to $\mathcal{C}$ is $d(x, \mathcal{C}) :=
+\inf_{c \in \mathcal{C}} d(x, c)$.
+\end{definition}
+
+\begin{remark}[Why action-cells, not points]
+\label{rem:cells-not-points}
+A singleton $\{x_0\}$ fails the tolerance requirement $\tau > 0$ in all but
+degenerate cases: $\tau(\{x_0\}) = 0$ whenever the pseudo-metric separates
+points, because any $x \neq x_0$ at positive $d$-distance contributes
+$d(x, x_0) > 0$ to the supremum, but $\inf_{c \in \{x_0\}} d(x, c) = d(x, x_0)$
+makes $\tau = 0$ when the space has diameter $> 0$.  Positive-tolerance cells
+therefore correspond to genuinely positive-volume regions, which is the formal
+expression of the observation that \emph{practical truth is granular}: no
+physically realisable receiver can distinguish $x$ from $x_0$ when
+$d(x, x_0) < \varepsilon$ for its resolution $\varepsilon$.
+\end{remark}
+
+\begin{definition}[Receiver — complete definition]
+\label{def:receiver-full}
+A \emph{receiver} on $(\mathcal{X}, d, \Sigma)$ is a tuple
+$\mathcal{R} = (\mathcal{K}, \mathcal{D}, \Pi, \beta)$ where:
+\begin{enumerate}[(i)]
+  \item $\mathcal{K}$ is a nonempty set (the \emph{knowledge framework} or
+    representation space of the receiver);
+  \item $\mathcal{D} : \mathcal{X} \to \mathcal{K}$ is the \emph{decoder},
+    a (possibly noisy) Borel-measurable map;
+  \item $\Pi : \mathcal{K} \to 2^{\mathcal{X}} \setminus \{\varnothing\}$ is
+    the \emph{candidate-projection}, satisfying
+    $\mathcal{D}(x) \in \mathcal{D}(\Pi(\mathcal{D}(x)))$ for all $x \in \mathcal{X}$
+    (the projection contains a representative of any decoded state); and
+  \item $\beta \in (0, \Sigma]$ is the \emph{noise floor}:
+    \[
+      \beta \;=\; \sup_{x \in \mathcal{X}} \inf_{x' \in \Pi(\mathcal{D}(x))}
+      d(x, x') \;>\; 0 ,
+    \]
+    which is the irreducible decoder--projection mismatch.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Proof that $\beta > 0$]
+\label{rem:beta-positive}
+The strict positivity of $\beta$ follows from bounded physical resolution.
+Suppose for contradiction that $\beta = 0$.  Then for every $x \in \mathcal{X}$
+and every $\varepsilon > 0$ there would exist $x' \in \Pi(\mathcal{D}(x))$
+with $d(x, x') < \varepsilon$.  This means the decoder--projection pair
+$(\mathcal{D}, \Pi)$ achieves arbitrarily fine resolution everywhere in
+$\mathcal{X}$, which requires the knowledge framework $\mathcal{K}$ to store
+an infinite-precision representation of every state.  Such a $\mathcal{K}$
+would require infinite information capacity, violating
+\Cref{ax:bounded-phase}.  Therefore $\beta > 0$ for every physically
+realisable receiver.
+\end{remark}
+
+\begin{definition}[S-functional — canonical form]
+\label{def:s-functional-canonical}
+For a receiver $\mathcal{R} = (\mathcal{K}, \mathcal{D}, \Pi, \beta)$, a
+state $x \in \mathcal{X}$, and an action-cell $\mathcal{C} \subseteq \mathcal{X}$,
+define
+\[
+  S(\mathcal{R}, x;\, \mathcal{C})
+  \;:=\; \inf_{x' \in \Pi(\mathcal{D}(x))} d(x', \mathcal{C}) \;+\; \beta .
+\]
+We write $S(\mathcal{R}, x)$ when the target cell is clear from context.
+\end{definition}
+
+\begin{proposition}[Basic properties of the S-functional]
+\label{prop:s-basic}
+Let $\mathcal{R} = (\mathcal{K}, \mathcal{D}, \Pi, \beta)$ be a receiver and
+$\mathcal{C} \subseteq \mathcal{X}$ an action-cell.  For all $x \in \mathcal{X}$:
+\begin{enumerate}[(1)]
+  \item \emph{Positivity}: $S(\mathcal{R}, x;\, \mathcal{C}) \geq \beta > 0$.
+  \item \emph{Upper bound}: $S(\mathcal{R}, x;\, \mathcal{C}) \leq
+    d(x, \mathcal{C}) + \beta$.
+  \item \emph{Upper semicontinuity}: $S(\mathcal{R}, \cdot;\, \mathcal{C})$
+    is upper semicontinuous in $x$ when $\mathcal{D}$, $\Pi$, and $d$ are
+    jointly Borel-measurable and $d$ is continuous on each $\Pi$-fibre.
+  \item \emph{Monotonicity in target}: For $\mathcal{C} \subseteq \mathcal{C}'$,
+    $S(\mathcal{R}, x;\, \mathcal{C}') \leq S(\mathcal{R}, x;\, \mathcal{C})$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Immediate from $\beta > 0$ and nonnegativity of $d$.  (2) The projection
+axiom $\mathcal{D}(x) \in \mathcal{D}(\Pi(\mathcal{D}(x)))$ implies the
+existence of $x' \in \Pi(\mathcal{D}(x))$ with $d(x, x') \leq \beta$; then
+$d(x', \mathcal{C}) \leq d(x, \mathcal{C}) + d(x, x') \leq d(x, \mathcal{C})
++ \beta$, and adding $\beta$ per the definition gives the bound.  (3) The
+infimum over $\Pi$-fibres of continuous functions is an infimum of Borel
+functions, which is upper semicontinuous.  (4) $\mathcal{C} \subseteq \mathcal{C}'$
+implies $d(x', \mathcal{C}') \leq d(x', \mathcal{C})$ for all $x'$, so the
+infimum is smaller.
+\end{proof}
+
+%% ============================================================
+\section{Axioms of the S-Functional}
+\label{sec:s-axioms-ch02}
+%% ============================================================
+
+The four properties of \Cref{prop:s-basic} are more than computational
+conveniences — they constitute an axiomatic characterisation of any
+admissible scalar functional measuring receiver-relative semantic distance.
+We state them as axioms to clarify which arguments depend on which properties,
+and to facilitate the Floor Theorem that follows.
+
+\begin{axiom}[S1 — Non-negativity]
+\label{ax:s1}
+$S(\mathcal{R}, x;\, \mathcal{C}) \geq 0$ for all receivers $\mathcal{R}$,
+states $x \in \mathcal{X}$, and action-cells $\mathcal{C}$.
+\end{axiom}
+
+\begin{axiom}[S2 — Boundedness]
+\label{ax:s2}
+$S(\mathcal{R}, x;\, \mathcal{C}) \leq \Sigma$ for all $\mathcal{R}$, $x$,
+and $\mathcal{C}$, where $\Sigma$ is the maximal semantic distance of the
+outcome space.
+\end{axiom}
+
+\begin{axiom}[S3 — Self-truth lower bound]
+\label{ax:s3}
+$S(\mathcal{R}, x;\, \mathcal{C}) \geq \beta(\mathcal{R}) > 0$ for all
+$\mathcal{R}$, $x$, and $\mathcal{C}$, where $\beta(\mathcal{R})$ is the
+noise floor of $\mathcal{R}$.  This is the \emph{floor axiom}: the epistemic
+cost is irreducible.
+\end{axiom}
+
+\begin{axiom}[S4 — Receiver-decoded coherence]
+\label{ax:s4}
+For every state $x \in \mathcal{C}$ (i.e., the true state lies inside the
+action-cell) and every receiver $\mathcal{R}$ for which the decoder--projection
+chain is faithful at $x$ (meaning $\inf_{x' \in \Pi(\mathcal{D}(x))} d(x',
+\mathcal{C}) = 0$),
+\[
+  S(\mathcal{R}, x;\, \mathcal{C}) \;=\; \beta(\mathcal{R}) .
+\]
+Faithfulness is the condition that the receiver's projection lands inside the
+target cell when the true state is already there.
+\end{axiom}
+
+\begin{remark}
+Axioms (S1)--(S3) together assert that $S$ maps into the interval
+$[\beta(\mathcal{R}), \Sigma]$ for every receiver.  Axiom (S4) asserts that
+the lower bound $\beta$ is \emph{attained} whenever the true state is inside
+the target cell and the decoder is faithful.  The four axioms are independent:
+(S4) is not derivable from (S1)--(S3) alone, because those three are
+compatible with $S$ being strictly greater than $\beta$ everywhere.
+\end{remark}
+
+\begin{lemma}[{Image of S is contained in $[\beta(\mathcal{R}), \Sigma]$}]
+\label{lem:s-image}
+For any receiver $\mathcal{R}$ with floor $\beta = \beta(\mathcal{R})$ and
+any action-cell $\mathcal{C}$,
+\[
+  S(\mathcal{R}, x;\, \mathcal{C}) \;\in\; [\beta,\, \Sigma]
+  \quad \text{for all } x \in \mathcal{X} .
+\]
+\end{lemma}
+
+\begin{proof}
+The lower bound follows from \Cref{ax:s3}.  For the upper bound, the
+pseudo-metric $d$ is bounded by $\Sigma$, so $d(x', \mathcal{C}) \leq \Sigma$
+for all $x' \in \Pi(\mathcal{D}(x))$.  Therefore $S(\mathcal{R}, x;\,
+\mathcal{C}) \leq \Sigma + \beta$.  Since $S$ is defined as the infimum of
+$d(x', \mathcal{C})$ plus $\beta$, and $d(x', \mathcal{C}) \leq \Sigma$, we
+obtain $S \leq \Sigma + \beta$.  The canonical normalisation rescales so that
+$d$ takes values in $[0, \Sigma - \beta]$, ensuring $S \leq \Sigma$; this is
+achieved by setting $\Sigma_{\mathrm{eff}} = \Sigma - \beta$ for the $d$-part.
+Under the canonical normalisation ($\Sigma = 100$, $\beta \ll \Sigma$), the
+image is effectively $[\beta, 100]$.
+\end{proof}
+
+%% ============================================================
+\section{Bounded Cognition and the Floor Theorem for Receivers}
+\label{sec:bounded-cognition-ch02}
+%% ============================================================
+
+\begin{definition}[Cognitive capacity]
+\label{def:cognitive-capacity}
+The \emph{cognitive capacity} of a receiver $\mathcal{R} = (\mathcal{K},
+\mathcal{D}, \Pi, \beta)$ is the Shannon entropy of its knowledge framework:
+\[
+  I_{\max}(\mathcal{R}) \;:=\; H(\mathcal{K}) \;=\; -\sum_{k \in \mathcal{K}}
+  p(k) \log p(k) ,
+\]
+where $p(k) = \mu(\mathcal{D}^{-1}(k))$ is the probability that the decoder
+maps an input to state $k$.  By \Cref{ax:bounded-phase}, $I_{\max}(\mathcal{R})
+< \infty$ for every physically realisable receiver~\citep{Shannon1948,Jaynes1957}.
+\end{definition}
+
+\begin{definition}[Total information space]
+\label{def:total-info-space}
+The \emph{total information space} of an outcome space $(\mathcal{X}, d,
+\Sigma)$ with respect to a receiver $\mathcal{R}$ is the set
+\[
+  \mathcal{I}(\mathcal{R}) \;:=\;
+  \bigl\{ \mathcal{C} \subseteq \mathcal{X} : \tau(\mathcal{C}) >
+  \beta(\mathcal{R}) \bigr\} ,
+\]
+i.e., the collection of all action-cells whose tolerance exceeds the receiver
+floor.  These are precisely the cells that $\mathcal{R}$ can resolve in
+principle: cells with tolerance $\leq \beta$ lie below the receiver's
+resolution and are operationally inaccessible.
+\end{definition}
+
+\begin{definition}[Cognitive residue]
+\label{def:cognitive-residue}
+For a receiver $\mathcal{R}$ and an action-cell $\mathcal{C}$, the
+\emph{cognitive residue} is
+\[
+  \rho(\mathcal{R}, x;\, \mathcal{C})
+  \;:=\; S(\mathcal{R}, x;\, \mathcal{C}) \;-\; \beta(\mathcal{R})
+  \;\geq\; 0 .
+\]
+It measures the excess semantic distance above the irreducible floor: a state
+$x$ inside the target cell has $\rho = 0$ (no excess), while a state outside
+has $\rho = d(x', \mathcal{C}) > 0$ for the reprojected candidate $x'$.
+\end{definition}
+
+\begin{theorem}[Floor theorem for receivers]
+\label{thm:floor-receiver-full}
+For any receiver $\mathcal{R}$, action-cell $\mathcal{C}$, and state
+$x \in \mathcal{X}$,
+\[
+  S(\mathcal{R}, x;\, \mathcal{C}) \;\geq\; \beta(\mathcal{R}) \;>\; 0 .
+\]
+The bound is attained — $S(\mathcal{R}, x;\, \mathcal{C}) = \beta(\mathcal{R})$
+— if and only if $x \in \mathcal{C}$ and the decoder--projection chain is
+faithful at $x$, i.e., $\inf_{x' \in \Pi(\mathcal{D}(x))} d(x', \mathcal{C})
+= 0$.
+\end{theorem}
+
+\begin{proof}
+The lower bound $S \geq \beta$ is \Cref{ax:s3}.  For the attainment clause,
+the direction ($\Leftarrow$): if $x \in \mathcal{C}$ and faithfulness holds,
+then by definition $\inf_{x'} d(x', \mathcal{C}) = 0$, so $S = 0 + \beta =
+\beta$.  The direction ($\Rightarrow$): if $S = \beta$, then $\inf_{x'}
+d(x', \mathcal{C}) = 0$, meaning the candidate projection contains a point in
+$\overline{\mathcal{C}}$ (the closure of $\mathcal{C}$); since $\mathcal{C}$
+is assumed open (positive-interior action-cell), attainment forces $x \in
+\mathcal{C}$ up to $d$-distance zero, and the decoder is faithful at $x$.
+The strict positivity $\beta > 0$ follows from \Cref{rem:beta-positive}.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:floor-receiver-full} sharpens \Cref{thm:floor-positivity}: the
+earlier theorem established that $\beta > 0$ via a physical argument about
+partition refinement; the present theorem provides the complete if-and-only-if
+characterisation of when the floor is attained.  Both are needed: the earlier
+theorem shows the floor cannot be zero, the present theorem shows it is tight.
+\end{remark}
+
+%% ============================================================
+\section{Cell-Truth: Expanded Treatment with Representational Invariance}
+\label{sec:cell-truth-expanded}
+%% ============================================================
+
+\Cref{sec:cell-truth} stated the Cell-Truth Theorem.  Here we give a more
+complete treatment: a formal proof from the canonical definitions of
+\Cref{sec:outcome-action-cell,sec:bounded-cognition-ch02}, a Representational
+Invariance Corollary showing that the three natural encodings (oscillatory,
+categorical, partition) give the same S-value, and two biological worked
+examples.
+
+\begin{theorem}[Cell-Truth — formal version]
+\label{thm:cell-truth-formal}
+Let $\mathcal{R}$ be a receiver on $(\mathcal{X}, d, \Sigma)$ and let
+$A : \mathcal{X} \to \mathcal{Y}$ be a measurable action map into an action
+space $\mathcal{Y}$.  Define the \emph{action-equivalence cell at $y \in
+\mathcal{Y}$} by $\mathcal{C}_y := A^{-1}(\{y\}) = \{x \in \mathcal{X} :
+A(x) = y\}$.  Suppose $\tau(\mathcal{C}_y) > 0$.  Then for any two states
+$x_1, x_2 \in \mathcal{C}_y$,
+\[
+  S(\mathcal{R}, x_1;\, \mathcal{C}_y)
+  \;=\; S(\mathcal{R}, x_2;\, \mathcal{C}_y) \;=\; \beta(\mathcal{R}) .
+\]
+States inside an action-equivalence cell are \emph{S-indistinguishable} from
+the cell.
+\end{theorem}
+
+\begin{proof}
+Since $x_i \in \mathcal{C}_y$, we have $d(x_i, \mathcal{C}_y) = 0$ for
+$i = 1, 2$.  By \Cref{prop:s-basic}(1)--(2),
+\[
+  \beta \;\leq\; S(\mathcal{R}, x_i;\, \mathcal{C}_y)
+  \;\leq\; d(x_i, \mathcal{C}_y) + \beta \;=\; \beta .
+\]
+Hence $S(\mathcal{R}, x_i;\, \mathcal{C}_y) = \beta$ for both $i$, proving
+both equality and the attainment of the floor.
+\end{proof}
+
+\begin{corollary}[Representational Invariance]
+\label{cor:rep-invariance}
+Let $\phi : \mathcal{X} \to \mathcal{X}'$ be any isometric bijection (in
+particular, any of the oscillatory, categorical, or partition encodings).
+Define the transferred receiver $\mathcal{R}' = (\mathcal{K}, \mathcal{D}
+\circ \phi^{-1}, \phi \circ \Pi, \beta)$ on $\mathcal{X}'$ and the
+transferred cell $\mathcal{C}' = \phi(\mathcal{C})$.  Then for all $x \in
+\mathcal{X}$,
+\[
+  S(\mathcal{R}, x;\, \mathcal{C})
+  \;=\; S(\mathcal{R}', \phi(x);\, \mathcal{C}') .
+\]
+In particular, the three encodings (oscillatory, categorical, partition) yield
+identical S-values: choice of representation is computational, not epistemic.
+\end{corollary}
+
+\begin{proof}
+Expanding the definition of $S(\mathcal{R}', \phi(x);\, \mathcal{C}')$:
+\[
+  S' \;=\; \inf_{x'_* \in (\phi \circ \Pi)(\mathcal{D}(\phi^{-1}(\phi(x))))}
+  d'(x'_*, \mathcal{C}') + \beta .
+\]
+Since $(\phi \circ \Pi)(\mathcal{D}(\phi^{-1}(\phi(x)))) = \phi(\Pi(\mathcal{D}(x)))$,
+as $x'_*$ ranges over $\phi(\Pi(\mathcal{D}(x)))$ we have $x'_* = \phi(x_*)$
+for $x_*$ ranging over $\Pi(\mathcal{D}(x))$.  Since $\phi$ is an isometry,
+$d'(\phi(x_*), \phi(\mathcal{C})) = d(x_*, \mathcal{C})$.  The infima
+therefore coincide, giving $S = S'$.
+\end{proof}
+
+\begin{example}[Protein in two conformations — same cell, same S-value]
+\label{ex:protein-conformations}
+Let $\mathcal{X}$ be the conformational phase space of a protein (positions
+and momenta of all heavy atoms).  Consider two distinct conformations
+$x_1, x_2 \in \mathcal{X}$ that correspond to the same functional state
+(e.g., both are ``open'' states of an ion channel, differing only in
+peripheral loop geometry).  The action-equivalence cell is
+$\mathcal{C}_{\text{open}} = \{x \in \mathcal{X} : \text{channel is open}\}$.
+
+Since $x_1, x_2 \in \mathcal{C}_{\text{open}}$, \Cref{thm:cell-truth-formal}
+gives $S(\mathcal{R}, x_1;\, \mathcal{C}_{\text{open}}) = S(\mathcal{R},
+x_2;\, \mathcal{C}_{\text{open}}) = \beta(\mathcal{R})$ for any receiver
+$\mathcal{R}$ with floor $\beta$.  The two conformations are
+S-indistinguishable: no measurement by $\mathcal{R}$ can tell them apart
+\emph{as functional states}.
+
+By \Cref{cor:rep-invariance}, this conclusion is the same whether $\mathcal{R}$
+operates on the oscillatory (normal-mode) encoding, the categorical (RMSD
+cluster) encoding, or the partition (Voronoi cell in dihedral space) encoding.
+This explains why protein function is often robust to conformational
+heterogeneity: the functional cell has positive tolerance, and all points
+inside it are S-equivalent.
+\end{example}
+
+\begin{example}[Gene expression — what ``truth'' means for a cell]
+\label{ex:gene-expression}
+Let $\mathcal{X} = \mathbb{R}_{+}^n$ be the space of mRNA expression levels
+for $n$ genes, and let $\mathcal{Y} = \{\text{proliferating}, \text{quiescent},
+\text{differentiating}, \text{apoptotic}\}$ be the set of cell-fate outcomes.
+The action map $A : \mathcal{X} \to \mathcal{Y}$ assigns each expression
+profile to a fate.
+
+For a gene-expression receiver $\mathcal{R}$ (a transcription-factor network),
+the ``true state'' of a quiescent cell is not a point in $\mathbb{R}_{+}^n$
+but the action-equivalence cell $\mathcal{C}_{\text{quiescent}} = A^{-1}
+(\{\text{quiescent}\})$.  This cell has positive tolerance: many distinct
+expression profiles produce the same fate.
+
+\Cref{thm:cell-truth-formal} implies that all expression profiles inside
+$\mathcal{C}_{\text{quiescent}}$ have the same S-value $\beta(\mathcal{R})$
+relative to any receiver.  The cell, not any specific expression vector,
+is the operationally meaningful truth.  Therapeutic interventions that target
+specific expression points (rather than the cell) will generically fail if the
+target point is not the unique minimiser of S, since multiple other points
+inside the cell are equally valid and accessible.
+\end{example}
+
+%% ============================================================
+\section{Layered Receivers: Full Treatment}
+\label{sec:layered-ch02}
+%% ============================================================
+
+\Cref{def:layered-receivers} introduced layered hierarchies under refinement
+ordering.  Here we develop the full structure of layered receivers in the
+sense of \Cref{def:receiver-full}: a receiver decomposed into pre-decoder,
+decoder, and delegated layers, with the aggregation rule taking the minimum
+S-value across layers.
+
+\begin{definition}[Layered receiver — full definition]
+\label{def:layered-full}
+A \emph{layered receiver} is a finite ordered sequence $\mathcal{R}_\bullet
+= (\mathcal{R}_1, \ldots, \mathcal{R}_n)$ of receivers on the same outcome
+space $(\mathcal{X}, d, \Sigma)$, with associated layer floors $\beta_i =
+\beta(\mathcal{R}_i) > 0$ and the \emph{aggregation rule}
+\[
+  S(\mathcal{R}_\bullet, x;\, \mathcal{C})
+  \;=\; \min_{1 \leq i \leq n} S(\mathcal{R}_i, x;\, \mathcal{C}) .
+\]
+Layer $i$ is:
+\begin{enumerate}[(i)]
+  \item a \emph{pre-decoder layer} if $\mathcal{D}_i$ is constant (fixed
+    reflex output for every input — the layer fires without consulting the
+    knowledge framework);
+  \item a \emph{decoder layer} if $\mathcal{D}_i$ is non-constant and
+    continuous (the layer accesses and updates the knowledge framework); or
+  \item a \emph{delegated layer} if $\mathcal{D}_i$ factors through an
+    external receiver not controlled by the agent.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Pre-decoder layers formalise reflexes]
+\label{rem:reflex-layers}
+A pre-decoder layer maps every input to the same decoded symbol, bypassing
+the knowledge framework entirely.  Startle responses, immune innate reactions,
+and thermostat triggers are pre-decoder events: they produce action without
+cognitive mediation.  A delegated layer models an agent that queries an
+external oracle — \eg a cell querying a paracrine signal — without possessing
+the oracle's internal machinery.
+\end{remark}
+
+\begin{proposition}[Floor of a layered receiver]
+\label{prop:layered-floor-full}
+For a layered receiver $\mathcal{R}_\bullet = (\mathcal{R}_1, \ldots,
+\mathcal{R}_n)$,
+\[
+  \beta(\mathcal{R}_\bullet)
+  \;=\; \min_{1 \leq i \leq n} \beta_i \;>\; 0 .
+\]
+\end{proposition}
+
+\begin{proof}
+By \Cref{thm:floor-receiver-full}, $S(\mathcal{R}_i, x;\, \mathcal{C}) \geq
+\beta_i > 0$ for each layer $i$.  The minimum of strictly positive quantities
+is strictly positive.  The minimum is achieved: for the layer $i^*$ realising
+$\min_i \beta_i$, attainment follows from \Cref{thm:floor-receiver-full}
+applied to layer $i^*$.
+\end{proof}
+
+\begin{theorem}[Mode Non-Privilege — full proof]
+\label{thm:mode-nonprovilege-full}
+Let $\mathcal{R}_\bullet = (\mathcal{R}_1, \ldots, \mathcal{R}_n)$ be a
+layered receiver and $\mathcal{C} \subseteq \mathcal{X}$ an action-cell with
+tolerance $\tau(\mathcal{C})$.  Suppose layer $i^*$ is a pre-decoder layer
+with $\beta_{i^*} < \tau(\mathcal{C})$.  Then for every state $x$ such that
+the reflex of $\mathcal{R}_{i^*}$ fires (i.e., $\inf_{x' \in
+\Pi_{i^*}(\mathcal{D}_{i^*}(x))} d(x', \mathcal{C}) = 0$),
+\[
+  S(\mathcal{R}_\bullet, x;\, \mathcal{C})
+  \;\leq\; \beta_{i^*} \;<\; \tau(\mathcal{C}) ,
+\]
+so the action-cell is reachable without invoking any decoder layer.
+\end{theorem}
+
+\begin{proof}
+By the aggregation rule, $S(\mathcal{R}_\bullet, x;\, \mathcal{C}) \leq
+S(\mathcal{R}_{i^*}, x;\, \mathcal{C})$.  The reflex firing condition states
+that $\inf_{x' \in \Pi_{i^*}(\mathcal{D}_{i^*}(x))} d(x', \mathcal{C}) = 0$,
+so by \Cref{def:s-functional-canonical},
+$S(\mathcal{R}_{i^*}, x;\, \mathcal{C}) = 0 + \beta_{i^*} = \beta_{i^*}$.
+Since $\beta_{i^*} < \tau(\mathcal{C})$, the action-cell is reached.  The
+decoder layers are not invoked because the minimum is already attained at
+layer $i^*$.
+\end{proof}
+
+\begin{theorem}[Layered composition theorem]
+\label{thm:layered-composition}
+Let $\mathcal{R}_\bullet^{(1)}$ and $\mathcal{R}_\bullet^{(2)}$ be two
+layered receivers with disjoint layer sets.  Their \emph{union}
+$\mathcal{R}_\bullet^{(1)} \cup \mathcal{R}_\bullet^{(2)}$ (concatenated
+layer sequence with min-aggregation) satisfies
+\[
+  \beta\bigl(\mathcal{R}_\bullet^{(1)} \cup \mathcal{R}_\bullet^{(2)}\bigr)
+  \;=\; \min\bigl(\beta(\mathcal{R}_\bullet^{(1)}),\,
+  \beta(\mathcal{R}_\bullet^{(2)})\bigr) .
+\]
+In particular, adding layers never increases the composite floor.
+\end{theorem}
+
+\begin{proof}
+By \Cref{prop:layered-floor-full}, the floor of each layered receiver is the
+minimum of its layer floors.  The min of two minima is the overall minimum,
+which equals $\min(\beta(\mathcal{R}_\bullet^{(1)}),
+\beta(\mathcal{R}_\bullet^{(2)}))$.  Adding a layer with floor $\beta_{\mathrm{new}}$
+either leaves the composite floor unchanged (if $\beta_{\mathrm{new}} \geq
+\beta_{\mathrm{current}}$) or decreases it (if $\beta_{\mathrm{new}} <
+\beta_{\mathrm{current}}$); it never increases.
+\end{proof}
+
+\begin{theorem}[Floor propagation through layers]
+\label{thm:floor-propagation}
+For any layered receiver $\mathcal{R}_\bullet = (\mathcal{R}_1, \ldots,
+\mathcal{R}_n)$ with monotonically ordered floors $\beta_1 \geq \beta_2
+\geq \cdots \geq \beta_n > 0$, the composite floor equals the floor of the
+finest layer:
+\[
+  \beta(\mathcal{R}_\bullet) \;=\; \beta_n .
+\]
+No information from layers $1, \ldots, n-1$ can lower the floor below $\beta_n$.
+\end{theorem}
+
+\begin{proof}
+By \Cref{prop:layered-floor-full}, $\beta(\mathcal{R}_\bullet) = \min_i
+\beta_i = \beta_n$ (since $\beta_n$ is the smallest by hypothesis).  The
+layers $1, \ldots, n-1$ have floors $\geq \beta_n$; their S-values are always
+$\geq \beta_n$, so they cannot pull the minimum below $\beta_n$.  The finest
+layer $\mathcal{R}_n$ sets the composite floor.
+\end{proof}
+
+%% ============================================================
+\section{Mode--Methodology Equivalence: Complete Proof and Numerical Example}
+\label{sec:mode-method-ch02}
+%% ============================================================
+
+\Cref{thm:mode-method-equiv} stated the Mode--Methodology Equivalence Theorem
+and gave a proof sketch.  Here we provide the complete proof from the canonical
+definitions of \Cref{sec:outcome-action-cell} and include a worked numerical
+example.
+
+\begin{definition}[Receiver--methodology composition]
+\label{def:rm-comp}
+For a receiver $\mathcal{R}$ with floor $\beta_\mathcal{R}$ and a methodology
+$P$ with methodological floor $\Sspace_{\mathrm{flat}}(P)$, the
+\emph{composite floor} is
+\[
+  \beta(\mathcal{R} \circ P)
+  \;:=\; \Sigma \Bigl(1 - \bigl(1 - \beta_\mathcal{R}/\Sigma\bigr)
+  \bigl(1 - \Sspace_{\mathrm{flat}}(P)/\Sigma\bigr)\Bigr) .
+\]
+\end{definition}
+
+\begin{theorem}[Mode--Methodology Equivalence -- complete proof]
+\label{thm:mode-method-complete}
+The composite floor of \Cref{def:rm-comp} satisfies
+\[
+  \beta(\mathcal{R} \circ P)
+  \;=\; \beta_\mathcal{R} + \Sspace_{\mathrm{flat}}(P)
+  \;-\; \frac{\beta_\mathcal{R} \cdot \Sspace_{\mathrm{flat}}(P)}{\Sigma} .
+\]
+Receivers and methodologies are therefore \emph{algebraically interchangeable
+factors} in determining attainable S.  Moreover, for a layered receiver
+$\mathcal{R}_\bullet = (\mathcal{R}_1, \ldots, \mathcal{R}_n)$ and a
+methodology stack $P_\bullet = P_1 \diamond \cdots \diamond P_m$,
+\[
+  \beta(\mathcal{R}_\bullet \circ P_\bullet)
+  \;=\; \Sigma \Bigl(1 - \prod_{i=1}^n \bigl(1 - \beta_i/\Sigma\bigr)
+  \prod_{j=1}^m \bigl(1 - \Sspace_{\mathrm{flat}}(P_j)/\Sigma\bigr)\Bigr) .
+\]
+\end{theorem}
+
+\begin{proof}
+Expanding \Cref{def:rm-comp}:
+\[
+  \beta(\mathcal{R} \circ P)
+  = \Sigma - \Sigma(1 - \beta_\mathcal{R}/\Sigma)(1 - \Sspace_{\mathrm{flat}}(P)/\Sigma) .
+\]
+Multiplying out the parentheses:
+\[
+  (1 - \beta_\mathcal{R}/\Sigma)(1 - \Sspace_{\mathrm{flat}}(P)/\Sigma)
+  = 1 - \beta_\mathcal{R}/\Sigma - \Sspace_{\mathrm{flat}}(P)/\Sigma
+  + \beta_\mathcal{R} \Sspace_{\mathrm{flat}}(P)/\Sigma^2 .
+\]
+Substituting back and multiplying through by $\Sigma$:
+\[
+  \beta(\mathcal{R} \circ P)
+  = \beta_\mathcal{R} + \Sspace_{\mathrm{flat}}(P)
+  - \beta_\mathcal{R} \Sspace_{\mathrm{flat}}(P)/\Sigma ,
+\]
+which is the stated formula.  The structural identity with the catalytic
+composition law (\Cref{thm:catalytic-composition}) follows from setting
+$\kappa_1 = \beta_\mathcal{R}/\Sigma$ and $\kappa_2 =
+\Sspace_{\mathrm{flat}}(P)/\Sigma$; the formula then reads
+$(\kappa_1 + \kappa_2 - \kappa_1 \kappa_2)\Sigma$, the standard
+probability-of-union formula $\Pr(E_1 \cup E_2)$ for independent events.
+
+The layered-stack formula follows by induction on $n + m$: applying the
+single-factor formula repeatedly, the product of dimensionless deficits
+$1 - \cdot/\Sigma$ multiplies, giving the stated product form.
+\end{proof}
+
+\begin{remark}[The floor composition formula]
+\label{rem:floor-composition}
+The formula $\beta(\mathcal{R} \circ P) = \beta_\mathcal{R} +
+\Sspace_{\mathrm{flat}}(P) - \beta_\mathcal{R} \Sspace_{\mathrm{flat}}(P)/\Sigma$
+has a transparent interpretation: the composite floor is the sum of the
+individual floors minus a cross-term that accounts for overlap of their
+failure modes.  When both floors are small relative to $\Sigma$, the
+cross-term is negligible and the composite is approximately additive.
+When either floor approaches $\Sigma$, the composite saturates toward
+$\Sigma$ (worst case).
+\end{remark}
+
+\begin{example}[Numerical illustration of floor composition]
+\label{ex:floor-composition-numerical}
+Take $\Sigma = 100$, $\beta_\mathcal{R} = 5$ (precise receiver), and
+$\Sspace_{\mathrm{flat}}(P_1) = 10$ (moderate-floor methodology with
+$\kappa = 0.5$, $\sigma = 10$).  The single-composition floor is
+\[
+  \beta(\mathcal{R} \circ P_1) = 5 + 10 - \tfrac{5 \times 10}{100}
+  = 15 - 0.5 = 14.5 .
+\]
+Adding a second methodology with $\Sspace_{\mathrm{flat}}(P_2) = 8$:
+\begin{align*}
+  \beta(\mathcal{R} \circ P_1 \circ P_2)
+  &= 100\bigl(1 - (1 - 0.05)(1 - 0.10)(1 - 0.08)\bigr) \\
+  &= 100\bigl(1 - 0.95 \times 0.90 \times 0.92\bigr) \\
+  &= 100\bigl(1 - 0.7866\bigr) = 21.34 .
+\end{align*}
+Each additional methodology raises the composite floor.  This is a direct
+consequence of the composition law: each methodology's floor acts as a
+residual that cannot be eliminated by subsequent steps, even as each step
+reduces the current S-value toward its own floor.
+\end{example}
+
+%% ============================================================
+\section{Methodological Incompatibility and the Distribution of Knowledge}
+\label{sec:incompat-ch02}
+%% ============================================================
+
+\Cref{thm:method-incompatibility,thm:distribution} established incompatibility
+and distribution in the context of the methodological floor.  Here we restate
+them in the canonical framework of this chapter, sharpen the proofs, and draw
+the biological implication about why no single cell can hold complete knowledge.
+
+\begin{theorem}[Methodological Incompatibility Principle]
+\label{thm:incompat-ch02}
+Let $P = (T, \kappa, \sigma)$ be a methodology.  The two regimes
+\begin{enumerate}[(I)]
+  \item \emph{Knowledge production}: generating new claims requires $\sigma > 0$
+    (nontrivial inter-iteration variation, so that successive runs of $P$ produce
+    distinct outputs); and
+  \item \emph{Action completion}: triggering action-cell $\mathcal{C}$ in a
+    single physical step requires $\sigma = 0$ on the action-decision step
+    (the receiver must commit to one outcome deterministically)
+\end{enumerate}
+are mutually exclusive at any single iteration: $\sigma > 0$ enables
+production but prevents completion; $\sigma = 0$ enables completion but
+prevents production.
+\end{theorem}
+
+\begin{proof}
+For (I): if $\sigma = 0$, every run of one iteration on the same input
+returns an identical output.  The methodology is deterministic, so
+$\Sspace_{\mathrm{flat}}(P) = \sigma\kappa/(1-\kappa) = 0$.  A zero
+methodological floor contradicts $\Sspace_{\mathrm{flat}}(P) > 0$
+(\Cref{thm:method-floor-pos}), which holds for any methodology with
+nontrivial representation.  Moreover, when $\sigma = 0$, no new claim is
+generated: the output is always the same, so the knowledge framework
+$\mathcal{K}$ is not updated.  Knowledge production requires $\sigma > 0$.
+
+For (II): action completion at state $x$ requires the receiver to output a
+deterministic action $A(x) \in \mathcal{Y}$.  With $\sigma > 0$, two
+independent runs of an iteration may map $x$ to different action-cells,
+so the receiver cannot commit.  The action-decision step requires $\sigma = 0$.
+
+Mutual exclusion follows directly: $\sigma > 0$ and $\sigma = 0$ cannot
+hold simultaneously.
+\end{proof}
+
+\begin{corollary}[Production--completion alternation]
+\label{cor:alternation-ch02}
+Any agent that both produces knowledge and completes actions must
+\emph{alternate} between $\sigma > 0$ phases (production) and $\sigma = 0$
+phases (completion).  Continuous simultaneous operation in both regimes is
+impossible.
+\end{corollary}
+
+\begin{theorem}[Distribution Theorem]
+\label{thm:distribution-ch02}
+Let $\mathcal{R}$ be a bounded receiver on outcome space
+$(\mathcal{X}, d, \Sigma)$ and let $X_0 \subseteq \mathcal{X}$ be any
+subject of positive $d$-measure.  Then
+\[
+  \sup_{x \in X_0} \bigl(\Sigma - S(\mathcal{R}, x;\, \{x\}^\varepsilon)\bigr)
+  \;\leq\; \Sigma - \beta(\mathcal{R}) ,
+\]
+where $\{x\}^\varepsilon$ is the closed $\varepsilon$-ball around $x$ for any
+$\varepsilon > \beta(\mathcal{R})$.  Hence no bounded receiver can hold full
+knowledge ($= \Sigma$) of any subject of positive $d$-measure: total knowledge
+is distributed and cannot concentrate on a single subject or a single receiver.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:floor-receiver-full}, $S(\mathcal{R}, x;\, \{x\}^\varepsilon)
+\geq \beta(\mathcal{R}) > 0$ for all $x$.  Therefore
+\[
+  \Sigma - S(\mathcal{R}, x;\, \{x\}^\varepsilon)
+  \;\leq\; \Sigma - \beta(\mathcal{R}) \;<\; \Sigma .
+\]
+The equality $S = \beta$ (and hence ``knowledge'' $= \Sigma - \beta$) is
+attained only where the decoder--projection chain is faithful, which by
+\Cref{rem:beta-positive} is a set of $d$-measure zero under generic decoder
+noise.  Thus on any positive-measure subject $X_0$, the supremum cannot reach
+$\Sigma$, so total knowledge is bounded away from $\Sigma$.
+\end{proof}
+
+\begin{corollary}[Anti-monopoly: no single receiver holds complete knowledge]
+\label{cor:anti-monopoly}
+The total knowledge of any positive-measure subject is necessarily distributed
+across multiple receivers, layers, and methodologies.  No single bounded
+receiver can be the unique locus of complete knowledge of any subject.
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:distribution-ch02}: the knowledge of any positive-measure
+subject is bounded away from $\Sigma$ for every individual receiver, so no
+single receiver attains $\Sigma$.
+\end{proof}
+
+\begin{remark}[Biological implication: why no single cell can know everything]
+\label{rem:no-single-cell}
+\Cref{cor:anti-monopoly} has a direct biological reading.  A cell is a bounded
+receiver: it has finite membrane-receptor capacity (\Cref{ax:bounded-phase}),
+finite intracellular signalling bandwidth, and a finite genome encoding its
+knowledge framework $\mathcal{K}$.  By \Cref{thm:distribution-ch02}, no
+single cell can hold complete knowledge of any physiologically relevant subject
+(the state of a tissue, the identity of a pathogen, the metabolic status of an
+organism).
+
+This is not a contingent limitation — it is a theorem.  The floor $\beta > 0$
+of any physically realisable receiver forces knowledge to be distributed.
+Multicellular organisation, immune system diversity, neural population coding,
+and organ-level specialisation are therefore \emph{thermodynamically necessary}
+consequences of the distribution theorem, not evolutionary accidents.  They
+arise because knowledge of a positive-measure subject cannot concentrate in a
+single bounded receiver regardless of how the receiver is constructed or
+trained.
+
+In the context of this monograph: a cancer cell that attempts to monopolise
+the processing of a therapeutic signal cannot succeed epistemically, even if
+it succeeds metabolically.  The distribution theorem guarantees that the
+signal's full information content is spread across the tissue, giving the
+therapeutic intervention multiple independent avenues that cannot all be
+simultaneously blocked by a single cell (\cf \Cref{ch:no-template}).
+\end{remark}
+
+%% ============================================================
+\section{Recursive S-Functional Structure}
+\label{sec:ch02-recursive-structure}
+%% ============================================================
+
+The S-functional $S(\mathcal{R}, x; C)$ maps a receiver, an outcome, and a
+context to a real number in $[\beta, \Sigma]$.  Nothing prevents the output of
+one S-functional evaluation from serving as the input of a second.  This
+self-application generates a hierarchy of \emph{meta-cognitive distances} that
+mirrors, in formal terms, the empirical hierarchy of scientific meta-theory.
+
+\begin{definition}[Meta-cognitive S-functional]
+\label{def:ch02-meta-sfunc}
+Given a receiver $\mathcal{R}$ on $(\mathcal{X}, d, \Sigma)$, two contexts $C$
+and $C'$, and an outcome $x \in \mathcal{X}$, the \emph{meta-cognitive
+S-functional} is
+\[
+  S^{(2)}(\mathcal{R}, x;\, C, C')
+  \;:=\;
+  S\!\bigl(\mathcal{R},\; S(\mathcal{R}, x;\, C);\; C'\bigr).
+\]
+More generally, for $n \geq 1$ the \emph{$n$-th order S-functional} is defined
+recursively by $S^{(1)} := S$ and
+\[
+  S^{(n)}(\mathcal{R}, x;\, C)
+  \;:=\;
+  S\!\bigl(\mathcal{R},\; S^{(n-1)}(\mathcal{R}, x;\, C);\; C\bigr),
+  \qquad n \geq 2.
+\]
+The argument $S^{(n-1)}(\mathcal{R}, x; C) \in [\beta, \Sigma]$ is treated as an
+element of the outcome space $\mathcal{X}$ under any embedding that preserves
+the metric $d$.
+\end{definition}
+
+\begin{remark}[Interpretation of meta-cognitive evaluation]
+\label{rem:ch02-meta-interpretation}
+The first-order evaluation $S^{(1)}(\mathcal{R}, x; C)$ is the familiar
+epistemic distance from $x$ to the receiver's knowledge boundary under context
+$C$.  The second-order evaluation $S^{(2)}$ is the receiver's epistemic distance
+from its \emph{own first-order evaluation}---a formal measure of how well the
+receiver knows its own knowledge.  This is the algebraic correlate of what
+epistemologists call \emph{higher-order knowledge} or \emph{meta-cognition}.
+\end{remark}
+
+\begin{theorem}[No Privileged Level Theorem]
+\label{thm:ch02-no-privileged-level}
+Let $(\mathcal{X}, d, \Sigma)$ be an outcome space, $\mathcal{R}$ a bounded
+receiver with floor $\beta > 0$, and $C$ any context.  For every order
+$n \geq 1$,
+\[
+  S^{(n)}(\mathcal{R}, x;\, C) \;\geq\; \beta \;>\; 0.
+\]
+In particular, no level of meta-cognitive evaluation attains zero: the floor
+$\beta$ applies uniformly across all recursion depths.
+\end{theorem}
+
+\begin{proof}
+By induction on $n$.  Base case $n = 1$: the Cell-Truth Theorem
+(\Cref{thm:cell-truth}) gives $S^{(1)} \geq \beta > 0$.
+
+Inductive step: assume $S^{(n-1)}(\mathcal{R}, x; C) \geq \beta > 0$ and
+lies in $[\beta, \Sigma]$.  The value $v := S^{(n-1)}(\mathcal{R}, x; C)$ is
+therefore an element of the outcome space $\mathcal{X}$ (via the embedding) with
+$d(v, \partial\mathcal{X}) \geq \beta > 0$.  Applying the S-functional axiom
+S3 (floor positivity) to the evaluation $S(\mathcal{R}, v; C)$ yields
+$S^{(n)}(\mathcal{R}, x; C) \geq \beta$.  The induction closes.
+\end{proof}
+
+\begin{corollary}[Cognitive regress terminates without a foundation]
+\label{cor:ch02-regress}
+There is no level $n^*$ at which $S^{(n^*)} = 0$.  In particular, there exists
+no \emph{Cartesian bedrock}---no privileged level of cognition that is free of
+epistemic floor positivity.  The regress terminates not by reaching certainty
+but by reaching the information-capacity bound of the receiver (see
+\Cref{thm:ch02-depth-bound} below).
+\end{corollary}
+
+\begin{theorem}[Recursion depth bound]
+\label{thm:ch02-depth-bound}
+Let $\mathcal{R}$ have information capacity $\mathfrak{I}(\mathcal{R})$ measured
+in base-$b$ units, and let $\beta$ be its floor.  The maximum meaningful
+recursion depth is
+\[
+  n_{\max}
+  \;\leq\;
+  \left\lfloor \log_b\!\left(\frac{\Sigma}{\beta}\right) \right\rfloor.
+\]
+For $n > n_{\max}$ the recursive S-functional collapses to the constant
+$\beta$: the receiver cannot distinguish its own meta-evaluations.
+\end{theorem}
+
+\begin{proof}
+At each recursion level the meaningful range of the S-functional is compressed
+from $[\beta, \Sigma]$ to a sub-interval of width at most $\Sigma - \beta$.
+The receiver can only resolve distinctions down to its floor $\beta$, so the
+number of distinguishable values in $[\beta, \Sigma]$ is at most
+$(\Sigma - \beta)/\beta \leq \Sigma/\beta$.  The base-$b$ logarithm of this
+count gives the maximum number of layers the receiver can usefully address.
+For $n > n_{\max}$, successive evaluations land inside the same resolution
+cell of width $\beta$, making them informationally identical.
+\end{proof}
+
+\begin{example}[Scientific methodology as recursive S-functional]
+\label{ex:ch02-science-recursion}
+Consider the three-layer hierarchy of scientific reasoning:
+\begin{enumerate}[(1)]
+  \item \textbf{Object level} ($n = 1$): empirical claims about phenomena
+    (e.g., ``the boiling point of water is $100\,^\circ\text{C}$ at
+    $1\,\text{atm}$'').  Floor $\beta_1 > 0$ due to measurement uncertainty.
+  \item \textbf{Meta-level} ($n = 2$): methodological claims about how
+    empirical claims are produced (e.g., ``the thermometer is calibrated
+    correctly'').  Floor $\beta_2 \geq \beta_1$ because the meta-claim depends
+    on the first-level claim plus additional assumptions.
+  \item \textbf{Meta-meta-level} ($n = 3$): epistemological claims about how
+    methodological claims are evaluated (e.g., ``calibration is a reliable
+    procedure'').  Floor $\beta_3 \geq \beta_2$.
+\end{enumerate}
+By \Cref{thm:ch02-no-privileged-level}, all three levels have $\beta_k > 0$.
+The composition formula (\Cref{thm:composition}) gives the composite floor
+across all three levels:
+\[
+  \beta_{\mathrm{sci}} = \Sigma\Bigl(1 - (1 - \beta_1/\Sigma)(1 - \beta_2/\Sigma)
+    (1 - \beta_3/\Sigma)\Bigr).
+\]
+With $\Sigma = 100$, $\beta_1 = 2$, $\beta_2 = 3$, $\beta_3 = 5$, the composite
+is
+\[
+  \beta_{\mathrm{sci}}
+  = 100\bigl(1 - 0.98 \times 0.97 \times 0.95\bigr)
+  = 100\bigl(1 - 0.9028\bigr) = 9.72.
+\]
+Nearly $10\%$ of the epistemic scale is irreducibly inaccessible to the
+three-layer scientific stack, even before any domain-specific uncertainty is
+added.  This is not a failure of science; it is a theorem.
+\end{example}
+
+\begin{example}[Immune surveillance hierarchy as 3-level recursive S-functional]
+\label{ex:ch02-immune-recursion}
+The mammalian immune system operates through a three-tier surveillance hierarchy
+that maps directly onto the recursive S-functional framework:
+\begin{enumerate}[(I)]
+  \item \textbf{Level 1 --- Innate immunity}: pattern-recognition receptors (TLRs,
+    NLRs) partition pathogen space into broad categories (``bacterial'' vs.\
+    ``viral'' vs.\ ``fungal'').  Floor $\beta_{\mathrm{inn}} > 0$: innate
+    receptors cannot distinguish between closely related pathogens in the same
+    category.
+  \item \textbf{Level 2 --- Adaptive immunity}: B and T cells refine the innate
+    partition using VDJ recombination, generating antigen-specific partitions.
+    $S^{(2)}$ evaluates the adaptive response to the innate signal: if innate
+    immunity fires at level $v_1 = S^{(1)}$, the adaptive module evaluates
+    $S(\mathcal{R}_{\mathrm{ada}}, v_1; C_{\mathrm{ada}})$.  Floor
+    $\beta_{\mathrm{ada}} > 0$: clonal selection cannot be perfect.
+  \item \textbf{Level 3 --- Regulatory T cells (Tregs)}: supervise the adaptive
+    response, preventing autoimmunity.  $S^{(3)}$ evaluates the regulatory
+    response to the adaptive signal.  Floor $\beta_{\mathrm{Treg}} > 0$: Tregs
+    themselves can be mis-tuned (as in autoimmune disease).
+\end{enumerate}
+The composite floor of the immune surveillance system is
+\[
+  \beta_{\mathrm{immune}}
+  = \Sigma\Bigl(1 - (1-\beta_{\mathrm{inn}}/\Sigma)(1-\beta_{\mathrm{ada}}/\Sigma)
+    (1-\beta_{\mathrm{Treg}}/\Sigma)\Bigr) > 0.
+\]
+This predicts the existence of an irreducible \emph{immunological blind spot}:
+a region of pathogen space that no three-layer immune hierarchy can correctly
+classify.  The predicted existence of such blind spots is consistent with the
+empirical phenomenon of immune evasion by pathogens (e.g., HIV, certain
+parasites) that exploit precisely the inter-layer floor gaps.
+
+By \Cref{thm:ch02-depth-bound}, the recursion depth of the immune system is
+bounded by $n_{\max} \leq \log_2(\Sigma/\beta_{\mathrm{inn}})$.  If
+$\beta_{\mathrm{inn}}/\Sigma \approx 10^{-3}$ (the innate system can resolve
+roughly one part in a thousand of pathogen space), then $n_{\max} \leq \log_2
+(10^3) \approx 10$ levels.  The observed three-tier mammalian system is
+well within this bound, leaving headroom for the somatic hypermutation
+sub-loop within adaptive immunity.
+\end{example}
+
+%% ============================================================
+\section{Information Geometry of the Partition Space}
+\label{sec:ch02-information-geometry}
+%% ============================================================
+
+The set $\mathbb{P}(\mathcal{X})$ of all partitions of the outcome space
+$\mathcal{X}$ is not merely a collection; it admits natural geometric structure
+that is inherited from the S-functional.  This section develops that structure,
+connecting the partition formalism to the classical information geometry of
+Fisher and Rao.
+
+\begin{definition}[Partition distance]
+\label{def:ch02-partition-distance}
+For two partitions $\mathbb{P}_1 = \{\mathcal{C}_i^{(1)}\}$ and
+$\mathbb{P}_2 = \{\mathcal{C}_j^{(2)}\}$ of $(\mathcal{X}, \mu)$, their
+\emph{partition distance} is the total variation between the induced probability
+measures $\mu_1$ and $\mu_2$ on $\mathcal{X}$:
+\[
+  d_P(\mathbb{P}_1, \mathbb{P}_2)
+  \;:=\;
+  \mathrm{TV}(\mu_1, \mu_2)
+  \;=\;
+  \sup_{A \subseteq \mathcal{X}} |\mu_1(A) - \mu_2(A)|.
+\]
+\end{definition}
+
+\begin{proposition}[Metric space of partitions]
+\label{prop:ch02-partition-metric}
+$(\mathbb{P}(\mathcal{X}), d_P)$ is a metric space.  The trivial partition
+$\{\mathcal{X}\}$ and the discrete partition $\{\{x\} : x \in \mathcal{X}\}$
+are the two extreme points, with
+\[
+  d_P(\mathbb{P}_{\mathrm{trivial}}, \mathbb{P}_{\mathrm{discrete}})
+  \;=\;
+  1 \;=\; \mathrm{diam}\bigl(\mathbb{P}(\mathcal{X}), d_P\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Symmetry and the triangle inequality are inherited from total variation.
+Positive-definiteness follows because $\mu_1 = \mu_2$ if and only if
+$\mathbb{P}_1$ and $\mathbb{P}_2$ induce identical $\sigma$-algebras on
+$\mathcal{X}$ (up to $\mu$-null sets), which holds if and only if
+$\mathbb{P}_1 = \mathbb{P}_2$ a.e.  The diameter bound $\leq 1$ is the standard
+TV bound; equality is achieved between the trivial partition (one cell:
+$\mu_1 = \delta_{\mathcal{X}}$) and the discrete partition.
+\end{proof}
+
+\begin{definition}[Partition Riemannian metric]
+\label{def:ch02-riemannian}
+For a smooth parameterisation $\theta \mapsto \mathbb{P}(\theta)$ of the
+partition space, the \emph{partition Riemannian metric} at $\theta$ is
+\[
+  g_{ij}(\theta)
+  \;:=\;
+  \frac{\partial^2 S}{\partial \mathbb{P}_i \,\partial \mathbb{P}_j}
+  \Bigg|_{\mathbb{P} = \mathbb{P}(\theta)},
+\]
+where $\partial/\partial \mathbb{P}_i$ denotes the directional derivative of
+$S(\mathcal{R}, x; \mathbb{P})$ in the $i$-th coordinate direction of the
+partition manifold.
+\end{definition}
+
+\begin{theorem}[Fisher Information as partition Riemannian metric]
+\label{thm:ch02-fisher}
+Let $\{p(x;\theta)\}_{\theta \in \Theta}$ be a parametric family of probability
+densities on $\mathcal{X}$, and let $\mathbb{P}(\theta)$ be the natural
+sufficient-statistic partition induced by $\theta$.  Then
+\[
+  g_{ij}(\theta)
+  \;=\;
+  I_F(\theta)_{ij}
+  \;:=\;
+  \mathbb{E}_\theta\!\left[
+    \frac{\partial \log p(x;\theta)}{\partial \theta_i}
+    \cdot
+    \frac{\partial \log p(x;\theta)}{\partial \theta_j}
+  \right],
+\]
+the \emph{Fisher Information Matrix}.  That is, the partition Riemannian metric
+specialises to the Fisher metric on a statistical manifold.
+\end{theorem}
+
+\begin{proof}
+The S-functional evaluated on the partition $\mathbb{P}(\theta)$ measures the
+residual distance from the receiver's knowledge boundary: increasing specificity
+of the partition (decreasing $d_P$ to the discrete partition) decreases $S$
+toward $\beta$.  The second mixed partial of $S$ with respect to partition
+coordinates therefore measures the curvature of the epistemic landscape, which
+equals the expected curvature of the log-likelihood surface.  The identification
+$g_{ij} = I_F(\theta)_{ij}$ follows from the standard derivation of the Fisher
+metric as the Hessian of the KL divergence, applied in partition coordinates.
+\end{proof}
+
+\begin{corollary}[Cram\'{e}r--Rao bound from partition geometry]
+\label{cor:ch02-cramer-rao}
+For any unbiased estimator $\hat{\theta}$ of $\theta$,
+\[
+  \mathrm{Var}(\hat{\theta}) \;\geq\; I_F(\theta)^{-1} \;=\; g(\theta)^{-1}.
+\]
+The Cram\'{e}r--Rao lower bound is the \emph{inverse of the partition Riemannian
+metric}: the curvature of the epistemic landscape sets a lower bound on
+estimation variance.
+\end{corollary}
+
+\begin{theorem}[Floor as diagonal of inverse Fisher matrix]
+\label{thm:ch02-floor-fisher}
+In the parametric setting of \Cref{thm:ch02-fisher}, the epistemic floor
+$\beta$ satisfies
+\[
+  \beta_i \;\geq\; \frac{1}{\sqrt{(I_F(\theta))_{ii}}}
+\]
+where $\beta_i$ is the component of the floor vector along the $i$-th
+parameter direction.  Equality holds when the estimator saturates the
+Cram\'{e}r--Rao bound.
+\end{theorem}
+
+\begin{proof}
+By \Cref{cor:ch02-cramer-rao}, $\mathrm{Var}(\hat{\theta}_i) \geq
+(I_F(\theta)^{-1})_{ii} \geq (I_F(\theta))_{ii}^{-1}$ (the latter inequality
+by the Hadamard--Fischer inequality for positive definite matrices).  The
+standard deviation of $\hat\theta_i$ is therefore at least
+$(I_F(\theta))_{ii}^{-1/2}$.  Since the floor $\beta_i$ is the minimum
+irreducible uncertainty in coordinate $i$ expressed in $\Sigma$-units, and
+the standard deviation is the corresponding statistical uncertainty, we obtain
+$\beta_i \geq \Sigma \cdot (I_F(\theta))_{ii}^{-1/2} / \Sigma =
+(I_F(\theta))_{ii}^{-1/2}$ after normalisation.
+\end{proof}
+
+\begin{definition}[Geodesics in partition space]
+\label{def:ch02-geodesics}
+A \emph{geodesic} in $(\mathbb{P}(\mathcal{X}), g)$ is a curve
+$\gamma: [0,1] \to \mathbb{P}(\mathcal{X})$ that locally minimises the
+arc-length functional
+\[
+  \mathcal{L}[\gamma]
+  \;=\;
+  \int_0^1 \sqrt{g_{ij}(\gamma(t))\,\dot\gamma^i(t)\,\dot\gamma^j(t)}\;\mathrm{d}t.
+\]
+\end{definition}
+
+\begin{remark}[Geodesics as optimal measurement protocols]
+\label{rem:ch02-geodesics-optimal}
+A geodesic from partition $\mathbb{P}_A$ to partition $\mathbb{P}_B$ in
+$(\mathbb{P}(\mathcal{X}), g)$ is the most \emph{informationally efficient}
+path between the two measurement resolutions.  Each intermediate partition
+$\mathbb{P}(\gamma(t))$ is the optimal measurement protocol at precision level
+$t$: it maximises the information gained per unit of partition distance
+traversed.  Statistical experiment design (in the sense of Blackwell and Le
+Cam) amounts to finding geodesics in partition space.
+\end{remark}
+
+\begin{definition}[Disease as geodesic disruption]
+\label{def:ch02-disease-geodesic}
+Let $\gamma_H: [0,1] \to \mathbb{P}(\mathcal{X})$ be the healthy geodesic
+from coarse physiological partition to fine diagnostic partition.  A
+\emph{disease holonomy defect} is a deviation $\delta\gamma$ from $\gamma_H$
+such that the parallel transport of the S-functional along $\gamma_H +
+\delta\gamma$ fails to close: the returned S-value after traversal of a
+closed loop in partition space is $S_{\mathrm{final}} \neq S_{\mathrm{initial}}$.
+The holonomy defect $\Delta S := S_{\mathrm{final}} - S_{\mathrm{initial}} > 0$
+is the irreducible epistemic cost of the disease process.
+\end{definition}
+
+\begin{remark}[Geometric interpretation of disease]
+\label{rem:ch02-disease-geometry}
+Under \Cref{def:ch02-disease-geodesic}, disease is a \emph{curvature event} in
+partition space.  A healthy organism traverses the diagnostic geodesic without
+holonomy accumulation: measurements compose transitively, and epistemic floors
+do not grow beyond their baseline values.  A diseased organism acquires
+positive holonomy: the curvature of the partition manifold is increased in the
+vicinity of the disease partition, raising the effective floor $\beta
+\mapsto \beta + \Delta S$ and widening the irreducible ignorance about its own
+state.  This connects the partition-algebraic formalism of the present chapter
+to the clinical presentation of diagnostic difficulty in complex disease.
+\end{remark}
+
+%% ============================================================
+\section{Biological Applications of Partition Algebra}
+\label{sec:ch02-biological-applications}
+%% ============================================================
+
+The partition-algebraic framework developed in this chapter is not merely
+abstract.  Every major biological information-storage and signalling system is,
+at its structural core, a partition of a high-dimensional state space.  This
+section instantiates the abstract machinery in three concrete biological
+contexts: the genetic code, protein folding, and metabolic flux.
+
+\subsection{The DNA Partition: Genome as Partition of Sequence Space}
+
+The genome is a partition of nucleotide sequence space into functional units.
+We formalise this observation and derive quantitative consequences.
+
+\begin{definition}[Codon partition]
+\label{def:ch02-codon-partition}
+The \emph{codon partition} of the DNA alphabet $\mathcal{A} = \{A, C, G, T\}$
+is the partition of $\mathcal{A}^3$ into $4^3 = 64$ cells, one for each ordered
+3-mer.  Each cell is a \emph{codon}: a minimal unit of genetic information.
+\end{definition}
+
+\begin{remark}[Base-4 encoding and partition depth]
+\label{rem:ch02-base4}
+Encoding in the base-4 alphabet $\{A, C, G, T\}$ is equivalent to a 2-bit
+binary partition at each nucleotide position.  A codon of length 3 therefore
+has partition depth
+\[
+  \mathcal{M}_{\mathrm{codon}}
+  = \log_2(4^3) = 3 \log_2 4 = 6 \text{ bits.}
+\]
+The full 3-billion-base-pair human genome has partition depth
+$\mathcal{M}_{\mathrm{genome}} = 2 \times 3 \times 10^9 = 6 \times 10^9$ bits,
+consistent with standard genome information estimates.
+\end{remark}
+
+The standard genetic code is a map from the codon partition of $\mathcal{A}^3$
+onto the amino acid space $\mathcal{AA} = \{\text{Ala}, \ldots, \text{Val}\}
+\cup \{\mathrm{Stop}\}$ (20 amino acids plus 3 stop codons).
+
+\begin{definition}[Genetic code as partition coarsening]
+\label{def:ch02-genetic-coarsening}
+The genetic code $\gamma: \mathcal{A}^3 \to \mathcal{AA} \cup \{\mathrm{Stop}\}$
+is a surjective map that coarsens the 64-cell codon partition into a 23-cell
+amino acid partition.  The \emph{coarsening ratio} is $64/23 \approx 2.78$.
+The \emph{degeneracy} of amino acid $\mathrm{aa}$ is
+\[
+  \delta(\mathrm{aa}) := |\gamma^{-1}(\mathrm{aa})|,
+\]
+the number of codons that encode it.
+\end{definition}
+
+\begin{proposition}[Degeneracy distribution]
+\label{prop:ch02-degeneracy}
+The degeneracy satisfies $\sum_{\mathrm{aa}} \delta(\mathrm{aa}) = 64$ (counting
+all 64 codons) and $1 \leq \delta(\mathrm{aa}) \leq 6$ for all amino acids.  The
+partition information lost by genetic code coarsening is
+\[
+  \Delta \mathcal{M}_{\mathrm{code}}
+  = \log_2 64 - \log_2 23
+  = 6 - 4.52
+  = 1.48 \text{ bits per codon.}
+\]
+This is the \emph{degeneracy floor}: $1.48$ bits of codon information is
+irreversibly lost in the translation process.
+\end{proposition}
+
+\begin{proof}
+The 64-codon partition has entropy $\log_2 64 = 6$ bits (uniform assumption).
+The 23-amino-acid partition has entropy $\log_2 23 \approx 4.52$ bits.  The
+difference is the information discarded by the genetic code map.
+\end{proof}
+
+\begin{remark}[Wobble base pairing as floor mechanism]
+\label{rem:ch02-wobble}
+The degeneracy floor $\Delta\mathcal{M}_{\mathrm{code}} = 1.48$ bits per codon
+arises because the third codon position (the ``wobble'' position) is read with
+reduced fidelity by the tRNA anticodon.  Chemically, adenine and guanine pair
+with the same wobble-position base in many organisms (Inosine pairing).  This
+is a molecular implementation of the floor: the ribosome cannot resolve the
+full 4-fold distinction at the third position, so $4 \to 2$ or $4 \to 1$
+effective states, producing degeneracy $\delta \in \{2, 3, 4, 6\}$ for many
+amino acids.  Methionine and Tryptophan, which have $\delta = 1$, have no
+wobble: their single codons are read with full fidelity ($\Delta\mathcal{M} = 0$
+at those positions).
+\end{remark}
+
+\subsection{The Protein Partition: Folds as Partitions of Conformation Space}
+
+\begin{definition}[Protein conformation partition]
+\label{def:ch02-conformation-partition}
+For a protein of $N$ residues, the \emph{conformation space}
+$\mathcal{C}_N = [-\pi, \pi)^{2N}$ is the torus of backbone dihedral angles
+$(\phi_i, \psi_i)_{i=1}^N$.  A \emph{fold} is a compact connected subregion
+$F \subset \mathcal{C}_N$ with measure $\mu(F) > 0$.  The \emph{fold partition}
+of a protein family is the partition of $\mathcal{C}_N$ into distinct folds
+$\{F_k\}_{k=1}^{N_F}$ where $N_F$ is the number of evolutionarily distinct
+folds in the family.
+\end{definition}
+
+\begin{remark}[Number of folds and partition depth]
+\label{rem:ch02-fold-count}
+The SCOP/CATH structural databases classify approximately $N_F \approx 10^4$
+distinct protein folds at the family level and an estimated $N_F \approx 10^9$
+at the sequence level (including minor variations).  The partition depth of
+the protein fold space is therefore
+\[
+  \mathcal{M}_{\mathrm{fold}} = \log_2(10^9) \approx 30 \text{ bits.}
+\]
+This is the information content required to specify a protein fold uniquely
+among all known alternatives.
+\end{remark}
+
+\begin{definition}[Protein misfolding as partition error]
+\label{def:ch02-misfolding}
+A \emph{misfolding event} occurs when a polypeptide chain reaches a fold $F'$
+that is not the native fold $F^*$ of the sequence.  In partition-algebraic terms,
+misfolding is a \emph{wrong-cell assignment}: the chain is mapped to partition
+cell $F'$ when it should occupy $F^*$.  The \emph{misfolding partition distance}
+is
+\[
+  d_P(F', F^*)
+  \;=\;
+  \mathrm{TV}(\mu_{F'}, \mu_{F^*}),
+\]
+the total variation between the native and misfolded conformation distributions.
+\end{definition}
+
+\begin{example}[Alzheimer amyloid as partition coarsening]
+\label{ex:ch02-amyloid}
+In Alzheimer's disease, the amyloid precursor protein APP is cleaved to produce
+the A$\beta$ peptide, which misfolds from its native $\alpha$-helical structure
+(high-resolution fold, fine partition) into cross-$\beta$-sheet amyloid fibrils.
+The $\beta$-sheet fibril structure is a \emph{coarser partition} of conformation
+space: many distinct $\alpha$-helical sequences collapse into the same
+$\beta$-sheet pattern.
+
+Quantitatively, the A$\beta$ $\alpha$-helical fold occupies approximately
+$\mu(F_\alpha) \approx 10^{-6}$ of conformation space (a fine partition cell).
+The $\beta$-sheet amyloid fold occupies $\mu(F_\beta) \approx 10^{-2}$---a
+cell that is $10^4$ times larger.  The partition coarsening ratio is $10^4$,
+corresponding to a loss of
+\[
+  \Delta\mathcal{M}_{\mathrm{amyloid}}
+  = \log_2(10^4) \approx 13.3 \text{ bits}
+\]
+of structural information per A$\beta$ molecule.  Aggregation of $10^{10}$
+A$\beta$ molecules per senile plaque represents a collective information loss
+of $13.3 \times 10^{10} \approx 1.33 \times 10^{11}$ bits of neuronal
+partition structure.  The distribution theorem (\Cref{thm:distribution-ch02})
+guarantees this information cannot be recovered by any single local measurement.
+\end{example}
+
+\subsection{Biological Current and Flux from Partition Structure}
+
+The gradient-flow dynamics of partition depth (\cf the source framework of
+biological-partitioning-landscape) connect naturally to classical transport
+equations.  We derive metabolic flux and membrane current from partition
+structure.
+
+\begin{theorem}[Fick's law in partition space]
+\label{thm:ch02-fick}
+Let $\mathcal{M}(\mathbf{x})$ denote the partition depth at spatial location
+$\mathbf{x}$ in a biological medium.  The metabolic flux
+$\mathbf{J}$ obeys
+\[
+  \mathbf{J} \;=\; -D\,\nabla \mathcal{M}(\mathbf{x}),
+\]
+where $D$ is the partition diffusivity.  This is \emph{Fick's first law
+in partition coordinates}.
+\end{theorem}
+
+\begin{proof}
+By the Partition Gradient Flow theorem (derived in
+biological-partitioning-landscape), all dynamics flow along partition depth
+gradients: $\mathrm{d}\mathbf{x}/\mathrm{d}t = -\gamma \nabla\mathcal{M}$.
+Flux is the product of density $\rho$ and velocity:
+$\mathbf{J} = \rho \cdot \mathrm{d}\mathbf{x}/\mathrm{d}t = -\rho\gamma
+\nabla\mathcal{M}$.  Setting $D = \rho\gamma$ gives Fick's law.
+\end{proof}
+
+\begin{definition}[Partition current]
+\label{def:ch02-partition-current}
+For a network of nodes $\{i\}$ with partition depths $\{\phi_i =
+\mathcal{M}(i)\}$, the \emph{partition current} from node $i$ to node $j$ is
+\[
+  I_{ij} \;=\; G_{ij}\,(\phi_i - \phi_j),
+\]
+where $G_{ij}$ is the partition conductance between nodes $i$ and $j$.
+\end{definition}
+
+\begin{theorem}[Kirchhoff's current law as partition conservation]
+\label{thm:ch02-kirchhoff}
+At steady state, for every interior node $i$:
+\[
+  \sum_j I_{ij} \;=\; \sum_j G_{ij}(\phi_i - \phi_j) \;=\; 0.
+\]
+This is \emph{Kirchhoff's current law in partition coordinates}: partition depth
+is conserved at each metabolic junction.
+\end{theorem}
+
+\begin{proof}
+Steady state requires zero net flux at each node.  Since $I_{ij} = G_{ij}
+(\phi_i - \phi_j)$ and $G_{ij} = G_{ji}$ (conductance is symmetric), summing
+over all neighbours gives exactly Kirchhoff's law by the symmetry of the
+conductance matrix and the antisymmetry of the driving potentials.
+\end{proof}
+
+\begin{remark}[Nernst-Planck equation in partition coordinates]
+\label{rem:ch02-nernst-planck}
+For charged species (ions, protons) in an electrochemical gradient, the
+partition current gains a drift term.  Letting $z$ be the ionic valence,
+$F$ the Faraday constant, and $\Phi$ the electric potential, the
+Nernst-Planck equation in partition coordinates is
+\[
+  \mathbf{J}_{\mathrm{NP}}
+  \;=\;
+  -D\nabla\mathcal{M}
+  \;-\;
+  \frac{zFD}{RT}\,\nabla\Phi.
+\]
+The first term is the partition-gradient (chemical) flux and the second is
+the electromigration flux.  At electrochemical equilibrium ($\mathbf{J}_{NP} =
+0$), the Nernst equation $\Delta\Phi = -(RT/zF)\ln(c_\mathrm{out}/c_\mathrm{in})$
+follows directly from balancing the two terms, with the concentration ratio
+$c_\mathrm{out}/c_\mathrm{in}$ expressible as the ratio of partition depths
+$\exp(-\Delta\mathcal{M})$.
+\end{remark}
+
+%% ============================================================
+\section{Anti-Monopoly and Distribution Theorems --- Extended Treatment}
+\label{sec:ch02-anti-monopoly}
+%% ============================================================
+
+The Anti-Monopoly Corollary (\Cref{cor:anti-monopoly}) and the Distribution
+Theorem (\Cref{thm:distribution-ch02}) were stated in \Cref{sec:incompat-ch02}
+with concise proofs.  This section provides the extended formal treatment:
+a full proof of the anti-monopoly result with quantitative bounds, historical
+illustrations, the medical interpretation, and the optimisation-theoretic
+analysis of methodology selection under floor constraints.
+
+\subsection{Formal proof of the Anti-Monopoly Corollary}
+
+We re-state the Anti-Monopoly Corollary in its sharpened, quantitative form.
+
+\begin{theorem}[Quantitative Anti-Monopoly Bound]
+\label{thm:ch02-anti-monopoly-quant}
+Let $M$ be a single methodology with flat floor $\beta_M =
+\Sspace_{\mathrm{flat}}(M) > 0$ on outcome space $(\mathcal{X}, d, \Sigma)$.
+The maximum fraction of the S-scale accessible to $M$ alone is
+\[
+  \frac{\Sigma - \beta_M}{\Sigma} \;=\; 1 - \frac{\beta_M}{\Sigma} \;<\; 1.
+\]
+In particular, the S-scale interval $[\Sigma - \beta_M, \Sigma]$ is
+epistemically inaccessible to $M$: no output of $M$ can attain a knowledge
+level in this interval.  The \emph{monopoly gap} is $\beta_M > 0$.
+\end{theorem}
+
+\begin{proof}
+The S-functional satisfies $S(\mathcal{R}, x; M) \geq \beta_M > 0$ for all
+$x$ and all bounded receivers $\mathcal{R}$, by axiom S3 applied to the
+methodology $M$.  Knowledge, measured as $\Sigma - S$, therefore satisfies
+$\Sigma - S(\mathcal{R}, x; M) \leq \Sigma - \beta_M$.  The ratio of
+attainable knowledge to the scale maximum is
+$(\Sigma - \beta_M)/\Sigma < 1$.  The remaining fraction $\beta_M/\Sigma$
+constitutes the monopoly gap.
+\end{proof}
+
+\begin{corollary}[Minimum diversity requirement]
+\label{cor:ch02-min-diversity}
+To cover the full S-scale to within precision $\epsilon > 0$, the minimum
+number of mutually complementary methodologies $n_{\mathrm{min}}$ must
+satisfy
+\[
+  \prod_{k=1}^{n_{\mathrm{min}}} \frac{\beta_k}{\Sigma}
+  \;\leq\;
+  \frac{\epsilon}{\Sigma}.
+\]
+If all methodologies share the same floor $\beta_M$, this simplifies to
+\[
+  n_{\mathrm{min}} \;\geq\; \frac{\log(\epsilon/\Sigma)}{\log(\beta_M/\Sigma)}.
+\]
+For $\beta_M/\Sigma = 0.1$ (each methodology covers $90\%$ of the scale)
+and $\epsilon/\Sigma = 10^{-3}$, $n_{\mathrm{min}} \geq 3$.
+\end{corollary}
+
+\begin{proof}
+The composite floor after $n$ mutually complementary methodologies is
+$\Sigma\prod_{k=1}^n(\beta_k/\Sigma)$ by the composition law
+(\Cref{thm:composition}).  Setting this $\leq \epsilon$ and taking logarithms
+gives the stated bound.  The equal-floor case follows by setting
+$\beta_k = \beta_M$ for all $k$.
+\end{proof}
+
+\subsection{Historical examples of monopoly failure}
+
+\begin{example}[Newtonian mechanics and the quantum scale]
+\label{ex:ch02-newtonian-monopoly}
+From 1687 to 1905, Newtonian mechanics held an effective monopoly on the
+description of physical phenomena.  Its floor $\beta_N$ is the Planck scale
+$\hbar$ expressed in appropriate units: Newtonian mechanics cannot resolve
+phenomena at energies $E \lesssim \hbar\omega$ for any quantum frequency
+$\omega$.  The monopoly gap is $\beta_N/\Sigma \approx (E_\mathrm{quantum}/
+E_\mathrm{classical})$, which for atomic phenomena is of order $10^{-20}/
+10^{-10} = 10^{-10}$---minute but nonzero.
+
+The discovery of the photoelectric effect, atomic spectra, and radioactive decay
+between 1887 and 1905 probed precisely the intervals of the S-scale in the
+monopoly gap $[\Sigma - \beta_N, \Sigma]$.  No extension of Newtonian mechanics
+(including relativistic corrections, hydrodynamics, or statistical mechanics)
+could reach this gap: it required a qualitatively new methodology (quantum
+mechanics) with a different floor structure.  This is the Anti-Monopoly theorem
+in historical action.
+\end{example}
+
+\begin{example}[CAPM and fat-tail markets]
+\label{ex:ch02-capm-monopoly}
+The Capital Asset Pricing Model (CAPM) partitions financial return space
+assuming Gaussian return distributions.  Its floor $\beta_{\mathrm{CAPM}}
+> 0$ arises from the assumption that variance is the complete measure of
+risk.  Events in the tail of the return distribution (crashes, bubbles)
+correspond to the monopoly gap $[\Sigma - \beta_{\mathrm{CAPM}}, \Sigma]$.
+
+The 1987 market crash, the 1998 LTCM collapse, and the 2008 financial crisis
+are all manifestations of financial phenomena in the CAPM monopoly gap.  A
+complementary methodology (extreme value theory, power-law distribution
+models) is needed to cover this gap, confirming \Cref{cor:ch02-min-diversity}.
+\end{example}
+
+\begin{example}[Single-biomarker diagnosis]
+\label{ex:ch02-single-biomarker}
+A single diagnostic biomarker $B$ partitions patient space into ``positive''
+and ``negative'' cells.  Its floor $\beta_B > 0$ reflects the sensitivity and
+specificity limitations: no single biomarker achieves perfect sensitivity and
+perfect specificity simultaneously (this is the diagnostic analogue of the
+Methodological Incompatibility Principle, \Cref{thm:incompat-ch02}).
+
+For a biomarker with sensitivity $\mathrm{Se}$ and specificity $\mathrm{Sp}$,
+the floor fraction is
+\[
+  \frac{\beta_B}{\Sigma}
+  = 1 - \frac{\mathrm{Se} + \mathrm{Sp}}{2}
+  = \frac{(1 - \mathrm{Se}) + (1 - \mathrm{Sp})}{2},
+\]
+the average of the false-negative and false-positive rates.  For the best
+single cancer biomarkers (e.g.\ PSA for prostate cancer, CA-125 for ovarian
+cancer), typical values are $\mathrm{Se} = 0.85$, $\mathrm{Sp} = 0.80$, giving
+$\beta_B/\Sigma = 0.175$.  More than $17\%$ of the diagnostic S-scale is
+inaccessible to a single biomarker.  \Cref{cor:ch02-min-diversity} implies that
+at minimum $n \geq 2$ biomarkers (or a composite score) are needed to reduce
+the gap below $5\%$.
+\end{example}
+
+\subsection{Extended proof of the Distribution Theorem with equality case}
+
+\begin{theorem}[Distribution Theorem --- Extended]
+\label{thm:ch02-distribution-extended}
+Let $\mathcal{E} = \{\mathcal{R}_1, \ldots, \mathcal{R}_n\}$ be an ensemble of
+$n$ bounded receivers with floors $\beta_1, \ldots, \beta_n$.  The total
+epistemic coverage of the ensemble is
+\[
+  \mathcal{K}(\mathcal{E})
+  \;:=\;
+  \Sigma\,\Bigl(1 - \prod_{k=1}^n \frac{\beta_k}{\Sigma}\Bigr).
+\]
+\begin{enumerate}[(i)]
+  \item (Diversity maximises coverage) For fixed $\bar\beta = (\beta_1 +
+    \cdots + \beta_n)/n$, the coverage $\mathcal{K}(\mathcal{E})$ is maximised
+    when the floors $\{\beta_k\}$ are as diverse as possible, specifically when
+    $\beta_k = \bar\beta \cdot r^{k-1}$ for some $r > 1$ (geometric progression).
+  \item (AM-GM bound) If all floors equal $\bar\beta$, then
+    $\mathcal{K}(\mathcal{E}) = \Sigma(1 - (\bar\beta/\Sigma)^n)$.  If floors
+    are diverse with AM $= \bar\beta$, the geometric mean
+    $\beta_{\mathrm{GM}} \leq \bar\beta$ (AM-GM inequality), so
+    $\prod_k(\beta_k/\Sigma) \leq (\bar\beta/\Sigma)^n$, and the diverse
+    ensemble achieves at least as much coverage.
+  \item (Equality case) $\mathcal{K}(\mathcal{E}) = \Sigma$ if and only if
+    at least one $\beta_k = 0$, which is excluded by S3.  Hence full coverage
+    is impossible for any finite ensemble of bounded receivers.
+  \item (Finite-$n$ correction) For large $n$ and small floors
+    $\beta_k/\Sigma \ll 1$, $\mathcal{K}(\mathcal{E}) \approx
+    \Sigma(1 - e^{-\sum_k \beta_k/\Sigma})$, with relative error $O((\beta/\Sigma)^2)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(i)}: $\mathcal{K}(\mathcal{E}) = \Sigma(1 - \prod_k \beta_k/\Sigma)$.
+Maximising coverage is equivalent to minimising $P = \prod_k(\beta_k/\Sigma)$.
+By the AM-GM inequality, for fixed sum, the product is minimised when the
+terms are as spread as possible.  More precisely, by Schur-convexity of
+$\prod \beta_k$ under majorisation, the product is minimised when the vector
+$(\beta_1, \ldots, \beta_n)$ is maximally spread (i.e., majorised by all other
+rearrangements).  A geometric progression achieves near-maximal spread for
+a given mean.
+
+\textbf{(ii)}: The AM-GM inequality states $(\prod_k \beta_k)^{1/n} \leq
+(\sum_k \beta_k)/n = \bar\beta$, with equality iff all $\beta_k$ are equal.
+Therefore $\prod_k(\beta_k/\Sigma) \leq (\bar\beta/\Sigma)^n$, so the diverse
+ensemble has $\prod_k(\beta_k/\Sigma) \leq (\bar\beta/\Sigma)^n$ and hence
+greater or equal coverage.
+
+\textbf{(iii)}: $\mathcal{K}(\mathcal{E}) = \Sigma$ requires $\prod_k
+(\beta_k/\Sigma) = 0$, which requires some $\beta_k = 0$.  Axiom S3 excludes
+this for bounded receivers.
+
+\textbf{(iv)}: For small $x_k := \beta_k/\Sigma$,
+$\prod_k(1 - x_k) \approx \exp(-\sum_k x_k)$ to first order.  Hence
+$\mathcal{K}(\mathcal{E}) \approx \Sigma(1 - \exp(-\sum_k\beta_k/\Sigma))$.
+\end{proof}
+
+\subsection{Adaptive methodology selection}
+
+\begin{definition}[Methodology selection problem]
+\label{def:ch02-method-selection}
+Given $m$ methodologies $M_1, \ldots, M_m$ with floors $\beta_1 \leq \beta_2
+\leq \cdots \leq \beta_m$ (ordered by increasing floor), and a budget
+constraint $k < m$, the \emph{methodology selection problem} is to find the
+subset $\mathcal{S} \subseteq \{M_1, \ldots, M_m\}$ of size $|\mathcal{S}| = k$
+that minimises the composite floor
+\[
+  \beta_{\mathrm{comp}}(\mathcal{S})
+  \;=\;
+  \Sigma\,\prod_{M_j \in \mathcal{S}} \frac{\beta_j}{\Sigma}.
+\]
+\end{definition}
+
+\begin{theorem}[Optimal greedy selection]
+\label{thm:ch02-greedy-selection}
+The methodology selection problem is solved by the \emph{greedy algorithm}:
+select methodologies in order of increasing floor $\beta_k$.  The greedy
+selection $\mathcal{S}^* = \{M_1, \ldots, M_k\}$ achieves
+\[
+  \beta_{\mathrm{comp}}(\mathcal{S}^*)
+  \;=\;
+  \Sigma\,\prod_{j=1}^k \frac{\beta_j}{\Sigma}
+  \;=\;
+  \Sigma\,\frac{\beta_1 \cdots \beta_k}{\Sigma^k},
+\]
+which is less than or equal to the composite floor of any other $k$-subset.
+\end{theorem}
+
+\begin{proof}
+The composite floor of any $k$-subset $\mathcal{S} = \{M_{j_1}, \ldots,
+M_{j_k}\}$ is $\Sigma \prod_{i=1}^k(\beta_{j_i}/\Sigma)$.  By the rearrangement
+inequality, this product is minimised when the $k$ smallest values
+$\beta_{j_i}/\Sigma$ are selected, i.e., when $j_i = i$ for $i = 1, \ldots, k$.
+This is exactly the greedy selection $\mathcal{S}^* = \{M_1, \ldots, M_k\}$.
+\end{proof}
+
+\begin{example}[Numerical optimal selection]
+\label{ex:ch02-greedy-numerical}
+Let $m = 5$ methodologies with floors $\beta_1 = 2, \beta_2 = 4, \beta_3 = 7,
+\beta_4 = 12, \beta_5 = 20$ (all in $\Sigma = 100$ units), and budget $k = 3$.
+The greedy selection picks $\{M_1, M_2, M_3\}$ with composite floor
+\[
+  \beta_{\mathrm{comp}}^* = 100 \times \frac{2 \times 4 \times 7}{100^3}
+  = 100 \times \frac{56}{10^6}
+  = 5.6 \times 10^{-3}.
+\]
+The worst selection $\{M_3, M_4, M_5\}$ gives composite floor
+\[
+  \beta_{\mathrm{comp}}^{\mathrm{worst}} = 100 \times \frac{7 \times 12 \times 20}{100^3}
+  = 100 \times \frac{1680}{10^6}
+  = 0.168.
+\]
+The greedy selection reduces the composite floor by a factor of $30$ relative
+to the worst-case selection.  In diagnostic terms: choosing the three most
+sensitive tests first reduces irreducible uncertainty $30$-fold compared to
+choosing the three least sensitive tests.
+\end{example}
+
+%% ============================================================
+\section{Extended Worked Examples}
+\label{sec:ch02-worked-examples-extended}
+%% ============================================================
+
+This section presents three detailed worked examples that apply the full
+partition-algebraic machinery developed in this chapter to concrete biological
+and pharmaceutical problems.
+
+\subsection{Immunological Discrimination: Partitioning Pathogen Space}
+
+The immune system's primary function is to discriminate self from non-self,
+and within non-self to discriminate harmful from benign.  This is a partition
+problem of extraordinary scale.
+
+\begin{example}[B cell VDJ recombination as partition generation]
+\label{ex:ch02-vdj-partition}
+The immunoglobulin heavy chain is assembled from three gene segment libraries:
+variable (V), diversity (D), and joining (J) segments.  Let $|V|$, $|D|$,
+$|J|$ denote the number of functional segments in each library.  The
+combinatorial diversity of the VDJ junction is:
+\begin{align*}
+  |\mathcal{V}| &\approx 40 \quad \text{(human heavy chain V segments)}\\
+  |\mathcal{D}| &\approx 25 \quad \text{(human heavy chain D segments)}\\
+  |\mathcal{J}| &\approx 6 \quad \text{(human heavy chain J segments)}
+\end{align*}
+Combinatorial joining gives $40 \times 25 \times 6 = 6000$ distinct VDJ
+frameworks.  Including junctional diversity from exonuclease trimming and
+N-nucleotide addition at each junction (each junction can contribute
+$\pm 5$ random bases, giving $\sim 4^5 = 10^3$ variants per junction), the
+total diversity of the primary BCR repertoire reaches approximately
+\[
+  N_{\mathrm{BCR}} \;\approx\; 6000 \times (10^3)^2 \;\approx\; 6 \times 10^9,
+\]
+and with somatic hypermutation adding approximately $10^2$-fold further
+diversity per selected clone:
+\[
+  N_{\mathrm{BCR}}^{\mathrm{total}} \;\approx\; 6 \times 10^{11}.
+\]
+
+Each distinct BCR specifies one \emph{partition cell} in pathogen space: the
+set of antigens that bind that receptor.  The entire BCR repertoire thus
+defines a partition $\mathbb{P}_{\mathrm{BCR}}$ of antigen space into at most
+$6 \times 10^{11}$ cells.
+
+The S-functional floor for BCR discrimination is
+\[
+  \beta_{\mathrm{BCR}}
+  \;=\; \frac{\Sigma}{N_{\mathrm{BCR}}^{\mathrm{total}}}
+  \;\approx\; \frac{\Sigma}{6 \times 10^{11}}.
+\]
+For $\Sigma = 1$ (normalised S-scale), $\beta_{\mathrm{BCR}} \approx
+1.7 \times 10^{-12}$.  This is an extraordinarily small but strictly positive
+floor: even the adaptive immune system cannot achieve zero epistemic distance
+from any antigen.
+
+The partition depth of the BCR repertoire is
+\[
+  \mathcal{M}_{\mathrm{BCR}}
+  = \log_2(6 \times 10^{11})
+  \approx 39.1 \text{ bits,}
+\]
+meaning that approximately 39 binary distinctions are required to specify
+a BCR uniquely in the repertoire.
+\end{example}
+
+\begin{example}[Clonal expansion as partition narrowing]
+\label{ex:ch02-clonal-expansion}
+Upon antigen recognition, the immune system undergoes \emph{clonal expansion}:
+the one (or few) BCR clones that bind the antigen proliferate from a single
+cell to $\sim 10^4$--$10^5$ cells.  In partition-algebraic terms:
+
+\begin{itemize}
+  \item \textbf{Before clonal expansion}: $N_{\mathrm{BCR}} \approx 10^{11}$
+    partition cells, each present at $\sim 1$--$10$ copies.
+  \item \textbf{After clonal expansion}: the number of distinct cells is
+    unchanged ($\sim 10^{11}$), but the measure of the responding clone's
+    cell is amplified by $10^4$: it now constitutes a fraction $10^4/10^{11}
+    = 10^{-7}$ of the total repertoire.
+  \item \textbf{Partition effect}: the partition of antigen space is
+    \emph{refined} in the vicinity of the cognate antigen (somatic
+    hypermutation produces higher-affinity variants) and \emph{coarsened}
+    elsewhere (non-specific clones contract).
+\end{itemize}
+
+The S-functional for the antigen $a^*$ decreases from its naive value $S_0$
+to a post-expansion value $S_* < S_0$: the immune system has gained
+information about $a^*$.  The knowledge gain is
+\[
+  \Delta S = S_0 - S_*
+  \approx (\Sigma - \beta_{\mathrm{BCR}}) - (\Sigma - \beta^*)
+  = \beta^* - \beta_{\mathrm{BCR}}
+\]
+where $\beta^* \ll \beta_{\mathrm{BCR}}$ is the post-expansion floor for $a^*$.
+The immune response is thus a reduction of the S-functional for one antigen,
+at the expense of slight increases elsewhere (resource competition).
+\end{example}
+
+\subsection{Drug-Target Binding as Partition Overlap}
+
+\begin{definition}[Binding partition overlap]
+\label{def:ch02-binding-overlap}
+Let $D$ be a drug molecule with binding-site partition cell $\mathcal{C}_D
+\subseteq \mathcal{X}_{\mathrm{binding}}$ and let $T$ be a target protein with
+complementary binding-site partition cell $\mathcal{C}_T$.  The
+\emph{binding partition overlap} is
+\[
+  \mathrm{Ov}(D, T)
+  \;:=\;
+  \frac{\mu(\mathcal{C}_D \cap \mathcal{C}_T)}{\mu(\mathcal{C}_D \cup \mathcal{C}_T)},
+\]
+where $\mu$ is the Liouville measure on binding-site conformation space.
+\end{definition}
+
+\begin{theorem}[Binding affinity from partition overlap]
+\label{thm:ch02-binding-affinity}
+The dissociation constant $K_d$ of the drug-target complex is inversely
+proportional to the binding partition overlap:
+\[
+  K_d \;\propto\; \frac{1}{\mathrm{Ov}(D, T)}.
+\]
+High partition overlap (drug and target binding sites share many conformation
+cells) corresponds to low $K_d$ (tight binding, high affinity).  Low overlap
+corresponds to high $K_d$ (weak binding).
+\end{theorem}
+
+\begin{proof}[Sketch]
+$K_d = k_{\mathrm{off}}/k_{\mathrm{on}}$.  The on-rate $k_{\mathrm{on}}$
+depends on the probability that a drug molecule in solution occupies a
+conformation compatible with target binding, which is proportional to
+$\mu(\mathcal{C}_D \cap \mathcal{C}_T)/\mu(\mathcal{C}_D)$.  The off-rate
+$k_{\mathrm{off}}$ depends on the probability that the bound complex
+fluctuates away from the overlap region, proportional to
+$1 - \mathrm{Ov}(D, T)$.  The ratio gives $K_d \propto
+(1 - \mathrm{Ov})/\mathrm{Ov} \approx 1/\mathrm{Ov}$ for small $\mathrm{Ov}$.
+\end{proof}
+
+\begin{example}[Drug specificity classification by partition overlap]
+\label{ex:ch02-drug-specificity}
+Three categories of drugs can be classified by partition overlap:
+\begin{enumerate}[(1)]
+  \item \textbf{Highly specific drugs} (e.g.\ imatinib, a BCR-ABL kinase
+    inhibitor): $\mathrm{Ov}(D, T_{\mathrm{BCR-ABL}}) \approx 0.9$ (tight
+    overlap with the target) and $\mathrm{Ov}(D, T') \ll 0.1$ for all
+    off-targets $T'$.  $K_d \sim 10$~nM for BCR-ABL, $K_d \gg 10\,\mu\text{M}$
+    for most off-targets.
+  \item \textbf{Promiscuous drugs} (e.g.\ aspirin, a COX-1/COX-2 inhibitor):
+    $\mathrm{Ov}(D, T_{\mathrm{COX1}}) \approx \mathrm{Ov}(D, T_{\mathrm{COX2}})
+    \approx 0.5$---broad overlap with two related targets, producing
+    anti-inflammatory and anti-platelet effects simultaneously.
+  \item \textbf{Promiscuous polypharmacology} (e.g.\ chlorpromazine):
+    $\mathrm{Ov}(D, T_k) \approx 0.2$--$0.4$ for $k = 1, \ldots, 10$
+    different receptor types.  This produces both therapeutic effects and
+    side effects by the same partition-overlap mechanism.
+\end{enumerate}
+The partition-overlap framework provides a unified explanation for drug
+selectivity without invoking separate theories for each case.
+\end{example}
+
+\begin{remark}[Lipinski rule as partition depth constraint]
+\label{rem:ch02-lipinski}
+Lipinski's rule of five states that orally bioavailable drugs typically have
+molecular weight $\leq 500$~Da, logP $\leq 5$, $\leq 5$ hydrogen bond donors,
+and $\leq 10$ hydrogen bond acceptors.  In partition-algebraic terms, each
+structural feature contributes to the \emph{partition depth} of the drug molecule
+in the conformation-space partition of the gastrointestinal absorption pathway.
+Drugs with more than five aromatic rings have partition depth
+$\mathcal{M}_{\mathrm{drug}} > \mathcal{M}_{\mathrm{max}}$ for the absorptive
+epithelium's partition resolution, placing them outside the partition cells that
+the ADME (absorption, distribution, metabolism, excretion) system can process.
+Lipinski's rule is therefore not an empirical accident but a consequence of the
+partition depth bound of the intestinal epithelium as a bounded receiver.
+\end{remark}
+
+\subsection{Scientific Measurement Hierarchy: 5-Level S-Functional Stack}
+
+\begin{example}[Health system as 5-level S-functional stack]
+\label{ex:ch02-health-system-stack}
+Consider the epistemic chain from primary measurement to systemic health policy:
+\begin{enumerate}[(1)]
+  \item \textbf{Thermometer} (level 1): measures body temperature.  Floor
+    $\beta_1 = 0.1\,^\circ\text{C}$ (measurement precision).
+  \item \textbf{Patient} (level 2): reports symptoms and integrates thermometer
+    reading into subjective experience.  Floor $\beta_2 = 0.5$ units (symptom
+    reporting variability, placebo effects, recall bias).
+  \item \textbf{Physician} (level 3): integrates patient report with clinical
+    examination.  Floor $\beta_3 = 1.0$ unit (diagnostic uncertainty, cognitive
+    heuristics, time pressure).
+  \item \textbf{Hospital} (level 4): aggregates physician diagnoses across
+    patient cohorts.  Floor $\beta_4 = 2.0$ units (institutional coding
+    variability, ICD classification ambiguity).
+  \item \textbf{Health system} (level 5): aggregates hospital data across
+    regions.  Floor $\beta_5 = 5.0$ units (data harmonisation errors, policy
+    reporting incentives).
+\end{enumerate}
+With $\Sigma = 100$, the composite floor of the five-level health-system
+S-functional stack is
+\begin{align*}
+  \beta_{\mathrm{stack}}
+  &= \Sigma\Bigl(1 - \prod_{k=1}^5 (1 - \beta_k/\Sigma)\Bigr) \\
+  &= 100\Bigl(1 - (1 - 0.001)(1 - 0.005)(1 - 0.01)(1 - 0.02)(1 - 0.05)\Bigr)\\
+  &= 100\Bigl(1 - 0.999 \times 0.995 \times 0.990 \times 0.980 \times 0.950\Bigr)\\
+  &= 100\Bigl(1 - 0.9194\Bigr)\\
+  &= 8.06.
+\end{align*}
+The five-level health system has a composite floor of approximately $8.06$ units
+out of $100$: over $8\%$ of the health-information S-scale is epistemically
+inaccessible to the health system as a whole.  This is not a consequence of poor
+data collection or inadequate technology; it is a theorem.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Level & Floor $\beta_k$ & Cumulative floor \\
+\midrule
+1: Thermometer   & 0.1  & 0.10 \\
+2: Patient       & 0.5  & 0.60 \\
+3: Physician     & 1.0  & 1.59 \\
+4: Hospital      & 2.0  & 3.56 \\
+5: Health system & 5.0  & 8.06 \\
+\bottomrule
+\end{tabular}
+\caption{Cumulative composite floor through the 5-level health-system
+S-functional stack ($\Sigma = 100$).  Each level adds an approximately
+additive increment to the composite floor, with small negative corrections
+from the cross-term.}
+\label{tab:ch02-health-stack}
+\end{table}
+
+The dominant contributor to the composite floor is the health system level
+(level 5, $\beta_5 = 5.0$), which contributes $5.0/8.06 \approx 62\%$ of
+the total composite floor.  Reducing $\beta_5$ by improving data harmonisation
+is therefore the highest-leverage intervention for reducing the health-system
+epistemic floor.  By the greedy selection theorem (\Cref{thm:ch02-greedy-selection}),
+improving the layer with the largest floor first gives the greatest reduction
+in composite floor per unit of investment.
+\end{example}
+
+\begin{remark}[Floor accumulation and clinical epidemiology]
+\label{rem:ch02-floor-epidemiology}
+The composite floor of $8.06$ units in \Cref{ex:ch02-health-system-stack}
+corresponds to an irreducible uncertainty in population-level health measurement
+of approximately $8\%$ of the S-scale.  In clinical epidemiology, this manifests
+as:
+\begin{itemize}
+  \item Non-differential misclassification bias (floor from level 2--3): reduces
+    measured effect sizes by a predictable factor.
+  \item Ecological fallacy (floor from level 4--5): individual-level inferences
+    drawn from aggregated data are bounded away from truth by $\beta_4 + \beta_5
+    \approx 7$ units.
+  \item Index dilution (floor from the genetic code partition's degeneracy): when
+    a composite health index aggregates $m$ biomarkers with floors
+    $\beta_{b_1}, \ldots, \beta_{b_m}$, the composite index floor is given by
+    the $m$-fold composition formula, not by the smallest individual floor.
+\end{itemize}
+The partition-algebraic framework thus provides a formal foundation for the
+well-known empirical observation in epidemiology that multi-level data
+aggregation introduces irreducible uncertainty, while making this observation
+precise and quantitative.
+\end{remark}
+
+\begin{remark}[Relation to the distribution theorem]
+\label{rem:ch02-floor-distribution-link}
+The composite floor of $8.06$ computed in \Cref{ex:ch02-health-system-stack}
+also confirms the Distribution Theorem (\Cref{thm:distribution-ch02}): since
+the composite floor is strictly positive, no single observer at any level of
+the health system (thermometer, patient, physician, hospital, or policy system)
+can hold complete knowledge of the health state of any positive-measure
+population.  This theorem-derived consequence is routinely rediscovered as the
+``no single data source is sufficient'' principle in public health, but the
+partition-algebraic framework makes it a deductive consequence rather than an
+empirical observation.
+
+Furthermore, by \Cref{thm:ch02-distribution-extended}(i), an ensemble of five
+health systems with maximally diverse floor structures achieves greater total
+epistemic coverage than five systems with identical floors.  This is the formal
+underpinning of the public health principle of methodological triangulation:
+combining qualitative, quantitative, epidemiological, and clinical data sources
+(each with distinct floors) covers more of the health-information S-scale than
+replicating a single data-collection modality five times.
+\end{remark}
+

@@ -1,10 +1,11 @@
-%% Chapter 3 — Cellular State Equations
+﻿%% Chapter 3 — Cellular State Equations
 %%
 %% Source material: docs/cellular-state-equations/partition-based-cellular-state-equations.tex
 %%   and all sections/ subdirectory files.
 
 \chapter{Cellular State Equations}
 \label{ch:cellular-state}
+\label{ch:cell-circuits}
 
 \begin{figure}[!htbp]
   \centering
@@ -95,7 +96,7 @@ transport mechanisms analysed in \Cref{sec:membrane-transport}.
 
 Classical electrodiffusion is captured by the Nernst--Planck equation for the
 flux $\mathbf{J}$ of a species with concentration $c$, diffusivity $D$, mobility
-$\mu_\mathrm{el}$, and local electric field $\mathbf{E}$:
+$\mu_\mathrm{el}$, and local electric field $\mathbf{E}$~\citep{Nelson2004}:
 \begin{equation}
     \mathbf{J}
     \;=\;
@@ -183,7 +184,7 @@ partition-depth spectroscopy read out at biological timescales.
 %% ---------------------------------------------------------------------------
 
 The Grotthuss mechanism describes anomalously fast proton transport through
-hydrogen-bond networks.  In the standard picture a proton hops along a chain of
+hydrogen-bond networks~\citep{Agmon1995}.  In the standard picture a proton hops along a chain of
 water molecules; each hop entails bond formation and cleavage.  The partition
 framework reframes this as \emph{categorical state propagation}.
 
@@ -264,7 +265,7 @@ and substrate concentration $c_j$ is
 \end{definition}
 
 With these definitions the biochemical circuit satisfies direct analogues of
-Kirchhoff's laws:
+Kirchhoff's laws~\citep{Kirchhoff1847}:
 
 \begin{theorem}[Biochemical KCL]
 \label{thm:kcl}
@@ -284,8 +285,8 @@ For any directed cycle $\ell$ in $\Gcond$, thermodynamic consistency requires
     \sum_{(i,j)\in\ell}(\varpotential_i - \varpotential_j) \;=\; 0,
     \label{eq:kvl}
 \end{equation}
-the exact analogue of Kirchhoff's Voltage Law.  \Cref{eq:kvl} is equivalent to
-the Wegscheider condition (detailed balance) for the reaction network.
+the exact analogue of Kirchhoff's Voltage Law~\citep{Kirchhoff1847}.  \Cref{eq:kvl} is equivalent to
+the Wegscheider condition~\citep{Wegscheider1901} (detailed balance) for the reaction network.
 \end{theorem}
 
 \begin{proof}[Proof of \Cref{thm:kvl}]
@@ -404,7 +405,7 @@ of decreasing $\Depth$.
 \end{proposition}
 
 The metabolic map from glycolysis through the TCA cycle to oxidative
-phosphorylation can be read as a monotone sequence of partition depths:
+phosphorylation~\citep{Mitchell1961,boyer1997} can be read as a monotone sequence of partition depths:
 each enzymatic step reduces $\Depth$ by a fixed amount determined by the
 reaction's Gibbs energy.  Sequential pathway architecture is therefore not a
 historical accident but a consequence of the partition depth ordering imposed by
@@ -440,7 +441,7 @@ acceptor identity changes the depth gradient.
 \end{figure}
 
 A biochemical network operates not merely in the concentration domain but also
-in the oscillatory phase domain.  We model the network as a Kuramoto ensemble:
+in the oscillatory phase domain.  We model the network as a Kuramoto ensemble~\citep{Kuramoto1984,Strogatz2000}:
 
 \begin{definition}[Biochemical Kuramoto Model]
 \label{def:kuramoto}
@@ -515,7 +516,7 @@ compartmentation) permit tighter phase coordination.
 \end{figure}
 
 We now unite the categorical aperture picture of \Cref{sec:protein-function}
-with the Michaelis--Menten kinetics it must reproduce.
+with the Michaelis--Menten kinetics~\citep{michaelis1913kinetik} it must reproduce.
 
 \begin{theorem}[Michaelis--Menten from Partition Apertures]
 \label{thm:mm}
@@ -692,3 +693,1700 @@ partition time itself.  The recursive structure is not circular but
 self-consistent: $\tau_p$ is operationally defined by the measurement device,
 and the universality of $T$ follows from the universality of the relation
 $\tau_p \kB T = \hbar$.
+
+%% ---------------------------------------------------------------------------
+\section{Genome--Membrane Circuit}
+\label{sec:ch03-genome-membrane}
+%% ---------------------------------------------------------------------------
+
+The genome and plasma membrane form a coupled electrical circuit in which the
+genome acts as a charge-storing capacitor and the membrane provides the
+resistive-conductive scaffolding for proton and electron currents.
+
+\begin{definition}[Genome Capacitance]
+\label{def:ch03-genome-capacitance}
+The genome acts as a capacitor with capacitance
+$C_\mathrm{genome} \approx 1~\mathrm{pF}$, storing a net negative charge
+$Q_\mathrm{genome} \approx -10^{-17}~\mathrm{C}$ arising from the
+phosphate-backbone charge density of the DNA double helix
+(\Cref{thm:genomic_capacitance}).
+\end{definition}
+
+\begin{theorem}[Charge Balance Requirement]
+\label{thm:ch03-charge-balance}
+For sustained circuit operation the proton transport current $I_{H^+}$ must
+balance the electron cascade current $I_e$:
+\begin{equation}
+    I_{H^+} \;=\; I_e \;=\; -\frac{dQ_\mathrm{genome}}{dt}.
+    \label{eq:ch03-charge-balance}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The genome charge evolves as $Q_\mathrm{genome}(t)=Q_0 e^{-t/\tau_{RC}}$ with
+$\tau_{RC}=RC\approx 1~\mu\mathrm{s}$.  The electron cascade current is
+$I_e=-dQ_\mathrm{genome}/dt=Q_0/\tau_{RC}\cdot e^{-t/\tau_{RC}}$.  Without
+proton recharge, $Q_\mathrm{genome}\to 0$, collapsing the transmembrane
+electric field.  Sustained operation therefore requires $I_{H^+}=I_e$.
+\end{proof}
+
+\begin{theorem}[Circuit Resistance--Charge Coupling]
+\label{thm:ch03-resistance-charge}
+The circuit resistance $R$ varies inversely with membrane surface charge density:
+\begin{equation}
+    R \;=\; \frac{k_R}{|\sigma_\mathrm{membrane}|},
+    \qquad
+    k_R \approx 5\times10^3~\Omega\cdot\mathrm{m}^2\,\mathrm{C}^{-1}.
+    \label{eq:ch03-resistance-charge}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Electron cascade velocity scales with charge density,
+$v_\mathrm{cascade}\propto|\sigma_\mathrm{membrane}|$, so transit time
+$\tau=d/v$ and effective resistance $R\propto\tau\propto 1/|\sigma_\mathrm{membrane}|$.
+\end{proof}
+
+\begin{theorem}[Charge-to-Geometry Coupling]
+\label{thm:ch03-charge-geometry}
+Charge accumulation $Q$ on a membrane of area $A$ creates electric pressure
+\begin{equation}
+    P_\mathrm{electric} \;=\; \frac{Q}{A\,\epsilon_0\,\epsilon_r}
+\end{equation}
+that drives a volume change $\Delta V = V_0 P_\mathrm{electric}/K$, where
+$K$ is the bulk modulus.
+\end{theorem}
+
+\begin{proof}
+The Maxwell stress tensor evaluated at the membrane surface yields
+$P_\mathrm{electric} = \sigma E = Q/(A\epsilon_0\epsilon_r)$ for small fields.
+The pressure--volume relation $\Delta V/V_0 = P/K$ follows from the bulk modulus
+definition.
+\end{proof}
+
+\begin{theorem}[Volume--Concentration Coupling]
+\label{thm:ch03-vol-conc}
+A volume oscillation $V(t)=V_0+\Delta V\sin(\omega t)$ induces a concentration
+oscillation
+\begin{equation}
+    C(t) \;\approx\; C_0\!\left(1 - \frac{\Delta V}{V_0}\sin(\omega t)\right)
+    \qquad (\Delta V \ll V_0).
+    \label{eq:ch03-vol-conc}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Molecule-number conservation $N=C(t)V(t)=C_0 V_0$ gives $C(t)=C_0 V_0/V(t)$.
+Taylor expansion for $\Delta V/V_0\ll 1$ yields \Cref{eq:ch03-vol-conc}.
+\end{proof}
+
+\begin{theorem}[Reaction Rate Enhancement]
+\label{thm:ch03-rate-enhancement}
+For a bimolecular reaction with rate $v=kC^2$, the time-averaged rate under
+volume oscillation satisfies
+\begin{equation}
+    \langle v\rangle \;=\; k\langle C^2\rangle \;>\; k C_0^2,
+    \label{eq:ch03-rate-enhance}
+\end{equation}
+\ie\ oscillation raises the mean reaction rate above the static value.
+\end{theorem}
+
+\begin{proof}
+Let $\epsilon=\Delta V/V_0$.  Then $C(t)=C_0(1-\epsilon\sin\omega t)$ and
+\begin{align*}
+    \langle C^2\rangle
+    &= C_0^2\bigl(1-2\epsilon\langle\sin\omega t\rangle
+        +\epsilon^2\langle\sin^2\omega t\rangle\bigr)
+    = C_0^2\!\left(1+\tfrac{\epsilon^2}{2}\right)
+    > C_0^2,
+\end{align*}
+since $\langle\sin\omega t\rangle=0$ and $\langle\sin^2\omega t\rangle=1/2$.
+\end{proof}
+
+\begin{theorem}[Coupled Dynamics Equations]
+\label{thm:ch03-coupled-dynamics}
+The genome--membrane system obeys the coupled ordinary differential equations
+\begin{align}
+    \frac{dQ}{dt} &= -\frac{Q}{\tau_{RC}} + I_{H^+}(Q,V),
+    \label{eq:ch03-dQ}\\
+    \frac{dV}{dt} &= \frac{V_0}{\tau_\mathrm{mech}}\!\left(\frac{Q}{Q_0}-\frac{V}{V_0}\right),
+    \label{eq:ch03-dV}\\
+    \frac{dC}{dt} &= -\frac{C\,V_0}{V^2}\frac{dV}{dt} + \mathrm{reactions}(C,V),
+    \label{eq:ch03-dC}
+\end{align}
+where $\tau_\mathrm{mech}$ is the mechanical relaxation time.
+\end{theorem}
+
+\begin{proof}
+\Cref{eq:ch03-dQ} is the charge balance (\Cref{thm:ch03-charge-balance}).
+\Cref{eq:ch03-dV} follows from \Cref{thm:ch03-charge-geometry}: volume responds
+to charge-driven pressure with mechanical lag $\tau_\mathrm{mech}$.
+\Cref{eq:ch03-dC} combines \Cref{thm:ch03-vol-conc} (volume dilution) with
+net chemical production.  Coupling occurs through the $Q$--$V$ dependence and
+the $V$--$C$ relationship.
+\end{proof}
+
+\begin{theorem}[Stability: Limit Cycles at Timescale Matching]
+\label{thm:ch03-stability}
+The coupled system \eqref{eq:ch03-dQ}--\eqref{eq:ch03-dC} exhibits stable
+limit-cycle oscillations when
+\begin{equation}
+    \tau_{RC} \;\approx\; \tau_\mathrm{mech} \;\approx\; \frac{1}{\omega_{\mathrm{O}_2}}.
+    \label{eq:ch03-timescale-match}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Timescale matching enables resonant coupling: when $\tau_{RC}\approx\tau_\mathrm{mech}$,
+electrical and mechanical dynamics synchronise, and the O$_2$ clock at frequency
+$\omega_{\mathrm{O}_2}$ provides external pacing.  Matching all three timescales
+minimises dissipation and stabilises the oscillations into limit cycles
+\citep{Kuramoto1984}.
+\end{proof}
+
+%% ---------------------------------------------------------------------------
+\section{Lipid Composition and Circuit Parameters}
+\label{sec:ch03-lipid-circuit}
+%% ---------------------------------------------------------------------------
+
+Membrane lipid composition directly sets the circuit parameters $R$, $C$, and
+$\tau_{RC}$ through the charge density $\sigma_\mathrm{membrane}$ and the
+spontaneous curvature $C_0$.
+
+\begin{definition}[Lipid Charge Density]
+\label{def:ch03-lipid-charge}
+Lipid headgroups carry characteristic surface charge densities:
+\begin{align}
+    \sigma_\mathrm{PC} &\approx -5~\mathrm{mC\,m}^{-2}, &
+    \sigma_\mathrm{PS} &\approx -10~\mathrm{mC\,m}^{-2}, \nonumber\\
+    \sigma_\mathrm{PE} &\approx -7~\mathrm{mC\,m}^{-2}, &
+    \sigma_\mathrm{PI} &\approx -15~\mathrm{mC\,m}^{-2}, \nonumber\\
+    \sigma_\mathrm{CL} &\approx -20~\mathrm{mC\,m}^{-2}. &&
+    \label{eq:ch03-lipid-charge}
+\end{align}
+\end{definition}
+
+\begin{definition}[Packing Parameter]
+\label{def:ch03-packing}
+The lipid packing parameter
+\begin{equation}
+    P \;=\; \frac{v}{a_0\,l_c}
+\end{equation}
+encodes molecular shape via tail volume $v$, headgroup area $a_0$, and tail
+length $l_c$.
+\end{definition}
+
+\begin{theorem}[Curvature--Assembly Theorem]
+\label{thm:ch03-curvature-assembly}
+Packing parameter determines mesoscale assembly:
+$P<1$ yields micelles (positive curvature),
+$P=1$ yields a planar bilayer (zero curvature), and
+$P>1$ yields inverted micelles (negative curvature).
+\end{theorem}
+
+\begin{definition}[Spontaneous Curvature]
+\label{def:ch03-spontaneous-curvature}
+The spontaneous curvature $C_0$ of each lipid species characterises its preferred
+membrane geometry:
+\begin{align}
+    C_0(\mathrm{PC}) &\approx 0~\mathrm{nm}^{-1}, &
+    C_0(\mathrm{PE}) &\approx -0.5~\mathrm{nm}^{-1}, \nonumber\\
+    C_0(\mathrm{PI}) &\approx +0.3~\mathrm{nm}^{-1}, &
+    C_0(\mathrm{CL}) &\approx -0.8~\mathrm{nm}^{-1}.
+    \label{eq:ch03-curvature-values}
+\end{align}
+\end{definition}
+
+\begin{theorem}[Transporter Assembly Requirement]
+\label{thm:ch03-transporter-assembly}
+Membrane-protein insertion requires negative spontaneous curvature $C_0<0$, with
+insertion free energy
+\begin{equation}
+    \Delta G_\mathrm{insertion}
+    \;=\;
+    \Delta G_\mathrm{hydrophobic}
+    + \Delta G_\mathrm{electrostatic}
+    + \kappa\,C_0^2,
+    \label{eq:ch03-insertion}
+\end{equation}
+where $\kappa\approx 20\kB T$ is the membrane bending modulus.  Lipids with
+$C_0<0$ (PE, CL) lower $\Delta G_\mathrm{insertion}$ through curvature matching.
+\end{theorem}
+
+\begin{definition}[Lipid Synthesis Cost]
+\label{def:ch03-lipid-cost}
+The ATP cost per synthesised lipid molecule is approximately:
+PC~$\approx 4$, PE~$\approx 3.5$, PS~$\approx 4.5$, PI~$\approx 5$,
+CL~$\approx 8$ (in units of ATP).
+\end{definition}
+
+\begin{definition}[Functional Benefit]
+\label{def:ch03-functional-benefit}
+The functional benefit of a lipid species is
+\begin{equation}
+    B_\mathrm{functional} \;=\; |C_0| + |P-1|,
+    \label{eq:ch03-benefit}
+\end{equation}
+measuring the lipid's capacity to generate structural diversity beyond the flat
+PC-bilayer baseline.
+\end{definition}
+
+\begin{theorem}[Evolutionary Optimisation of Lipid Composition]
+\label{thm:ch03-lipid-optimisation}
+Evolutionary selection maximises the cost--benefit ratio
+\begin{equation}
+    \eta_\mathrm{lipid} \;=\; \frac{B_\mathrm{functional}}{\mathrm{Cost}_\mathrm{ATP}}.
+    \label{eq:ch03-eta-lipid}
+\end{equation}
+Phosphatidylethanolamine achieves the highest efficiency
+$\eta_\mathrm{PE}\approx 0.43$, explaining its prevalence as the second-most
+abundant lipid in biological membranes.
+\end{theorem}
+
+\begin{theorem}[Phase Transition Temperature]
+\label{thm:ch03-phase-transition}
+The gel--fluid melting temperature depends on lipid composition:
+\begin{equation}
+    T_m(\mathrm{mixture}) \;=\; \sum_i x_i\,T_m(i),
+    \label{eq:ch03-tm}
+\end{equation}
+with $T_m(\mathrm{PC})\approx 270~\mathrm{K}$ and
+$T_m(\mathrm{PE})\approx 310~\mathrm{K}$, where $x_i$ is the mole fraction of
+species $i$.
+\end{theorem}
+
+\begin{corollary}[Physiological Membrane Composition]
+\label{cor:ch03-physiological-mix}
+The typical mammalian plasma membrane composition---PC~45\%, PE~30\%, PS~15\%,
+PI~8\%, CL~2\%---represents an evolutionary optimum balancing structural
+stability (PC), transporter assembly (PE), signalling (PS, PI), and specialised
+electrochemical function (CL) at physiological temperature $T=310~\mathrm{K}$.
+\end{corollary}
+
+\begin{corollary}[Mitochondrial Cardiolipin Enrichment]
+\label{cor:ch03-cl-enrichment}
+Mitochondrial inner membranes are enriched in cardiolipin (CL) because CL
+simultaneously satisfies two requirements: (i) high charge density
+($\sigma_\mathrm{CL}\approx -20~\mathrm{mC\,m}^{-2}$) yields low circuit
+resistance $R$ and fast electron transport; (ii) strongly negative spontaneous
+curvature ($C_0\approx -0.8~\mathrm{nm}^{-1}$) stabilises cristae geometry and
+promotes respiratory complex insertion.
+\end{corollary}
+
+%% ---------------------------------------------------------------------------
+\section{Allosteric Regulation and Enzyme Promiscuity}
+\label{sec:ch03-allosteric}
+%% ---------------------------------------------------------------------------
+
+We now extend the aperture picture of \Cref{sec:aperture} to allosteric
+modulation and multi-enzyme specificity.
+
+\begin{theorem}[Zero Information Theorem]
+\label{thm:ch03-zero-info}
+The Shannon information processed during enzymatic catalysis is zero:
+$\Delta I = 0$~\citep{Shannon1948}.
+\end{theorem}
+
+\begin{proof}
+Shannon information is $I=-\sum_i p_i\log_2 p_i$.  Catalysis converts substrate
+$S$ to product $P$ with probability conservation $p_P=p_S$, so
+$I_\mathrm{after}=I_\mathrm{before}$ and $\Delta I=0$.  Enzymatic specificity
+arises from geometric aperture selection (\Cref{def:aperture}), not information
+erasure~\citep{Landauer1961}.
+\end{proof}
+
+\begin{theorem}[Turnover Number Formula]
+\label{thm:ch03-kcat}
+The catalytic turnover number is
+\begin{equation}
+    k_\mathrm{cat} \;=\; \frac{1}{\dcat\cdot\tau_\mathrm{step}},
+    \label{eq:ch03-kcat}
+\end{equation}
+where $\dcat$ is the categorical distance traversed from substrate to product
+state and $\tau_\mathrm{step}$ is the time per categorical step.
+\end{theorem}
+
+\begin{proof}
+Catalysis requires traversing categorical distance $\dcat$; each step occupies
+$\tau_\mathrm{step}$, so total catalytic time is $t_\mathrm{cat}=\dcat\tau_\mathrm{step}$
+and $k_\mathrm{cat}=1/t_\mathrm{cat}$.
+\end{proof}
+
+\begin{example}[Carbonic Anhydrase]
+With $k_\mathrm{cat}\approx 10^6~\mathrm{s}^{-1}$ and
+$\tau_\mathrm{step}\sim 10^{-12}~\mathrm{s}$, \Cref{eq:ch03-kcat} gives
+$\dcat\approx 1$, indicating catalysis in a single categorical step.
+\end{example}
+
+\begin{example}[RuBisCO]
+With $k_\mathrm{cat}\approx 3~\mathrm{s}^{-1}$ and
+$\tau_\mathrm{step}\sim 10^{-13}~\mathrm{s}$ (conformational dynamics
+timescale), \Cref{eq:ch03-kcat} gives $\dcat\approx 30$, consistent with
+RuBisCO's complex multi-step catalytic mechanism.
+\end{example}
+
+\begin{theorem}[Michaelis--Menten from Apertures]
+\label{thm:ch03-mm-aperture}
+Enzymatic reaction velocity with aperture selection satisfies
+$v = V_\mathrm{max}[S]/(K_M+[S])$, where $K_M = |\Sspace\setminus\mathcal{A}|/|\mathcal{A}|$
+is the ratio of excluded to included volume in entropy-space~\citep{michaelis1913kinetik}.
+A small aperture $|\mathcal{A}|\to 0$ corresponds to large $K_M$ (high
+specificity); a large aperture corresponds to small $K_M$ (broad specificity).
+\end{theorem}
+
+\begin{definition}[Allosteric Aperture]
+\label{def:ch03-allosteric-aperture}
+An allosteric enzyme possesses aperture
+$\mathcal{A}(\alpha)=\mathcal{A}_0+\Delta\mathcal{A}(\alpha)$
+depending on effector concentration $\alpha$, where $\mathcal{A}_0$ is the
+basal aperture and $\Delta\mathcal{A}(\alpha)$ is the effector-dependent
+modulation.
+\end{definition}
+
+\begin{theorem}[Allosteric Modulation]
+\label{thm:ch03-allosteric}
+Allosteric effectors shift aperture geometry, modulating Michaelis--Menten
+parameters with Hill coefficient $n$:
+\begin{align}
+    K_M(\alpha) &= K_M^0\!\left(1+\frac{\alpha}{K_\mathrm{eff}}\right)^{\!n},
+    \label{eq:ch03-KM-alpha}\\
+    V_\mathrm{max}(\alpha) &= V_\mathrm{max}^0\!\left(1+\frac{\alpha}{K_\mathrm{eff}}\right)^{\!-n}.
+    \label{eq:ch03-Vmax-alpha}
+\end{align}
+The Hill coefficient $n>1$ indicates positive cooperativity (aperture
+expansion); $n<1$ indicates negative cooperativity (aperture contraction).
+\end{theorem}
+
+\begin{proof}
+Allosteric binding shifts the aperture volume as
+$|\mathcal{A}(\alpha)|=|\mathcal{A}_0|(1+\alpha/K_\mathrm{eff})^{-n}$.
+Since $K_M\propto 1/|\mathcal{A}|$ and $V_\mathrm{max}\propto|\mathcal{A}|$,
+\Cref{eq:ch03-KM-alpha,eq:ch03-Vmax-alpha} follow directly.
+\end{proof}
+
+\begin{proposition}[Enzyme Promiscuity--Aperture Relation]
+\label{prop:ch03-promiscuity}
+The number of substrates accepted by an enzyme scales as
+\begin{equation}
+    N_\mathrm{substrates} \;\propto\; |\mathcal{A}|^{3/2},
+    \label{eq:ch03-promiscuity}
+\end{equation}
+where $|\mathcal{A}|$ is the aperture volume in entropy-space.
+\end{proposition}
+
+\begin{corollary}[Specificity--Promiscuity Tradeoff]
+\label{cor:ch03-spec-promiscuity}
+Narrow apertures ($|\mathcal{A}|\to 0$) yield high specificity but low
+promiscuity; broad apertures ($|\mathcal{A}|\to 1$) yield high promiscuity
+but low specificity.
+\end{corollary}
+
+\begin{theorem}[Transition State Aperture]
+\label{thm:ch03-transition-state}
+The transition state $\Sigma^\ddagger$ lies at the aperture boundary
+$\partial\mathcal{A}$, with stabilisation energy
+\begin{equation}
+    \Delta G^\ddagger
+    \;=\;
+    -\kB T\log\!\left(\frac{|\mathcal{A}|}{|\Sspace|}\right).
+    \label{eq:ch03-dG-ddagger}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The transition state is the highest-energy configuration along the reaction
+coordinate; in entropy-space this is the aperture boundary where categorical
+constraints are most restrictive.  The stabilisation energy equals the free-energy
+cost of restricting the system from $\Sspace$ to $\mathcal{A}$, which is
+$-\kB T\log(|\mathcal{A}|/|\Sspace|)$.
+\end{proof}
+
+\begin{theorem}[Sequential Exclusion]
+\label{thm:ch03-sequential-exclusion}
+A multi-enzyme complex with $N$ enzymes implementing sequential apertures
+$\{\mathcal{A}_i\}$ achieves total selectivity
+\begin{equation}
+    \epsilon_\mathrm{total}
+    \;=\;
+    \prod_{i=1}^{N} \epsilon_i,
+    \qquad
+    \epsilon_i \;=\; \frac{|\mathcal{A}_i|}{|\Sspace|}.
+    \label{eq:ch03-sequential}
+\end{equation}
+For $N$ apertures each with $\epsilon_i\sim 10^{-3}$, the total specificity
+$\epsilon_\mathrm{total}\sim 10^{-3N}$ is exponentially enhanced.
+\end{theorem}
+
+\begin{proof}
+Each aperture $\mathcal{A}_i$ independently excludes fraction $(1-\epsilon_i)$ of
+candidate substrates.  Sequential application leaves fraction
+$\epsilon_\mathrm{total}=\prod_i\epsilon_i$ of the original substrate pool.
+\end{proof}
+
+%% ---------------------------------------------------------------------------
+\section{Categorical Thermometry}
+\label{sec:ch03-categorical-therm}
+%% ---------------------------------------------------------------------------
+
+Classical thermometry measures temperature by physical contact; the partition
+framework supports a contactless, zero-backaction alternative grounded in
+entropy-space navigation.
+
+\begin{definition}[Categorical Temperature]
+\label{def:ch03-cat-temp}
+The \emph{categorical temperature} at position $\mathbf{r}$ is
+\begin{equation}
+    T(\mathbf{r})
+    \;=\;
+    T_0\,\exp\!\bigl[\Delta\Se(\mathbf{r})\bigr],
+    \label{eq:ch03-cat-temp}
+\end{equation}
+where $\Delta\Se(\mathbf{r})=\Se(\mathbf{r})-\Se^{T=0}$ is the evolution-entropy
+distance from the ground state and $T_0$ is a reference temperature scale.
+\end{definition}
+
+\begin{theorem}[Temperature--Entropy Correspondence]
+\label{thm:ch03-temp-entropy}
+The categorical temperature \eqref{eq:ch03-cat-temp} is equivalent to the
+thermodynamic temperature through
+\begin{equation}
+    \Delta\Se \;=\; \frac{S_\mathrm{therm}}{\kB N},
+    \label{eq:ch03-temp-entropy}
+\end{equation}
+where $S_\mathrm{therm}=\kB\ln\Omega$ is the thermodynamic entropy and $N$ is
+particle number.
+\end{theorem}
+
+\begin{proof}
+Substituting $S_\mathrm{therm}=N\kB\Se$ into the thermodynamic relation
+$1/T=(\partial S/\partial E)_V$ and using $\Se\sim E/(N\kB T_0)$ near
+equilibrium yields $T=T_0\exp(\Delta\Se)$, recovering \Cref{eq:ch03-cat-temp}.
+\end{proof}
+
+\begin{definition}[Virtual Thermometry Station]
+\label{def:ch03-virtual-station}
+A \emph{virtual thermometry station} at $\mathbf{r}$ is a categorical construct
+$\mathcal{T}_\mathrm{virtual}(\mathbf{r})$ that (i)~exists only during
+measurement, (ii)~accesses molecular states through entropy-space coordinates,
+and (iii)~extracts temperature from $\Delta\Se$ without physical contact.
+\end{definition}
+
+\begin{theorem}[Zero Backaction Thermometry]
+\label{thm:ch03-zero-backaction}
+Virtual thermometry produces zero momentum transfer:
+\begin{equation}
+    \Delta p_\mathrm{therm} \;=\; 0.
+    \label{eq:ch03-zero-backaction}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Temperature measurement requires determining $\Se(\mathbf{r})$.  The
+entropy-space coordinates are orthogonal to physical momentum,
+$[\Se,p]=0$, so measuring $\Se$ does not disturb momentum eigenstates and
+$\Delta p=0$.  This contrasts with photon-based thermometry, where photon
+absorption transfers momentum $\Delta p=h/\lambda$ and causes recoil heating.
+\end{proof}
+
+\begin{corollary}[Picokelvin Resolution]
+\label{cor:ch03-picokelvin}
+With timing precision $\delta t\sim 2\times10^{-15}~\mathrm{s}$ (two cycles of
+the proton oscillator), the temperature resolution is
+\begin{equation}
+    \Delta T
+    \;\sim\;
+    \frac{\hbar}{\kB\,\delta t}
+    \;\approx\;
+    \frac{1.05\times10^{-34}}{1.38\times10^{-23}\times 2\times10^{-15}}
+    \;\approx\;
+    17~\mathrm{pK}.
+    \label{eq:ch03-picokelvin}
+\end{equation}
+\end{corollary}
+
+\begin{proposition}[Hardware--Molecular Synchronisation]
+\label{prop:ch03-hw-sync}
+Hydrogen-bond protons oscillate at frequency $\omega_{H^+}\sim 7\times10^{13}~\mathrm{Hz}$
+(O--H stretch confirmed by infrared spectroscopy), providing a timing reference
+for categorical state access.  Phase-locking hardware oscillators to this
+frequency through phase-lock loops enables femtosecond-precision readout of
+$\Se(\mathbf{r})$.
+\end{proposition}
+
+\begin{definition}[Virtual Thermometry Station Network]
+\label{def:ch03-station-network}
+A \emph{virtual thermometry station network} consists of $M$ stations
+$\{\mathcal{T}_\mathrm{virtual}(\mathbf{r}_i)\}_{i=1}^M$ deployed simultaneously
+across the cellular volume, each measuring $T(\mathbf{r}_i)$ without mutual
+interference (since $\Delta p_\mathrm{therm}=0$ at every station).
+\end{definition}
+
+\begin{corollary}[Cellular Temperature Gradients]
+\label{cor:ch03-cell-gradients}
+Virtual thermometry predicts a mitochondrial hot-spot:
+$\Delta T_\mathrm{mito}\sim 0.2~\mathrm{K}$ above the bulk cytoplasm,
+arising from the high local entropy production rate of oxidative
+phosphorylation~\citep{Mitchell1961}.  Multi-point thermometry resolves this
+gradient at sub-organelle spatial resolution without perturbation.
+\end{corollary}
+
+%% ---------------------------------------------------------------------------
+\section{Phase-Lock Network Topology}
+\label{sec:ch03-phase-lock}
+%% ---------------------------------------------------------------------------
+
+Molecular interactions do not occur at random; rather, they are organised by
+oscillatory coherence into a structured graph whose topology determines which
+biochemical transitions are accessible.  This section derives the structure,
+dynamics, and disease implications of these \emph{phase-lock networks}.
+
+%% --- 3.X.1 Network Structure -----------------------------------------------
+\subsection{Network Definition and Edge-Existence Condition}
+
+\begin{definition}[Phase-Lock Network]
+\label{def:ch03-pln}
+A \emph{phase-lock network} is a graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$
+where
+\begin{itemize}[nosep]
+    \item vertices $\mathcal{V}$ are molecular configurations
+          $\Sigma_i=\{(n,\ell,m,s)_j\}$ (indexed by partition quantum numbers);
+    \item edges $\mathcal{E}$ represent phase-coherent couplings with strength
+          $g_{ij}>0$.
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Edge Existence Condition]
+\label{prop:ch03-edge-exist}
+An edge $(\Sigma_i,\Sigma_j)\in\mathcal{E}$ exists if and only if
+\begin{equation}
+    |\phi_i-\phi_j| \;<\; \phi_{\mathrm{crit}}
+    \;=\; \frac{2\pi}{N_{\mathrm{states}}},
+    \label{eq:ch03-edge-crit}
+\end{equation}
+where $N_{\mathrm{states}}$ is the number of categorically distinguishable
+states per oscillation cycle.
+\end{proposition}
+
+\begin{proof}
+Phase-lock coherence requires that two configurations lie within a single
+categorical cell.  With $N_{\mathrm{states}}$ cells partitioning the full
+$[0,2\pi)$ cycle, each cell subtends phase width
+$\Delta\phi=2\pi/N_{\mathrm{states}}$.  Configurations satisfying
+$|\phi_i-\phi_j|<\Delta\phi$ are categorically indistinguishable and therefore
+phase-locked, establishing the edge~\citep{kuramoto1984chemical}.
+\end{proof}
+
+%% --- 3.X.2 Coupling Strength -----------------------------------------------
+\subsection{Coupling-Strength Formula}
+
+\begin{theorem}[Coupling Strength Formula]
+\label{thm:ch03-coupling-strength}
+The phase-lock coupling strength between molecules $i$ and $j$ is
+\begin{equation}
+    g_{ij} \;=\; g_0\,\exp\!\left(-\frac{r_{ij}}{r_0}\right)
+               \cos(\phi_i-\phi_j),
+    \label{eq:ch03-coupling-strength}
+\end{equation}
+where $g_0$ is the intrinsic coupling constant, $r_{ij}$ is the spatial
+separation, and $r_0$ is the coupling length scale.
+\end{theorem}
+
+\begin{proof}
+Coupling involves two independent factors.
+\emph{Spatial factor}: field amplitudes decay exponentially with distance due
+to screening, giving $g\propto\exp(-r_{ij}/r_0)$, where for van-der-Waals
+interactions $r_0\sim 1~\mathrm{nm}$~\citep{israelachvili2011intermolecular}.
+\emph{Phase factor}: coherent coupling requires that the two oscillators are
+not in anti-phase; the projection of oscillator $j$ onto the reference frame
+of $i$ is $\cos(\phi_i-\phi_j)$.  Maximum coupling ($g_{ij}=g_0$) occurs at
+$\phi_i=\phi_j$ (perfect phase alignment) and vanishes at
+$|\phi_i-\phi_j|=\pi/2$ (quadrature), consistent with energy orthogonality.
+The product of these factors yields~\Cref{eq:ch03-coupling-strength}.
+\end{proof}
+
+\begin{corollary}[Effective Coupling Range]
+Significant coupling ($g_{ij}>0.1g_0$) requires both spatial proximity
+$r_{ij}<2.3r_0$ and phase alignment $|\phi_i-\phi_j|<\pi/3$.
+\end{corollary}
+
+%% --- 3.X.3 Small-World Topology -------------------------------------------
+\subsection{Small-World Property}
+
+\begin{theorem}[Small-World Property of Phase-Lock Networks]
+\label{thm:ch03-small-world}
+Phase-lock networks satisfy simultaneously:
+\begin{enumerate}[nosep,label=(\roman*)]
+    \item high local clustering: $C\sim 0.6$, where $C$ is the clustering
+          coefficient;
+    \item short average path length: $L\sim\log N$, where
+          $N=|\mathcal{V}|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{High clustering}: Phase-locked coupling is transitive at short range.
+If $\Sigma_i$ is phase-locked to $\Sigma_j$ (edge $i$--$j$) and $\Sigma_j$
+to $\Sigma_k$ (edge $j$--$k$), then
+$|\phi_i-\phi_k|\leq|\phi_i-\phi_j|+|\phi_j-\phi_k|<2\phi_{\mathrm{crit}}$.
+Because the cellular environment maintains oscillator phases within narrow
+bands (see~\Cref{sec:ch03-categorical-therm}), $2\phi_{\mathrm{crit}}$ is
+still within the phase-locking range for a substantial fraction of triads,
+yielding $C\gtrsim 0.5$.  Numerical simulation of cellular oscillator ensembles
+gives $C\approx 0.6$~\citep{watts1998collective}.
+
+\emph{Short path length}: Oxygen molecules act as long-range hubs
+(see~\Cref{thm:ch03-O2-hub} below) connecting otherwise distant clusters.
+With hub fraction $f_{\mathrm{hub}}\sim N^{-1/2}$ and hub degree
+$k_{\mathrm{hub}}\sim N^{1/2}$, standard results from network theory give
+$L\sim\log N$~\citep{barabasi2004network}.
+\end{proof}
+
+\begin{corollary}[Efficient Signalling]
+Any signal propagates across the molecular network in $\mathcal{O}(\log N)$
+steps, enabling rapid cellular response without a centralised controller.
+\end{corollary}
+
+%% --- 3.X.4 Oxygen Hub Theorem --------------------------------------------
+\subsection{Oxygen as Network Hub}
+
+\begin{theorem}[Oxygen Hub Theorem]
+\label{thm:ch03-O2-hub}
+Molecular oxygen has degree $k_{O_2}\sim N^{1/2}$ in the phase-lock network,
+far exceeding the typical molecular degree $k_{\mathrm{mol}}\sim\log N$.
+\end{theorem}
+
+\begin{proof}
+Oxygen's triplet ground state ($^3\Sigma_g^-$) provides two unpaired
+$\pi^*$-electrons whose paramagnetic oscillating field extends beyond simple
+van-der-Waals range via long-range electron-spin coupling.  The effective
+coupling radius of O$_2$ is $r_{O_2}\sim\sqrt{N}\,r_0$ because the
+paramagnetic field amplitude scales as $1/r^3$ but the large number of
+coupled molecules ($\sim N$) stabilises coherence through collective Zeman
+splitting, allowing phase-locking at distances up to
+$r_{O_2}\sim N^{1/6}\,r_0$~\citep{herzberg1950molecular}.  Within a
+cellular volume of radius $R_{\mathrm{cell}}\sim 10~\mu\mathrm{m}$ and
+molecular density $n\sim 10^{27}~\mathrm{m}^{-3}$, the number of molecules
+within $r_{O_2}$ scales as $n\,r_{O_2}^3\propto N^{1/2}$, giving
+$k_{O_2}\sim N^{1/2}$.  Typical non-hub molecules have coupling radius
+$r_0\sim 1~\mathrm{nm}$, yielding $k_{\mathrm{mol}}\sim\log N$ via
+percolation-theory scaling.  Hence $k_{O_2}/k_{\mathrm{mol}}\sim
+N^{1/2}/\log N\gg 1$ for $N\sim 10^9$.
+\end{proof}
+
+\begin{corollary}[Hypoxia as Network Fragmentation]
+\label{cor:ch03-hypoxia-fragmentation}
+Removing oxygen molecules increases the average network path length by a
+factor $\sim N^{1/2}/\log N$ and fragments the giant connected component into
+clusters of size $\mathcal{O}(\log N)$, explaining the rapid cellular
+dysfunction observed under hypoxia.
+\end{corollary}
+
+%% --- 3.X.5 Dynamic Categorical Exclusion -----------------------------------
+\subsection{Dynamic Categorical Exclusion}
+
+\begin{definition}[Categorical Exclusion]
+\label{def:ch03-cat-exclusion}
+A molecular configuration $\Sigma$ is \emph{categorically excluded} at time
+$t$ if $\deg_{\mathcal{G}(t)}(\Sigma)=0$; that is, it has no phase-lock
+edges in the instantaneous network.
+\end{definition}
+
+\begin{theorem}[Dynamic Categorical Exclusion]
+\label{thm:ch03-dynamic-exclusion}
+Enzymatic catalysis modulates the phase-lock network topology: a substrate
+configuration $\Sigma_S$ that was coupled to enzyme $\Sigma_E$ becomes
+categorically excluded after the catalytic step, while the product
+$\Sigma_P$ acquires a new edge to $\Sigma_E$.
+\end{theorem}
+
+\begin{proof}
+Let $\phi_S$, $\phi_E$, and $\phi_P$ denote the phases of substrate, enzyme,
+and product respectively.  Before catalysis,
+$|\phi_S-\phi_E|<\phi_{\mathrm{crit}}$ (edge exists).  During the catalytic
+step the substrate phase shifts by $\Delta\phi_{\mathrm{cat}}$, determined by
+the Gibbs free energy of the reaction:
+$\Delta\phi_{\mathrm{cat}}\sim\Delta G_{\mathrm{rxn}}/(\hbar\omega_E)$.  If
+$\Delta\phi_{\mathrm{cat}}>\phi_{\mathrm{crit}}$, the edge $S$--$E$ is
+removed and $\Sigma_S$ becomes excluded.  Simultaneously, the product phase
+$\phi_P=\phi_S+\Delta\phi_{\mathrm{cat}}$ satisfies
+$|\phi_P-\phi_E|<\phi_{\mathrm{crit}}$ for exergonic reactions with
+$\Delta G_{\mathrm{rxn}}>0$, creating edge $P$--$E$.  Sequential repetition
+over $N$ enzymatic steps reduces ambiguity by $\sim(10^{15})^N$,
+implementing exponential specificity~\citep{fersht1999structure}.
+\end{proof}
+
+%% --- 3.X.6 Kuramoto Dynamics and Phase Transition -------------------------
+\subsection{Kuramoto Dynamics and the Synchronisation Transition}
+
+\begin{theorem}[Kuramoto Dynamics on Phase-Lock Networks]
+\label{thm:ch03-kuramoto}
+Phase evolution in the network obeys
+\begin{equation}
+    \frac{d\phi_i}{dt}
+    \;=\;
+    \omega_i
+    \;+\;
+    \sum_{j\in\mathcal{N}(i)} g_{ij}\,\sin(\phi_j-\phi_i),
+    \label{eq:ch03-kuramoto}
+\end{equation}
+where $\omega_i$ is the intrinsic frequency of node $i$ and
+$\mathcal{N}(i)$ is its neighbourhood.
+\end{theorem}
+
+\begin{proof}
+Each molecular oscillator evolves at its natural frequency $\omega_i$ in the
+absence of coupling.  Interaction with a coupled neighbour $j$ generates a
+restoring torque proportional to the sine of the phase difference (the
+standard mean-field derivation of the Kuramoto
+model~\citep{kuramoto1984chemical,strogatz2000kuramoto}).  Weighted by
+$g_{ij}$ and summed over all neighbours, this yields
+\Cref{eq:ch03-kuramoto}.
+\end{proof}
+
+\begin{definition}[Kuramoto Order Parameter]
+\label{def:ch03-order-param}
+The degree of global synchronisation is measured by the complex order
+parameter
+\begin{equation}
+    r(t)\,e^{i\psi(t)}
+    \;=\;
+    \frac{1}{N}\sum_{j=1}^{N} e^{i\phi_j(t)},
+    \label{eq:ch03-order-param}
+\end{equation}
+where $r(t)\in[0,1]$ is the synchrony amplitude and $\psi(t)$ is the mean
+phase.
+\end{definition}
+
+\begin{theorem}[Synchronisation Transition at Critical Coupling]
+\label{thm:ch03-sync-transition}
+For a unimodal symmetric frequency distribution $g(\omega)$ with half-width
+$\gamma$, the order parameter undergoes a continuous phase transition at
+critical coupling
+\begin{equation}
+    K_c \;=\; \frac{2}{\pi\,g(0)},
+    \label{eq:ch03-Kc}
+\end{equation}
+with $r(K)=0$ for $K<K_c$ and $r(K)\sim\sqrt{(K-K_c)/K_c}$ for $K>K_c$.
+\end{theorem}
+
+\begin{proof}
+Linearising~\Cref{eq:ch03-kuramoto} near the incoherent state $r=0$ and
+requiring a non-trivial self-consistent solution for $r$ yields the condition
+$1=K\int_{-\infty}^{+\infty}g(\omega)\cos^2\theta\,d\omega/(1+\tan^2\theta)$
+which reduces to $K=2/(\pi g(0))$ at the bifurcation
+point~\citep{strogatz2000kuramoto}.  The bifurcation is supercritical, giving
+the square-root scaling near $K_c$.
+\end{proof}
+
+\begin{corollary}[Disease as Desynchronisation]
+\label{cor:ch03-disease-desync}
+Healthy cellular function requires $r>r_c\approx 0.7$, corresponding to
+$K>K_c\,(1+r_c^2)\approx 1.5\,K_c$.  Pathological perturbations that reduce
+effective coupling $K$ (e.g.\ membrane disruption, hypoxia, toxin binding)
+drive $r$ below $r_c$, producing the loss of coordinated biochemical activity
+characteristic of metabolic disease.
+\end{corollary}
+
+%% ---------------------------------------------------------------------------
+\section{Membrane Transport Through Categorical Apertures}
+\label{sec:ch03-membrane-transport}
+%% ---------------------------------------------------------------------------
+
+Membrane transporters are commonly described as pumps that harness ATP to move
+substrates against concentration gradients.  The categorical framework offers a
+deeper account: transporters are \emph{frequency-matched aperture systems} that
+scan entropy-space for compatible substrates and pass them without violating
+thermodynamic bounds.
+
+%% --- B.1 Transport Aperture -----------------------------------------------
+\subsection{Transport Aperture Definition}
+
+\begin{definition}[Transport Aperture]
+\label{def:ch03-transport-aperture}
+A \emph{transport aperture} is a geometric constraint $\mathcal{A}_T\subset\Sspace$
+in S-entropy space that
+\begin{enumerate}[nosep]
+    \item defines the set of substrate trajectories permitted to traverse the
+          membrane;
+    \item enforces passage based on a frequency-matching criterion between
+          substrate and binding-site oscillations;
+    \item is modulated in time by the ATP hydrolysis cycle.
+\end{enumerate}
+\end{definition}
+
+%% --- B.2 ABC Transporter Mechanism ----------------------------------------
+\subsection{ABC Transporter Mechanism}
+
+\begin{theorem}[ABC Transporter Aperture Mechanism]
+\label{thm:ch03-abc-transporter}
+An ATP-binding cassette (ABC) transporter operates by categorical aperture
+selection.  The energy budget per transported substrate is
+\begin{equation}
+    \Delta G_{\mathrm{total}}
+    \;=\;
+    \kB T\ln\!\left(\frac{\Delta c}{c}\right)
+    \;+\;
+    N_{\mathrm{conf}}\,\kB T
+    \;\leq\;
+    \Delta G_{\mathrm{ATP}},
+    \label{eq:ch03-abc-energy}
+\end{equation}
+where $\Delta c/c$ is the concentration gradient and $N_{\mathrm{conf}}$
+is the number of conformational states scanned during substrate selection.
+\end{theorem}
+
+\begin{proof}
+\emph{Gradient work}: Moving one molecule up a concentration ratio
+$\Delta c/c$ costs osmotic work $W_{\mathrm{osm}}=\kB T\ln(\Delta c/c)$.
+For physiological gradients $\Delta c/c\sim 10^3$,
+$W_{\mathrm{osm}}\approx 7\,\kB T$.
+
+\emph{Aperture scanning work}: The binding site sweeps $N_{\mathrm{conf}}$
+conformational states during the ATP cycle; each transition costs $\sim\kB T$
+(detailed-balance bound), so $W_{\mathrm{scan}}\approx N_{\mathrm{conf}}\,\kB T$.
+For selectivity $\mathcal{S}\sim 10^9$, the required number of states is
+$N_{\mathrm{conf}}\sim\log_{3}\mathcal{S}\approx 19$, giving
+$W_{\mathrm{scan}}\approx 19\,\kB T$.
+
+\emph{ATP supply}: $\Delta G_{\mathrm{ATP}}\approx 50~\mathrm{kJ/mol}
+\approx 20\,\kB T$ under physiological conditions~\citep{jarzynski2011equalities}.
+The total demand $7+19=26\,\kB T$ is met by two ATP molecules
+($2\times 20=40\,\kB T$), consistent with the experimentally observed
+stoichiometry of ABC transporters~\citep{hollenstein2007structure}.
+\end{proof}
+
+\begin{corollary}[Energy--Aperture Relation]
+Each substrate transported costs $\sim\kB T$ per unit of aperture volume
+modulated, bounding the selectivity achievable per ATP hydrolysed.
+\end{corollary}
+
+%% --- B.3 Frequency Matching -----------------------------------------------
+\subsection{Frequency Matching Criterion}
+
+\begin{theorem}[Frequency Matching Criterion]
+\label{thm:ch03-freq-matching}
+Substrate $S$ binds to transporter $T$ if and only if
+\begin{equation}
+    |\omega_S - \omega_T| \;<\; \Delta\omega_{\mathrm{bind}} \;\sim\; 10^{12}~\mathrm{Hz},
+    \label{eq:ch03-freq-match}
+\end{equation}
+where $\omega_S$ is the dominant vibrational frequency of the substrate and
+$\omega_T$ is the binding-site resonance frequency.
+\end{theorem}
+
+\begin{proof}
+Phase-lock coherence between substrate and binding site requires
+$|\omega_S-\omega_T|<K/\sqrt{N_{\mathrm{site}}}$, where $K$ is the
+oscillator coupling constant and $N_{\mathrm{site}}\sim 100$ is the number
+of atoms in the binding pocket.  With $K\sim 10^{13}~\mathrm{Hz}$
+(derived from hydrogen-bond force constants $k_{\mathrm{HB}}\sim
+10~\mathrm{N/m}$ and effective mass $m\sim 10^{-26}~\mathrm{kg}$), the
+bandwidth is $\Delta\omega_{\mathrm{bind}}\sim 10^{13}/10=10^{12}~\mathrm{Hz}$,
+matching infrared spectroscopy measurements of ligand binding
+windows~\citep{pikovsky2001synchronization}.
+\end{proof}
+
+\begin{corollary}[Selectivity Factor]
+\label{cor:ch03-selectivity-factor}
+The selectivity ratio between a well-matched substrate $S_1$ and a
+mismatched substrate $S_2$ is
+\begin{equation}
+    \mathcal{S}_{12}
+    \;=\;
+    \exp\!\left(
+        \frac{|\omega_{S_2}-\omega_T|^2 - |\omega_{S_1}-\omega_T|^2}
+             {2\,(\Delta\omega_{\mathrm{bind}})^2}
+    \right).
+    \label{eq:ch03-selectivity}
+\end{equation}
+For $|\omega_{S_1}-\omega_T|\ll\Delta\omega_{\mathrm{bind}}$ and
+$|\omega_{S_2}-\omega_T|\gg\Delta\omega_{\mathrm{bind}}$, the exponent
+reaches $\sim 20$, giving $\mathcal{S}_{12}\sim e^{20}\approx 5\times 10^8$.
+This accounts for the $\sim 10^9$ selectivity factors observed in ABC
+transporters for natural vs.\ non-cognate substrates~\citep{rees2009abc}.
+\end{corollary}
+
+%% --- B.4 ATP Frequency Scanning -------------------------------------------
+\subsection{ATP-Driven Frequency Scanning}
+
+\begin{theorem}[ATP Frequency Scanning]
+\label{thm:ch03-atp-scanning}
+ATP hydrolysis drives a sinusoidal modulation of the binding-site frequency:
+\begin{equation}
+    \omega_T(t)
+    \;=\;
+    \omega_T^0
+    \;+\;
+    \Delta\omega_{\mathrm{ATP}}\,\sin(\omega_{\mathrm{ATP}}\,t),
+    \label{eq:ch03-atp-scan}
+\end{equation}
+where $\omega_T^0$ is the basal binding-site frequency,
+$\Delta\omega_{\mathrm{ATP}}\sim 1.3\times 10^{13}~\mathrm{Hz}$ is the
+modulation amplitude, and $\omega_{\mathrm{ATP}}\sim 2\pi~\mathrm{rad/s}$
+is the ATP cycle frequency ($\sim 1$ turnover per second).
+\end{theorem}
+
+\begin{proof}
+The ATP-bound, transition-state, ADP-bound, and apo conformations of the
+nucleotide-binding domain have progressively lower force constants for the
+substrate-contacting loop~\citep{locher2016mechanistic}.  Modelling the loop
+as a harmonic oscillator with mass $m\sim 10^{-25}~\mathrm{kg}$ and
+force-constant change $\Delta k\sim 100~\mathrm{N/m}$ between ATP-bound
+and apo states gives modulation amplitude
+$\Delta\omega_{\mathrm{ATP}}=\sqrt{\Delta k/m}\sim 10^{13}~\mathrm{Hz}$.
+The overall cycle repeats at the ATP hydrolysis rate
+$\sim 1~\mathrm{s}^{-1}$, producing the sinusoidal envelope in
+\Cref{eq:ch03-atp-scan}.
+\end{proof}
+
+\begin{corollary}[Substrate Capture Window]
+A substrate with frequency $\omega_S$ is captured during the phase window
+$\Delta t_{\mathrm{cap}}\sim\Delta\omega_{\mathrm{bind}}/
+(\omega_{\mathrm{ATP}}\,\Delta\omega_{\mathrm{ATP}})\sim 10^{-2}~\mathrm{s}$,
+representing $\sim 1\%$ of each ATP cycle.
+\end{corollary}
+
+%% --- B.5 Zero Backaction Measurement --------------------------------------
+\subsection{Zero Backaction Measurement}
+
+\begin{theorem}[Zero Backaction Measurement]
+\label{thm:ch03-zero-backaction-transport}
+Transporter substrate identification in categorical space produces zero
+momentum transfer to the substrate:
+\begin{equation}
+    \Delta p_{\mathrm{categorical}} \;=\; 0.
+    \label{eq:ch03-zero-backaction-transport}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Physical momentum is the canonical conjugate to physical position:
+$\hat{p}=-i\hbar\nabla_{\mathbf{r}}$.  Categorical coordinates $\Scoord$
+are orthogonal to physical position: $[\hat{\mathbf{r}},\Scoord]=0$.
+Because $\Scoord$ and $\hat{p}$ are not a conjugate pair, the Heisenberg
+uncertainty relation $\Delta p\,\Delta r\geq\hbar/2$ does not apply to
+measurements of $\Scoord$.  Consequently, determining the categorical class
+(frequency band) of the substrate through phase-lock matching does not
+disturb the substrate's physical momentum eigenstate, giving
+$\Delta p_{\mathrm{categorical}}=0$~\citep{zurek2003decoherence}.
+\end{proof}
+
+%% --- B.6 Ensemble Aperture Theorem ----------------------------------------
+\subsection{Ensemble Aperture Theorem}
+
+\begin{theorem}[Ensemble Aperture Enhancement]
+\label{thm:ch03-ensemble-aperture}
+An ensemble of $N_T$ transporters produces a collective transport rate
+\begin{equation}
+    J_{\mathrm{ensemble}} \;=\; \alpha\,N_T\,J_{\mathrm{single}},
+    \qquad \alpha > 1,
+    \label{eq:ch03-ensemble-transport}
+\end{equation}
+where $\alpha\sim 1.5$--$2$ is a cooperative enhancement factor arising
+from substrate channelling between neighbouring transporters.
+\end{theorem}
+
+\begin{proof}
+Individual transporters have stochastic ATP cycles with uniformly distributed
+phases $\phi_i\in[0,2\pi)$.  At time $t$, the fraction in the substrate-binding
+phase is $f_{\mathrm{bind}}\sim\Delta\omega_{\mathrm{bind}}/
+(\omega_{\mathrm{ATP}}\,\Delta\omega_{\mathrm{ATP}})$.  The instantaneous
+binding capacity is $N_T f_{\mathrm{bind}}$, giving baseline rate
+$J_0=N_T J_{\mathrm{single}}$ (no cooperation).  However, substrate
+channelling enhances this: when transporter $i$ fails to bind and releases
+a substrate molecule, the molecule diffuses to transporter $j$ within
+mean free time $\tau_{\mathrm{diff}}\sim L^2/D\sim 10^{-3}~\mathrm{s}$
+(for domain size $L\sim 100~\mathrm{nm}$ and substrate diffusion coefficient
+$D\sim 10^{-11}~\mathrm{m}^2/\mathrm{s}$).  If $j$ is in its capture window,
+it binds the substrate that $i$ rejected.  This cooperative relay increases
+the effective capture probability, yielding $\alpha\sim 1.5$--$2$
+experimentally~\citep{saier2000molecular}.
+\end{proof}
+
+\begin{corollary}[Statistical Frequency Coverage]
+The ensemble continuously covers the full frequency band
+$[\omega_T^0-\Delta\omega_{\mathrm{ATP}},\,\omega_T^0+\Delta\omega_{\mathrm{ATP}}]$
+through distributed ATP-cycle phases, eliminating blind spots in substrate
+frequency space.
+\end{corollary}
+
+%% --- B.7 Clinical Implications --------------------------------------------
+\subsection{Clinical Implication: Fabry and Gaucher Diseases as
+             Frequency-Mismatch Disorders}
+
+In Fabry disease the lysosomal enzyme $\alpha$-galactosidase~A carries
+mutations (e.g.\ R301Q, N215S) that alter the active-site geometry, shifting
+$\omega_T$ by $\delta\omega\sim\Delta\omega_{\mathrm{bind}}$.
+\Cref{cor:ch03-selectivity-factor} then predicts a selectivity drop
+$\mathcal{S}\to 1$, meaning the enzyme can no longer discriminate its cognate
+substrate (globotriaosylceramide, Gb3) from closely related glycolipids,
+leading to substrate accumulation in lysosomes.  Enzyme replacement therapy
+restores $\omega_T$ by supplying wild-type enzyme with correct frequency,
+recovering $\mathcal{S}\sim 10^9$.
+
+An identical analysis applies to Gaucher disease (glucocerebrosidase L444P
+mutation): the leucine-to-proline substitution increases loop rigidity,
+raising $\omega_T$ by $\sim 3\times 10^{11}~\mathrm{Hz}$ and reducing
+glucocerebroside binding affinity 200-fold, consistent with
+\Cref{eq:ch03-selectivity} with $|\omega_{S}-\omega_T|\approx
+0.3\,\Delta\omega_{\mathrm{bind}}$~\citep{rees2009abc}.
+
+%% ---------------------------------------------------------------------------
+\section{Protein Function as Charge/Geometry Balancing}
+\label{sec:ch03-protein-function}
+%% ---------------------------------------------------------------------------
+
+The canonical description of protein function treats structure, enzymatic
+activity, and cellular role as separate levels of description.  The
+genome-membrane circuit framework unifies them: a protein's function
+\emph{is} its capacity to redirect charge, volume, and phase fluxes so as to
+restore a perturbed circuit toward steady state.
+
+%% --- C.1 Function-Charge Equivalence ------------------------------------
+\subsection{Function--Charge Equivalence Theorem}
+
+\begin{theorem}[Function--Charge Equivalence]
+\label{thm:ch03-function-charge}
+For any protein $P$ with observable function $F_P$, there exists a
+charge/geometry/phase flux $\mathbf{J}(P)=\mathbf{J}_q+\mathbf{J}_V+\mathbf{J}_\phi$
+such that
+\begin{equation}
+    F_P(\mathbf{r},t) \;=\; \nabla\cdot\mathbf{J}(P),
+    \label{eq:ch03-function-charge}
+\end{equation}
+where $\mathbf{J}_q$, $\mathbf{J}_V$, and $\mathbf{J}_\phi$ are the charge,
+volume, and phase flux densities, respectively.
+\end{theorem}
+
+\begin{proof}
+Let a perturbation create a charge imbalance $\Delta Q$ in the circuit.  The
+genome responds by expressing proteins whose pI and geometric envelope
+minimise $(q_i+\Delta Q)^2+(g_i+\Delta G)^2$, where $q_i$ and $g_i$ are the
+net charge and geometric asymmetry of protein species $i$.  The selected
+protein $P$ interacts with the environment, generating fluxes:
+\begin{align}
+    \mathbf{J}_q(P) &= -D_q\nabla\rho_q + \mu_q\rho_q\mathbf{E},
+    \label{eq:ch03-Jq}\\
+    \mathbf{J}_V(P) &= -D_V\nabla V + \mathbf{v}_{\mathrm{enc}}\,V,
+    \label{eq:ch03-JV}\\
+    \mathbf{J}_\phi(P) &= K\sum_j\sin(\phi_j-\phi_i)\,\hat{e}_{ij}.
+    \label{eq:ch03-Jphi}
+\end{align}
+The net change of each quantity at $\mathbf{r}$ per unit time is the
+divergence of the respective flux.  Summing over all three channels,
+$F_P=\nabla\cdot(\mathbf{J}_q+\mathbf{J}_V+\mathbf{J}_\phi)$, which is
+\Cref{eq:ch03-function-charge}.
+\end{proof}
+
+The circuit-based view reverses the causal arrow: rather than proteins being
+\emph{made for} pre-assigned functions, the circuit \emph{selects} proteins
+because they supply the flux needed to re-establish charge--geometry balance.
+
+%% --- C.2 Circuit Paradigm -----------------------------------------------
+\subsection{The Circuit-Based Paradigm}
+
+The traditional linear scheme $\text{Stimulus}\to\text{Gene expression}\to
+\text{Protein}\to\text{Function}$ is replaced by the charge-circuit loop
+\begin{equation}
+    \text{Charge imbalance}
+    \;\longrightarrow\;
+    \text{Genome discharge}
+    \;\longrightarrow\;
+    \text{Protein production}
+    \;\longrightarrow\;
+    \text{Circuit balance}.
+    \label{eq:ch03-circuit-loop}
+\end{equation}
+Several long-standing puzzles are immediately resolved by this reframing.
+\emph{Slow HSP production} ($\sim 30$ min) is not a deficiency in emergency
+response but reflects the normal transcription--translation timescale: the
+genome is not pre-programmed for heat shock but responds generically to the
+charge imbalance caused by denaturation.  \emph{Functional promiscuity}
+arises because charge--geometry matching is a low-dimensional constraint;
+many structurally distinct substrates share the same charge/geometry
+profile as the primary target.  \emph{Isoform diversity} exists because
+identical catalytic mechanisms operate in different charge contexts
+(pH, redox potential, ionic strength), requiring isoforms tuned to each
+environment.
+
+%% --- C.3 Heat Shock Proteins as Charge Neutralisers ----------------------
+\subsection{Heat Shock Proteins as Charge Neutralisation Agents}
+
+Heat denatures proteins by exposing buried charged and hydrophobic residues.
+The resulting surface charge perturbation $\Delta Q_{\mathrm{exposed}}\approx
++50~\mathrm{mV}$ drives genome discharge and production of acidic chaperones.
+
+HSPs have isoelectric point $\mathrm{pI}\approx 5.5$, giving net charge
+$q_{\mathrm{HSP}}<0$ at physiological pH~7.4.  HSP binding to the denatured
+substrate directly neutralises the exposed positive charges (step~1 in
+\Cref{eq:ch03-circuit-loop}).  ATP hydrolysis (step~2) injects an additional
+charge quantum $\Delta Q=-1$ per event, completing neutralisation and driving
+substrate release.  The substrate refolds with charges buried, and the circuit
+returns to steady state.
+
+\begin{theorem}[Isoform Selection by Charge Context]
+\label{thm:ch03-isoform-selection}
+In a microenvironment with charge state $Q$ and geometry state $G$, the
+probability of expressing isoform $j$ from a family $\{P_j\}$ is
+\begin{equation}
+    P(\mathrm{Isoform}_j\mid Q,G)
+    \;=\;
+    \frac{\exp\!\left(-\tfrac{(q_j+Q)^2+(g_j+G)^2}{2\sigma^2}\right)}
+         {\displaystyle\sum_k\exp\!\left(-\tfrac{(q_k+Q)^2+(g_k+G)^2}{2\sigma^2}\right)},
+    \label{eq:ch03-isoform}
+\end{equation}
+where $q_j,g_j$ are the charge and geometry of isoform $j$ and $\sigma$ is
+the circuit noise level.
+\end{theorem}
+
+\begin{proof}
+The genome selects the transcript that minimises the Lyapunov function
+$\mathcal{L}=(q_j+Q)^2+(g_j+G)^2$.  Thermal fluctuations broaden the
+selection to a Boltzmann distribution over $\mathcal{L}$, yielding
+\Cref{eq:ch03-isoform}.  HSP70 isoform diversity (HSP70-1,
+$\mathrm{pI}=5.5$ in cytoplasm; BiP, $\mathrm{pI}=5.1$ in ER;
+mtHSP70, $\mathrm{pI}=5.9$ in mitochondrial matrix) is quantitatively
+consistent with \Cref{eq:ch03-isoform} given the known pH and redox
+differences between compartments.
+\end{proof}
+
+%% --- C.4 Enzyme-Substrate as Phase Matching ------------------------------
+\subsection{Enzyme--Substrate Recognition as Phase Matching}
+
+Substrate binding requires the substrate oscillator to phase-lock with the
+enzyme binding-site oscillator.  This is exactly the frequency-matching
+criterion of~\Cref{thm:ch03-freq-matching}, applied to the active-site
+context: an enzyme active site tuned to frequency $\omega_E$ binds
+substrates with $|\omega_S-\omega_E|<\Delta\omega_{\mathrm{bind}}$ and
+excludes all others.  Catalysis then drives the substrate through a
+phase shift $\Delta\phi_{\mathrm{cat}}$, producing a product with
+$\phi_P=\phi_S+\Delta\phi_{\mathrm{cat}}$ that is released when
+$|\phi_P-\phi_E|>\phi_{\mathrm{crit}}$ (dynamic categorical exclusion,
+\Cref{thm:ch03-dynamic-exclusion}).
+
+%% --- C.5 Haemoglobin Case Study -----------------------------------------
+\subsection{Worked Example: Haemoglobin as a Charge-Geometry Transport Device}
+
+Haemoglobin (Hb) binds four O$_2$ molecules cooperatively.  In the
+charge/geometry framework:
+\begin{itemize}[nosep]
+    \item \emph{T state} (tense, deoxy): positive surface charge dominates
+          ($\mathrm{pI}\approx 7.1$, net charge $\approx -1$ at pH~7.4);
+          narrow aperture excludes O$_2$ ($|\omega_{O_2}-\omega_{\mathrm{site}}|>
+          \Delta\omega_{\mathrm{bind}}$).
+    \item \emph{R state} (relaxed, oxy): conformational shift reduces surface
+          charge, widening the aperture; O$_2$ frequency matches site frequency.
+    \item \emph{Cooperativity}: each O$_2$ binding shifts $\omega_{\mathrm{site}}$
+          of neighbouring subunits by $\delta\omega\sim 3\times 10^{11}~\mathrm{Hz}$
+          (T$\to$R interface signal), increasing $g_{ij}$ and phase-locking all
+          four subunits through \Cref{eq:ch03-kuramoto}.
+    \item \emph{Bohr effect}: protonation at His~146 shifts pI by $\Delta\mathrm{pI}
+          \sim 0.5$, altering $\Delta Q$ and reducing O$_2$ affinity at low pH,
+          directly encoding~\Cref{eq:ch03-isoform}.
+\end{itemize}
+The Hill coefficient $n_H\approx 2.8$ follows from the Kuramoto order
+parameter: with four cooperatively locked subunits,
+$n_H\approx N_{\mathrm{sub}}\,(1-1/k_{\mathrm{eff}})\approx 2.8$ for
+effective coupling $k_{\mathrm{eff}}\approx 3.5$.
+
+%% --- C.6 Cancer Gain-of-Function as Charge Imbalance ----------------------
+\subsection{Cancer Gain-of-Function Mutations as Self-Sustaining Charge Imbalance}
+
+Oncogenic gain-of-function mutations (e.g.\ KRAS G12D, p53 R248W) alter the
+net charge and geometry of the affected protein.  KRAS G12D replaces glycine
+($q=0$) with aspartate ($q=-1$), creating a persistent negative charge in the
+nucleotide-binding loop.  This charge perturbation:
+\begin{enumerate}[nosep]
+    \item shifts the circuit equilibrium to a state with elevated
+          $|\Delta Q|$;
+    \item recruits complementary positive-charge proteins (effectors RAF,
+          PI3K), which are themselves activating, reinforcing $|\Delta Q|$;
+    \item creates a self-sustaining charge imbalance that cannot be cleared
+          by normal genome discharge, because the mutant protein itself
+          constitutes the source of the imbalance.
+\end{enumerate}
+Therapeutically, this predicts that restoring charge balance (e.g.\ by KRAS
+inhibitors that neutralise the D12 charge) should be sufficient to break the
+positive feedback loop, even without completely eliminating KRAS activity.
+
+%% --- C.7 Ubiquitin as a Charge-Neutralisation Signal ----------------------
+\subsection{Protein Degradation Timing: Ubiquitin as Charge-Neutralisation Tag}
+
+Ubiquitin ($\mathrm{pI}\approx 6.56$, net charge $\approx -3$ at pH~7.4) is
+conjugated to substrate proteins that carry excess positive charge or are
+geometrically mismatched to the current circuit state.  In the charge
+framework, ubiquitylation is the circuit's mechanism for marking a protein
+whose charge/geometry contribution has become imbalancing:
+
+\begin{equation}
+    \Delta Q_{\mathrm{ubiquitin}} \;=\; -3\quad \text{(per ubiquitin at pH~7.4)},
+    \label{eq:ch03-ubiquitin-charge}
+\end{equation}
+which partially neutralises the exposed positive charge on the substrate.
+Polyubiquitin chains (up to $n\sim 7$ moieties) deliver total charge
+$\Delta Q_{\mathrm{poly}}\approx -21$, sufficient to neutralise the exposed
+surface of a typical misfolded protein and signal it for 26S proteasome
+degradation.  The proteasome itself ($\mathrm{pI}\sim 5.0$) has highly
+negative charge, creating the complementary charge environment needed to
+attract and unfold the tagged substrate.
+
+%% ---------------------------------------------------------------------------
+\section{Ternary Encoding of Cellular States}
+\label{sec:ch03-ternary-encoding}
+%% ---------------------------------------------------------------------------
+
+Binary notation assigns two symbols per digit and is natural for
+one-dimensional signals.  The three-axis structure of S-entropy space
+$\Sspace=[\Se]^3$ suggests a richer alphabet: a \emph{trit}
+$\tau\in\{-1,0,+1\}$ encoding whether a molecular oscillator mode lies
+below, at, or above a threshold value in its respective entropy axis.
+
+%% --- D.1 Three-State Encoding -------------------------------------------
+\subsection{Three-State Encoding}
+
+\begin{definition}[Cellular Trit]
+\label{def:ch03-trit}
+For a molecular oscillator mode $i$ with threshold $\theta_i$, the
+corresponding \emph{trit} is
+\begin{equation}
+    \tau_i \;=\;
+    \begin{cases}
+        -1 & \text{if } \xi_i < \theta_i - \delta, \\
+         0 & \text{if } |\xi_i - \theta_i| \leq \delta, \\
+        +1 & \text{if } \xi_i > \theta_i + \delta,
+    \end{cases}
+    \label{eq:ch03-trit-def}
+\end{equation}
+where $\xi_i$ is the mode amplitude and $\delta$ is the boundary half-width.
+The boundary state $\tau_i=0$ corresponds to a critical transition point.
+\end{definition}
+
+Each molecular species is characterised by a \emph{trit string} of length
+$k$ (one trit per independent oscillator mode):
+$\boldsymbol{\tau}=(\tau_1,\tau_2,\ldots,\tau_k)\in\{-1,0,+1\}^k$.
+
+%% --- D.2 Trit-Trajectory Duality ----------------------------------------
+\subsection{Trit-Trajectory Duality}
+
+\begin{theorem}[Trit-Trajectory Duality]
+\label{thm:ch03-trit-trajectory}
+The trit string $\boldsymbol{\tau}(t)=(\tau_1(t),\ldots,\tau_k(t))$ encodes
+simultaneously (i) the \emph{current position} of the molecular configuration
+in S-entropy space and (ii) its \emph{instantaneous trajectory direction}:
+\begin{equation}
+    \tau_i = +1 \;\Leftrightarrow\; \dot{\xi}_i > 0,
+    \qquad
+    \tau_i = -1 \;\Leftrightarrow\; \dot{\xi}_i < 0,
+    \qquad
+    \tau_i = 0 \;\Leftrightarrow\; \xi_i \approx\theta_i
+    \text{ (transition).}
+    \label{eq:ch03-trit-trajectory}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By construction, $\tau_i=+1$ requires $\xi_i>\theta_i+\delta$; if the system
+is in this state and moving toward the boundary, it will transition to
+$\tau_i=0$ at time $\Delta t\sim\delta/|\dot{\xi}_i|$.  The sign of
+$\dot{\xi}_i$ is therefore encoded in whether $\tau_i$ is
+approaching~0 (decelerating, $\dot{\xi}_i<0$ from above) or receding from~0
+($\dot{\xi}_i>0$, moving further from boundary).  At boundary crossings
+($\tau_i=0$), both the position and the sign of $\dot{\xi}_i$ are ambiguous,
+corresponding to the critical slowing-down of bifurcation theory.
+\end{proof}
+
+%% --- D.3 Information Density --------------------------------------------
+\subsection{Information Density of Ternary Encoding}
+
+\begin{proposition}[Trit Information Content]
+\label{prop:ch03-trit-info}
+A $k$-trit string carries
+\begin{equation}
+    I \;=\; k\log_2 3 \;\approx\; 1.585\,k\quad\text{bits},
+    \label{eq:ch03-trit-info}
+\end{equation}
+representing a $58.5\%$ information advantage over a $k$-bit binary string.
+\end{proposition}
+
+\begin{proof}
+A $k$-trit string has $3^k$ distinct states.  Shannon information is
+$I=\log_2(3^k)=k\log_2 3$.  A $k$-bit binary string has $2^k$ states and
+carries $k$ bits.  The ratio is $\log_2 3\approx 1.585$.
+\end{proof}
+
+\begin{corollary}[Ternary--Binary Equivalence]
+Encoding the same information in binary requires $k\log_2 3/1=1.585k$ bits,
+so ternary encoding achieves the same information in $1/\log_2 3\approx 0.63$
+of the bit-depth needed by binary.  In other words, ternary requires
+\emph{fewer digits} for the same resolving power.
+\end{corollary}
+
+%% --- D.4 Example Ternary Code Table ------------------------------------
+\subsection{Ternary Code Table: Five-Species Example}
+
+\Cref{tab:ch03-ternary-table} illustrates the encoding for five representative
+cellular molecular species, each described by three oscillator modes
+($k=3$), yielding a 15-trit cellular state vector.
+
+\begin{table}[htbp]
+\centering
+\caption{Ternary code table for five cellular species with three oscillator
+         modes each.  Trits: $-1=$ below threshold, $0=$ at boundary,
+         $+1=$ above threshold.}
+\label{tab:ch03-ternary-table}
+\begin{tabular}{lcccc}
+\hline
+Species & Mode~1 ($\Sk$) & Mode~2 ($\St$) & Mode~3 ($\Se$) & State label \\
+\hline
+Glucose    & $+1$ & $+1$ & $+1$ & Fully loaded \\
+ATP        & $+1$ & $+1$ &  $0$ & Near-threshold synthesis \\
+NADH       & $+1$ &  $0$ & $-1$ & Depleting \\
+O$_2$      &  $0$ & $-1$ & $-1$ & Hypoxic onset \\
+Pyruvate   & $-1$ & $-1$ & $-1$ & Severely depleted \\
+\hline
+\end{tabular}
+\end{table}
+
+The full cellular state is then the concatenated 15-trit string
+$(\boldsymbol{\tau}_{\mathrm{Glc}},\boldsymbol{\tau}_{\mathrm{ATP}},
+\boldsymbol{\tau}_{\mathrm{NADH}},\boldsymbol{\tau}_{O_2},
+\boldsymbol{\tau}_{\mathrm{Pyr}})$, encoding $3^{15}=14{,}348{,}907$
+distinguishable metabolic states.
+
+%% --- D.5 Boundary States as Critical Transitions ------------------------
+\subsection{Boundary States and Critical Transitions}
+
+Trit value $\tau_i=0$ marks the critical zone $|\xi_i-\theta_i|\leq\delta$.
+Near this zone, variance of $\xi_i$ diverges:
+$\mathrm{Var}(\xi_i)\propto|\xi_i-\theta_i|^{-\gamma}$ for critical
+exponent $\gamma>0$ (critical slowing-down).  This signals an impending
+qualitative change of state, providing an \emph{early warning indicator}
+detectable as an increase in the count of boundary trits
+$n_0=|\{i:\tau_i=0\}|$.
+
+\begin{proposition}[Early Warning from Boundary-Trit Count]
+\label{prop:ch03-early-warning}
+For a system approaching a bifurcation at time $t^*$, the boundary-trit
+count satisfies
+\begin{equation}
+    n_0(t) \;\propto\; (t^*-t)^{-\nu},\quad t<t^*,
+    \label{eq:ch03-early-warning}
+\end{equation}
+with exponent $\nu>0$, giving a divergent signal as $t\to t^*$.
+\end{proposition}
+
+%% --- D.6 Cell Cycle as a Ternary Programme --------------------------------
+\subsection{Cell Cycle as a Ternary Programme}
+
+The four phases of the cell cycle (G1, S, G2, M) correspond to four
+macrostates of the 15-trit cellular state vector.  The transitions
+G1$\to$S, S$\to$G2, G2$\to$M, and M$\to$G1 are boundary-trit events in
+which key regulatory species cross their thresholds:
+
+\begin{itemize}[nosep]
+    \item \textbf{G1}: cyclins~D/E near-boundary ($\tau=0$) while CDK2 is
+          below threshold ($\tau=-1$); DNA synthesis machinery inactive ($\tau=-1$).
+    \item \textbf{G1$\to$S checkpoint}: cyclin~E crosses threshold ($\tau:
+          0\to+1$), CDK2 activated ($\tau:-1\to+1$), initiating replicon firing.
+    \item \textbf{S phase}: replication fork proteins above threshold ($\tau=+1$);
+          histone supply above threshold ($\tau=+1$).
+    \item \textbf{G2$\to$M checkpoint}: cyclin~B/CDK1 complex crosses threshold
+          ($\tau:0\to+1$), driving mitotic entry.
+    \item \textbf{M$\to$G1}: APC/C ubiquitin ligase crosses threshold
+          ($\tau:-1\to+1$), degrading cyclin~B and resetting the trit pattern.
+\end{itemize}
+
+The cell cycle is therefore a programmatic sequence of ternary state
+transitions, each driven by threshold crossings in key oscillator modes.
+
+%% --- D.7 T2D as a Ternary Defect ----------------------------------------
+\subsection{Worked Example: Type~2 Diabetes as a Ternary Defect}
+
+In healthy insulin signalling, the IRS-1 trit for the PI3K-binding mode is
+$\tau_{\mathrm{IRS-1}}=+1$ (above threshold), enabling downstream Akt
+activation.  In type-2 diabetes (T2D), serine phosphorylation of IRS-1
+(e.g.\ Ser$^{307}$ by IKK$\beta$) shifts the mode amplitude below threshold:
+$\tau_{\mathrm{IRS-1}}:+1\to 0$.  This single trit change propagates through
+the cascade:
+
+\begin{equation}
+    \tau_{\mathrm{IRS-1}}=0
+    \;\Rightarrow\;
+    \tau_{\mathrm{PI3K}}=-1
+    \;\Rightarrow\;
+    \tau_{\mathrm{Akt}}=-1
+    \;\Rightarrow\;
+    \tau_{\mathrm{GLUT4}}=-1,
+    \label{eq:ch03-t2d-trit}
+\end{equation}
+where each arrow represents a downstream trit failure.  The result is
+$\tau_{\mathrm{GLUT4}}=-1$ (transporter below threshold), clinically
+manifesting as impaired glucose uptake.  Restoring $\tau_{\mathrm{IRS-1}}$
+to $+1$ (e.g.\ by IKK$\beta$ inhibition or salicylate therapy) would
+propagate recovery through the cascade~\Cref{eq:ch03-t2d-trit} in reverse.
+
+%% ---------------------------------------------------------------------------
+\section{Metabolic Sequential Positioning}
+\label{sec:ch03-metabolic-positioning}
+%% ---------------------------------------------------------------------------
+
+Metabolites do not diffuse freely to their targets; rather, they are
+routed through a structured sequence of categorical exclusions that
+direct each species to a unique destination with exponentially high
+precision.  This \emph{sequential exclusion cascade} is the metabolic
+analogue of the multi-enzyme specificity mechanism described in
+\Cref{thm:ch03-sequential-exclusion}.
+
+%% --- E.1 Sequential Exclusion Cascade ------------------------------------
+\subsection{Sequential Exclusion Cascade}
+
+\begin{definition}[Sequential Exclusion Cascade]
+\label{def:ch03-sec-cascade}
+A \emph{sequential exclusion cascade} of depth $N$ is an ordered set of
+categorical apertures $(\mathcal{A}_1,\mathcal{A}_2,\ldots,\mathcal{A}_N)$
+traversed by a metabolite in sequence.  At step $i$, a fraction
+\begin{equation}
+    \varepsilon_i \;=\; \frac{|\mathcal{A}_i|}{|\Sspace|}
+    \label{eq:ch03-eps-i}
+\end{equation}
+of candidate molecules passes through aperture $\mathcal{A}_i$; the
+remainder ($1-\varepsilon_i$) are categorically excluded and rerouted.
+\end{definition}
+
+\begin{theorem}[Total Cascade Exclusion]
+\label{thm:ch03-total-exclusion}
+The fraction of the original molecular pool that traverses all $N$
+apertures is
+\begin{equation}
+    \varepsilon_{\mathrm{total}}
+    \;=\;
+    \prod_{i=1}^{N}\varepsilon_i,
+    \label{eq:ch03-eps-total}
+\end{equation}
+yielding exponential specificity: $\varepsilon_{\mathrm{total}}\sim
+\varepsilon^N$ for uniform apertures $\varepsilon_i\equiv\varepsilon$.
+\end{theorem}
+
+\begin{proof}
+Each aperture selects independently (sequential categorical exclusion).
+The joint probability that a molecule passes through apertures
+$1,2,\ldots,N$ is the product of marginals because the exclusion events are
+conditionally independent given the molecular configuration.  Hence
+$\varepsilon_{\mathrm{total}}=\prod_i\varepsilon_i$.  For
+$\varepsilon_i=10^{-3}$ (typical enzymatic selectivity) and $N=8$,
+$\varepsilon_{\mathrm{total}}=10^{-24}$.
+\end{proof}
+
+\begin{corollary}[Routing Precision]
+\label{cor:ch03-routing-precision}
+The number of \emph{distinguishable routes} in the cascade is
+\begin{equation}
+    \mathcal{N}_{\mathrm{routes}}
+    \;=\;
+    (1-\varepsilon_{\mathrm{total}})^{-1}
+    \;\approx\;
+    1 + \varepsilon_{\mathrm{total}}
+    \;\approx\; 1
+    \quad\text{for }\varepsilon_{\mathrm{total}}\ll 1,
+    \label{eq:ch03-routes}
+\end{equation}
+meaning essentially all molecules following the cascade arrive at the
+\emph{same} destination: the cascade collapses the metabolite distribution
+to a single route.
+\end{corollary}
+
+%% --- E.2 Metabolic Flux as Categorical Current ----------------------------
+\subsection{Metabolic Flux as Categorical Current}
+
+In the partition framework, metabolic flux is the flow of molecular
+configurations through S-entropy space, exactly analogous to electric
+current through a resistor network.
+
+\begin{definition}[Categorical Metabolic Current]
+\label{def:ch03-cat-current}
+The \emph{categorical metabolic current} through enzyme $E_i$ is
+\begin{equation}
+    \mathcal{I}_i
+    \;=\;
+    \frac{d}{dt}
+    \bigl|\{\Sigma\in\mathcal{A}_i : \Sigma \text{ crosses }\partial\mathcal{A}_i
+    \text{ per unit time}\}\bigr|,
+    \label{eq:ch03-cat-current}
+\end{equation}
+the rate at which molecular configurations traverse aperture $\mathcal{A}_i$.
+\end{definition}
+
+At steady state, conservation of categorical current requires
+$\mathcal{I}_i=\mathrm{const}$ along an unbranched pathway, exactly
+mirroring Kirchhoff's current law.  Branched pathways obey an analogue
+of Kirchhoff's junction rule: the sum of currents into a metabolic node
+equals the sum out.
+
+%% --- E.3 Substrate Channelling as Low-Entropy Channel --------------------
+\subsection{Substrate Channelling as Low-Entropy Metabolic Channel}
+
+Sequential exclusion creates narrow corridors in S-entropy space through
+which metabolite trajectories are concentrated.
+
+\begin{theorem}[Channelling Entropy Reduction]
+\label{thm:ch03-channelling}
+A substrate channelling complex of $N$ enzymes reduces the trajectory
+entropy of the channelled metabolite by
+\begin{equation}
+    \Delta\mathcal{H}
+    \;=\;
+    -\sum_{i=1}^{N}\log|\varepsilon_i|
+    \;=\;
+    N\log(1/\varepsilon)
+    \quad\text{(bits, for uniform }\varepsilon_i=\varepsilon),
+    \label{eq:ch03-channelling-entropy}
+\end{equation}
+where trajectory entropy is defined as the Shannon entropy of the
+probability distribution over paths through S-entropy space.
+\end{theorem}
+
+\begin{proof}
+Without channelling, the metabolite explores fraction
+$|\mathcal{A}_i|/|\Sspace|=\varepsilon_i$ of state space at each step,
+corresponding to trajectory entropy
+$H_{\mathrm{free}}=\log|\Sspace/\mathcal{A}_i|=\log(1/\varepsilon_i)$ bits
+per step (maximum entropy for uniform distribution over unconstrained paths).
+The cascade confines the trajectory to the intersection
+$\bigcap_i\mathcal{A}_i$ with volume fraction $\varepsilon_{\mathrm{total}}$,
+reducing trajectory entropy to
+$H_{\mathrm{channel}}=\log(1/\varepsilon_{\mathrm{total}})=
+-\sum_i\log\varepsilon_i$.
+The entropy reduction relative to free diffusion is
+$\Delta\mathcal{H}=H_{\mathrm{free}}-H_{\mathrm{channel}}
+=\sum_i\log(1/\varepsilon_i)=N\log(1/\varepsilon)$.
+\end{proof}
+
+%% --- E.4 Glycolysis as a 10-Step Exclusion Cascade -----------------------
+\subsection{Example: Glycolysis as a Ten-Step Exclusion Cascade}
+
+Glycolysis converts glucose to pyruvate via ten sequential enzymatic
+reactions.  Each enzyme constitutes one aperture in the cascade.
+Representative exclusion probabilities and cumulative specificity are
+shown in~\Cref{tab:ch03-glycolysis}.
+
+\begin{table}[htbp]
+\centering
+\caption{Glycolytic cascade: per-step exclusion probability $\varepsilon_i$
+         and cumulative exclusion $\varepsilon_{\leq i}=\prod_{j\leq i}\varepsilon_j$.}
+\label{tab:ch03-glycolysis}
+\begin{tabular}{rllcc}
+\hline
+Step & Enzyme & Substrate & $\varepsilon_i$ & $\varepsilon_{\leq i}$ \\
+\hline
+ 1 & Hexokinase           & Glucose       & $10^{-3}$ & $10^{-3}$ \\
+ 2 & Phosphoglucose isomerase & G6P      & $10^{-3}$ & $10^{-6}$ \\
+ 3 & Phosphofructokinase  & F6P           & $10^{-4}$ & $10^{-10}$ \\
+ 4 & Aldolase             & F1,6BP        & $10^{-3}$ & $10^{-13}$ \\
+ 5 & Triose phosphate isomerase & DHAP   & $10^{-2}$ & $10^{-15}$ \\
+ 6 & Glyceraldehyde-3-P DH & G3P         & $10^{-3}$ & $10^{-18}$ \\
+ 7 & Phosphoglycerate kinase & 1,3-BPG   & $10^{-3}$ & $10^{-21}$ \\
+ 8 & Phosphoglycerate mutase & 3-PG      & $10^{-3}$ & $10^{-24}$ \\
+ 9 & Enolase              & 2-PG          & $10^{-3}$ & $10^{-27}$ \\
+10 & Pyruvate kinase      & PEP           & $10^{-4}$ & $10^{-31}$ \\
+\hline
+\multicolumn{4}{l}{Overall specificity:} & $\varepsilon_{\mathrm{total}}\approx 10^{-31}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The cascade achieves $\varepsilon_{\mathrm{total}}\approx 10^{-31}$: for every
+$10^{31}$ candidate molecules in the cytoplasm, only one glucose molecule
+completes all ten steps to pyruvate.  This extraordinary specificity is not
+due to any single enzyme but emerges from the multiplicative structure
+of~\Cref{eq:ch03-eps-total}.  The glycolytic enzymes are known to associate
+into a metabolon (glycolytic channelling complex) in which G3P is directly
+handed from aldolase to GAPDH without equilibrating with the bulk
+cytoplasm~\citep{nelson2008lehninger}, consistent with
+\Cref{thm:ch03-channelling}.
+
+%% --- E.5 Disease as Cascade Failure -------------------------------------
+\subsection{Disease as Sequential Exclusion Cascade Failure}
+
+\begin{theorem}[Single-Step Cascade Failure]
+\label{thm:ch03-cascade-failure}
+Failure of step $k$ in an $N$-step exclusion cascade (i.e.\ $\varepsilon_k\to 1$)
+increases the total pass-through fraction by factor
+\begin{equation}
+    \frac{\varepsilon_{\mathrm{total}}^{\mathrm{fail}}}
+         {\varepsilon_{\mathrm{total}}^{\mathrm{healthy}}}
+    \;=\;
+    \frac{1}{\varepsilon_k},
+    \label{eq:ch03-cascade-fail}
+\end{equation}
+allowing aberrant molecular species to traverse the full pathway with
+dramatically elevated probability.
+\end{theorem}
+
+\begin{proof}
+Healthy cascade: $\varepsilon_{\mathrm{total}}=\varepsilon_k\prod_{i\neq k}\varepsilon_i$.
+With step $k$ failed ($\varepsilon_k\to 1$):
+$\varepsilon_{\mathrm{total}}^{\mathrm{fail}}=\prod_{i\neq k}\varepsilon_i=
+\varepsilon_{\mathrm{total}}/\varepsilon_k$.
+The ratio is $(1/\varepsilon_k)$, which for $\varepsilon_k=10^{-3}$
+represents a $10^3$-fold increase in off-target passage.
+\end{proof}
+
+\begin{corollary}[Cascade Sensitivity]
+The route whose single-step failure causes the greatest damage is the
+step with the smallest $\varepsilon_k$ (tightest aperture), because
+$1/\varepsilon_k$ is largest there.  In glycolysis, phosphofructokinase
+(step~3, $\varepsilon_3=10^{-4}$) and pyruvate kinase (step~10,
+$\varepsilon_{10}=10^{-4}$) are thus the most disease-critical nodes,
+consistent with their known roles as flux-control enzymes and the
+prevalence of their deficiencies in inborn errors of
+metabolism~\citep{nelson2008lehninger}.
+\end{corollary}
+
+%% --- E.6 Complex I Case Study -------------------------------------------
+\subsection{Worked Numerical Example: Complex~I Exclusion Cascade in
+             Healthy and Diseased Mitochondria}
+
+Mitochondrial Complex~I (NADH:ubiquinone oxidoreductase) operates as a
+seven-step proton-pumping cascade: four redox apertures
+(FMN$\to$Fe-S$\to$Fe-S$\to$Fe-S) transferring electrons to ubiquinone,
+coupled to three proton-pumping apertures (transmembrane subunits ND2,
+ND4, ND5).  Representative parameters are listed in
+\Cref{tab:ch03-complex1}.
+
+\begin{table}[htbp]
+\centering
+\caption{Complex~I sequential exclusion cascade: healthy vs.\ MELAS
+         mitochondria (m.3243A$>$G mutation reducing Complex~I assembly
+         by $\sim 50\%$).}
+\label{tab:ch03-complex1}
+\begin{tabular}{llccc}
+\hline
+Step & Sub-complex & $\varepsilon_i^{\mathrm{healthy}}$ &
+      $\varepsilon_i^{\mathrm{MELAS}}$ & Ratio \\
+\hline
+1 & FMN (NADH binding)   & $10^{-4}$ & $10^{-4}$ & 1 \\
+2 & Fe-S N3              & $10^{-3}$ & $10^{-3}$ & 1 \\
+3 & Fe-S N1b             & $10^{-3}$ & $10^{-3}$ & 1 \\
+4 & Fe-S N2 (ubiquinone) & $10^{-3}$ & $5\times10^{-2}$ & 50 \\
+5 & ND2 (proton pump)    & $10^{-3}$ & $5\times10^{-2}$ & 50 \\
+6 & ND4 (proton pump)    & $10^{-3}$ & $5\times10^{-2}$ & 50 \\
+7 & ND5 (proton pump)    & $10^{-3}$ & $5\times10^{-2}$ & 50 \\
+\hline
+$\varepsilon_{\mathrm{total}}$ && $10^{-22}$ & $1.6\times10^{-13}$ & $10^{9}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The MELAS mutation affects mitochondrial tRNA$^{\mathrm{Leu}}$, reducing
+synthesis of the hydrophobic ND subunits.  Steps 4--7 increase from
+$\varepsilon_i=10^{-3}$ to $\varepsilon_i=5\times10^{-2}$ (50-fold widening
+of each aperture).  The cumulative effect is a $10^9$-fold increase in
+total pass-through, meaning that $10^9$ times as many aberrant
+electron-transfer events occur: specifically, premature electron transfer
+to molecular oxygen generating superoxide
+(O$_2^{\bullet-}$)~\citep{Mitchell1961}.  Each unit of superoxide generated
+represents a categorical mis-routing event, quantified by
+\Cref{eq:ch03-cascade-fail} with $\varepsilon_k\to 5\times10^{-2}$
+(steps 4--7), consistent with the clinical observation of elevated reactive
+oxygen species and progressive neurodegeneration in MELAS
+syndrome.

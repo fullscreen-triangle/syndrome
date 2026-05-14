@@ -15,6 +15,7 @@
 \usepackage{bm}
 \usepackage{physics}   % \dd, \dv, \pdv, \abs, \norm etc.
 \usepackage{siunitx}
+\usepackage{mathrsfs}  % \mathscr calligraphic font
 
 %% Theorem environments (shared numbering across the monograph)
 \theoremstyle{plain}
@@ -28,6 +29,10 @@
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
+
+%% Algorithm environments
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 %% Figures, tables, layout
 \usepackage{graphicx}
@@ -46,7 +51,7 @@
   {../publication/disease-computing/figures/}%
 }
 \usepackage{booktabs,array,multirow}
-\usepackage{enumitem}
+\usepackage[shortlabels]{enumitem}
 \usepackage{float}
 \usepackage[margin=2.5cm]{geometry}
 
@@ -95,9 +100,7 @@
 %% Partition coordinates
 \newcommand{\pn}{n}                        % principal depth
 \newcommand{\pl}{\ell}                     % angular complexity
-\newcommand{\pm}{m}                        % orientation
 \newcommand{\ps}{s}                        % chirality
-\newcommand{\Sigma}{\boldsymbol{\Sigma}}   % partition state (n,l,m,s)
 \newcommand{\SigmaField}{\Sigma(\mathbf{r})} % spatial partition field
 
 %% Partition structures
@@ -135,6 +138,21 @@
 
 %% Drug / therapeutic
 \newcommand{\drugvec}{\boldsymbol{\eta}}     % drug perturbation vector
+
+%% Math operators
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+%% Trajectory / GRN
+\newcommand{\trit}{\tau}               % ternary gene state ∈ {-1,0,+1}
+\newcommand{\Fwd}{\mathrm{Fwd}}        % forward reachability set
+\newcommand{\rxntime}{t_0}             % causal reaction / emission time
+
+%% Additional theorem-like environments
+\theoremstyle{definition}
+\newtheorem{prediction}[theorem]{Prediction}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
 
 %% Abbreviations
 \newcommand{\ie}{i.e.\@}

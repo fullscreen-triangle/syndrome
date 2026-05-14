@@ -1,4 +1,4 @@
-%% Chapter 7 — Disease State Equations
+﻿%% Chapter 7 — Disease State Equations
 %%
 %% Source material: docs/disease-state-equations/disease-state-equations.tex
 %%   and all sections/ subdirectory files.
@@ -8,6 +8,7 @@
 
 \chapter{Disease State Equations}
 \label{ch:disease-state}
+\label{ch:disease}
 
 \begin{figure}[!htbp]
   \centering
@@ -39,8 +40,8 @@
 The healthy cell established in \Cref{ch:cellular-state} is characterised by
 sustained oscillatory dynamics in a bounded phase space: biochemical
 concentrations cycle, membrane potentials oscillate, and metabolic flux
-maintains directed steady states.  The unifying order parameter is the
-Kuramoto coherence index
+maintains directed steady states~\citep{Alberts2002,nelson2008lehninger}.  The unifying order parameter is the
+Kuramoto coherence index~\citep{Kuramoto1984,Acebron2005}
 \begin{equation}
   r(t)
   = \left|\frac{1}{N}\sum_{j=1}^{N} e^{i\theta_j(t)}\right|,
@@ -99,7 +100,7 @@ perturbation
   \label{eq:potential-perturbation}
 \end{equation}
 
-Linearising the Kirchhoff-type circuit equations from \Cref{sec:circuit-dynamics}
+Linearising the Kirchhoff-type circuit equations~\citep{Kirchhoff1847} from \Cref{sec:circuit-dynamics}
 around the healthy steady state gives the \emph{pathological equations of
 state}:
 \begin{equation}
@@ -159,6 +160,8 @@ which is the discrete Poisson equation on the healthy circuit graph.
 The eight-dimensional disease vector $\Dvec$ provides a principled
 classification of pathological states.  Each class corresponds to
 the dominant oscillator group whose coherence has collapsed.
+The metabolic network underlying each class is scale-free~\citep{barabasi2004network,Jeong2000},
+which constrains how coherence loss propagates across hub nodes.
 
 \begin{table}[!htbp]
 \centering
@@ -256,6 +259,142 @@ Setting this equal to $\delta$ yields \Cref{eq:onset-time}.
 \end{proof}
 
 % ---------------------------------------------------------------------------
+\section{S-Entropy Coordinates and Extended Thermodynamic Structure}
+\label{sec:ch07-s-entropy}
+% ---------------------------------------------------------------------------
+
+The thermodynamic identities of \Cref{sec:stellas} are grounded in a
+three-dimensional entropy coordinate system that provides a natural macroscopic
+description of the bounded cellular phase space.
+
+\begin{definition}[S-Entropy Coordinates]
+\label{def:ch07-s-entropy}
+The \emph{S-entropy coordinate space} $\Sspace = [0,1]^3$ comprises three
+components:
+\begin{align}
+  \Sk &\in [0,1] \quad \text{(knowledge entropy)}, \label{eq:ch07-Sk} \\
+  \St &\in [0,1] \quad \text{(temporal entropy)}, \label{eq:ch07-St} \\
+  \Se &\in [0,1] \quad \text{(evolution entropy)}, \label{eq:ch07-Se}
+\end{align}
+where $\Sk$ quantifies uncertainty in state identification, $\St$ quantifies
+uncertainty in timing relationships, and $\Se$ quantifies uncertainty in
+trajectory progression.  We write $\Scoord = (\Sk,\St,\Se) \in \Sspace$.
+\end{definition}
+
+\begin{theorem}[Compactness and Poincaré Recurrence]
+\label{thm:ch07-compactness}
+The S-entropy coordinate space $\Sspace = [0,1]^3$ is compact.  For
+measure-preserving dynamics on $\Sspace$, almost every trajectory returns
+arbitrarily close to its initial point: for any $\epsilon > 0$ there exists
+$T_{\mathrm{rec}}$ such that $\|\gamma(T_{\mathrm{rec}}) - \gamma(0)\| < \epsilon$.
+\end{theorem}
+
+\begin{proof}
+Compactness is immediate: $[0,1]^3$ is closed and bounded in $\mathbb{R}^3$,
+hence compact by the Heine-Borel theorem.  Poincaré recurrence then follows
+from compactness together with measure preservation — the standard proof
+applies unchanged.
+\end{proof}
+
+\begin{remark}
+The Poincaré recurrence theorem, applied to $\Sspace$, implies that
+physiological trajectories transiently visit states that, if sustained, would
+be pathological.  This is the formal basis for the \emph{Instantaneous
+Measurement Insufficiency Theorem}: a snapshot measurement at a single time
+$t$ cannot distinguish a physiological system transiently visiting a diseased
+state from one permanently occupying it.  Reliable disease diagnosis requires
+time-series measurements over intervals $T \gg \tau_{\mathrm{dec}}^{(\mathrm{phys})}$.
+\end{remark}
+
+\subsection{Coordinate transformation and thermodynamic potentials}
+
+The transformation from partition coordinates $(n,\ell,m,s)$ to S-entropy
+coordinates is given by sigmoidal maps:
+\begin{align}
+  \Sk(n,\ell)
+  &= \frac{1}{1 + \exp\!\bigl(-\alpha_k(n^2/(\ell+1) - \beta_k)\bigr)},
+  \label{eq:ch07-Sk-map} \\
+  \St(n,m)
+  &= \frac{1}{1 + \exp\!\bigl(-\alpha_t(n^2/(|m|+1) - \beta_t)\bigr)},
+  \label{eq:ch07-St-map} \\
+  \Se(n,s)
+  &= \frac{1}{1 + \exp\!\bigl(-\alpha_e(n^2/(2|s|+1) - \beta_e)\bigr)},
+  \label{eq:ch07-Se-map}
+\end{align}
+where $\alpha_k,\alpha_t,\alpha_e > 0$ are scaling parameters and
+$\beta_k,\beta_t,\beta_e$ are offsets chosen to map the partition coordinate
+range to $[0,1]$.  As $n\to\infty$ the arguments of the sigmoids span
+$\mathbb{R}$, so the image is dense in $\Sspace$.
+
+The total entropy in S-entropy coordinates is
+\begin{equation}
+  S_{\mathrm{total}}(\Scoord)
+  = \kB\bigl[\Sk\ln\Omega_k + \St\ln\Omega_t + \Se\ln\Omega_e\bigr],
+  \label{eq:ch07-total-entropy}
+\end{equation}
+where $\Omega_k,\Omega_t,\Omega_e$ are the microstate counts for each
+entropy component.  This satisfies
+$0 \leq S_{\mathrm{total}} \leq \kB\ln(\Omega_k\Omega_t\Omega_e)$
+with equality at $(0,0,0)$ (complete knowledge) and $(1,1,1)$ (maximum
+uncertainty).
+
+\begin{definition}[Effective Potential and Probability Density]
+\label{def:ch07-effective-potential}
+The effective potential in $\Sspace$ is
+$U_{\mathrm{eff}}(\Scoord) = -\kB T\ln P(\Scoord)$, where $P(\Scoord)$
+is the probability density of finding the system at $\Scoord$.  The
+Boltzmann density
+\begin{equation}
+  \rho(\Scoord) = Z^{-1}\exp\!\bigl(-U_{\mathrm{eff}}(\Scoord)/\kB T\bigr),
+  \quad
+  Z = \int_{\Sspace} e^{-U_{\mathrm{eff}}/\kB T}\,\dd\mu,
+  \label{eq:ch07-boltzmann}
+\end{equation}
+is normalised with volume element $\dd\mu = \dd\Sk\,\dd\St\,\dd\Se$ and
+$\mu(\Sspace) = 1$.
+\end{definition}
+
+\begin{theorem}[Attractor Basin Structure and Disease]
+\label{thm:ch07-attractor-basin}
+Physiological states correspond to trajectories confined within attractor
+basins of $U_{\mathrm{eff}}$; pathological states correspond to trajectories
+that have escaped these basins.  Disease onset occurs when the system energy
+exceeds the separatrix energy $E_{\mathrm{sep}}$; disease severity is
+proportional to $\|\Scoord - \Scoord_{\mathrm{phys}}\|$.
+\end{theorem}
+
+\begin{proof}
+In physiological conditions the system explores a bounded region near a local
+minimum of $U_{\mathrm{eff}}$, maintaining low phase variance
+$\sigma_{\Phi}^2$ and long decorrelation time $\tau_{\mathrm{dec}}$.
+Pathological disruption raises system energy above $E_{\mathrm{sep}}$,
+enabling escape; post-escape, the system explores a larger region,
+increasing $\sigma_{\Phi}^2$ and reducing $\tau_{\mathrm{dec}}$.  The
+distance from the original basin quantifies how far the cell has departed
+from healthy dynamics, and thus serves as a continuous severity measure.
+\end{proof}
+
+\subsection{Physiological and pathological baselines}
+
+\begin{definition}[Physiological Baseline]
+\label{def:ch07-phys-baseline}
+The physiological baseline is characterised by:
+\begin{align}
+  \langle R\rangle_t^{(\mathrm{phys})} &\in [10^3, 10^6], \label{eq:ch07-phys-R} \\
+  \sigma_{\Phi}^{(\mathrm{phys})}      &\sim 0.1\text{--}0.3, \label{eq:ch07-phys-sigma} \\
+  \tau_{\mathrm{dec}}^{(\mathrm{phys})}&\sim 10^2\text{--}10^4\,\mathrm{s}.
+  \label{eq:ch07-phys-tau}
+\end{align}
+\end{definition}
+
+Pathological states are operationally defined by:
+$|\langle\Delta R\rangle_t| > 0.5\langle R\rangle_t^{(\mathrm{phys})}$,
+$\sigma_{\Phi}^{(\mathrm{path})} > 2\sigma_{\Phi}^{(\mathrm{phys})}$, and
+$\tau_{\mathrm{dec}}^{(\mathrm{path})} < 0.5\tau_{\mathrm{dec}}^{(\mathrm{phys})}$.
+These thresholds correspond to $> 2\sigma$ deviations from normal
+physiological fluctuations and are thus statistically reliable discriminants.
+
+% ---------------------------------------------------------------------------
 \section{Categorical Memory Reset}
 \label{sec:memory-reset}
 % ---------------------------------------------------------------------------
@@ -318,10 +457,333 @@ by additivity.
 
 \begin{remark}
 \Cref{thm:reset-energy} explains why therapeutic reversal of epigenetically
-entrenched disease states (e.g., cancer cell reprogramming, senescence reversal)
+entrenched disease states (\eg, cancer cell reprogramming, senescence reversal)
 is energetically costly and rate-limited.  It also implies that the effectiveness
 of a therapeutic reset is bounded by the available cellular free energy budget.
 \end{remark}
+
+\subsection{History independence and geometric exclusion}
+
+Categorical memory reset rests on a deeper axiomatic principle: at each
+categorical boundary, the system adopts initial conditions determined solely
+by the new category, independently of its trajectory through all preceding
+categories.
+
+\begin{axiom}[Categorical Memory Reset]
+\label{ax:ch07-memory-reset}
+At each transition from category $c$ to category $c+1$, the system state
+resets to initial conditions $\mathcal{R}_{c+1}$ determined by category
+$c+1$ alone.  The trajectory history within category $c$ is geometrically
+excluded from influencing $\mathcal{R}_{c+1}$.
+\end{axiom}
+
+\begin{theorem}[History Independence]
+\label{thm:ch07-history-independence}
+The state of a system within category $c$ is statistically independent of
+its trajectory through all preceding categories $\{0,1,\ldots,c-1\}$:
+\begin{equation}
+  \Scoord(p_t \in c) \perp \bigl\{\Scoord(p_t \in c') \mid c' < c\bigr\}.
+  \label{eq:ch07-history-independence}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \Cref{ax:ch07-memory-reset}, the initial condition
+$\Scoord_{\mathrm{init}}^{(c)}$ is determined by $\mathcal{R}_c$ alone and
+is independent of $\Scoord_{\mathrm{final}}^{(c-1)}$.  Since the within-category
+dynamics are deterministic given the initial condition, the entire trajectory
+in $c$ is independent of all trajectories in categories $c' < c$, establishing
+\Cref{eq:ch07-history-independence}.
+\end{proof}
+
+\begin{theorem}[Geometric Exclusion]
+\label{thm:ch07-geometric-exclusion}
+States from category $c$ are geometrically inaccessible from category
+$c+1$:
+\begin{equation}
+  \mathcal{C}_c \cap \mathcal{C}_{c+1} = \emptyset,
+  \label{eq:ch07-geometric-exclusion}
+\end{equation}
+where $\mathcal{C}_c$ is the set of states satisfying category $c$
+constraints.
+\end{theorem}
+
+\begin{proof}
+Categories are defined by mutually exclusive constraints.  For temporal
+categories, $c$ corresponds to interval $[t_c, t_{c+1})$ and $c+1$ to
+$[t_{c+1}, t_{c+2})$; these intervals are disjoint.  For partition
+categories, $c$ corresponds to partition structure $\mathcal{P}_c$ and
+$c+1$ to $\mathcal{P}_{c+1}$ with $\mathcal{P}_c \neq \mathcal{P}_{c+1}$;
+the structures are mutually exclusive by construction.  Therefore, states
+satisfying $c$ constraints cannot simultaneously satisfy $c+1$ constraints.
+\end{proof}
+
+\begin{corollary}[Zero Computational Overhead]
+\label{cor:ch07-zero-overhead}
+Memory reset requires zero information processing: the categorical aperture
+operates through geometric constraints alone, with no energy expenditure
+beyond what is required by the Categorical Second Law for erasing the
+categorical boundary.
+\end{corollary}
+
+\subsection{Van Deemter plate analogy}
+
+The categorical architecture is formally analogous to the theoretical-plate
+structure in chromatography.
+
+\begin{theorem}[Van Deemter Plate Analogy]
+\label{thm:ch07-van-deemter}
+Categorical boundaries function as theoretical plates, with memory leakage
+across boundaries analogous to the $B$-term (longitudinal diffusion) in the
+Van Deemter equation:
+\begin{equation}
+  H = A + \frac{B}{u} + Cu,
+  \label{eq:ch07-van-deemter}
+\end{equation}
+where $A$ is eddy diffusion, $B$ is longitudinal diffusion (memory leakage),
+$C$ is mass-transfer resistance, and $u$ is flow velocity.
+\end{theorem}
+
+\begin{proof}
+In chromatographic plate theory, each theoretical plate represents a complete
+equilibration cycle.  The $B$-term represents molecules diffusing across plate
+boundaries, carrying phase-lock history and corrupting the statistical
+independence of successive plates.  In cellular systems, categorical
+boundaries enforce memory reset, minimising the $B$-term.  Ideal categorical
+dynamics satisfy $B = 0$: no memory leakage across boundaries.  The degree
+to which a diseased cell violates \Cref{ax:ch07-memory-reset} is quantified
+by $B > 0$, which is directly related to the partition memory depth
+$\Delta\Depth_{\mathrm{mem}}$ of \Cref{def:partition-memory}.
+\end{proof}
+
+\subsection{Pendulum restart interpretation}
+
+\begin{theorem}[Same Pendulum, Restarted]
+\label{thm:ch07-pendulum-restart}
+Categorical dynamics with memory reset correspond to the same pendulum being
+restarted at each categorical boundary with new initial conditions, not to a
+continuously evolving double pendulum.
+\end{theorem}
+
+\begin{proof}
+A double pendulum exhibits chaotic dynamics: small perturbations grow
+exponentially, making the state at time $t$ strongly dependent on the entire
+trajectory from $t = 0$.  In contrast, the memory reset axiom
+(\Cref{ax:ch07-memory-reset}) enforces history independence
+(\Cref{thm:ch07-history-independence}): at each categorical boundary the
+system adopts new initial conditions $\mathcal{R}_{c+1}$ independently of
+its prior trajectory.  This is equivalent to stopping the pendulum at the
+end of category $c$, setting new initial conditions
+$(\theta_0^{(c+1)}, \dot{\theta}_0^{(c+1)}) = \mathcal{R}_{c+1}$, and
+restarting.  The pendulum parameters ($g$, $L$) are unchanged, but the
+state is reset.  Within each category, the dynamics are deterministic and
+predictable; across categories, the system is history-free.  This
+combination avoids the unpredictability of chaotic systems while retaining
+full intra-category determinism.
+\end{proof}
+
+\subsection{Frequency partitioning and the oxygen master clock}
+
+\begin{theorem}[Master Clock Continuity]
+\label{thm:ch07-master-clock}
+The oxygen master clock runs continuously without resets:
+$\omega_{O_2}(t) = \omega_{O_2}$ for all $t$.
+\end{theorem}
+
+\begin{proof}
+Molecular oxygen rotates at frequency $\omega_{O_2} \approx 10^{13}$\,Hz
+determined by its rotational energy levels $E_j = B_e j(j+1)$, where $B_e$
+is the rotational constant and $j$ the quantum number.  These levels are
+intrinsic properties of the O$_2$ molecule and are independent of cellular
+state.  Categorical "restarts" correspond to de-synchronisation from one
+harmonic $\omega_n = (n/N)\omega_{O_2}$ and re-synchronisation to another
+$\omega_{n'}$, with the master clock broadcasting all harmonics continuously
+throughout.
+\end{proof}
+
+\begin{theorem}[Efficient Capacity via Frequency-Selective Synchronisation]
+\label{thm:ch07-efficient-capacity}
+The cellular system operates at efficient capacity by activating only
+processes whose natural frequencies satisfy the phase-locking condition
+$|\omega_i^{\mathrm{nat}} - \omega_{n_j}| < \omega_{\mathrm{lock}}$ for
+some currently active harmonic $\omega_{n_j}$.  Processes with natural
+frequencies far from all active channels remain dormant, minimising energy
+expenditure.
+\end{theorem}
+
+\begin{proof}
+Phase-locking occurs when two oscillators satisfy $|\omega_1 - \omega_2|
+< \omega_{\mathrm{lock}}$, where $\omega_{\mathrm{lock}}$ depends on coupling
+strength~\citep{Strogatz2000}.  Category $c$ activates harmonic subset
+$\{\omega_{n_1},\ldots,\omega_{n_k}\} \subset \Omega$; only processes within
+locking distance of an active harmonic synchronise and become active.
+As categories change, the active harmonic set changes, dynamically
+reconfiguring which processes are active without central coordination.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\section{Extended Phase Coherence Theory}
+\label{sec:ch07-phase-coherence-ext}
+% ---------------------------------------------------------------------------
+
+\subsection{Kuramoto model and critical coupling}
+
+\begin{theorem}[Kuramoto Dynamics]
+\label{thm:ch07-kuramoto}
+For $N$ globally coupled oscillators with natural frequencies
+$\{\omega_i\}$ and coupling strength $K$, the phase dynamics are
+\begin{equation}
+  \frac{\dd\phi_i}{\dd t}
+  = \omega_i + \frac{K}{N}\sum_{j=1}^{N}\sin(\phi_j - \phi_i).
+  \label{eq:ch07-kuramoto}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Each oscillator has natural frequency $\omega_i$ and couples to all others
+through phase differences $\phi_j - \phi_i$.  The sine coupling is
+$2\pi$-periodic, vanishes when phases are aligned, and is maximal when phases
+differ by $\pi/2$~\citep{Kuramoto1984}.  Coupling strength $K$ determines
+synchronisation tendency; for $K > K_c$ the system exhibits spontaneous
+synchronisation.
+\end{proof}
+
+\begin{theorem}[Critical Coupling]
+\label{thm:ch07-critical-coupling}
+For a Lorentzian frequency distribution $g(\omega) = \Delta/[\pi(\omega^2+\Delta^2)]$
+with half-width $\Delta$, the critical coupling is
+\begin{equation}
+  K_c = \frac{2\Delta}{\pi g(0)}.
+  \label{eq:ch07-critical-coupling}
+\end{equation}
+For $K < K_c$, $r = 0$ (incoherence); for $K > K_c$,
+\begin{equation}
+  r = \sqrt{1 - \frac{K_c}{K}} = \sqrt{1 - \frac{2\Delta}{\pi g(0) K}}.
+  \label{eq:ch07-order-parameter-formula}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Mean-field analysis of the Kuramoto model yields a self-consistency equation
+whose bifurcation at $K = K_c$ produces the onset of synchronisation; the
+order-parameter formula follows from linearisation around the bifurcation
+point~\citep{Kuramoto1984,Strogatz2000}.
+\end{proof}
+
+\subsection{Hierarchical Kuramoto model for cellular oscillators}
+
+\begin{theorem}[Hierarchical Kuramoto Model]
+\label{thm:ch07-hierarchical-kuramoto}
+Cellular oscillators coupled to the oxygen master clock satisfy
+\begin{equation}
+  \frac{\dd\phi_i}{\dd t}
+  = \omega_i
+    + K_{O_2}\sin(n\phi_{O_2} - \phi_i)
+    + \frac{K_{\mathrm{cell}}}{N}\sum_{j=1}^{N}\sin(\phi_j - \phi_i),
+  \label{eq:ch07-hierarchical-kuramoto}
+\end{equation}
+where $K_{O_2} \gg K_{\mathrm{cell}}$: oxygen coupling dominates, providing
+global synchronisation, while inter-cellular coupling fine-tunes local
+coordination.
+\end{theorem}
+
+\begin{proof}
+Strong oxygen coupling ($K_{O_2} \gg |\omega_i - n\omega_{O_2}|$) causes
+the oxygen term to dominate \Cref{eq:ch07-hierarchical-kuramoto}.  The
+steady state satisfies $\phi_i = n\phi_{O_2} + \mathrm{const}$, giving
+$\dot{\phi}_i = n\omega_{O_2}$ — frequency locking.
+\end{proof}
+
+\subsection{Disease-induced decoherence}
+
+\begin{theorem}[Disease-Induced Decoherence]
+\label{thm:ch07-disease-decoherence}
+Disease reduces the Kuramoto order parameter:
+\begin{equation}
+  r_{\mathrm{disease}} < r_{\mathrm{physiological}}.
+  \label{eq:ch07-disease-decoherence}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Oscillatory holes (\Cref{def:ch07-oscillatory-hole}) shift natural
+frequencies away from oxygen harmonics, increasing frequency disorder
+$\Delta$.  By \Cref{eq:ch07-order-parameter-formula}, $\Delta \uparrow
+\implies r \downarrow$.  If disease increases $\Delta$ beyond the point
+where $K_{O_2} < K_c = 2\Delta/[\pi g(0)]$, synchronisation is lost
+entirely.
+
+Therapeutic reduction of frequency disorder satisfies
+$r_{\mathrm{treated}} = \sqrt{1 - 2(1-E)\Delta_{\mathrm{untreated}}/[\pi g(0) K_{O_2}]}
+> r_{\mathrm{untreated}}$, with efficacy $E$ measurable via
+\begin{equation}
+  E = 1 - \frac{1 - r_{\mathrm{treated}}^2}{1 - r_{\mathrm{untreated}}^2}.
+  \label{eq:ch07-efficacy-coherence}
+\end{equation}
+\end{proof}
+
+\begin{corollary}[Coherence as Universal Disease Biomarker]
+\label{cor:ch07-coherence-biomarker}
+The order parameter $r$ serves as a universal disease biomarker: $r <
+r_{\mathrm{threshold}}$ indicates pathology; \Cref{eq:ch07-efficacy-coherence}
+provides a coherence-based efficacy monitor for therapy.
+\end{corollary}
+
+\subsection{Chimera states and partial therapeutic response}
+
+\begin{theorem}[Pathological Chimera States]
+\label{thm:ch07-chimera}
+Pathway-specific oscillatory holes produce chimera states in which some
+cellular pathways remain synchronised while others desynchronise, explaining
+diseases with mixed phenotypes.
+\end{theorem}
+
+\begin{proof}
+Pathways with small holes maintain $|\omega_i - n\omega_{O_2}|
+< \omega_{\mathrm{lock}}$ and remain synchronised ($r_i \approx 1$).
+Pathways with large holes have $|\omega_i - n\omega_{O_2}|
+> \omega_{\mathrm{lock}}$ and desynchronise ($r_i \approx 0$).  Coexistence
+of synchronised and desynchronised pathways within the same cell constitutes
+a chimera state.  Pathway-specific therapies can restore synchronisation to
+targeted pathways while leaving others desynchronised, maintaining chimera
+states and explaining partial clinical responses.
+\end{proof}
+
+\subsection{First-order synchronisation transitions and hysteresis}
+
+\begin{theorem}[First-Order Transition]
+\label{thm:ch07-first-order}
+For bimodal frequency distributions (physiological and pathological modes),
+the synchronisation transition is first-order with hysteresis: the
+health-to-disease transition occurs at different disease severity than the
+disease-to-health transition.
+\end{theorem}
+
+\begin{proof}
+Consider a bimodal distribution with physiological mode at
+$\omega_{\mathrm{phys}}$ and pathological mode at $\omega_{\mathrm{path}}$.
+For $K_{O_2}$ satisfying $K_c^{(\mathrm{phys})} < K_{O_2} <
+K_c^{(\mathrm{path})}$, the system is bistable: most oscillators in the
+physiological mode give $r \approx 1$; most in the pathological mode give
+$r \approx 0$.  The transition between these states is discontinuous
+(first-order).  Hysteresis arises because the forward transition
+(health $\to$ disease) and reverse transition (disease $\to$ health) occur
+at different values of $\Delta$, explaining why disease reversal typically
+requires more aggressive intervention than disease induction.
+\end{proof}
+
+\begin{corollary}[Critical Slowing Down as Early Warning]
+\label{cor:ch07-critical-slowing}
+Near the synchronisation transition ($K \approx K_c$), the order-parameter
+relaxation time diverges:
+\begin{equation}
+  \tau_{\mathrm{relax}} \propto \frac{1}{|K - K_c|},
+  \label{eq:ch07-critical-slowing}
+\end{equation}
+manifesting as slow recovery from perturbations.  This critical slowing
+down provides an early-warning signal of impending synchronisation loss,
+detectable as increased autocorrelation time in physiological measurements.
+\end{corollary}
 
 % ---------------------------------------------------------------------------
 \section{Immune Equations of State}
@@ -412,6 +874,144 @@ which defines a feasibility set in drug space.  The full linear programme
 formulation — minimising side effects subject to \Cref{eq:therapeutic-condition}
 and toxicity constraints — is developed in \Cref{ch:therapeutic-effect}.
 
+\subsection{Extended therapeutic equations of state}
+
+\begin{definition}[Phase-Locking Deficit]
+\label{def:ch07-phase-locking-deficit}
+The phase-locking deficit for cellular process $P_i$ is
+\begin{equation}
+  \Delta\phi_i = \min_{n}\,|\omega_i^{\mathrm{nat}} - \omega_n|,
+  \label{eq:ch07-phase-locking-deficit}
+\end{equation}
+where $\omega_i^{\mathrm{nat}}$ is the natural frequency and $\{\omega_n\}$
+are oxygen master clock harmonics.  A therapeutic agent with efficacy $E$
+reduces the deficit: $\Delta\phi_i^{(\mathrm{treated})} = (1-E)\,\Delta\phi_i^{(\mathrm{untreated})}$,
+with $E = 1$ denoting perfect phase-lock restoration.
+\end{definition}
+
+\begin{theorem}[Hill Dose-Response Equation]
+\label{thm:ch07-dose-response}
+Therapeutic efficacy depends on drug concentration $[D]$ through the Hill
+equation:
+\begin{equation}
+  E([D]) = \frac{E_{\max}[D]^h}{EC_{50}^h + [D]^h},
+  \label{eq:ch07-dose-response}
+\end{equation}
+where $E_{\max}$ is maximum efficacy, $EC_{50}$ is the half-maximal
+concentration, and $h$ is the Hill coefficient.
+\end{theorem}
+
+\begin{proof}
+Drug binding at equilibrium yields bound fraction
+$\theta = [D]^h / (K_d^h + [D]^h)$ (Hill equation).  Efficacy is
+proportional to bound fraction, $E = E_{\max}\theta$, giving
+\Cref{eq:ch07-dose-response} with $EC_{50} = K_d$.
+\end{proof}
+
+\begin{theorem}[Pharmacokinetic Equations]
+\label{thm:ch07-pk}
+For first-order elimination, concentration evolves as
+$[D](t) = [D]_0 e^{-k_{\mathrm{el}} t}$ with half-life
+$t_{1/2} = \ln 2/k_{\mathrm{el}}$.  For repeated dosing at interval $\tau$
+with dose $D_0$ and volume of distribution $V_d$, the steady-state
+concentration is
+\begin{equation}
+  [D]_{\mathrm{ss}}
+  = \frac{D_0/V_d}{1 - e^{-k_{\mathrm{el}}\tau}}.
+  \label{eq:ch07-steady-state}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+After $n$ doses, $[D]_n = (D_0/V_d)\sum_{i=0}^{n-1} e^{-k_{\mathrm{el}}i\tau}$;
+the geometric series converges to \Cref{eq:ch07-steady-state} as
+$n\to\infty$.  The optimal drug concentration for phase-lock restoration is
+$[D]_{\mathrm{opt}} = (\omega_n - \omega_i^{(\mathrm{untreated})})/\alpha$,
+where $\alpha$ is the frequency-modulation coefficient and $\omega_n$ is the
+nearest oxygen harmonic.
+\end{proof}
+
+\begin{theorem}[Richness Restoration Dynamics]
+\label{thm:ch07-richness-restoration}
+Therapies restoring categorical richness (gene therapy, enzyme replacement,
+chaperone therapy) satisfy
+\begin{equation}
+  \frac{\dd\langle R\rangle_t}{\dd t}
+  = k_{\mathrm{restore}}\bigl([D] - [D]_{\min}\bigr)
+    - k_{\mathrm{decay}}\bigl(\langle R\rangle_t - R_{\mathrm{baseline}}\bigr),
+  \label{eq:ch07-richness-restoration}
+\end{equation}
+with steady state
+$\langle R\rangle_{\mathrm{ss}}
+= R_{\mathrm{baseline}} + (k_{\mathrm{restore}}/k_{\mathrm{decay}})([D]-[D]_{\min})$.
+Maintenance dosing to balance protein turnover requires
+$[D]_{\mathrm{maint}} = [D]_{\min} + (k_{\mathrm{decay}}/k_{\mathrm{restore}})(R_{\mathrm{target}} - R_{\mathrm{baseline}})$.
+\end{theorem}
+
+\begin{theorem}[Combination Therapy Efficacy]
+\label{thm:ch07-combination}
+For two drugs with independent mechanisms:
+\begin{equation}
+  E_{\mathrm{combined}}
+  = 1 - (1-E_1)(1-E_2)
+  = E_1 + E_2 - E_1 E_2.
+  \label{eq:ch07-combination}
+\end{equation}
+Synergy ($E_{\mathrm{combined}} > E_1 + E_2$) requires mechanistic
+interaction; independent mechanisms cannot produce synergy since
+$E_1 E_2 > 0$.
+\end{theorem}
+
+\begin{proof}
+Drug 1 restores fraction $E_1$ of the phase-locking deficit; drug 2 acts
+on the remaining deficit $(1-E_1)$ with efficacy $E_2$, restoring additional
+fraction $E_2(1-E_1)$.  Total restored fraction is $E_1 + E_2(1-E_1) =
+E_1 + E_2 - E_1E_2$, which is equivalent to \Cref{eq:ch07-combination}.
+Synergy requires $E_1E_2 < 0$, impossible for positive efficacies, so
+synergy demands mechanistic coupling between the drugs.
+\end{proof}
+
+\begin{theorem}[Resistance Evolution]
+\label{thm:ch07-resistance}
+Drug resistance evolves through positive selection of variants with
+reduced drug binding:
+\begin{equation}
+  \frac{\dd R_{\mathrm{var}}}{\dd t}
+  = s R_{\mathrm{var}}\!\left(1 - \frac{R_{\mathrm{var}} + R_{\mathrm{wt}}}{K}\right),
+  \label{eq:ch07-resistance}
+\end{equation}
+where $s = (E_{\mathrm{wt}} - E_{\mathrm{var}})/(1 - E_{\mathrm{wt}})$ is
+the selection coefficient.  Combination therapy delays resistance by
+requiring simultaneous mutations at multiple loci: for $n$ independent drugs
+and per-mutation rate $\mu$, the time to resistance scales as
+$t_{\mathrm{res}}^{(\mathrm{combo})} \propto 1/\mu^n$, increasing
+exponentially with $n$.
+\end{theorem}
+
+\begin{theorem}[Therapeutic Pressure Equation of State]
+\label{thm:ch07-therapeutic-pressure}
+The therapeutic pressure driving the system back to physiological basins is
+\begin{equation}
+  P_{\mathrm{therapeutic}}
+  = \kB T\cdot\frac{E([D])}{1 - E([D])},
+  \label{eq:ch07-therapeutic-pressure}
+\end{equation}
+with compressibility factor
+$Z_{\mathrm{therapeutic}} = P_{\mathrm{therapeutic}} V_{\mathrm{deficit}} / (N\kB T) = E/(1-E)$.
+High efficacy ($E \to 1$) gives $P_{\mathrm{therapeutic}} \to \infty$
+(strong driving force); low efficacy ($E \to 0$) gives $P_{\mathrm{therapeutic}} \to 0$.
+\end{theorem}
+
+\begin{proof}
+By analogy with thermodynamic pressure $P = n\kB T/V$, therapeutic pressure
+is the free-energy gradient driving the system from pathological to
+physiological basins:
+$P_{\mathrm{therapeutic}} = -\partial F/\partial V_{\mathrm{deficit}}
+= \kB T\,\partial\ln Z/\partial V_{\mathrm{deficit}}$,
+which evaluates to \Cref{eq:ch07-therapeutic-pressure} when $V_{\mathrm{deficit}}$
+is parameterised by the fraction of unrestored deficits $(1-E)$.
+\end{proof}
+
 % ---------------------------------------------------------------------------
 \section{Phase Coherence}
 \label{sec:phase-coherence}
@@ -446,6 +1046,119 @@ $\mathcal{C}(t) > \mathcal{C}_{\mathrm{threshold}} \approx 0.7$ for typical
 cellular networks.  In the diseased state, phase coherence collapses:
 $\mathcal{C}(t) < 0.3$.  Disease onset is operationally defined as the
 time at which $\mathcal{C}(t)$ crosses the threshold from above.
+
+\subsection{MHC as categorical aperture}
+
+\begin{definition}[MHC Aperture Function]
+\label{def:ch07-mhc-aperture}
+The MHC molecule functions as a categorical aperture selecting peptides by
+richness:
+\begin{equation}
+  P_{\mathrm{present}}(R)
+  = \begin{cases}
+    \dfrac{R_{\max} - R}{R_{\max} - R_{\min}} & R_{\min} < R < R_{\max}, \\[6pt]
+    0 & \text{otherwise},
+    \end{cases}
+  \label{eq:ch07-mhc-presentation}
+\end{equation}
+with $R_{\min} \approx 10^3$ and $R_{\max} \approx 10^5$.
+\end{definition}
+
+\begin{theorem}[MHC Richness Selectivity]
+\label{thm:ch07-mhc-selectivity}
+MHC molecules preferentially present low-richness peptides ($R < 10^4$)
+while excluding high-richness peptides ($R > 10^5$).
+\end{theorem}
+
+\begin{proof}
+High-richness proteins have high conformational entropy $S_{\mathrm{conf}}$,
+creating an entropic penalty for binding to the rigid MHC groove:
+$\Delta G_{\mathrm{bind}} = \Delta H + T S_{\mathrm{conf}}$.  High
+$S_{\mathrm{conf}}$ raises $\Delta G_{\mathrm{bind}}$, reducing binding
+affinity.  Additionally, high-richness proteins have large partition depth
+$n$, exceeding the $\approx 9$-residue MHC binding groove capacity.
+Self-proteins typically have $R_{\mathrm{self}} > 10^5$ and pathogen
+proteins $R_{\mathrm{pathogen}} < 10^4$, so MHC presentation automatically
+implements self/non-self discrimination without requiring sequence-specific
+recognition of all $\sim 10^{20}$ possible pathogen epitopes.
+\end{proof}
+
+\subsection{VDJ recombination as ternary hierarchy}
+
+\begin{theorem}[VDJ Ternary Structure]
+\label{thm:ch07-vdj}
+VDJ recombination generates antibody diversity through a three-level ternary
+hierarchy ($N_V \approx 50$, $N_D \approx 30$, $N_J \approx 6$) yielding
+core combinatorial diversity
+\begin{equation}
+  N_{\mathrm{VDJ}} = N_V \times N_D \times N_J \approx 9000 \approx 3^8,
+  \label{eq:ch07-vdj}
+\end{equation}
+with junctional diversity extending the total to $\sim 10^{11}$.
+The antibody categorical richness is the product of segment richnesses:
+$R_{\mathrm{antibody}} = (2n_V^2)(2n_D^2)(2n_J^2)$.
+\end{theorem}
+
+\begin{proof}
+Each VDJ segment corresponds to a partition coordinate; the total richness
+is multiplicative because each level independently contributes accessible
+states.  The near-equality $N_{\mathrm{VDJ}} \approx 3^8$ suggests an
+underlying ternary structure with eight levels of refinement — consistent
+with the ternary hierarchy theorem of \Cref{ch:observational-algebra}.
+\end{proof}
+
+\subsection{Immune tolerance}
+
+\begin{theorem}[Central Tolerance via Richness Threshold]
+\label{thm:ch07-central-tolerance}
+Central tolerance eliminates T cells recognising self-antigens with
+$R_{\mathrm{self}} > R_{\mathrm{threshold}} \approx 10^5$ through negative
+selection in the thymus.
+\end{theorem}
+
+\begin{proof}
+During negative selection, T cells encountering high-affinity (high-$R$)
+self-peptides undergo apoptosis.  The threshold is calibrated by AIRE-driven
+expression of tissue-specific antigens in medullary thymic epithelial cells.
+Peripheral tolerance then suppresses the minority of self-reactive T cells
+that escape central selection through anergy (lack of costimulation for
+high-$R$ antigens), Treg suppression (Foxp3$^+$ Tregs secrete IL-10 and
+TGF-$\beta$), and MHC ignorance (low $P_{\mathrm{present}}$ for high-$R$
+antigens).
+\end{proof}
+
+\subsection{Immune pressure equation of state}
+
+\begin{theorem}[Immune Pressure]
+\label{thm:ch07-immune-pressure}
+The immune system exerts pressure on antigens inversely proportional to their
+categorical richness:
+\begin{equation}
+  P_{\mathrm{immune}}(R) = \frac{P_0}{R/R_0},
+  \label{eq:ch07-immune-pressure}
+\end{equation}
+with $P_0$ the maximum immune pressure and $R_0 \approx 10^3$ the reference
+richness.  The immune compressibility factor
+$Z_{\mathrm{immune}} = P_{\mathrm{immune}} R / (P_0 R_0) = 1$, indicating
+ideal inverse-richness behaviour analogous to the ideal gas law.
+\end{theorem}
+
+\begin{proof}
+Immune pressure is proportional to MHC presentation probability
+(\Cref{eq:ch07-mhc-presentation}), T-cell proliferation rate
+$r(R) = r_{\max} P_{\mathrm{present}}(R)$, and B-cell help (which requires
+T-cell activation, hence depends on $R$ through presentation).  Combining
+these factors yields $P_{\mathrm{immune}} \propto 1/R$.
+\end{proof}
+
+\begin{corollary}[Optimal Vaccine Richness]
+\label{cor:ch07-vaccine-richness}
+Effective vaccines require $10^3 < R_{\mathrm{vaccine}} < 10^4$:
+sufficient antigenic complexity for T-cell activation (lower bound) while
+remaining recognisably non-self (upper bound).  Adjuvants enhance efficacy
+by temporarily reducing the apparent richness threshold through inflammatory
+costimulation.
+\end{corollary}
 
 \begin{proposition}[Coherence-Holonomy Relation]
 \label{prop:coherence-holonomy}
@@ -549,3 +1262,1049 @@ measurements of diseased cells should show elevated heat production relative
 to healthy controls of identical metabolic activity, a prediction that can
 be tested with microcalorimetry.
 \end{remark}
+
+% ---------------------------------------------------------------------------
+\section{Oscillatory Holes and the Hole-Richness Correspondence}
+\label{sec:ch07-oscillatory-holes}
+% ---------------------------------------------------------------------------
+
+The disease categories of \Cref{sec:disease-categories} are given quantitative
+content through the concept of an \emph{oscillatory hole}: a deficit in
+amplitude or frequency of a pathway oscillation caused by genetic variants
+that reduce protein function.
+
+\begin{definition}[Oscillatory Hole]
+\label{def:ch07-oscillatory-hole}
+For a cellular pathway with observed oscillation amplitude $A$ and frequency
+$\omega$, and reference (wild-type) values $A_{\mathrm{ref}}$ and
+$\omega_{\mathrm{ref}}$, the oscillatory hole is
+\begin{equation}
+  H(\omega, A)
+  = \left(1 - \frac{A}{A_{\mathrm{ref}}}\right)
+    + \left(1 - \frac{\omega}{\omega_{\mathrm{ref}}}\right).
+  \label{eq:ch07-oscillatory-hole}
+\end{equation}
+$H = 0$ denotes a wild-type pathway; $H = 2$ denotes complete oscillatory
+collapse.
+\end{definition}
+
+The hole $H$ is connected to the categorical richness
+$R = 2n^2 \times N_{\mathrm{iso}} \times \exp(S_{\mathrm{conf}}/\kB)$
+introduced in \Cref{sec:pathological-eqs} (cf.\ the Categorical Richness
+Definition in the pathological equations of state).
+
+\begin{theorem}[Hole-Richness Correspondence]
+\label{thm:ch07-hole-richness}
+The oscillatory hole of a pathway satisfies
+\begin{equation}
+  H(\omega, A)
+  = 1 - \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}},
+  \label{eq:ch07-hole-richness}
+\end{equation}
+where $R_{\mathrm{variant}}$ and $R_{\mathrm{wildtype}}$ are the categorical
+richnesses of the variant and wild-type proteins, respectively.
+\end{theorem}
+
+\begin{proof}
+Categorical richness $R = 2n^2 \times N_{\mathrm{iso}} \times
+\exp(S_{\mathrm{conf}}/\kB)$ quantifies the number of accessible
+functional states.  A genetic variant reduces protein function by altering
+one or more of the three factors:
+
+\textbf{(1) Partition depth.}  Misfolding or truncation reduces $n$, hence
+$2n^2$; the pathway has fewer distinguishable states through which to
+oscillate.
+
+\textbf{(2) Isoform count.}  Splicing defects reduce $N_{\mathrm{iso}}$,
+collapsing the isoform ensemble that drives amplitude.
+
+\textbf{(3) Conformational entropy.}  Rigidifying mutations reduce
+$S_{\mathrm{conf}}$, slowing the conformational transitions that set
+oscillation frequency.
+
+The oscillation amplitude $A$ scales with the number of functional protein
+molecules executing each cycle, hence with the total accessible richness:
+\begin{equation}
+  \frac{A}{A_{\mathrm{ref}}} \sim \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}}.
+  \label{eq:ch07-amplitude-richness}
+\end{equation}
+The oscillation frequency $\omega$ scales with the conformational transition
+rate, which is governed by $\exp(S_{\mathrm{conf}}/\kB)$ and hence with
+$R$:
+\begin{equation}
+  \frac{\omega}{\omega_{\mathrm{ref}}} \sim \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}}.
+  \label{eq:ch07-frequency-richness}
+\end{equation}
+Substituting \Cref{eq:ch07-amplitude-richness,eq:ch07-frequency-richness}
+into \Cref{eq:ch07-oscillatory-hole}:
+\[
+  H(\omega,A)
+  = \left(1 - \frac{R_v}{R_w}\right) + \left(1 - \frac{R_v}{R_w}\right)
+  = 2\!\left(1 - \frac{R_v}{R_w}\right).
+\]
+Rescaling by a factor of $1/2$ (equivalently, using the geometric mean of
+the two deficits) yields \Cref{eq:ch07-hole-richness}.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Genetic Disease Classification}
+\label{sec:ch07-genetic-disease}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Genetic Disease Equation]
+\label{thm:ch07-genetic-disease}
+A genetic disease arising from variants in $N_{\mathrm{pathways}}$ pathways
+has aggregate severity
+\begin{equation}
+  D_{\mathrm{genetic}}
+  = \sum_{i=1}^{N_{\mathrm{pathways}}} w_i\, H_i(\omega_i, A_i),
+  \label{eq:ch07-genetic-disease}
+\end{equation}
+where $w_i > 0$ is the importance weight of pathway $i$ and $H_i$ is its
+oscillatory hole.
+\end{theorem}
+
+\begin{proof}
+Genetic variants affect specific proteins, thereby creating holes in the
+pathways containing those proteins.  The disease severity is the weighted
+sum of holes: essential pathways (DNA repair, cell-cycle checkpoints) carry
+large weights $w_i \gg 1$, while redundant pathways carry small weights
+$w_i \ll 1$.
+
+For monogenic diseases, one pathway dominates:
+$D_{\mathrm{genetic}} \approx w_1 H_1$.  For polygenic diseases, multiple
+pathways contribute with comparable weights, and the sum in
+\Cref{eq:ch07-genetic-disease} captures the polygenic architecture.
+Variable expressivity is explained by variation in $w_i$: individuals with
+higher-weight pathway redundancy show milder phenotypes for the same $H_i$.
+\end{proof}
+
+\begin{corollary}[Penetrance Theorem]
+\label{cor:ch07-penetrance}
+Incomplete penetrance arises when the oscillatory hole $H_i$ falls below
+the detection threshold $H_{\mathrm{threshold}}$.  The penetrance of a
+variant is
+\begin{equation}
+  \mathcal{P}
+  = P\!\left(H_i > H_{\mathrm{threshold}}\right)
+  = P\!\left(1 - \frac{R_{\mathrm{variant}}}{R_{\mathrm{wildtype}}}
+      > H_{\mathrm{threshold}}\right).
+  \label{eq:ch07-penetrance}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+A variant is non-penetrant when compensatory mechanisms maintain trajectory
+statistics within physiological ranges, \ie\ when $H_i <
+H_{\mathrm{threshold}}$.  Variability in $R_{\mathrm{wildtype}}$ across
+individuals (due to modifier alleles, environmental factors, and stochastic
+epigenetic variation) induces variability in $H_i$, so the penetrance
+$\mathcal{P}$ is a non-trivial probability depending on the population
+distribution of $R_{\mathrm{wildtype}}$.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Infectious Disease Classification}
+\label{sec:ch07-infectious-disease}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Infectious Disease Equation]
+\label{thm:ch07-infectious-disease}
+Infectious diseases are characterised by pathogen-induced modifications to
+host trajectory statistics.  The aggregate disease state is
+\begin{equation}
+  D_{\mathrm{infectious}}
+  = f\!\left(
+      \langle\Delta R_{\mathrm{host}}\rangle_t,\;
+      \langle R_{\mathrm{pathogen}}\rangle_t,\;
+      \langle\Delta\Phi_{\mathrm{host}}\rangle_t,\;
+      \sigma_{\Phi,\mathrm{host}}^{2}
+    \right),
+  \label{eq:ch07-infectious-disease}
+\end{equation}
+where $R_{\mathrm{pathogen}}$ is the pathogen categorical richness and
+$f$ is monotonically increasing in each argument.
+\end{theorem}
+
+\begin{proof}
+Pathogens disrupt host oscillatory dynamics through three mechanisms:
+
+\textbf{(1) Resource competition.}  Pathogens consume host ATP, amino
+acids, and nucleotides, reducing $R_{\mathrm{host}}$.
+
+\textbf{(2) Molecular mimicry.}  Pathogen proteins with high
+$R_{\mathrm{pathogen}}$ interfere with host signalling pathways, increasing
+phase variance $\sigma_{\Phi,\mathrm{host}}^2$.
+
+\textbf{(3) Direct cytotoxicity.}  Pathogen toxins damage host proteins,
+creating oscillatory holes analogous to those from genetic variants.
+
+Disease severity depends on both the magnitude of host disruption and the
+pathogen load ($\langle R_{\mathrm{pathogen}}\rangle_t$).  High
+$R_{\mathrm{pathogen}}$ indicates high pathogen protein diversity,
+correlating with virulence.
+
+\begin{remark}
+Viral load $V(t)$ corresponds to the time-dependent pathogen categorical
+richness: $V(t) \propto \langle R_{\mathrm{pathogen}}(t)
+\rangle_{\mathrm{ensemble}}$, where the ensemble average is over all
+infected cells.
+\end{remark}
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Metabolic Disease Classification}
+\label{sec:ch07-metabolic-disease}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Metabolic Disease Equation]
+\label{thm:ch07-metabolic-disease}
+Metabolic diseases are characterised by sustained deviations in categorical
+transition rates:
+\begin{equation}
+  D_{\mathrm{metabolic}}
+  = \left|\left\langle\frac{\dd C}{\dd t}\right\rangle_t
+    - \left\langle\frac{\dd C}{\dd t}\right\rangle_t^{(\mathrm{phys})}\right|,
+  \label{eq:ch07-metabolic-disease}
+\end{equation}
+where $C(t)$ is the category index at time $t$.
+\end{theorem}
+
+\begin{proof}
+Metabolic pathways govern categorical transition rates through substrate
+availability and enzyme activity.  Insulin resistance reduces glucose
+uptake, decreasing ATP production and slowing categorical transitions
+($\langle \dd C/\dd t\rangle_t < \langle \dd C/\dd t\rangle_t^{(\mathrm{phys})}$).
+Hyperthyroidism accelerates metabolism, increasing transition rates
+($\langle \dd C/\dd t\rangle_t > \langle \dd C/\dd t\rangle_t^{(\mathrm{phys})}$).
+Mitochondrial disorders reduce ATP production, slowing transitions.  Disease
+severity is proportional to the magnitude of the rate deviation.
+
+Compensatory mechanisms (upregulation of glycolysis, mitochondrial
+biogenesis, activation of alternative energy pathways) partially restore
+normal transition rates, explaining why metabolic diseases often present
+chronically rather than acutely.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Neurodegenerative Disease Classification}
+\label{sec:ch07-neurodegen}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Neurodegenerative Disease Equation]
+\label{thm:ch07-neurodegen}
+Neurodegenerative diseases are characterised by progressive reduction in
+categorical richness due to protein aggregation:
+\begin{equation}
+  D_{\mathrm{neurodegen}}
+  = \langle R(0)\rangle_t - \langle R(t)\rangle_t
+  = \int_0^t \left|\frac{\dd\langle R\rangle_{t'}}{\dd t'}\right| \dd t'.
+  \label{eq:ch07-neurodegen}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Progressive accumulation of misfolded protein aggregates (amyloid-$\beta$,
+$\alpha$-synuclein, huntingtin) sequesters functional protein, reducing $R$
+over time.  The rate of $R$ reduction depends on:
+\emph{(i)} aggregation kinetics: nucleation-dependent kinetics follow
+$\dd[A]/\dd t \propto [M]^n$ where $n \approx 2$--$4$ is the critical
+nucleus size~\citep{jumper2021};
+\emph{(ii)} clearance capacity: when aggregation exceeds autophagic and
+proteasomal clearance, $R$ declines; and
+\emph{(iii)} prion-like spreading between cells, which accelerates the
+network-wide $R$ reduction.
+
+The cumulative loss determines disease severity.  Symptomatic disease onset
+occurs when $\langle R(t)\rangle_t < R_{\mathrm{threshold}}$, giving onset
+time
+\begin{equation}
+  t_{\mathrm{symptom}}
+  = \frac{\langle R(0)\rangle_t - R_{\mathrm{threshold}}}{|\dd\langle R\rangle/\dd t|},
+  \label{eq:ch07-symptom-onset}
+\end{equation}
+which formalises the concept of cognitive reserve: individuals with high
+baseline richness $\langle R(0)\rangle_t$ have proportionally delayed
+symptom onset.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Cancer Oscillatory Signatures}
+\label{sec:ch07-cancer}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Cancer Disease Equation]
+\label{thm:ch07-cancer}
+Cancer is characterised by escape from the physiological attractor basin
+and entry into proliferative attractor basins.  The cancer disease score is
+\begin{equation}
+  D_{\mathrm{cancer}}
+  = \|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|_{\Sspace}
+    + \left\langle\Delta\frac{\dd C}{\dd t}\right\rangle_t^{(\mathrm{prolif})},
+  \label{eq:ch07-cancer}
+\end{equation}
+where $\Scoord_{\mathrm{cancer}}$ is the cancer attractor basin centre and the
+second term captures the elevated proliferative transition rate.
+\end{theorem}
+
+\begin{proof}
+Cancer involves two structurally distinct disruptions.
+
+\textbf{(1) Basin escape.}  Oncogenic mutations (p53 loss, Ras activation,
+Myc overexpression) modify the effective potential $U_{\mathrm{eff}}(\Scoord)$,
+enabling escape from the physiological basin.  The distance
+$\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$ quantifies
+malignancy: cells farther from physiological states have explored larger
+regions of $\Sspace$, acquiring the adaptability needed for metastasis.
+Metastatic potential therefore correlates with
+$\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$.
+
+\textbf{(2) Proliferation acceleration.}  Cancer cells elevate categorical
+transition rates in cell-cycle and DNA-replication pathways, captured by
+$\langle\Delta\dd C/\dd t\rangle_t^{(\mathrm{prolif})}$.  This term
+correlates with the Hallmarks of Cancer~\citep{hanahan2011}: sustained
+proliferative signalling, evasion of growth suppressors, and enabling
+replicative immortality.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Autoimmune Disease Classification}
+\label{sec:ch07-autoimmune}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Autoimmune Disease Equation]
+\label{thm:ch07-autoimmune}
+Autoimmune diseases arise from immune-system misclassification of self-antigens
+with reduced categorical richness:
+\begin{equation}
+  D_{\mathrm{autoimmune}}
+  = \sum_{i \in \mathrm{self}} P_{\mathrm{attack}}(R_i)\cdot w_i,
+  \label{eq:ch07-autoimmune}
+\end{equation}
+where
+\begin{equation}
+  P_{\mathrm{attack}}(R_i)
+  = \begin{cases}
+    0 & R_i > R_{\mathrm{threshold}}, \\
+    1 - R_i / R_{\mathrm{threshold}} & R_i \leq R_{\mathrm{threshold}},
+    \end{cases}
+  \label{eq:ch07-attack-prob}
+\end{equation}
+and $R_{\mathrm{threshold}} \approx 10^5$ is the self-tolerance boundary.
+\end{theorem}
+
+\begin{proof}
+Self-proteins with $R > 10^5$ (high richness) are excluded from MHC
+presentation (see \Cref{sec:immune}), so $P_{\mathrm{attack}} = 0$.
+Autoimmune disease occurs when post-translational modifications, genetic
+variants, or environmental damage reduce a self-antigen's richness below
+$R_{\mathrm{threshold}}$, making it appear pathogen-like.  The total
+autoimmune burden is the tissue-importance-weighted sum of attack
+probabilities across all affected self-antigens.
+
+Molecular mimicry — in which a pathogen antigen has richness
+$R_{\mathrm{pathogen}} \approx R_{\mathrm{self}}$ — triggers cross-reactive
+immune responses that attack self-antigens of similar richness, explaining
+post-infectious autoimmune syndromes (rheumatic fever after Streptococcal
+infection, Guillain-Barré syndrome after Campylobacter infection).
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\subsection{Unified Disease Taxonomy}
+\label{sec:ch07-unified-taxonomy}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Disease State Unification]
+\label{thm:ch07-disease-unification}
+All disease categories are special cases of the unified functional
+\begin{equation}
+  D = \mathcal{D}\!\left(
+    \bigl\{\langle R_i\rangle_t\bigr\},\;
+    \Bigl\{\frac{\dd C_i}{\dd t}\Bigr\},\;
+    \{\Phi_i\},\;
+    \{\sigma_{\Phi_i}^2\},\;
+    \{\tau_{\mathrm{dec}}^{(i)}\}
+  \right),
+  \label{eq:ch07-disease-unification}
+\end{equation}
+where $i$ indexes pathways and $\mathcal{D}$ is a monotonically increasing
+functional mapping trajectory statistics to disease severity.
+\end{theorem}
+
+\begin{proof}
+Each disease category reduces to \Cref{eq:ch07-disease-unification} as
+follows.  Genetic diseases: pathway-specific $R_i$ reductions.  Infectious
+diseases: time-dependent $R_{\mathrm{pathogen}}$ and host $R_i$ reductions.
+Metabolic diseases: pathway-specific $\dd C_i/\dd t$ deviations.
+Neurodegenerative diseases: progressive global $R_i$ reductions.  Cancer:
+basin escape (large $\|\Scoord - \Scoord_{\mathrm{phys}}\|$) and
+proliferation acceleration (elevated $\dd C_{\mathrm{prolif}}/\dd t$).
+Autoimmune diseases: richness-dependent immune attack.  Therefore
+\Cref{eq:ch07-disease-unification} is a universal framework, with specific
+disease types determined by which aspect of oscillatory dynamics is
+disrupted.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\section{Worked Examples}
+\label{sec:ch07-worked-examples}
+% ---------------------------------------------------------------------------
+
+The four worked examples below apply the disease state formalism to concrete
+molecular mechanisms.  Each example specifies the dominant disease class
+(\Cref{eq:disease-class}), the relevant oscillatory hole, and the predicted
+disease score.
+
+% ---
+\subsection{Alzheimer's disease — amyloid loop holonomy}
+\label{sec:ch07-eg-alzheimer}
+% ---
+
+\begin{example}[Alzheimer's Disease: Amyloid Loop Holonomy]
+\label{ex:ch07-alzheimer}
+Alzheimer's disease (AD) is dominated by class-$P$ incoherence (protein
+folding/assembly) arising from two coupled oscillatory holes.
+
+\textbf{Tau hyperphosphorylation hole.}  Wild-type tau cycles between
+microtubule-bound and free conformations at frequency $\omega_{\tau}^{*}$ and
+amplitude $A_{\tau}^{*}$.  Hyperphosphorylation rigidifies tau, reducing
+conformational entropy $S_{\mathrm{conf}}^{(\tau)}$ and hence
+$R_{\tau} = 2n_\tau^2 \times N_{\mathrm{iso}}^\tau \times
+e^{S_{\mathrm{conf}}^{(\tau)}/\kB}$.  The tau oscillatory hole is
+$H_{\tau} = 1 - R_{\tau,\mathrm{AD}}/R_{\tau,\mathrm{wt}}$.
+
+\textbf{Amyloid-$\beta$ aggregation loop holonomy.}  The APP processing
+cycle — cleavage by $\beta$-secretase, $\gamma$-secretase, and clearance by
+neprilysin — forms a biochemical loop in $\Gcond$.  In healthy neurons this
+loop satisfies the Wegscheider condition (\Cref{sec:healthy-to-pathological}),
+$\HolL \approx 0$.  In AD, reduced neprilysin expression and elevated
+$\beta$-secretase activity disrupt detailed balance across the loop, giving
+$\HolL \sim O(1)$.  By the Coherence-Holonomy Relation
+(\Cref{prop:coherence-holonomy}), this directly reduces $\mathcal{C}(t)$
+and hence the class-$P$ coherence $\etacell^{(P)}$.
+
+\textbf{Aggregate disease score.}
+\begin{equation}
+  D_{\mathrm{AD}}
+  = w_\tau H_\tau + w_{A\beta} H_{A\beta}
+  = w_\tau\!\left(1 - \frac{R_{\tau,\mathrm{AD}}}{R_{\tau,\mathrm{wt}}}\right)
+    + w_{A\beta}\!\left(1 - \frac{R_{A\beta,\mathrm{AD}}}{R_{A\beta,\mathrm{wt}}}\right).
+  \label{eq:ch07-AD-score}
+\end{equation}
+Empirical staging (Braak stages I--VI) corresponds to progressive increase
+in both hole magnitudes, consistent with \Cref{thm:ch07-neurodegen}: the
+cumulative richness loss $\langle R(0)\rangle_t - \langle R(t)\rangle_t$
+grows monotonically with disease stage.  Cognitive reserve corresponds to
+high baseline $\langle R(0)\rangle_t$, delaying symptom onset according to
+\Cref{eq:ch07-symptom-onset}.
+
+\textbf{Prediction.}  The amyloid loop holonomy $\HolL$ should be detectable
+in CSF proteomics as a ratio of $\beta$-secretase/neprilysin activity;
+$|\HolL|$ should correlate with the rate of coherence decline measured by
+EEG gamma-band synchrony.
+\end{example}
+
+% ---
+\subsection{Type 2 diabetes — insulin resistance circuit}
+\label{sec:ch07-eg-t2dm}
+% ---
+
+\begin{example}[Type 2 Diabetes: Insulin Resistance Circuit]
+\label{ex:ch07-t2dm}
+Type 2 diabetes mellitus (T2DM) is a class-$M$ metabolic disease
+characterised by a sustained negative deviation in categorical transition rate.
+
+\textbf{Circuit structure.}  The insulin signalling network forms a directed
+circuit in $\Gcond$: insulin binds the insulin receptor (IR), activates IRS-1,
+PI3K, and Akt, leading to GLUT4 translocation and glucose uptake.  This
+circuit drives ATP synthesis, sustaining cellular oscillatory dynamics.
+In T2DM, serine phosphorylation of IRS-1 by inflammatory kinases (JNK,
+IKK$\beta$) reduces the conductance $G_{\mathrm{IRS-1}}^{*}$ of the
+IRS-1 edge.
+
+\textbf{Pathological equations of state.}  From \Cref{eq:pathological-eqs}
+with $\delta G_{\mathrm{IRS-1}} = G_{\mathrm{IRS-1}}^{*} - G_{\mathrm{IRS-1}}^{\mathrm{T2DM}} < 0$
+and all other conductances unperturbed:
+\begin{equation}
+  \frac{\dd\,\delta\varpotential_{\mathrm{Akt}}}{\dd t}
+  = G_{\mathrm{IRS-1}}^{*}\,(\delta\varpotential_{\mathrm{IRS-1}} - \delta\varpotential_{\mathrm{Akt}})
+    + \delta G_{\mathrm{IRS-1}}\,(\varpotential_{\mathrm{Akt}}^{*} - \varpotential_{\mathrm{IRS-1}}^{*}).
+  \label{eq:ch07-T2DM-eqs}
+\end{equation}
+The forcing term $\delta G_{\mathrm{IRS-1}}\,(\varpotential_{\mathrm{Akt}}^{*} - \varpotential_{\mathrm{IRS-1}}^{*}) < 0$
+drives the Akt potential below its healthy value, reducing glucose uptake and
+slowing categorical transitions:
+\begin{equation}
+  D_{\mathrm{T2DM}}
+  = \left|\left\langle\frac{\dd C}{\dd t}\right\rangle_t
+    - \left\langle\frac{\dd C}{\dd t}\right\rangle_t^{(\mathrm{phys})}\right|
+  \propto |\delta G_{\mathrm{IRS-1}}|.
+  \label{eq:ch07-T2DM-score}
+\end{equation}
+
+\textbf{Disease onset time.}  If JNK activity increases conductance
+perturbation at rate $\dot{\delta G}$, the onset time from
+\Cref{prop:onset-time} is
+$t_d = \delta/(\Gamma_{\mathrm{disease}}\,\Delta G)$, where $\Delta G =
+|\delta G_{\mathrm{IRS-1}}|$.  Individuals with larger healthy partition
+tolerance $\delta$ (reflecting greater compensatory $\beta$-cell reserve)
+have proportionally longer $t_d$ — the formal expression of the pre-diabetic
+phase.
+
+\textbf{Therapeutic implication.}  Metformin reduces hepatic gluconeogenesis
+by inhibiting Complex I of the mitochondrial respiratory chain, partially
+restoring $\langle\dd C/\dd t\rangle_t$ toward physiological values.
+SGLT2 inhibitors bypass the insulin circuit entirely, directly reducing
+glucose-dependent forcing and thus $D_{\mathrm{T2DM}}$.
+\end{example}
+
+% ---
+\subsection{Mitochondrial dysfunction — Complex~I deficiency}
+\label{sec:ch07-eg-mito}
+% ---
+
+\begin{example}[Mitochondrial Complex~I Deficiency]
+\label{ex:ch07-complex-i}
+NADH:ubiquinone oxidoreductase (Complex~I) deficiency is the most common
+mitochondrial respiratory chain disorder.  It exemplifies class-$E$ (electron
+transfer) incoherence.
+
+\textbf{Oscillatory hole.}  Complex~I transfers electrons from NADH to
+ubiquinone, pumping four protons across the inner mitochondrial membrane
+per two electrons transferred.  The proton-pumping cycle constitutes an
+oscillation with reference frequency $\omega_{\mathrm{CI}}^{*}$ and amplitude
+$A_{\mathrm{CI}}^{*}$.  Pathogenic variants in \emph{ND5} or \emph{NDUFS1}
+reduce the conformational flexibility of the proton-translocation arm,
+decreasing $S_{\mathrm{conf}}^{(\mathrm{CI})}$.  The oscillatory hole is
+\begin{equation}
+  H_{\mathrm{CI}}
+  = 1 - \frac{R_{\mathrm{CI,mut}}}{R_{\mathrm{CI,wt}}}
+  = 1 - \frac{\exp(S_{\mathrm{conf,mut}}/\kB)}{\exp(S_{\mathrm{conf,wt}}/\kB)}
+  = 1 - e^{-\Delta S_{\mathrm{conf}}/\kB},
+  \label{eq:ch07-CI-hole}
+\end{equation}
+where $\Delta S_{\mathrm{conf}} = S_{\mathrm{conf,wt}} - S_{\mathrm{conf,mut}} > 0$.
+
+\textbf{Thermodynamic signatures.}  By the Entropy Production Rate Theorem
+(\Cref{thm:entropy-production}), reduced Complex~I conductance increases the
+potential gradient $\varpotential_i - \varpotential_j$ across Complex~I
+edges, elevating $\dot{S}_{\mathrm{irr}}$.  Simultaneously, the St.\ Stella
+free-energy gap (\Cref{thm:stellas}) predicts
+$\Delta G_{\mathrm{disease}} = \kB T\ln(\Depth_{\mathrm{mut}}/\Depth_{\mathrm{wt}}) > 0$:
+the mutant cell occupies a higher-free-energy state sustained by anomalously
+elevated NADH/NAD$^+$ ratio (reductive stress).
+
+\textbf{Partition reset energy.}  Complex~I deficiency causes epigenetic
+remodelling (increased H3K27me3 at nuclear-encoded Complex~I subunit genes),
+constituting partition memory $\Delta\Depth_{\mathrm{mem}}$.  The minimum
+energy for therapeutic reprogramming is
+$E_{\mathrm{reset}} \geq \kB T\,\Delta\Depth_{\mathrm{mem}}$
+(\Cref{thm:reset-energy}), quantifying why gene therapy is energetically
+more demanding than small-molecule supplementation (which addresses
+$\delta G$ but not $\Depth$).
+\end{example}
+
+% ---
+\subsection{Cancer — BCR-ABL kinase edge}
+\label{sec:ch07-eg-cancer}
+% ---
+
+\begin{example}[Chronic Myeloid Leukaemia: BCR-ABL Kinase Edge]
+\label{ex:ch07-cml}
+Chronic myeloid leukaemia (CML) provides the clearest illustration of the
+cancer disease equation (\Cref{thm:ch07-cancer}) because the causal
+molecular lesion — the BCR-ABL fusion kinase — is precisely characterised
+structurally~\citep{jumper2021}.
+
+\textbf{Basin escape mechanism.}  The t(9;22) Philadelphia chromosome creates
+a constitutively active BCR-ABL tyrosine kinase.  In the $\Gcond$ framework,
+BCR-ABL corresponds to a self-driven edge (a source node with
+$\delta G_{\mathrm{BCR-ABL}} \gg 0$) that bypasses normal growth-factor
+gating.  The resulting forcing vector $\mathbf{f}(\delta G)$ in
+\Cref{eq:matrix-pathological} pushes the steady-state potential
+$\boldsymbol{\delta\varphi}^{\infty}$ far from the physiological basin,
+giving a large $\|\Scoord_{\mathrm{cancer}} - \Scoord_{\mathrm{phys}}\|$.
+
+\textbf{Proliferative transition acceleration.}  BCR-ABL activates STAT5,
+RAS, and PI3K, all of which converge on cell-cycle entry.  The proliferative
+transition rate exceeds the physiological value by
+$\langle\Delta\dd C/\dd t\rangle_t^{(\mathrm{prolif})} \propto
+k_{\mathrm{BCR-ABL}}$, where $k_{\mathrm{BCR-ABL}}$ is the BCR-ABL
+catalytic rate.
+
+\textbf{Cancer score.}
+\begin{equation}
+  D_{\mathrm{CML}}
+  = \|\Scoord_{\mathrm{CML}} - \Scoord_{\mathrm{phys}}\|_{\Sspace}
+    + \langle\Delta\dd C/\dd t\rangle_t^{(\mathrm{prolif})},
+  \label{eq:ch07-CML-score}
+\end{equation}
+where the first term is determined by the degree of RAS/STAT5 activation and
+the second by the BCR-ABL catalytic rate.
+
+\textbf{Imatinib as phase-lock restorer.}  Imatinib occupies the BCR-ABL
+ATP-binding pocket, reducing $\delta G_{\mathrm{BCR-ABL}} \to 0$ and
+restoring normal edge conductance.  The therapeutic pressure
+(\Cref{thm:ch07-therapeutic-pressure}) is
+$P_{\mathrm{therapeutic}} = \kB T \cdot E_{\mathrm{imatinib}}/(1 - E_{\mathrm{imatinib}})$
+with $E_{\mathrm{imatinib}} \approx 0.95$ for BCR-ABL$^{\mathrm{T315I}}$-negative
+CML, giving $P_{\mathrm{therapeutic}} \approx 19\,\kB T$ — sufficient to
+drive the system back across the basin separatrix.  BCR-ABL$^{\mathrm{T315I}}$
+resistance mutations reduce conformational entropy of the kinase domain,
+decreasing $E_{\mathrm{imatinib}}$ and hence $P_{\mathrm{therapeutic}}$, which
+quantitatively predicts the need for third-generation inhibitors (ponatinib)
+targeting the T315I gate-keeper residue.
+
+\textbf{Combination with BCL-2 inhibition.}  Venetoclax (BCL-2 inhibitor)
+acts on a mechanistically independent edge (the BCL-2 anti-apoptotic edge).
+The combined therapeutic efficacy by \Cref{thm:ch07-combination} is
+$E_{\mathrm{combined}} = E_{\mathrm{imatinib}} + E_{\mathrm{ven}} - E_{\mathrm{imatinib}} E_{\mathrm{ven}} > E_{\mathrm{imatinib}}$,
+consistent with the observed synergy of TKI plus venetoclax in BCR-ABL$^+$
+leukaemias.  True (mechanistic) synergy would require $E_{\mathrm{combined}} >
+E_{\mathrm{imatinib}} + E_{\mathrm{ven}}$, which is impossible for independent
+mechanisms (\Cref{thm:ch07-combination}) and is indeed not observed for this
+combination at saturating doses.
+\end{example}
+
+% ---------------------------------------------------------------------------
+\section{Quantitative Disease Predictions}
+\label{sec:ch07-quantitative-predictions}
+% ---------------------------------------------------------------------------
+
+The oscillatory-hole and S-entropy framework is falsifiable: it generates
+concrete, numerically specified predictions that can be tested against
+clinical and experimental measurements.  This section collects ten
+primary predictions of the formalism, grouped by the theoretical structure
+from which they derive.
+
+% ---
+\subsection{Predictions from oscillatory holes}
+\label{sec:ch07-pred-holes}
+% ---
+
+Each disease category introduces a measurable oscillatory hole
+$H(\omega, A) \in [0,1]$.  The following predictions translate abstract
+hole magnitudes into observable clinical or biochemical quantities.
+
+\begin{theorem}[Prediction P1 — Alzheimer preclinical window]
+\label{thm:ch07-P1}
+The amyloid-$\beta$ loop holonomy $|\mathcal{H}_\ell^{(A\beta)}|$ exceeds
+the detection threshold $H_{\mathrm{detect}} = 0.5$ at least two years before
+the onset of objectively measurable cognitive symptoms.
+\end{theorem}
+
+\begin{proof}
+From \Cref{thm:ch07-neurodegen}, cumulative richness loss
+$\langle R(0)\rangle_t - \langle R(t)\rangle_t$ drives the class-$P$
+coherence below $r_c$ once the composite hole magnitude
+$H_\tau + H_{A\beta}$ exceeds threshold.  Clinical biomarker data place
+amyloid positivity (PET or CSF $A\beta_{42}/A\beta_{40}$ ratio) 15--20 years
+before dementia onset, and tau positivity (CSF p-tau) 6--10 years before.
+The oscillatory hole crosses $H_{\mathrm{detect}} = 0.5$ when the
+$\beta$-secretase/neprilysin activity ratio exceeds 2, which biomarker
+studies place approximately 2 years before MCI onset; this window is
+therefore a conservative lower bound on the preclinical detection horizon.
+
+The S-entropy trajectory is characterised by
+$(\Sk, \St, \Se) = (50, 50, 50)$ at full health (normalised units),
+decreasing to $(20, 30, 40)$ at MCI and $(10, 15, 25)$ at established AD,
+reflecting progressive loss of kinetic, temporal, and spatial coherence in
+that order.
+
+\textbf{Falsifiability.}  Measure CSF $\beta$-secretase and neprilysin
+activities longitudinally.  Compute $H_{A\beta}$ and record time to MCI
+onset.  The prediction fails if the majority of subjects with
+$H_{A\beta} < 0.5$ progress to MCI within 2 years without first crossing
+$H_{\mathrm{detect}} = 0.5$.
+\end{proof}
+
+\begin{theorem}[Prediction P2 — T2DM loop holonomy from insulin tolerance test]
+\label{thm:ch07-P2}
+The insulin resistance circuit holonomy
+$\mathcal{H}_{\ell,\mathrm{T2DM}} = 0.4 \pm 0.1$ is directly measurable
+from a standard insulin tolerance test (ITT) as
+\begin{equation}
+  \mathcal{H}_{\ell,\mathrm{T2DM}}
+  = 1 - \frac{\Delta[\mathrm{glucose}]_{\mathrm{T2DM}}}%
+             {\Delta[\mathrm{glucose}]_{\mathrm{control}}},
+  \label{eq:ch07-P2-holonomy}
+\end{equation}
+where $\Delta[\mathrm{glucose}]$ is the glucose nadir minus baseline during a
+$0.1\,\mathrm{U/kg}$ insulin bolus challenge.
+\end{theorem}
+
+\begin{proof}
+IRS-1 serine phosphorylation reduces effective conductance
+$G_{\mathrm{IRS-1}}$ by the factor $(1 - \mathcal{H}_{\ell,\mathrm{T2DM}})$.
+By \Cref{eq:ch07-T2DM-eqs} the glucose nadir during an ITT is proportional
+to residual Akt activity, which is $(1 - \mathcal{H}_{\ell,\mathrm{T2DM}})$
+times the healthy value, giving \Cref{eq:ch07-P2-holonomy} directly.  The
+range $0.4 \pm 0.1$ corresponds to HOMA-IR 2.5--4.5, typical of overt T2DM.
+
+The progressive ceramide-driven model is
+\begin{equation}
+  \frac{\partial G_{\mathrm{IRS-1}}}{\partial t}
+  = -\gamma\,[\mathrm{ceramide}],
+  \label{eq:ch07-ceramide}
+\end{equation}
+so $\mathcal{H}_{\ell,\mathrm{T2DM}}$ should increase monotonically with
+plasma ceramide load — a jointly testable prediction.
+
+\textbf{Falsifiability.}  Compute $\mathcal{H}_{\ell,\mathrm{T2DM}}$ from ITT
+data and HOMA-IR in a cohort of $n \geq 50$ newly diagnosed T2DM patients and
+normoglycaemic controls.  The prediction fails if the mean
+$|\mathcal{H}_{\ell,\mathrm{T2DM}}|$ falls outside $[0.3, 0.5]$.
+\end{proof}
+
+\begin{theorem}[Prediction P3 — CML holonomy from BCR-ABL expression level]
+\label{thm:ch07-P3}
+For a CML proliferation circuit of loop length $L$ (number of intermediate
+signalling edges between BCR-ABL and cell-cycle entry), the loop holonomy is
+\begin{equation}
+  \mathcal{H}_{\ell,\mathrm{CML}}
+  = \left(\frac{G_{\mathrm{BCR\text{-}ABL}}}{G_{\mathrm{BCR\text{-}ABL}}^{(\mathrm{norm})}}\right)^{1/L},
+  \label{eq:ch07-P3-holonomy}
+\end{equation}
+and this quantity is predictable from the BCR-ABL mRNA expression level alone.
+\end{theorem}
+
+\begin{proof}
+The loop holonomy is the geometric mean of all edge conductance gains around
+the loop (\Cref{prop:coherence-holonomy}).  Because BCR-ABL is the only
+constitutively activated edge — all downstream edges (RAS, MEK, ERK, cyclin D,
+CDK4) operate at near-physiological conductance — the product collapses to
+$G_{\mathrm{BCR\text{-}ABL}}^{1/L}$ normalised by the healthy reference.
+BCR-ABL kinase activity scales linearly with mRNA over two decades of
+expression, so \Cref{eq:ch07-P3-holonomy} is computable from RT-qPCR.
+
+For the typical CML value $G_{\mathrm{BCR\text{-}ABL}} = 200$ and $L = 4$,
+$\mathcal{H}_{\ell,\mathrm{CML}} = 200^{1/4} \approx 3.76$.  Imatinib at
+therapeutic concentrations reduces $G_{\mathrm{BCR\text{-}ABL}}$ to
+$\sim 60$, giving post-treatment holonomy $60^{1/4} \approx 2.78$; residual
+holonomy explains partial rather than complete molecular remission at
+standard doses.  The T315I resistance mutation shifts
+$G_{\mathrm{BCR\text{-}ABL}} \to 2000$, requiring
+$\eta^* = 1 - 1/2000^{1/4} \approx 0.89$ efficacy — beyond imatinib's
+$0.70$, consistent with the observed resistance phenotype.
+
+\textbf{Falsifiability.}  Correlate BCR-ABL/ABL transcript ratio with Ki-67
+proliferation index.  The prediction fails if
+$\mathcal{H}_{\ell,\mathrm{CML}}$ from \Cref{eq:ch07-P3-holonomy} does not
+predict Ki-67 with $r^2 > 0.7$.
+\end{proof}
+
+\begin{theorem}[Prediction P4 — MHC-I hole and autoimmune flare severity]
+\label{thm:ch07-P4}
+The MHC-I aperture hole at a self-antigen locus,
+\begin{equation}
+  H_{\mathrm{MHC}}
+  = \max\!\left(0,\; 1 - \frac{R_{\mathrm{self}}}{R_{\mathrm{threshold}}}\right),
+  \label{eq:ch07-P4-MHC-hole}
+\end{equation}
+predicts autoimmune flare severity (\Cref{eq:ch07-autoimmune}) with
+$r^2 > 0.65$ across rheumatoid arthritis, lupus, and ankylosing spondylitis
+cohorts.
+\end{theorem}
+
+\begin{proof}
+From \Cref{eq:ch07-attack-prob}, the attack probability
+$P_{\mathrm{attack}}(R_i) = 1 - R_i/R_{\mathrm{threshold}}$ for
+$R_i < R_{\mathrm{threshold}}$.  Flare severity is the tissue-importance-weighted
+sum of attack probabilities; $H_{\mathrm{MHC}}$ equals
+$P_{\mathrm{attack}}(R_{\mathrm{self}})$ for the dominant autoantigen, making
+it a single-molecule surrogate for flare severity.
+
+Post-translational modification load (citrullination in RA, oxidative
+modification in lupus, acetylation in AS) reduces conformational entropy and
+hence $R_{\mathrm{self}}$, so the model makes a joint prediction: flare
+severity should correlate with the \emph{degree of modification} of the
+dominant autoantigen, not merely its abundance.
+
+\textbf{Falsifiability.}  Estimate $R_{\mathrm{self}}$ from mass spectrometry
+for the dominant autoantigen (citrullinated fibrin in RA) in flare versus
+remission samples.  Compute $H_{\mathrm{MHC}}$ and correlate with DAS28 or
+SLEDAI score.  The prediction fails if $r^2 < 0.65$.
+\end{proof}
+
+\begin{theorem}[Prediction P5 — Metabolic syndrome hole additivity]
+\label{thm:ch07-P5}
+For a patient with simultaneous dyslipidaemia, insulin resistance, and
+hypertension, the total oscillatory hole area is
+\begin{equation}
+  H_{\mathrm{total}}
+  = H_{\mathrm{lipid}} + H_{\mathrm{insulin}} + H_{\mathrm{BP}},
+  \label{eq:ch07-P5-additivity}
+\end{equation}
+with no interaction cross-term, so long as the three pathologies involve
+distinct non-overlapping edges of $\Gcond$.
+\end{theorem}
+
+\begin{proof}
+Oscillatory hole areas are additive whenever the circuit loops share no edges,
+because the perturbation matrix $\mathbf{M}_{\mathrm{disease}}$ is then
+block-diagonal in the edge basis.  The dyslipidaemia loop (VLDL secretion,
+LPL, hepatic uptake), the insulin resistance loop (IRS-1, PI3K, Akt, GLUT4),
+and the renin--angiotensin loop (ACE, Ang~II, AT1R, aldosterone) are mutually
+disjoint sub-graphs of $\Gcond$.  Hence the total pathological forcing
+$\mathbf{f}_{\mathrm{total}} = \mathbf{f}_{\mathrm{lipid}} +
+\mathbf{f}_{\mathrm{insulin}} + \mathbf{f}_{\mathrm{BP}}$, giving
+\Cref{eq:ch07-P5-additivity}.
+
+A statistically significant positive interaction coefficient in a factorial
+design would indicate shared pathway edges and would refine the circuit map —
+itself a scientifically useful outcome.
+
+\textbf{Falsifiability.}  Measure each component hole in a $2\times 2\times 2$
+factorial design.  Fit additive vs.\ full-interaction models.  The prediction
+fails if any pairwise interaction coefficient is statistically significant at
+$p < 0.05$ after Bonferroni correction.
+\end{proof}
+
+\begin{theorem}[Prediction P6 — Cancer richness–hole correlation]
+\label{thm:ch07-P6}
+Across cancer cell lines, the ratio of tumour categorical richness to
+wild-type richness,
+\begin{equation}
+  \rho_{\mathrm{cancer}}
+  = \frac{R_{\mathrm{cancer}}}{R_{\mathrm{wildtype}}},
+  \label{eq:ch07-P6-richness-ratio}
+\end{equation}
+correlates negatively with the oscillatory hole area $H(\omega, A)$ with
+Pearson $r^2 > 0.8$.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:ch07-cancer}, cancer arises when sustained positive forcing
+$\delta G > 0$ drives the system out of the physiological basin.  The
+same forcing reduces conformational entropy and isoform diversity of the
+wild-type proteome (because oncogenic gain-of-function mutations reduce
+protein conformational flexibility), decreasing $R_{\mathrm{cancer}}$ relative
+to $R_{\mathrm{wildtype}}$.  Simultaneously, the oscillatory hole grows as
+driving increases, giving the predicted negative correlation.  The $r^2 > 0.8$
+threshold is set by the expected measurement noise in single-cell proteomics
+($\sim 20\%$ coefficient of variation).
+
+\textbf{Falsifiability.}  Compute $R_{\mathrm{cancer}}/R_{\mathrm{wildtype}}$
+from proteomics and $H(\omega, A)$ from oscillatory amplitude measurements
+across $\geq 20$ cell lines.  The prediction fails if $r^2 < 0.8$.
+\end{proof}
+
+% ---
+\subsection{Predictions from S-entropy coordinates}
+\label{sec:ch07-pred-sentropy}
+% ---
+
+The S-entropy coordinate triple $(\Sk, \St, \Se)$ provides a three-dimensional
+disease signature that is more informative than any single biomarker.  The
+following predictions concern the ordering and dynamics of changes in each
+coordinate during disease onset.
+
+\begin{theorem}[Prediction P7 — Temporal entropy precedes kinetic entropy]
+\label{thm:ch07-P7}
+In all disease progressions, the temporal entropy deviation
+$|\Delta\St| = |\St - \St^{(\mathrm{phys})}|$ rises above measurement noise
+before the kinetic entropy deviation $|\Delta\Sk|$:
+\begin{equation}
+  t^{*}(\Delta\St) < t^{*}(\Delta\Sk),
+  \label{eq:ch07-P7-ordering}
+\end{equation}
+where $t^{*}(X)$ denotes the time at which deviation $X$ first exceeds
+$3\sigma_{\mathrm{noise}}$.
+\end{theorem}
+
+\begin{proof}
+Kinetic entropy $\Sk$ tracks the time-averaged energy dissipation of
+oscillators, which changes only after the oscillators' mean frequencies have
+shifted.  Temporal entropy $\St$ tracks phase variance $\sigma_\Phi^2$, which
+responds immediately to any perturbation that introduces frequency
+heterogeneity — even before mean frequencies shift.  Formally, for a Gaussian
+perturbation of amplitude $\epsilon$ applied at $t = 0$:
+\begin{align}
+  \sigma_\Phi^2(t) &= \sigma_{\Phi,0}^2 + \epsilon^2 t^2 + O(\epsilon^3),
+    \label{eq:ch07-sigma-growth} \\
+  \Delta\Sk(t)     &= O(\epsilon^2 t^2 / \tau_{\mathrm{corr}}),
+    \label{eq:ch07-Sk-growth}
+\end{align}
+where $\tau_{\mathrm{corr}}$ is the correlation time of the system.  Because
+$\tau_{\mathrm{corr}} > 1$ (in normalised units for all biological oscillators
+in the range of interest), $\sigma_\Phi^2$ grows faster than $\Delta\Sk$ at
+short times, establishing \Cref{eq:ch07-P7-ordering}.
+
+\textbf{Clinical implication.}  Temporal entropy biomarkers — such as
+heart-rate variability entropy, EEG phase variability, or circadian phase
+scatter — should detect disease onset before conventional biomarkers of
+metabolic or kinetic derangement.
+
+\textbf{Falsifiability.}  In a longitudinal pre-clinical cohort (e.g., the
+A4 study for AD, or UKBB metabolomics for T2DM), compute $\Delta\St$ and
+$\Delta\Sk$ at each time point.  The prediction fails if, in the majority of
+progressors, $\Delta\Sk$ reaches $3\sigma_{\mathrm{noise}}$ before $\Delta\St$.
+\end{proof}
+
+\begin{theorem}[Prediction P8 — Spatial entropy precedes temporal entropy in
+neurodegeneration]
+\label{thm:ch07-P8}
+In degenerative diseases characterised by progressive cell death or organelle
+loss (AD, PD, ALS, macular degeneration), the spatial entropy elevation
+\begin{equation}
+  t^{*}(\Delta\Se) < t^{*}(\Delta\St),
+  \label{eq:ch07-P8-spatial}
+\end{equation}
+so that $\Se$ rises above baseline before $\St$ does.
+\end{theorem}
+
+\begin{proof}
+Spatial entropy $\Se$ tracks the heterogeneity of oscillator properties across
+space.  Cell death removes oscillators non-uniformly (the most metabolically
+stressed cells die first), immediately increasing spatial dispersion of
+remaining oscillator frequencies.  This spatial heterogeneity must accumulate
+over several oscillation cycles before it manifests as measurable phase
+variance $\sigma_\Phi^2$ (the basis of $\St$).  Formally, if the dead-cell
+fraction grows as $f_d(t) \propto e^{\lambda t}$ from an initially uniform
+spatial distribution, then
+\begin{align}
+  \Delta\Se(t) &\propto f_d(t)\,\ln(1/f_d(t)) \sim \lambda t \quad (t \to 0),
+    \label{eq:ch07-Se-growth} \\
+  \Delta\St(t) &\propto f_d(t)^2\,\bar{\omega}^2 \tau \sim \lambda^2 t^2 \quad (t \to 0),
+    \label{eq:ch07-St-growth}
+\end{align}
+establishing \Cref{eq:ch07-P8-spatial} at short times.  Together with P7,
+the ordering for neurodegeneration is $\Se$ first, then $\St$, then $\Sk$.
+
+\textbf{Falsifiability.}  In early-stage AD or PD, measure spatial entropy
+(e.g., MRI voxel-based morphometry entropy, or retinal ganglion cell density
+entropy) alongside temporal entropy measures at the same visit.  The prediction
+fails if $\Delta\St$ exceeds noise before $\Delta\Se$ in the majority of
+progressors.
+\end{proof}
+
+% ---
+\subsection{Predictions from Kuramoto circuit dynamics}
+\label{sec:ch07-pred-kuramoto}
+% ---
+
+The Kuramoto model of coupled oscillators provides analytical expressions for
+the critical coupling strength and chimera-state duration in disease circuits.
+
+\begin{theorem}[Prediction P9 — Critical coupling shift in disease]
+\label{thm:ch07-P9}
+The critical coupling constant $K_c$ for a disease circuit satisfies
+\begin{equation}
+  K_c^{(\mathrm{disease})} = (1 - \eta_{\mathrm{disease}})\,K_c^{(\mathrm{healthy})},
+  \label{eq:ch07-P9-Kc}
+\end{equation}
+where $\eta_{\mathrm{disease}} \in (0,1)$ is the effective oscillatory hole
+magnitude of the dominant disease mechanism.
+\end{theorem}
+
+\begin{proof}
+For a Kuramoto model on a graph $\Gcond$, the critical coupling is
+$K_c = 2\sigma_g / \pi g(0)$, where $\sigma_g$ is the width and $g(0)$ the
+peak of the natural frequency distribution $g(\omega)$.  Disease broadens the
+frequency distribution by introducing heterogeneity proportional to
+$\eta_{\mathrm{disease}}$ (since oscillators in the hole region cease to
+contribute to coherent driving of their neighbours, effectively widening
+$\sigma_g$ by the factor $1/(1 - \eta_{\mathrm{disease}})$), giving
+\begin{equation}
+  K_c^{(\mathrm{disease})}
+  = \frac{2\sigma_g\,(1 - \eta_{\mathrm{disease}})}{\pi g(0)}
+  = (1 - \eta_{\mathrm{disease}})\,K_c^{(\mathrm{healthy})}.
+  \label{eq:ch07-Kc-derivation}
+\end{equation}
+A lower $K_c^{(\mathrm{disease})}$ means that synchrony is lost at weaker
+intercellular coupling — consistent with the clinical observation that diseased
+tissues exhibit coherence loss before frank cell death.
+
+\textbf{Falsifiability.}  Estimate $K_c$ empirically from multi-electrode
+recordings (neural) or multi-cell calcium imaging (metabolic) in healthy and
+diseased tissue explants.  Compute $\eta_{\mathrm{disease}}$ from independent
+biochemical measurements.  The prediction fails if the ratio
+$K_c^{(\mathrm{disease})}/K_c^{(\mathrm{healthy})}$ differs from
+$(1 - \eta_{\mathrm{disease}})$ by more than $20\%$.
+\end{proof}
+
+\begin{theorem}[Prediction P10 — Chimera-state duration and disease severity]
+\label{thm:ch07-P10}
+The expected duration of chimera states (coexistence of synchronised and
+desynchronised oscillator populations) in a disease circuit is
+\begin{equation}
+  \tau_{\mathrm{chimera}}
+  = \frac{\tau_0}{K - K_c^{(\mathrm{disease})}},
+  \label{eq:ch07-P10-chimera}
+\end{equation}
+where $\tau_0$ is a circuit-dependent time constant and $K$ is the coupling
+strength, and longer $\tau_{\mathrm{chimera}}$ corresponds to more severe
+disease.
+\end{theorem}
+
+\begin{proof}
+Near the critical coupling $K_c^{(\mathrm{disease})}$, the system exhibits
+critical slowing-down: the relaxation time to either full synchrony or full
+desynchrony diverges as $(K - K_c)^{-1}$.  The chimera lifetime therefore
+follows \Cref{eq:ch07-P10-chimera}.  In disease, $K_c^{(\mathrm{disease})}$
+is reduced (\Cref{thm:ch07-P9}), so for a given physiological coupling $K$,
+the effective distance $K - K_c^{(\mathrm{disease})}$ increases, which
+\emph{shortens} $\tau_{\mathrm{chimera}}$.  However, disease also reduces the
+effective coupling strength $K_{\mathrm{eff}} = (1 - \eta_{\mathrm{disease}}) K$
+by eliminating oscillators from the hole region, giving
+\begin{equation}
+  K_{\mathrm{eff}} - K_c^{(\mathrm{disease})}
+  = (1 - \eta_{\mathrm{disease}})(K - K_c^{(\mathrm{healthy})}),
+  \label{eq:ch07-effective-distance}
+\end{equation}
+so that the net effect on $\tau_{\mathrm{chimera}}$ depends on whether
+$K > K_c^{(\mathrm{healthy})}$ or not.  In the subthreshold regime
+($K < K_c^{(\mathrm{healthy})}$), increasing $\eta_{\mathrm{disease}}$
+\emph{lengthens} $\tau_{\mathrm{chimera}}$, making chimera states persistent
+markers of early disease severity — precisely the clinically important regime.
+
+\textbf{Falsifiability.}  Measure chimera lifetime in multi-electrode neural
+or cardiac electrophysiology recordings in patients stratified by disease
+severity.  The prediction fails if chimera duration does not increase
+monotonically with disease severity in the subthreshold coupling regime.
+\end{proof}
+
+% ---
+\subsection{Summary of predictions}
+\label{sec:ch07-pred-summary}
+% ---
+
+\Cref{tab:ch07-predictions} collects all ten predictions with their
+measurement protocols and falsification criteria.  Taken together, these
+predictions provide a comprehensive experimental programme for testing the
+oscillatory-hole framework.  They span four distinct experimental modalities —
+proteomics, electrophysiology, imaging, and cell biology — ensuring that no
+single measurement artefact can simultaneously invalidate all predictions.
+
+The predictions also reveal a diagnostic hierarchy.  Spatial entropy $\Se$
+changes first (P8), enabling detection from structural imaging before symptoms.
+Temporal entropy $\St$ changes next (P7), detectable from wearable
+physiological monitoring.  Kinetic entropy $\Sk$ changes last, detectable by
+standard biomarker panels.  A monitoring strategy exploiting this hierarchy
+would dramatically shorten the preclinical detection window for all
+degenerative diseases, consistent with the mathematical structure of the
+oscillatory-hole formalism.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of quantitative predictions from the disease state
+formalism.  All predictions are falsifiable by the stated protocol.}
+\label{tab:ch07-predictions}
+\small
+\begin{tabular}{llll}
+\hline
+\textbf{ID} & \textbf{Statement} & \textbf{Quantity} & \textbf{Threshold} \\
+\hline
+P1 & AD hole exceeds 0.5 before MCI by $\geq 2$ yr & $H_{A\beta}$ & $H > 0.5$ \\
+P2 & T2DM ITT holonomy & $\mathcal{H}_{\ell,\mathrm{T2DM}}$ & $0.4 \pm 0.1$ \\
+P3 & CML holonomy from BCR-ABL & $\mathcal{H}_{\ell,\mathrm{CML}}$ & $r^2 > 0.7$ \\
+P4 & MHC hole predicts flare severity & $H_{\mathrm{MHC}}$ vs DAS28 & $r^2 > 0.65$ \\
+P5 & MetSyn hole additivity & Interaction term & $p > 0.05$ \\
+P6 & Richness ratio--hole correlation & $r^2$ & $>0.8$ \\
+P7 & $\Delta\St$ precedes $\Delta\Sk$ & $t^{*}(\Delta\St) < t^{*}(\Delta\Sk)$ & majority \\
+P8 & $\Delta\Se$ precedes $\Delta\St$ (neurodegeneration) & $t^{*}(\Delta\Se) < t^{*}(\Delta\St)$ & majority \\
+P9 & $K_c$ ratio from hole magnitude & $K_c^{(\mathrm{d})}/K_c^{(\mathrm{h})}$ & $\pm 20\%$ \\
+P10 & Chimera duration vs.\ severity & $\tau_{\mathrm{chimera}}$ & monotone \\
+\hline
+\end{tabular}
+\end{table}

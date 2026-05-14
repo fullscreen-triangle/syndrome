@@ -1,24 +1,62 @@
-%% Chapter 1 — Axiomatic Basis and S-Entropy Calculus
+﻿%% Chapter 1 — Axiomatic Basis and S-Entropy Calculus
 %%
 %% Source material:
 %%   docs/sources/unconstrained-subtask-recursion.tex  (primary)
+%%   docs/sources/finite-agent-coordination.tex        (receiver structure)
 %%   README.md §2
 %%
 %% This chapter states the two axioms, derives the S-functional and
 %% all its structural properties, proves the Triple Equivalence via
-%% explicit functors, and establishes the Unconstrained Subtask Theorem
-%% and Circular Validation.  Everything downstream builds on this chapter
-%% without re-deriving.
+%% explicit functors, and establishes the Unconstrained Subtask Theorem,
+%% Recursive No-Privileged-Level, Information Catalyst Algebra,
+%% Mode-Methodology Equivalence, and Circular Validation.
+%% Everything downstream builds on this chapter without re-deriving.
 
 \chapter{Axiomatic Basis and S-Entropy Calculus}
 \label{ch:axioms}
+\label{ch:axiomatic-basis}
+
+The edifice of the present monograph rests on a single pair of axioms
+whose joint force is this: every physical observer is a \emph{finite}
+entity measuring a \emph{finite} world.  From these two constraints alone
+one derives a complete calculus of epistemic distance — the S-entropy
+calculus — that governs everything from thermodynamic phase boundaries
+to disease classification to drug action.  The derivation proceeds in
+logical order: axioms first, partition geometry second, the S-functional
+and its four characterising axioms third, the Triple Equivalence (the
+structural cornerstone) fourth, and then the sequence of major theorems
+that follow.  No physical input beyond the two axioms is needed at any
+stage.
+
+The chapter is organised as follows.  \Cref{sec:axioms} states the two
+foundational axioms and draws the immediate consequences.
+\Cref{sec:partition-geometry} develops the combinatorial geometry of
+observer partitions, culminating in the Capacity Formula and the
+Depth-Entropy Equivalence.  \Cref{sec:s-scalar} introduces the S-scale
+and the formal receiver structure.  \Cref{sec:s-axioms} states the four
+axioms of the S-functional.  \Cref{sec:bounded-cognition} treats bounded
+cognition and proves the Floor Theorem rigorously.  \Cref{sec:s-functional}
+defines the S-functional and its S-entropy space.  \Cref{sec:triple-equivalence}
+constructs the three category representations and proves their equivalence
+via explicit functors, including the Koopman operator and Stone duality
+connections.  \Cref{sec:unconstrained-subtask} proves the Unconstrained
+Subtask Theorem and its biological interpretation.
+\Cref{sec:recursive-no-privileged} establishes the Recursive
+No-Privileged-Level Theorem.  \Cref{sec:catalyst-algebra} develops the
+Information Catalyst Algebra.  \Cref{sec:mode-methodology} treats
+Mode-Methodology Equivalence.  \Cref{sec:ch01-worked-examples} provides three
+fully worked examples.  \Cref{sec:classical-connections} situates the
+calculus within ergodic theory, lattice theory, category theory, and
+information theory.  \Cref{sec:circular-validation} proves the Circular
+Validation theorem and identifies the three pillars.
 
 \section{The Two Axioms}
 \label{sec:axioms}
 
 The entire framework rests on two axioms whose joint content is that every
 physical observer is a \emph{finite} entity interacting with a \emph{finite}
-world.  No other metaphysical machinery is required.
+world.  No other metaphysical machinery is required.  The maximum-entropy
+foundation for inference from incomplete data is due to Jaynes~\citep{Jaynes1957}.
 
 \begin{axiom}[Bounded Phase Space]
 \label{ax:bounded-phase}
@@ -43,11 +81,11 @@ $C_i \cap C_j = \emptyset$ for $i \neq j$ and $\bigcup_i C_i = \Omega$.
 
 \begin{remark}
 \Cref{ax:bounded-phase} is the standard assumption of classical and quantum
-statistical mechanics: the partition function converges.  \Cref{ax:categorical-obs}
-is the operational statement that any measurement apparatus has a minimal
-distinguishable volume $\delta^d > 0$, where $d$ is the dimension of the
-phase space.  The two axioms together imply all results of this monograph
-without further assumptions.
+statistical mechanics: the partition function converges~\citep{Callen1985}.
+\Cref{ax:categorical-obs} is the operational statement that any measurement
+apparatus has a minimal distinguishable volume $\delta^d > 0$, where $d$ is
+the dimension of the phase space.  The two axioms together imply all results
+of this monograph without further assumptions.
 \end{remark}
 
 \begin{theorem}[Forced Partitioning]
@@ -92,6 +130,18 @@ biology, medicine, and disease are explored throughout the monograph.
 
 The structure of an observer's partition is not arbitrary.  Physical symmetry
 and hierarchical organisation constrain the allowable partition coordinates.
+The combinatorial content of these constraints turns out to reproduce, from
+purely observational axioms, the shell-filling structure of atomic physics —
+a striking connection between the epistemological framework and quantum
+mechanics that we now make precise.
+
+The key insight is that the labels $(n, \ell, m, s)$ are not borrowed from
+quantum mechanics but are forced by the logical structure of any hierarchical
+classification system: one needs a depth counter ($n$), a complexity index
+($\ell$) at each depth, an orientation selector ($m$) within each complexity
+class, and a binary chirality bit ($s$) to break the final degeneracy.  The
+same four-parameter family arises wherever a finite observer classifies states
+by nested equivalences.
 
 \begin{definition}[Partition Coordinates]
 \label{def:partition-coords}
@@ -149,9 +199,9 @@ of the logarithm.  $\Depth$ is measured in \emph{partition bits} (base-2)
 or \emph{partition nats} (base-$e$).
 \end{definition}
 
-\begin{theorem}[Depth–Entropy Equivalence]
+\begin{theorem}[Depth--Entropy Equivalence]
 \label{thm:depth-entropy}
-The partition depth $\Depth$ and the Boltzmann entropy $S_P$ of the
+The partition depth $\Depth$ and the Boltzmann entropy $S_P$~\citep{Shannon1948,Jaynes1957} of the
 associated microstate distribution are related by
 \[
   S_P \;=\; \kB \cdot \Depth \cdot \ln b ,
@@ -162,7 +212,7 @@ where $\kB$ is Boltzmann's constant and $b$ is the logarithm base.
 \begin{proof}
 The partition places uniform probability $p = 1/b^{\Depth(\Pi)}$ on each
 of the $b^{\Depth}$ equiprobable cells (uniform prior by the maximum-entropy
-principle under the cell constraint).  The Boltzmann entropy is
+principle under the cell constraint~\citep{Jaynes1957}).  The Boltzmann entropy is
 \[
   S_P \;=\; -\kB \sum_i p \ln p
   \;=\; -\kB \cdot b^{\Depth} \cdot \frac{1}{b^{\Depth}} \cdot
@@ -174,10 +224,12 @@ principle under the cell constraint).  The Boltzmann entropy is
 \begin{definition}[Partition Time]
 \label{def:partition-time}
 The \emph{partition time} $\tau_p$ is the minimal time required to carry out
-one act of partitioning, set by the time–energy uncertainty relation:
+one act of partitioning, set by the time--energy uncertainty relation:
 \[
   \tau_p \;=\; \frac{\hbar}{\kB T} \;>\; 0 .
 \]
+The floor on irreversible information erasure implicit in this timescale is
+the Landauer principle~\citep{Landauer1961}.
 \end{definition}
 
 \begin{theorem}[Residue Principle]
@@ -231,13 +283,339 @@ The dissipation coefficient $\gamma = \tau_p^{-1} \cdot \kB T / \mu$ follows
 from the fluctuation-dissipation theorem applied to partition fluctuations.
 \end{proof}
 
-\section{The S-Functional}
+\section{The S-Scale and Receiver Structure}
+\label{sec:s-scalar}
+
+Before defining the S-functional we must establish the scale on which
+S-values live and the precise mathematical structure of a receiver.  These
+definitions are more subtle than they first appear: the choice of the closed
+interval $[0, 100]$ rather than $[0, 1]$ or $[0, \infty)$ is deliberate,
+and the four-component receiver definition captures all operationally
+relevant structure without redundancy.
+
+The S-scale $[0, 100]$ should be read as a normalised semantic distance: the
+value $0$ represents exact alignment of a candidate with the truth — a state
+that the Floor Theorem (\Cref{thm:floor-positivity}) will show is
+unattainable by any bounded receiver — and the value $100$ represents maximal
+misalignment, \ie, the candidate and the truth are as far apart as the
+problem allows.  The choice of $100$ as the upper bound is a normalisation
+convention; no result depends on it.
+
+\begin{definition}[S-scale]
+\label{def:s-scale}
+The \emph{S-scale} is the closed real interval
+$\mathbb{S} := [0, 100] \subset \mathbb{R}$.
+We write $\mathbb{S}^{*} := (0, 100]$ for the open-below S-scale, and
+$\partial \mathbb{S} := \{0, 100\}$ for the boundary points: $0$
+(exact alignment) and $100$ (maximal misalignment).
+\end{definition}
+
+\begin{definition}[Candidate Space and Truth Space]
+\label{def:candidate-truth}
+A \emph{candidate space} $\mathcal{X}$ is a non-empty set whose elements
+represent admissible candidate solutions to a problem.  A
+\emph{truth space} $\mathcal{X}^{*} \subseteq \mathcal{X}$ is a designated
+non-empty subset whose elements are the correct solutions.  We assume
+$|\mathcal{X}^{*}| \geq 1$; the case $|\mathcal{X}^{*}| > 1$ allows for
+solutions that are operationally indistinguishable.
+\end{definition}
+
+\begin{remark}
+The distinction between candidate space and truth space is crucial.  In a
+diagnostic setting, $\mathcal{X}$ is the space of all possible disease states
+and $\mathcal{X}^{*}$ is the set of states consistent with the patient's
+actual condition.  A receiver (the clinician, the diagnostic device) maps
+signals to candidates; the S-functional measures how far the best achievable
+candidate is from any element of $\mathcal{X}^{*}$.
+\end{remark}
+
+\begin{definition}[Receiver — Quadruple Form]
+\label{def:receiver-quad}
+A \emph{receiver} $\mathcal{R}$ over $(\mathcal{X}, \mathcal{X}^{*})$ is a
+quadruple
+\[
+  \mathcal{R} = (\Sigma_{\mathcal{R}},\; \Phi_{\mathcal{R}},\;
+                 K_{\mathcal{R}},\; \mathrm{dec}_{\mathcal{R}})
+\]
+where:
+\begin{enumerate}[(i)]
+  \item $\Sigma_{\mathcal{R}}$ is a non-empty set, the
+    \emph{signal space} of $\mathcal{R}$;
+  \item $\Phi_{\mathcal{R}}: \Sigma_{\mathcal{R}} \to K_{\mathcal{R}}$
+    is a function called the \emph{internal decoder}, mapping each incoming
+    signal to a knowledge state;
+  \item $K_{\mathcal{R}}$ is a set called the \emph{knowledge framework},
+    equipped with a fixed set of operations $\{\circ_j\}_{j \in J_{\mathcal{R}}}$;
+  \item $\mathrm{dec}_{\mathcal{R}}: K_{\mathcal{R}} \to \mathcal{X}$ is the
+    \emph{candidate-projection}, associating each knowledge state with a
+    candidate.
+\end{enumerate}
+The receiver is \emph{bounded} if $|K_{\mathcal{R}}|$ is a cardinal strictly
+less than that of $\mathcal{X}$ when $|\mathcal{X}|$ is infinite.
+\end{definition}
+
+The quadruple form makes the receiver's epistemic architecture explicit.
+An alternative formulation, used when studying action-cells in multi-agent
+settings, presents the same structure differently:
+
+\begin{definition}[Receiver — Operational Form]
+\label{def:receiver-operational}
+A \emph{receiver} on outcome space $(\mathcal{X}, d, \Sigma)$ is a tuple
+$\mathcal{R} = (K, D, \Pi, \beta)$ where:
+\begin{itemize}
+  \item $K$ is a non-empty set, the \emph{knowledge framework};
+  \item $D : \mathcal{X} \to K$ is the \emph{decoder};
+  \item $\Pi : K \to 2^{\mathcal{X}} \setminus \{\varnothing\}$ is the
+    \emph{candidate-projection}, satisfying $D(x) \in D(\Pi(D(x)))$ for
+    all $x \in \mathcal{X}$;
+  \item $\beta \in (0, \Sigma]$ is a strictly positive \emph{noise floor},
+    $\beta = \sup_{x \in \mathcal{X}} \inf_{x' \in \Pi(D(x))} d(x, x') > 0$.
+\end{itemize}
+\end{definition}
+
+\begin{remark}
+The two receiver definitions are equivalent.  The quadruple form emphasises
+the signal-processing pipeline: signals arrive, are decoded internally, then
+projected to candidates.  The operational form emphasises the
+distance-to-cell structure.  The noise floor $\beta > 0$ in the operational
+form corresponds to the floor function $S_\flat(\mathcal{R}) > 0$ that will
+be characterised axiomatically in \Cref{sec:s-axioms} and proved strictly
+positive in \Cref{sec:bounded-cognition}.
+\end{remark}
+
+\begin{definition}[Bounded Receiver]
+\label{def:bounded-receiver}
+A receiver $\mathcal{R}$ is \emph{bounded} if its knowledge framework $K$
+has cardinality strictly less than that of the total information space
+$\mathcal{U}_{\mathrm{tot}}$ of the problem: $|K| < |\mathcal{U}_{\mathrm{tot}}|$.
+For a finite receiver, $|K| < \infty$.  For a denumerably bounded receiver,
+$|K| \leq \aleph_0$.
+\end{definition}
+
+We write $\mathfrak{R}$ for the class of all receivers.  All receivers in
+this monograph are bounded unless otherwise stated.
+
+\section{Axioms of the S-Functional}
+\label{sec:s-axioms}
+
+The S-functional is constrained by four axioms.  The first two establish the
+range; the third, the Self-Truth Lower Bound, is the heart of the theory —
+it asserts that no receiver can achieve perfect alignment with the truth.
+The fourth ensures that the S-value is computed through the receiver's own
+decoding architecture, not by some external oracle.
+
+Together the four axioms characterise S as a bounded, receiver-specific,
+floor-separated pseudo-metric on candidate space.  Every construction in the
+rest of the monograph uses at most these four properties.
+
+\begin{definition}[S-Functional — Axiomatic Form]
+\label{def:s-functional-axiom}
+An \emph{S-functional} on $(\mathcal{X}, \mathcal{X}^{*})$ is a map
+\[
+  S : \mathfrak{R} \times \mathcal{X} \times \mathcal{X}^{*}
+  \to \mathbb{S},
+  \qquad
+  (\mathcal{R}, x, x^{*}) \mapsto S_{\mathcal{R}}(x, x^{*}) ,
+\]
+satisfying Axioms~(S1)--(S4) below.
+\end{definition}
+
+\begin{axiom}[Non-negativity — S1]
+\label{ax:S1}
+For every $\mathcal{R} \in \mathfrak{R}$, $x \in \mathcal{X}$,
+$x^{*} \in \mathcal{X}^{*}$:
+\[
+  S_{\mathcal{R}}(x, x^{*}) \;\geq\; 0 .
+\]
+\end{axiom}
+
+\begin{axiom}[Boundedness — S2]
+\label{ax:S2}
+For every $\mathcal{R} \in \mathfrak{R}$, $x \in \mathcal{X}$,
+$x^{*} \in \mathcal{X}^{*}$:
+\[
+  S_{\mathcal{R}}(x, x^{*}) \;\leq\; 100 .
+\]
+\end{axiom}
+
+\begin{axiom}[Self-Truth Lower Bound — S3]
+\label{ax:S3}
+There exists a function $S_\flat : \mathfrak{R} \to \mathbb{S}^{*}$,
+called the \emph{floor function}, with $S_\flat(\mathcal{R}) > 0$ for every
+$\mathcal{R} \in \mathfrak{R}$, such that
+\[
+  \inf_{x \in \mathcal{X}} S_{\mathcal{R}}(x, x^{*})
+  \;=\; S_\flat(\mathcal{R})
+\]
+for every $x^{*} \in \mathcal{X}^{*}$.
+\end{axiom}
+
+\begin{axiom}[Receiver-Decoded Coherence — S4]
+\label{ax:S4}
+For every $\mathcal{R} \in \mathfrak{R}$, the partial map
+$x \mapsto S_{\mathcal{R}}(x, x^{*})$ is
+$\mathrm{dec}_{\mathcal{R}}$-coherent: there exists a non-decreasing
+function
+$\delta_{\mathcal{R}} : K_{\mathcal{R}} \times K_{\mathcal{R}} \to \mathbb{S}$
+with $\delta_{\mathcal{R}}(\sigma, \sigma) = S_\flat(\mathcal{R})$ for all
+$\sigma$, such that
+\[
+  S_{\mathcal{R}}(x, x^{*})
+  \;=\; \delta_{\mathcal{R}}\!\bigl(\Phi_{\mathcal{R}}(\sigma_x),\,
+                                    \Phi_{\mathcal{R}}(\sigma_{x^{*}})\bigr)
+\]
+for some $\sigma_x \in \Sigma_{\mathcal{R}}$ with
+$\mathrm{dec}_{\mathcal{R}}(\Phi_{\mathcal{R}}(\sigma_x)) = x$ and
+similarly for $\sigma_{x^{*}}$.
+\end{axiom}
+
+\begin{remark}
+Axiom~(S3) expresses the boundedness of cognition: no receiver can attain
+perfect alignment with the truth.  The constant $S_\flat(\mathcal{R})$ is the
+\emph{smallest knowable error} of $\mathcal{R}$ and depends only on the
+receiver's internal structure, not on the particular candidate or truth being
+compared.  This is proved in \Cref{sec:bounded-cognition}.
+
+Axiom~(S4) is the coherence condition: the S-value must be computable
+through the receiver's own decoder chain.  It rules out situations where an
+oracle outside $\mathcal{R}$ could inform $\mathcal{R}$ of its true S-distance;
+such an oracle would itself be a receiver with its own floor, and the
+composition would not circumvent (S3).
+\end{remark}
+
+\begin{lemma}[Image of $S_{\mathcal{R}}$]
+\label{lem:image-S}
+For each receiver $\mathcal{R}$, the image of $S_{\mathcal{R}}$ is contained in
+$[S_\flat(\mathcal{R}),\, 100] \subseteq \mathbb{S}^{*}$.
+\end{lemma}
+
+\begin{proof}
+Immediate from Axioms~(S1), (S2), and (S3).
+\end{proof}
+
+\section{Bounded Cognition and the Floor}
+\label{sec:bounded-cognition}
+
+The Floor Theorem is the central impossibility result of the entire
+framework.  It asserts that no bounded receiver — however well designed,
+however carefully calibrated — can achieve a zero S-value.  There is always
+an irreducible residual error, a ``smallest knowable error'' that is a
+structural property of the receiver and cannot be removed by any amount of
+additional information processing.
+
+This result is the formal counterpart of the Heisenberg uncertainty
+principle, the Landauer erasure cost, and the G\"{o}delian incompleteness
+theorem, but it is derived from purely observational axioms without invoking
+quantum mechanics, thermodynamics, or formal logic.  The proof uses only the
+cardinality mismatch between the receiver's knowledge framework and the total
+information space.
+
+\begin{definition}[Cognitive Capacity]
+\label{def:cog-cap}
+The \emph{cognitive capacity} of a receiver $\mathcal{R}$ is the cardinal
+$|K_{\mathcal{R}}|$.  The receiver is \emph{finite} if $|K_{\mathcal{R}}|$
+is finite, and \emph{denumerably bounded} if $|K_{\mathcal{R}}| \leq \aleph_0$.
+\end{definition}
+
+\begin{definition}[Total Information Space]
+\label{def:total-info}
+The \emph{total information space} of a problem $(\mathcal{X}, \mathcal{X}^{*})$
+is a set $\mathcal{U}_{\mathrm{tot}}$ with $\mathcal{X} \subseteq \mathcal{U}_{\mathrm{tot}}$,
+equipped with a cardinality $|\mathcal{U}_{\mathrm{tot}}|$ that may exceed
+$|\mathcal{X}|$.  It represents all information logically required to
+specify a candidate perfectly.
+\end{definition}
+
+\begin{definition}[Cognitive Residue]
+\label{def:residue}
+The \emph{cognitive residue} of a receiver $\mathcal{R}$ relative to total
+information space $\mathcal{U}_{\mathrm{tot}}$ is
+\[
+  \mathfrak{R}(\mathcal{R}) \;:=\;
+  \mathcal{U}_{\mathrm{tot}}
+  \setminus
+  \mathrm{dec}_{\mathcal{R}}\!\bigl(\Phi_{\mathcal{R}}(\Sigma_{\mathcal{R}})\bigr) .
+\]
+The cognitive residue is the set of informational states that the receiver
+can never represent in its candidate-projection, regardless of what signal it
+receives.
+\end{definition}
+
+\begin{theorem}[Residue Persistence]
+\label{thm:cognitive-residue-persistence}
+Let $\mathcal{R}$ be a receiver with cognitive capacity
+$|K_{\mathcal{R}}| < |\mathcal{U}_{\mathrm{tot}}|$.  Then
+$|\mathfrak{R}(\mathcal{R})| = |\mathcal{U}_{\mathrm{tot}}|$.
+\end{theorem}
+
+\begin{proof}
+Since $\mathrm{dec}_{\mathcal{R}} : K_{\mathcal{R}} \to \mathcal{X}$ is a
+function,
+$|\mathrm{dec}_{\mathcal{R}}(\Phi_{\mathcal{R}}(\Sigma_{\mathcal{R}}))| \leq
+|K_{\mathcal{R}}|$.
+Thus
+$|\mathfrak{R}(\mathcal{R})| = |\mathcal{U}_{\mathrm{tot}} \setminus
+\mathrm{dec}_{\mathcal{R}}(\Phi_{\mathcal{R}}(\Sigma_{\mathcal{R}}))|
+\geq |\mathcal{U}_{\mathrm{tot}}| - |K_{\mathcal{R}}|$.
+By the cardinal arithmetic of subtraction in infinite cardinals, when
+$|K_{\mathcal{R}}| < |\mathcal{U}_{\mathrm{tot}}|$, this difference equals
+$|\mathcal{U}_{\mathrm{tot}}|$.
+\end{proof}
+
+\begin{theorem}[Floor Positivity]
+\label{thm:floor-positivity-cog}
+For every bounded receiver $\mathcal{R}$, $S_\flat(\mathcal{R}) > 0$.
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that $S_\flat(\mathcal{R}) = 0$.  By Axiom~(S3)
+there is a candidate $x_0 \in \mathcal{X}$ with
+$S_{\mathcal{R}}(x_0, x^{*}) = 0$.  By Axiom~(S4) this requires
+\[
+  \delta_{\mathcal{R}}(\Phi_{\mathcal{R}}(\sigma_{x_0}),\,
+  \Phi_{\mathcal{R}}(\sigma_{x^{*}})) \;=\; 0 .
+\]
+But $\delta_{\mathcal{R}}(\sigma, \sigma') = 0$ implies $\sigma = \sigma'$:
+since $\delta_{\mathcal{R}}(\sigma, \sigma) = S_\flat(\mathcal{R}) = 0$, and
+$\delta_{\mathcal{R}}$ is the floor on the diagonal, any value below the
+diagonal floor is impossible.  Therefore
+$\Phi_{\mathcal{R}}(\sigma_{x_0}) = \Phi_{\mathcal{R}}(\sigma_{x^{*}})$ in
+$K_{\mathcal{R}}$.  By \Cref{thm:cognitive-residue-persistence}, since
+$|K_{\mathcal{R}}| < |\mathcal{U}_{\mathrm{tot}}|$, the inverse image
+$\mathrm{dec}_{\mathcal{R}}^{-1}(\{x^{*}\})$ has cardinality at most
+$|K_{\mathcal{R}}|$, while $\mathcal{U}_{\mathrm{tot}}$ has greater
+cardinality, so the residue has positive measure with respect to any
+cardinality-preserving measure on $\mathcal{U}_{\mathrm{tot}}$.  This
+contradicts the requirement that the residue's information content vanish at
+floor.  Hence $S_\flat(\mathcal{R}) > 0$.
+\end{proof}
+
+\begin{corollary}[Smallest Knowable Error]
+\label{cor:smallest-knowable}
+For every bounded receiver $\mathcal{R}$ and every truth
+$x^{*} \in \mathcal{X}^{*}$, there is no candidate $x \in \mathcal{X}$
+with $S_{\mathcal{R}}(x, x^{*}) < S_\flat(\mathcal{R})$.
+\end{corollary}
+
+\begin{remark}
+The floor $S_\flat(\mathcal{R})$ is a \emph{receiver-intrinsic} property: it
+depends only on the structure of $\mathcal{R}$, not on the candidate or the
+truth.  Two distinct truths $x_1^*, x_2^* \in \mathcal{X}^{*}$ can be
+approached to the same floor but no closer.  The floor is not a measurement
+error that can be corrected by better calibration; it is a logical consequence
+of the cardinality mismatch between the receiver's knowledge and the world.
+\end{remark}
+
+\section{The S-Functional and S-Entropy Space}
 \label{sec:s-functional}
 
 The \emph{S-functional} formalises the epistemic distance between a receiver
-and a target cell.  It is the central object of the entire theory.
+and a target cell.  It is the central object of the entire theory.  The
+S-entropy space decomposes this distance into three components corresponding
+to kinematic, thermodynamic, and epistemic contributions — a decomposition
+that will reappear, in specialised forms, in every application chapter.
 
-\begin{definition}[S-Functional]
+\begin{definition}[S-Functional — Operational Form]
 \label{def:s-functional}
 For a receiver $\mathcal{R}$, a system state $x \in \Omega$, and a target cell
 $C \subset \Omega$, the \emph{S-functional} is
@@ -251,8 +629,8 @@ where:
   \item $D(x)$ is the resolution cell of $\mathcal{R}$ containing $x$;
   \item $\Pi(D(x))$ is the partition of $D(x)$ induced by $\mathcal{R}$;
   \item $\dcat$ is the categorical distance (\Cref{def:categorical-distance});
-  \item $\beta > 0$ is the \emph{irreducible floor} (proved positive in
-    \Cref{ch:epistemic}).
+  \item $\beta > 0$ is the \emph{irreducible floor} proved positive in
+    \Cref{thm:floor-positivity}.
 \end{itemize}
 \end{definition}
 
@@ -274,6 +652,26 @@ regardless of whether they are spatially near or far, visible or occluded.
 This is the content of the Opacity Independence corollary
 (\Cref{cor:opacity-independence}) proved in \Cref{sec:triple-equivalence}.
 \end{remark}
+
+\begin{proposition}[Basic S-Properties]
+\label{prop:basic-S}
+For receiver $\mathcal{R} = (K, D, \Pi, \beta)$ and cell $C$:
+\begin{enumerate}[(1)]
+  \item $S(\mathcal{R}, x; C) \geq \beta$ for all $x$;
+  \item $S(\mathcal{R}, x; C) \leq \dcat(x, C) + \beta$;
+  \item $C \subseteq C' \Rightarrow S(\mathcal{R}, x; C') \leq S(\mathcal{R}, x; C)$;
+  \item If $D$ and $\Pi$ are Borel measurable, then $x \mapsto S(\mathcal{R}, x; C)$
+    is upper semicontinuous.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Property (1) is the floor lower bound from \Cref{thm:floor-positivity}.
+Property (2) follows since $x$ itself is a candidate in $\Pi(D(x))$.
+Property (3) holds because enlarging the target cell reduces the infimum.
+Property (4) follows from the upper semicontinuity of the infimum over a
+family of measurable functions.
+\end{proof}
 
 \begin{definition}[S-Entropy Space]
 \label{def:s-space}
@@ -320,7 +718,7 @@ information).
 
 \begin{proposition}[Monotonicity of S-Functional under Refinement]
 \label{prop:monotone-refinement}
-If $\Pi' \leq \Pi$ (i.e., $\Pi'$ refines $\Pi$), then for all $x$ and $C$,
+If $\Pi' \leq \Pi$ (\ie, $\Pi'$ refines $\Pi$), then for all $x$ and $C$,
 \[
   S(\mathcal{R}', x; C) \;\leq\; S(\mathcal{R}, x; C) ,
 \]
@@ -333,8 +731,22 @@ Since $\Pi'$ refines $\Pi$, each cell of $\Pi'$ is contained in a cell of
 $\Pi$.  Thus $\Pi'(D'(x)) \subseteq \Pi(D(x))$ and the infimum in
 \Cref{def:s-functional} is taken over a smaller set, producing a value at most
 as large.  The floor $\beta$ is common to all receivers by
-\Cref{thm:floor-positivity} (proved in \Cref{ch:epistemic}).
+\Cref{thm:floor-positivity}.
 \end{proof}
+
+\begin{definition}[Symmetric S-Functional]
+\label{def:symmetric-S}
+An S-functional $S_{\mathcal{R}}$ is \emph{symmetric} if for every
+$\mathcal{R} \in \mathfrak{R}$ and every $x, y \in \mathcal{X} \cup \mathcal{X}^{*}$:
+\[
+  S_{\mathcal{R}}(x, y) \;=\; S_{\mathcal{R}}(y, x)
+  \quad \text{and} \quad
+  S_{\mathcal{R}}(x, z) \;\leq\; S_{\mathcal{R}}(x, y) + S_{\mathcal{R}}(y, z)
+  \quad \text{(modulo floor)}.
+\]
+Symmetric S-functionals satisfying both conditions form a
+\emph{semimetric} on $\mathcal{X}$ with offset $S_\flat$.
+\end{definition}
 
 \section{The Triple Equivalence}
 \label{sec:triple-equivalence}
@@ -354,61 +766,95 @@ as large.  The floor $\beta$ is common to all receivers by
 
 Three representations of a dynamical system — oscillatory, categorical, and
 partition-theoretic — are equivalent as categories.  This equivalence is the
-technical cornerstone of the framework.
+technical cornerstone of the framework.  It asserts that no representation is
+epistemically privileged: any computation can be performed in whichever
+representation makes it cheapest, and the S-value is the same regardless of
+the choice.
 
-\begin{definition}[Oscillatory Category $\mathbf{Osc}(\Omega)$]
-\label{def:osc-category}
-The \emph{oscillatory category} $\mathbf{Osc}(\Omega)$ has:
-\begin{itemize}
-  \item \textbf{Objects}: pairs $(\Omega, H)$ where $H : \Omega \to \mathbb{R}$
-    is a Hamiltonian of finite range;
-  \item \textbf{Morphisms}: symplectic maps $\phi : \Omega \to \Omega$
-    preserving $H$ up to a constant (orbit equivalences);
-  \item \textbf{Trajectories}: $\Traj_H : \mathbb{R} \to \Omega$, the integral
-    curves of Hamilton's equations $\dot{x} = \{x, H\}$.
-\end{itemize}
+The result is deeper than it might appear.  The oscillatory representation
+captures the dynamical content (frequencies, phases, mode structure); the
+categorical representation captures the combinatorial content (which cells
+are visited in which order); the partition representation captures the
+measure-theoretic content (which sets have which probabilities).  That these
+three are equivalent under explicit, computationally accessible functors means
+that every dynamical property has a purely combinatorial shadow and every
+combinatorial structure has a dynamical realisation.
+
+\begin{definition}[Oscillatory Structure]
+\label{def:osc-structure}
+An \emph{oscillatory structure} is a quadruple
+\[
+  \mathfrak{O} \;=\; (M,\, \omega,\, \Phi,\, \mu)
+\]
+where:
+\begin{enumerate}[(i)]
+  \item $M$ is a non-empty set, the \emph{mode set};
+  \item $\omega : M \to \mathbb{R}_{\geq 0}$ is the \emph{frequency assignment};
+  \item $\Phi : M \times \mathbb{R} \to S^1$, with $\Phi(m, t)$ the
+    \emph{phase} of mode $m$ at time $t$, satisfying
+    $\Phi(m, t+s) = \Phi(m, t) \cdot e^{2\pi i \omega(m) s}$;
+  \item $\mu$ is a probability measure on $M$ encoding mode weights.
+\end{enumerate}
+The set of oscillatory structures forms a category $\mathbf{Osc}$ whose
+morphisms preserve frequencies and phase compatibility.
 \end{definition}
 
-\begin{definition}[Categorical Category $\mathbf{Cat}(\Omega)$]
-\label{def:cat-category}
-The \emph{categorical category} $\mathbf{Cat}(\Omega)$ has:
-\begin{itemize}
-  \item \textbf{Objects}: finite sequences of cells
-    $\sigma = (C_{i_0}, C_{i_1}, \ldots, C_{i_T})$ in some partition $\Pi$;
-  \item \textbf{Morphisms}: cellular maps $f : \sigma \to \sigma'$ that
-    preserve the transition relation $C_{i_k} \to C_{i_{k+1}}$;
-  \item \textbf{Composition}: concatenation of sequences modulo the
-    transition relation.
-\end{itemize}
+\begin{definition}[Categorical Structure]
+\label{def:cat-structure}
+A \emph{categorical structure} is a quadruple
+\[
+  \mathfrak{C} \;=\; (C,\, \prec,\, \lambda,\, \nu)
+\]
+where:
+\begin{enumerate}[(i)]
+  \item $C$ is a non-empty set, the \emph{cell set};
+  \item $\prec$ is a strict partial order on $C$ with the property that
+    for each $c \in C$, the set $\{c' : c' \prec c\}$ is finite —
+    the \emph{refinement order};
+  \item $\lambda : C \to \Lambda$ is the \emph{labelling}, where $\Lambda$
+    is a set of label tuples;
+  \item $\nu$ is a probability measure on $C$ encoding cell weights.
+\end{enumerate}
+The set of categorical structures forms a category $\mathbf{Cat}$ whose
+morphisms preserve $\prec$ and $\lambda$.
 \end{definition}
 
-\begin{definition}[Partition Category $\mathbf{Part}(\Omega)$]
-\label{def:part-category}
-The \emph{partition category} $\mathbf{Part}(\Omega)$ has:
-\begin{itemize}
-  \item \textbf{Objects}: partitions $\Pi$ of $\Omega$ satisfying
-    \Cref{ax:categorical-obs};
-  \item \textbf{Morphisms}: refinement maps $r : \Pi \to \Pi'$
-    (every cell of $\Pi$ is a union of cells of $\Pi'$);
-  \item \textbf{Composition}: transitivity of refinement.
-\end{itemize}
+\begin{definition}[Partition Structure]
+\label{def:part-structure}
+A \emph{partition structure} is a triple
+\[
+  \mathfrak{P} \;=\; (\Omega,\, \mathscr{P},\, \pi)
+\]
+where:
+\begin{enumerate}[(i)]
+  \item $\Omega$ is a non-empty measurable space with $\sigma$-algebra
+    $\mathscr{B}$;
+  \item $\mathscr{P} = \{P_n\}_{n \in \mathbb{N}}$ is a sequence of finite
+    measurable partitions of $\Omega$ with $P_{n+1}$ refining $P_n$;
+  \item $\pi$ is a probability measure on $\Omega$ compatible with each
+    $P_n$ in the sense that $\pi(\partial p) = 0$ for each $p \in P_n$.
+\end{enumerate}
+The set of partition structures forms a category $\mathbf{Part}$ whose
+morphisms preserve refinement and the measure.
 \end{definition}
+
+We now construct the three conversion functors explicitly.
 
 \begin{theorem}[Triple Equivalence]
 \label{thm:triple-equivalence}
 There exist functors
 \[
-  F_{OC} : \mathbf{Osc}(\Omega) \to \mathbf{Cat}(\Omega), \qquad
-  F_{CP} : \mathbf{Cat}(\Omega) \to \mathbf{Part}(\Omega), \qquad
-  F_{PO} : \mathbf{Part}(\Omega) \to \mathbf{Osc}(\Omega)
+  F_{OC} : \mathbf{Osc} \to \mathbf{Cat}, \qquad
+  F_{CP} : \mathbf{Cat} \to \mathbf{Part}, \qquad
+  F_{PO} : \mathbf{Part} \to \mathbf{Osc}
 \]
 such that the triangle
 \[
   F_{PO} \circ F_{CP} \circ F_{OC} \;\cong\; \mathrm{Id}_{\mathbf{Osc}},
 \]
 and all three functors are fully faithful and essentially surjective.  In
-particular, $\mathbf{Osc}(\Omega) \simeq \mathbf{Cat}(\Omega) \simeq
-\mathbf{Part}(\Omega)$ as categories.
+particular, $\mathbf{Osc} \simeq \mathbf{Cat} \simeq \mathbf{Part}$ as
+categories.
 \end{theorem}
 
 \begin{proof}
@@ -416,55 +862,124 @@ We construct the three functors explicitly.
 
 \smallskip
 \noindent\textbf{Construction of $F_{OC}$.}
-Given a trajectory $\Traj_H : [0, T] \to \Omega$ and a partition $\Pi$, define
+Define $F_{OC} : \mathbf{Osc} \to \mathbf{Cat}$ on objects by
 \[
-  F_{OC}(\Traj_H) \;=\; \bigl( C(t_0), C(t_1), \ldots, C(t_T) \bigr)
+  F_{OC}(\mathfrak{O}) \;:=\; (M,\, \prec_\omega,\, \lambda_\omega,\, \mu)
 \]
-where $C(t_k)$ is the cell of $\Pi$ containing $\Traj_H(t_k)$ at time $t_k$.
-This is well-defined since $\Pi$ covers $\Omega$.  $F_{OC}$ maps morphisms
-(orbit equivalences) to cellular maps: if $\phi : \Traj_H \to \Traj_{H'}$ is
-an orbit equivalence, then $F_{OC}(\phi)$ maps $C(t_k)$ to the cell containing
-$\Traj_{H'}(\phi(t_k))$.  $F_{OC}$ is faithful because two trajectories that
-visit distinct sequences of cells are distinct.  $F_{OC}$ is full because any
-cellular transition $C_i \to C_j$ is realised by a Hamiltonian trajectory
-(Hamiltonians with finite energy can always be perturbed to produce any
-prescribed cell sequence, by the Connecting Lemma of dynamical systems).
-$F_{OC}$ is essentially surjective since every categorical sequence is the
-image of some trajectory.
+where $m_1 \prec_\omega m_2$ iff $\omega(m_1)$ divides $\omega(m_2)$ in
+$\mathbb{R}_{>0}$ (interpreted as rational ratio with bounded denominator),
+and
+\[
+  \lambda_\omega(m) \;:=\;
+  \bigl(\lfloor \log_2 \omega(m) \rfloor,\;
+   \lfloor (\omega(m) - 2^{\lfloor \log_2 \omega(m) \rfloor})
+   / 2^{\lfloor \log_2 \omega(m) \rfloor - 1} \rfloor,\;
+   \arg \Phi(m, 0) \bigr).
+\]
+On morphisms, $F_{OC}$ acts by restriction.  Faithfulness holds because
+two trajectories visiting distinct cell-sequences are distinct.  Fullness
+holds because any prescribed cell transition $C_i \to C_j$ is realised
+by a trajectory with the corresponding mode-frequency ratio (by the
+Connecting Lemma of dynamical systems).  Essential surjectivity holds
+because every categorical sequence is the image of some trajectory.
 
 \smallskip
 \noindent\textbf{Construction of $F_{CP}$.}
-Given a categorical sequence $\sigma = (C_{i_0}, \ldots, C_{i_T})$, define
-\[
-  F_{CP}(\sigma) \;=\; \Pi_\sigma
-\]
-where $\Pi_\sigma$ is the coarsest partition of $\Omega$ whose cells include
-all $C_{i_k}$ appearing in $\sigma$.  Refinement morphisms in $\mathbf{Cat}$
-map to refinement morphisms in $\mathbf{Part}$.  Full faithfulness follows from
-the bijection between maximal categorical sequences and minimal (finest)
-partitions consistent with those sequences.
+Define $F_{CP} : \mathbf{Cat} \to \mathbf{Part}$ on objects as follows.
+Let $\Omega := C/{\sim_n}$ where $\sim_n$ identifies cells whose labels
+agree on the first $n$ coordinates; then the family $\{P_n\}$ of
+partitions is induced by the labels.  Define $\pi$ as the pushforward of
+$\nu$ under the quotient by $\sim_n$ in the limit.  Refinement morphisms
+in $\mathbf{Cat}$ map to refinement morphisms in $\mathbf{Part}$.  Full
+faithfulness follows from the bijection between maximal categorical
+sequences and minimal partitions consistent with those sequences.
 
 \smallskip
 \noindent\textbf{Construction of $F_{PO}$.}
-Given a partition $\Pi$, define $F_{PO}(\Pi)$ to be the Hamiltonian
+Define $F_{PO} : \mathbf{Part} \to \mathbf{Osc}$ by
 \[
-  H_\Pi(x) \;=\; \min_{C \in \Pi} \{ E_C : x \in C \} ,
+  F_{PO}(\mathfrak{P}) \;:=\; (P_\infty,\, \omega_{\mathfrak{P}},\,
+  \Phi_{\mathfrak{P}},\, \pi)
 \]
-where $E_C$ is the minimum energy consistent with confining the system to cell
-$C$ (a variational problem in $L^2(\Omega)$, solved by the first eigenvalue of
-the Dirichlet Laplacian on $C$).  The integral curves of Hamilton's equations
-for $H_\Pi$ define the minimal-energy oscillation consistent with $\Pi$.
-Refinement morphisms in $\mathbf{Part}$ induce symplectic maps in $\mathbf{Osc}$
-via the symplectic quotient construction.
+where $P_\infty = \bigvee_n P_n$ is the limit partition (atoms in the
+generated $\sigma$-algebra), $\omega_{\mathfrak{P}}(p) := 1/\pi(p)$
+(inverse-measure frequency, by Kac's lemma analogue), and
+$\Phi_{\mathfrak{P}}(p, t) := e^{2\pi i \omega_{\mathfrak{P}}(p) t}$.
+
+Given a partition $\Pi$, the Hamiltonian
+\[
+  H_\Pi(x) \;=\; \min_{C \in \Pi} \{ E_C : x \in C \}
+\]
+(where $E_C$ is the first eigenvalue of the Dirichlet Laplacian on $C$)
+generates oscillations whose frequencies are $\omega(p) = 1/\pi(p)$.
+Refinement morphisms in $\mathbf{Part}$ induce symplectic maps in
+$\mathbf{Osc}$ via the symplectic quotient construction.
 
 \smallskip
 \noindent\textbf{Triangle commutativity.}
-For any trajectory $\Traj_H$, we have
-$F_{PO}(F_{CP}(F_{OC}(\Traj_H))) = \Traj_{H_{\Pi_\sigma}}$,
-where $\Pi_\sigma$ is the partition induced by the cell sequence.  The
-Hamiltonians $H$ and $H_{\Pi_\sigma}$ are orbit-equivalent (they produce the
-same cell sequence), so the composed functor is naturally isomorphic to the
-identity.
+For any oscillatory structure $\mathfrak{O}$,
+$F_{PO}(F_{CP}(F_{OC}(\mathfrak{O})))$ recovers a structure whose mode
+frequencies match those of $\mathfrak{O}$ up to the label rounding
+inherent in $F_{OC}$ (equivalence, not equality, of categories).  All
+three structures encode the same information about the underlying
+probability measure under the same generating $\sigma$-algebra; the
+choice among them is computational, not informational.
+\end{proof}
+
+\begin{remark}[Koopman Operator Connection]
+\label{rem:koopman}
+The functor $F_{PO}$ has a direct interpretation in ergodic theory.  Given
+a partition structure $\mathfrak{P}$ with measure $\pi$, the Koopman
+operator $\mathcal{U}_T : L^2(\Omega, \pi) \to L^2(\Omega, \pi)$ defined
+by $(\mathcal{U}_T f)(x) = f(T x)$ for the partition-induced map $T$
+has eigenfunctions precisely equal to the oscillatory modes of
+$F_{PO}(\mathfrak{P})$.  The eigenvalues are $e^{2\pi i \omega(p)}$ for
+each partition atom $p$, and $\omega(p) = 1/\pi(p)$ by Kac's mean
+recurrence theorem~\citep{Halmos1950,Billingsley1995}.  The Triple
+Equivalence therefore gives an explicit operator-theoretic realisation:
+every partition structure is the spectrum of a Koopman operator, and every
+Koopman operator defines a partition structure.
+\end{remark}
+
+\begin{remark}[Stone Duality Connection]
+\label{rem:stone}
+The functor pair $(F_{CP}, F_{PC})$ has the structural shape of Stone
+duality between Boolean algebras and totally disconnected compact Hausdorff
+spaces.  The categorical structure plays the role of an algebraic object
+whose `points' correspond to maximal filters (ultrafilters), and the
+partition structure plays the role of the dual topological space — the
+Stone space.  The atoms of the limiting partition $P_\infty$ correspond
+to the ultrafilters of the Boolean algebra of cylinder sets generated by
+the labels $\lambda$.  This connection provides a purely topological
+interpretation of the limit partition: it is the Stone--\v{C}ech
+compactification of the discrete label space.
+\end{remark}
+
+\begin{corollary}[Free Conversion]
+\label{cor:free-conversion}
+For any computation $f$ defined in one of the three representations, there
+exist computations $f^O, f^C, f^P$ in the other representations such that
+the diagram of conversions commutes up to natural isomorphism.  Thus a
+computation may be performed in whichever representation makes it cheapest.
+\end{corollary}
+
+\begin{theorem}[Optimal Representation]
+\label{thm:opt-rep}
+For any computation $f$, the optimal total cost over the choice of
+representation is
+\[
+  \mathrm{Cost}^*(f)
+  \;=\; \min_{R \in \{\mathbf{Osc}, \mathbf{Cat}, \mathbf{Part}\}}
+  \bigl[\mathrm{Cost}_R(f) + \min_{R'} \mathrm{Cost}_{R \to R'}\bigr] ,
+\]
+where $\mathrm{Cost}_R(f)$ is the cost of computing $f$ in representation
+$R$ and $\mathrm{Cost}_{R \to R'}$ is the conversion cost.
+\end{theorem}
+
+\begin{proof}
+Direct from \Cref{cor:free-conversion}: every computation has equivalent
+forms in all three representations, so the total cost is minimised over
+the three-way choice of primary representation plus any necessary conversion.
 \end{proof}
 
 \begin{corollary}[Opacity Independence]
@@ -481,20 +996,18 @@ to cell $C$ — a set membership condition — not on any metric of physical spa
 or any photonic path between $x'$ and $C$.  Since \Cref{thm:triple-equivalence}
 shows that the categorical representation is equivalent to the oscillatory one,
 the dynamics that transport the system from $x'$ to $C$ are Hamiltonian, not
-optical.  Optical barriers (opacity) affect photon trajectories, not Hamiltonian
-orbits.
+optical.  Optical barriers affect photon trajectories, not Hamiltonian orbits.
 \end{proof}
 
 \begin{corollary}[Computational-Observational Identity]
 \label{cor:comp-obs-identity}
 Computed trajectories have the same epistemic status as experimentally observed
 ones.  A trajectory produced by numerical integration of Hamilton's equations
-is an object of $\mathbf{Osc}(\Omega)$ on equal footing with a laboratory
-measurement.
+is an object of $\mathbf{Osc}$ on equal footing with a laboratory measurement.
 \end{corollary}
 
 \begin{proof}
-Both computed and observed trajectories are morphisms in $\mathbf{Osc}(\Omega)$.
+Both computed and observed trajectories are morphisms in $\mathbf{Osc}$.
 The functor $F_{OC}$ maps both to categorical sequences without distinguishing
 their origin.  Their S-values are therefore computed by the same formula
 (\Cref{thm:entropy-identity}).  There is no additional epistemic penalty for
@@ -509,80 +1022,106 @@ places \emph{no} constraint on the S-values of individual subtasks.  This
 is the mathematical reason why complex biological processes can proceed even
 when every individual step appears locally infeasible.
 
+Before proving the theorem, we need the algebra of S-expressions — the formal
+language in which problems and their decompositions are stated.  An
+S-expression is any syntactic object that a receiver can evaluate to an
+S-value.  The key feature of S-expressions is that the same global S-value
+can be expressed in exponentially many syntactically distinct ways, and the
+local S-values of the constituent sub-expressions are entirely unconstrained.
+
 \begin{definition}[Task Decomposition]
 \label{def:task-decomposition}
 A \emph{task decomposition} of a global task $\mathcal{T}$ with S-value
 $S_{\mathrm{global}}$ is a collection of subtasks $\{t_1, \ldots, t_n\}$ and
-receiver configurations $\{R_1, \ldots, R_n\}$ such that
+receiver configurations $\{R_1, \ldots, R_n\}$ such that the receiver's
+evaluation of the composed expression equals the global evaluation:
 \[
-  \sum_{i=1}^n S(R_i, x; t_i) \;=\; S_{\mathrm{global}} .
+  \mathrm{eval}_{\mathcal{R}}\!\bigl(\xi_1 \star_1 \xi_2 \star_2 \cdots
+  \star_{n-1} \xi_n\bigr) \;=\; k^* \in K_{\mathcal{R}} ,
+  \qquad
+  S_{\mathcal{R}}(\mathrm{dec}_{\mathcal{R}}(k^*), x^*) \;=\; S_{\mathrm{global}} .
 \]
 \end{definition}
 
-\begin{definition}[Information Catalyst]
-\label{def:info-catalyst}
-An \emph{information catalyst} for receiver $\mathcal{R}$ is a coupling
-$\Traj$ with \emph{catalytic power} $\kappa(\Traj) \in [0,1)$ such that
-\[
-  S(\mathcal{R} \diamond \Traj, x; C) \;=\; (1 - \kappa(\Traj)) \cdot S(\mathcal{R}, x; C) .
-\]
-The catalyst reduces the S-value without being consumed (it can be reused
-for subsequent tasks).
-\end{definition}
-
-\begin{theorem}[Catalytic Composition]
-\label{thm:catalytic-composition}
-For two information catalysts $\Traj_1, \Traj_2$ with powers
-$\kappa_1, \kappa_2 \in [0,1)$, their sequential composition satisfies
-\[
-  \kappa(\Traj_1 \diamond \Traj_2)
-  \;=\; 1 - (1 - \kappa_1)(1 - \kappa_2) .
-\]
+\begin{theorem}[Local-Global Decoupling]
+\label{thm:local-global}
+For any global S-value $S_{\mathrm{global}} \in [S_\flat(\mathcal{R}), 100]$
+and any sequence of target local S-values
+$(\sigma_1, \sigma_2, \ldots, \sigma_n) \in [S_\flat(\mathcal{R}), 100]^n$,
+there exists an expression $\xi$ with subtasks $\eta_1, \ldots, \eta_n$
+satisfying:
+\begin{enumerate}[(i)]
+  \item $S_{\mathcal{R}}(\xi, x^*) = S_{\mathrm{global}}$;
+  \item $S_{\mathcal{R}}(\eta_i, x^*) = \sigma_i$ for each $i$.
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-By \Cref{def:info-catalyst}:
-\[
-  S(\mathcal{R} \diamond \Traj_1 \diamond \Traj_2, x; C)
-  = (1-\kappa_2) \cdot S(\mathcal{R} \diamond \Traj_1, x; C)
-  = (1-\kappa_2)(1-\kappa_1) \cdot S(\mathcal{R}, x; C) .
-\]
-Comparing with $(1 - \kappa(\Traj_1 \diamond \Traj_2)) \cdot S(\mathcal{R}, x; C)$
-gives the formula.
+Construct $\xi := \xi_0 + \sum_{i=1}^n (\eta_i - \eta_i)$ where $\xi_0$ is
+an expression with global S-value $S_{\mathrm{global}}$ and each $\eta_i$ is
+chosen to have local S-value $\sigma_i$.  The terms $\eta_i - \eta_i$
+evaluate to zero in $K_{\mathcal{R}}$ and therefore contribute nothing to the
+global evaluation.  By \Cref{lem:image-S}, every value in
+$[S_\flat(\mathcal{R}), 100]$ is achievable as a local S-value.
 \end{proof}
 
 \begin{theorem}[Unconstrained Subtask]
 \label{thm:unconstrained-subtask}
-Let $S_{\mathrm{global}} \in (0, S_{\max}]$ be any global S-value, let $n \geq 1$,
-and let $s_1, \ldots, s_n \in [0, S_{\max}]$ be any target values satisfying
-$\sum_{i=1}^n s_i = S_{\mathrm{global}}$.  Then there exist receiver configurations
-$R_1, \ldots, R_n$ such that $S(R_i, x; t_i) = s_i$ for each $i$.
+Let $S_{\mathrm{global}} \in (0, 100]$ be any global S-value, let $n \geq 1$,
+and let $\sigma_1, \ldots, \sigma_n \in [S_\flat(\mathcal{R}), 100]$ be any
+target local S-values.  Then there exist a task decomposition with subtasks
+$\eta_1, \ldots, \eta_n$ satisfying $S_{\mathcal{R}}(\eta_i, x^*) = \sigma_i$
+for each $i$, while the composed expression has $S_{\mathcal{R}}(\xi, x^*) =
+S_{\mathrm{global}}$.
 
-In particular, the global S-value $S_{\mathrm{global}}$ places \textbf{no lower bound}
-on individual subtask S-values: any $s_i \in [0, S_{\max}]$ is achievable for
-task $t_i$ independently of the values chosen for other subtasks.
+In particular, the global S-value $S_{\mathrm{global}}$ places
+\textbf{no lower bound} on individual subtask S-values: any $\sigma_i \in
+[S_\flat(\mathcal{R}), 100]$ is achievable for task $t_i$ independently
+of the values chosen for other subtasks.
 \end{theorem}
 
 \begin{proof}
-We construct the required receivers.  For each $i$, let $n_i \geq 1$ be such
-that $s_i \leq \kB \Depth_{\max} \ln n_i$.  Set the partition depth of $R_i$
-to $\Depth_i = s_i / (\kB \ln n_i)$ (by \Cref{thm:entropy-identity}).  Such
-a partition exists by \Cref{ax:categorical-obs} as long as $\Depth_i \geq 0$,
-which holds since $s_i \geq 0$.  The constraint $\sum_i S(R_i, x; t_i) =
-\sum_i s_i = S_{\mathrm{global}}$ is satisfied by construction.  Since each $s_i$
-was arbitrary in $[0, S_{\max}]$ subject only to the sum constraint, and since
-the sum constraint can be met for any choice of the $s_i$ (we have $n-1$
-degrees of freedom after fixing the sum), the theorem follows.
+The existence of the required decomposition is \Cref{thm:local-global}.  The
+``no lower bound'' statement follows because the local S-values $\sigma_i$
+are chosen freely in $[S_\flat(\mathcal{R}), 100]$ subject only to the
+composition evaluating to $k^*$ — and the Local-Global Decoupling theorem
+shows this is always achievable by inserting cancelling pairs.
+
+For the rigorous algebraic argument: let $\xi$ be parsed as $\xi = C[\eta]$
+where $C[\cdot]$ is the surrounding context.  For any $\eta'$ with
+$\mathrm{eval}_{\mathcal{R}}(\eta') = \mathrm{eval}_{\mathcal{R}}(\eta)$, the
+substitution $\xi' = C[\eta']$ has
+$\mathrm{eval}_{\mathcal{R}}(\xi') = k^*$ by induction on the size of $C$.
+The set of such $\eta'$ includes all expressions in any of the three
+representations whose evaluation matches, all mixed-type expressions whose
+conversions cancel, and all signed-fractional expressions with arithmetic
+equivalence.  The local S-value $S_{\mathcal{R}}(\eta', x^*)$ is unconstrained
+within $[S_\flat(\mathcal{R}), 100]$ by choosing $\eta'$ appropriately.
+\end{proof}
+
+\begin{corollary}[Local Infeasibility is Compatible with Global Feasibility]
+\label{cor:local-infeasibility}
+There exist expressions $\xi$ with global S-value
+$S_{\mathrm{global}} \to S_\flat(\mathcal{R})$ (near-perfect) in which one or
+more subtasks have local S-value $100$ (maximally incorrect).
+\end{corollary}
+
+\begin{proof}
+Take $\xi = \eta + (-\eta) + \xi_0$ where $\eta$ is at S-value $100$ and
+$\xi_0$ has S-value at floor.  The pair $(\eta, -\eta)$ cancels in the
+receiver's evaluation, so the global S-value equals that of $\xi_0$ alone.
 \end{proof}
 
 \begin{remark}[Miracle Principle]
 \label{rem:miracle}
 \Cref{thm:unconstrained-subtask} is the formal basis of what biologists
 sometimes call ``emergent'' or ``miraculous'' steps in cellular cascades: a
-locally infeasible sub-step ($s_i$ near 0) can appear in a globally feasible
-cascade ($S_{\mathrm{global}}$ near 0) precisely because there is no sum-to-floor
-constraint on individual subtasks.  Subtasks can be locally ``easy'' even when
-the global problem is thermodynamically marginal.
+locally infeasible sub-step ($\sigma_i$ near $100$) can appear in a globally
+feasible cascade ($S_{\mathrm{global}}$ near $S_\flat$) precisely because
+there is no floor-to-global constraint on individual subtasks.  The cascade
+as a whole can be near-optimal even when individual steps appear impossible
+in isolation.  This is not a metaphysical claim but a theorem: the
+mathematics of receiver evaluation allows it, and biology exploits it.
 \end{remark}
 
 \begin{figure}[!htbp]
@@ -604,6 +1143,722 @@ the global problem is thermodynamically marginal.
   \label{fig:part1-foundations}
 \end{figure}
 
+\section{Recursive No-Privileged-Level Theorem}
+\label{sec:recursive-no-privileged}
+
+The Unconstrained Subtask Theorem shows that local and global S-values
+decouple horizontally — across the components of a single decomposition.
+The Recursive No-Privileged-Level Theorem extends this decoupling
+\emph{vertically}: the same algebraic laws hold at every level of recursion,
+and no level is singled out as the ``true'' global level.
+
+This has profound implications for hierarchical biological systems.  A
+cellular partition can serve simultaneously as the global description at the
+cellular scale and as a subtask at the tissue scale.  The calculus does not
+distinguish these roles: the S-value is invariant under vertical
+re-embedding.
+
+\begin{definition}[Triple Decomposition]
+\label{def:triple-decomp}
+A \emph{triple decomposition} of an S-expression $\xi$ is an ordered triple
+$(\xi_k, \xi_t, \xi_e)$ of S-expressions satisfying
+\[
+  \mathrm{eval}_{\mathcal{R}}((\xi_k, \xi_t, \xi_e))
+  \;=\; \mathrm{eval}_{\mathcal{R}}(\xi)
+  \quad \text{for every receiver } \mathcal{R}.
+\]
+The components $\xi_k$, $\xi_t$, $\xi_e$ are the \emph{kinematic},
+\emph{thermodynamic}, and \emph{epistemic} components, corresponding to
+the three coordinates of the S-entropy space $\Sspace$.
+\end{definition}
+
+\begin{definition}[Recursive Triple at Depth $d$]
+\label{def:rec-triple}
+A \emph{recursive triple} of $\xi$ at depth $d$ is a triple decomposition
+$(\xi_k, \xi_t, \xi_e)$ together with triple decompositions of each
+component, continued to depth $d$ or all the way down ($d = \infty$).
+\end{definition}
+
+\begin{definition}[Scale Operator]
+\label{def:scale-op}
+The \emph{scale operator} $\sigma_{d \to d+1}$ sends an expression $\xi$ at
+depth $d$ to the expression $(\xi, \mathbf{0}, \mathbf{0})$ at depth $d+1$,
+where $\mathbf{0}$ is the zero-expression evaluating to the unit element of
+$K_{\mathcal{R}}$.
+\end{definition}
+
+\begin{theorem}[Scale Invariance of S-Value]
+\label{thm:scale-inv}
+For every $\xi$ and every truth $x^*$:
+\[
+  S_{\mathcal{R}}(\sigma_{d \to d+1}(\xi),\, x^*)
+  \;=\; S_{\mathcal{R}}(\xi,\, x^*) .
+\]
+\end{theorem}
+
+\begin{proof}
+The scale operator adds zero-evaluating components.  By the inductive
+definition of receiver evaluation, these contribute nothing to the
+receiver's knowledge state, so the S-value is preserved.
+\end{proof}
+
+\begin{theorem}[No Privileged Level]
+\label{thm:no-priv-level}
+For every depth $d \in \mathbb{N}$ and every $\xi$, there exists $\xi'$ at
+depth $d+1$ such that $\xi'$ contains $\xi$ as a subtask at depth $d+1$,
+and $S_{\mathcal{R}}(\xi', x^*) = S_{\mathcal{R}}(\xi, x^*)$.  Thus the
+same expression appears as ``global'' at depth $d$ and as ``subtask'' at
+depth $d+1$, with identical S-value in both roles.
+\end{theorem}
+
+\begin{proof}
+Take $\xi' := (\xi, \mathbf{0}, \mathbf{0})$ as the trivial extension; the
+inner $\xi$ is now a subtask of $\xi'$.  The S-value is preserved by
+\Cref{thm:scale-inv}.
+\end{proof}
+
+\begin{corollary}[Recursive Global Identification]
+\label{cor:recursive-global}
+For any expression $\xi$ at any depth, the choice of which level of the
+recursive triple is treated as ``global'' is a free parameter.  The calculus
+is indifferent to this choice: the same algebraic machinery applies at every
+level of recursion, and the system is self-similar under the recursive triple
+operation.
+\end{corollary}
+
+\begin{theorem}[Existence and Multiplicity of Recursive Triples]
+\label{thm:exist-mult-rec-triple}
+For every $\xi$ and every depth $d \in \mathbb{N} \cup \{\infty\}$:
+\begin{enumerate}[(a)]
+  \item \emph{(Existence)} There exists a recursive triple of $\xi$ at depth $d$.
+  \item \emph{(Multiplicity)} The number of recursive triples at depth $d$ is
+    at least $T(d) = 3 \cdot 4^{d-1}$ for $d \geq 1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(a)} By induction.  At $d = 0$, the recursive triple is $\xi$ itself.
+At depth $d+1$, choose any triple decomposition $(\xi_k, \xi_t, \xi_e)$
+of $\xi$ — such decompositions exist by taking $\xi_k = \xi$,
+$\xi_t = \xi - \xi$, $\xi_e = \xi - \xi$, which trivially satisfy the
+evaluation equality.  Apply the inductive hypothesis to each component.
+At $d = \infty$, the recursion continues without termination.
+
+\emph{(b)} At depth $d = 1$, there are at least three non-trivial triple
+decompositions (assigning $\xi$ to any of the three component positions and
+zero to the others).  At each subsequent depth, each component admits at
+least four binary-operation embeddings (positive addition, negative addition,
+multiplication, division, modulo non-degeneracy), and three component
+positions multiply to give the lower bound $3 \cdot 4^{d-1}$.
+\end{proof}
+
+\begin{theorem}[Recursive Coordinates and Coordinate Multiplicity]
+\label{thm:recursive-coords}
+A \emph{recursive coordinate path} of length $n$ is a sequence
+$(c_1, c_2, \ldots, c_n) \in \{k, t, e\}^n$.  For a recursive triple of
+$\xi$ at depth $d \geq n$, the number of coordinate selections $\xi_{\mathbf{p}}$
+for $|\mathbf{p}| = n$ is exactly $3^n$, growing exponentially.  The
+recursive S-tuple at depth $d$,
+\[
+  \mathbf{S}^{(d)}_{\mathcal{R}, x^*}(\xi)
+  \;\in\; \mathbb{S}^{3^d} ,
+\]
+has components $S_{\mathcal{R}}(\xi_{\mathbf{p}}, x^*)$ for each coordinate
+path $\mathbf{p}$ of length $d$.
+\end{theorem}
+
+\begin{proof}
+By definition, each coordinate path of length $n$ selects exactly one
+sub-expression, and there are $|\{k, t, e\}|^n = 3^n$ such paths.
+\end{proof}
+
+\begin{remark}[Cellular Partition Depth as S-Scale Instantiation]
+\label{rem:cellular-partition}
+In the biological setting, the recursive structure has a direct
+interpretation.  A cell partition of a tissue into $N_1$ cell-types at the
+first level, with each type subdivided into $N_2$ sub-types at the second
+level, and so on, gives a recursive triple with depth $d$ equal to the
+number of classification levels.  The S-scale coordinate $\Sk$ at depth $d$
+measures the kinematic uncertainty in assigning a given cell to its
+partition class at that depth.  By \Cref{thm:no-priv-level}, the S-value is
+the same whether we treat the tissue-level partition or the cell-level
+partition as the ``global'' description: both are valid, equivalent S-values,
+and the calculus does not privilege either.
+\end{remark}
+
+\section{Information Catalyst Algebra}
+\label{sec:catalyst-algebra}
+
+An information catalyst is an expression that, when composed with any other
+expression, strictly reduces the receiver's S-value without itself being
+consumed.  The catalytic power of an expression measures how much of the
+residual distance above floor it closes.  The key result of this section is
+that catalytic powers multiply under composition — a law that is the
+information-theoretic analogue of survival probability multiplication in
+reliability theory.
+
+\begin{definition}[Information Catalyst]
+\label{def:info-catalyst}
+An \emph{information catalyst} for receiver $\mathcal{R}$ at truth $x^*$
+is an expression $\gamma$ such that for every $\xi$ with
+$S_{\mathcal{R}}(\xi, x^*) > S_\flat(\mathcal{R})$:
+\[
+  S_{\mathcal{R}}(\xi \diamond \gamma,\, x^*)
+  \;<\; S_{\mathcal{R}}(\xi,\, x^*) ,
+\]
+where $\diamond$ denotes catalytic composition.
+\end{definition}
+
+\begin{definition}[Catalytic Power]
+\label{def:catalytic-power}
+The \emph{catalytic power} of catalyst $\gamma$ at receiver $\mathcal{R}$
+on truth $x^*$ is
+\[
+  \kappa_{\mathcal{R}, x^*}(\gamma)
+  \;:=\;
+  \sup_{\xi}
+  \frac{S_{\mathcal{R}}(\xi, x^*) - S_{\mathcal{R}}(\xi \diamond \gamma, x^*)}
+       {S_{\mathcal{R}}(\xi, x^*) - S_\flat(\mathcal{R})} .
+\]
+The catalyst is \emph{strict} if $\kappa > 0$, \emph{absolute} if
+$\kappa = 1$, and \emph{neutral} if $\kappa = 0$.
+\end{definition}
+
+\begin{lemma}[Catalytic Power Range]
+\label{lem:cat-power-range}
+For every catalyst $\gamma$: $\kappa_{\mathcal{R}, x^*}(\gamma) \in [0, 1]$.
+\end{lemma}
+
+\begin{proof}
+The numerator is bounded above by the denominator because S-values cannot
+decrease below $S_\flat(\mathcal{R})$ by \Cref{cor:smallest-knowable}.
+\end{proof}
+
+\begin{theorem}[Multiplicativity of Catalytic Power]
+\label{thm:mult-cat-power}
+Let $\gamma_1, \gamma_2$ be catalysts for receiver $\mathcal{R}$ at truth
+$x^*$ with catalytic powers $\kappa_1 := \kappa_{\mathcal{R}, x^*}(\gamma_1)$
+and $\kappa_2 := \kappa_{\mathcal{R}, x^*}(\gamma_2)$.  Then the catalytic
+power of the composite $\gamma_1 \diamond \gamma_2$ is
+\[
+  \kappa_{\mathcal{R}, x^*}(\gamma_1 \diamond \gamma_2)
+  \;=\; 1 - (1 - \kappa_1)(1 - \kappa_2) .
+\]
+\end{theorem}
+
+\begin{proof}
+Apply $\gamma_1$ first.  The residual S-distance above floor is multiplied
+by $(1 - \kappa_1)$:
+\[
+  S_{\mathcal{R}}(\xi \diamond \gamma_1, x^*) - S_\flat
+  \;=\; (1 - \kappa_1)\bigl[S_{\mathcal{R}}(\xi, x^*) - S_\flat\bigr].
+\]
+Apply $\gamma_2$ to the result.  The residual is further multiplied by
+$(1 - \kappa_2)$:
+\[
+  S_{\mathcal{R}}(\xi \diamond \gamma_1 \diamond \gamma_2, x^*) - S_\flat
+  \;=\; (1 - \kappa_2)(1 - \kappa_1)\bigl[S_{\mathcal{R}}(\xi, x^*) - S_\flat\bigr].
+\]
+The total fraction of distance closed is
+$1 - (1 - \kappa_1)(1 - \kappa_2)$, which equals the catalytic power of
+the composite by definition.
+\end{proof}
+
+\begin{corollary}[Diminishing Returns]
+\label{cor:diminishing-returns}
+Repeated application of the same catalyst $\gamma$ a total of $n$ times
+yields composite catalytic power $1 - (1 - \kappa)^n$, which converges to
+$1$ as $n \to \infty$ but never reaches it.
+\end{corollary}
+
+\begin{theorem}[Cascade Composition Rule]
+\label{thm:cascade-comp}
+The catalytic power of a cascade $\Gamma = (\gamma_1, \ldots, \gamma_n)$
+in right-associative parsing is
+\[
+  \kappa(\Gamma) \;=\; 1 - \prod_{i=1}^n (1 - \kappa_i) .
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \Cref{thm:mult-cat-power} inductively to each pair.
+\end{proof}
+
+\begin{corollary}[Asymptotic Floor Approach]
+\label{cor:asymptotic-floor}
+For a sequence of catalysts $(\gamma_1, \gamma_2, \ldots)$ with $\kappa_i > 0$:
+\begin{enumerate}[(a)]
+  \item If $\sum_{i=1}^\infty \kappa_i = \infty$ (divergent), the cascade
+    S-converges to floor: $S_{\mathcal{R}}(\xi \diamond \gamma^n, x^*)
+    \to S_\flat(\mathcal{R})$.
+  \item If $\sum_{i=1}^\infty \kappa_i < \infty$ (convergent), the cascade
+    S-converges to a value strictly above floor.
+\end{enumerate}
+This is the catalytic analogue of the Borel--Cantelli lemma.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:cascade-comp}, the cascade catalytic power after $n$ steps is
+$1 - \prod_{i=1}^n(1 - \kappa_i)$.  The infinite product
+$\prod_{i=1}^\infty(1 - \kappa_i)$ converges to $1$ iff
+$\sum_{i=1}^\infty \kappa_i < \infty$ (by the standard criterion for
+convergence of infinite products).  If the sum diverges, the product
+converges to $0$, so the cascade catalytic power converges to $1$, driving
+the residual above floor to zero.  If the sum converges, the product
+converges to a positive value, so the cascade leaves a residual above floor.
+\end{proof}
+
+\begin{theorem}[Locally-Impossible Catalysts Can Have Positive Power]
+\label{thm:loc-imp-positive}
+There exist catalysts $\gamma$ with $S_{\mathcal{R}}(\gamma, x^*) = 100$
+(locally maximally infeasible) yet $\kappa_{\mathcal{R}, x^*}(\gamma) > 0$.
+\end{theorem}
+
+\begin{proof}
+Construct $\gamma := \eta + (-\eta + \delta)$ where $\eta$ is locally
+maximally infeasible and $\delta$ is a small correction expression with
+$S_{\mathcal{R}}(\delta, x^*) = S_\flat(\mathcal{R}) + \varepsilon$ for
+arbitrarily small $\varepsilon > 0$.  By \Cref{thm:local-global}, the
+local S-value of the first summand $\eta$ is $100$, while the composite
+$\gamma$ has S-value equal to that of $\delta$ alone.  Substituting
+$\gamma$ into a parent expression $\xi$ via $\diamond$ reduces the global
+S-distance by the amount encoded by $\delta$.
+\end{proof}
+
+\begin{proposition}[Catalyst Monoid Structure]
+\label{prop:catalyst-monoid}
+The set $\mathcal{F}_{\mathcal{R}, x^*} := \{\gamma : \kappa_{\mathcal{R}, x^*}(\gamma) > 0\}$
+of strict catalysts, equipped with the binary operation $\diamond$ and the
+empty expression as unit, forms a monoid: $\diamond$ is associative and the
+unit is two-sided.
+\end{proposition}
+
+\begin{proof}
+Associativity follows from the associativity of composition in the expression
+algebra and the multiplicativity of catalytic power (\Cref{thm:mult-cat-power}).
+The unit is the empty expression, whose application leaves the receiver's
+knowledge state unchanged.
+\end{proof}
+
+\begin{proposition}[Non-Commutativity of Catalyst Algebra]
+\label{prop:non-comm-catalyst}
+The catalyst algebra is in general non-commutative: there exist
+$\gamma_1, \gamma_2$ with
+$\gamma_1 \diamond \gamma_2 \neq \gamma_2 \diamond \gamma_1$ as
+expressions, even though their composite catalytic powers are equal
+(since $1 - (1-\kappa_1)(1-\kappa_2)$ is symmetric in $\kappa_1, \kappa_2$).
+\end{proposition}
+
+\begin{proof}
+The order of catalyst application affects the intermediate state of the
+receiver's knowledge framework, even when the final S-value is the same.
+Concretely, if $\gamma_1$ acts on representation $\mathbf{Osc}$ and
+$\gamma_2$ acts on representation $\mathbf{Cat}$, the receiver's internal
+state after $\gamma_1 \diamond \gamma_2$ differs from that after
+$\gamma_2 \diamond \gamma_1$, even though both yield the same net S-value
+reduction.
+\end{proof}
+
+\begin{theorem}[Distributivity of Catalysis]
+\label{thm:dist-cat}
+For all expressions $\xi_1, \xi_2$ and catalyst $\gamma$:
+\[
+  (\xi_1 \star \xi_2) \diamond \gamma
+  \;=\; (\xi_1 \diamond \gamma) \star (\xi_2 \diamond \gamma) ,
+\]
+where $\star$ is any binary operation for which $\diamond$ distributes in
+the receiver's knowledge framework.
+\end{theorem}
+
+\begin{proof}
+Distributivity of the catalytic product over the binary operation follows
+from the distributivity of the receiver-internal operations: the catalyst
+$\gamma$ modifies the receiver's decoding of both $\xi_1$ and $\xi_2$
+independently when applied to their composition, which is the same as
+modifying each and then composing.
+\end{proof}
+
+\section{Mode-Methodology Equivalence}
+\label{sec:mode-methodology}
+
+A \emph{layered receiver} is an ordered tuple of receivers on the same
+outcome space that pool their candidate-projections.  The key structural
+result of this section is that a receiver's \emph{mode} (its layer
+structure) and the \emph{methodology} it employs contribute to the
+aggregate floor through the same composition law.  This means that a
+more structured methodology and a more refined measurement mode are
+formally interchangeable as floor-reduction mechanisms.
+
+\begin{definition}[Layered Receiver]
+\label{def:layered-receiver}
+A \emph{layered receiver} is an ordered tuple
+$\mathcal{R}_\bullet = (\mathcal{R}_1, \ldots, \mathcal{R}_n)$ of receivers
+on the same outcome space, with aggregation
+\[
+  S(\mathcal{R}_\bullet, x; C) \;=\; \min_{i} S(\mathcal{R}_i, x; C) .
+\]
+Layer $i$ is \emph{pre-decoder} if $D_i$ is constant,
+\emph{decoder-layer} if $D_i$ is non-constant continuous, and
+\emph{delegated} if $D_i$ factors through an external receiver.
+\end{definition}
+
+\begin{proposition}[Layered Floor]
+\label{prop:layered-floor}
+$S_\flat(\mathcal{R}_\bullet) = \min_i \beta_i$.
+\end{proposition}
+
+\begin{proof}
+The aggregate S is the minimum over layers.  The minimum of a collection
+of quantities each bounded below by $\beta_i$ is bounded below by
+$\min_i \beta_i$, and this bound is attained by the best layer.
+\end{proof}
+
+\begin{definition}[Methodology]
+\label{def:methodology}
+A \emph{methodology} is a triple $(T, \kappa, \sigma)$ with per-iteration
+update $T : \mathcal{X} \times [0, \Sigma] \to [0, \Sigma]$, contraction
+$\kappa \in [0, 1)$, dispersion $\sigma \in [0, \Sigma]$, and
+\emph{methodological floor}
+\[
+  S_\flat(\mathcal{M}) \;=\; \frac{\sigma \kappa}{1 - \kappa} \;>\; 0 .
+\]
+\end{definition}
+
+\begin{theorem}[Mode-Methodology Equivalence]
+\label{thm:mode-method-equiv-ch01}
+For a layered receiver $\mathcal{R}_\bullet$ with layer floors $\beta_i$
+and an agent with methodology floor $S_\flat(\mathcal{M})$, the composite
+floor under the parallel-OR-success composition law is
+\[
+  S_\flat(\mathcal{R}_\bullet \diamond \mathcal{M})
+  \;=\; \frac{\prod_i \beta_i \cdot S_\flat(\mathcal{M})}{\Sigma^n} ,
+\]
+which depends only on the floor values, not on the internal structure of
+either the layers or the methodology.  Modes and methodologies contribute
+floors through the same multiplicative law.
+\end{theorem}
+
+\begin{proof}
+The composite floor under parallel-OR-success is the product of the
+dimensionless individual floors times $\Sigma$.  The $n$ receiver layers
+contribute $\prod_i \beta_i / \Sigma^{n-1}$ and the methodology contributes
+$S_\flat(\mathcal{M}) / \Sigma$; their parallel composition gives
+$\prod_i \beta_i \cdot S_\flat(\mathcal{M}) / \Sigma^n$.  The key observation
+is that the formula is symmetric in the floors: whether we call a
+floor-contributor a ``layer'' or a ``methodology'' is a labelling choice.
+\end{proof}
+
+\begin{theorem}[Methodological Incompatibility Principle]
+\label{thm:meth-incompatibility}
+Two methodologies $\mathcal{M}_1, \mathcal{M}_2$ with disjoint update maps
+(the image of $T_1$ is disjoint from the image of $T_2$ in
+$[0, \Sigma]$) produce incompatible belief structures: the joint
+methodology floor satisfies
+\[
+  S_\flat(\mathcal{M}_1 \diamond \mathcal{M}_2)
+  \;<\; \min(S_\flat(\mathcal{M}_1),\, S_\flat(\mathcal{M}_2)) .
+\]
+Incompatible methodologies are more powerful in combination than either
+alone, even though their beliefs are disjoint.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:mode-method-equiv-ch01}, the composite floor is the product of
+the dimensionless individual floors times $\Sigma$:
+$S_\flat(\mathcal{M}_1 \diamond \mathcal{M}_2) =
+S_\flat(\mathcal{M}_1) \cdot S_\flat(\mathcal{M}_2) / \Sigma$.
+Since both floors are in $(0, \Sigma)$, the product divided by $\Sigma$
+is strictly less than either factor.
+\end{proof}
+
+\begin{theorem}[Distribution Theorem]
+\label{thm:agent-floor-distribution}
+For any target cell $C$ and any finite ensemble of agents
+$\mathcal{A} = (\mathcal{A}_1, \ldots, \mathcal{A}_n)$ with agent floors
+$f_i$, the composite floor satisfies
+\[
+  S_\flat(\mathcal{A}_1 \diamond \cdots \diamond \mathcal{A}_n)
+  \;=\; \frac{\prod_{i=1}^n f_i}{\Sigma^{n-1}} ,
+\]
+and the composite decreases geometrically in $n$:
+$S_\flat(\mathcal{A}^n) = f^n / \Sigma^{n-1}$ when all $f_i = f$.
+\end{theorem}
+
+\begin{proof}
+Repeated application of the parallel-composition formula from
+\Cref{thm:mode-method-equiv-ch01}, noting that independence of the agents'
+candidate-projections makes the product formula exact.
+\end{proof}
+
+\section{Worked Examples}
+\label{sec:ch01-worked-examples}
+
+\subsection{A Periodic System in Three Representations}
+\label{subsec:periodic-example}
+
+The following example shows the Triple Equivalence in action.  A system
+with period exactly $3$ (in some unit) is expressed in three representations;
+the S-value is identical in all three.  This illustrates
+\Cref{thm:triple-equivalence} concretely and shows the Unconstrained Subtask
+property in an arithmetic context.
+
+\begin{example}[Period-3 System]
+\label{ex:period-3}
+Consider a candidate space $\mathcal{X}$ representing periodic systems with
+truth $x^* \in \mathcal{X}^*$ being a system of period exactly $3$ (seconds).
+Let receiver $\mathcal{R}$ have $\delta_{\mathcal{R}}(s, s') =
+\min(100, |s - s'| \cdot 33.3)$ (a unit difference contributes $33.3$ to
+the S-value).
+
+\paragraph{Oscillatory representation.}
+The truth $x^*$ corresponds to mode $m^*$ with frequency $\omega(m^*) =
+2\pi/3$.  The expression $\xi_O := (m^*, \mathbf{Osc})$ directly identifies
+the mode.  Its S-value: $S_{\mathcal{R}}(\xi_O, x^*) = S_\flat(\mathcal{R})$.
+
+\paragraph{Categorical representation.}
+Under $F_{OC}$, the mode $m^*$ maps to cell $c^*$ with label
+$(\lfloor \log_2(2\pi/3) \rfloor, \ldots, \arg \Phi(m^*, 0))$.
+The expression $\xi_C := (c^*, \mathbf{Cat})$ has the same S-value:
+$S_{\mathcal{R}}(\xi_C, x^*) = S_\flat(\mathcal{R})$.
+
+\paragraph{Partition representation.}
+Under $F_{PO}$, the partition atom $p^*$ has measure
+$\pi(p^*) = 1/\omega(m^*) = 3/(2\pi)$.
+The expression $\xi_P := (p^*, \mathbf{Part})$ has the same S-value.
+
+\paragraph{Unconstrained decompositions.}
+All of the following evaluate to period $3$ and hence have S-value $S_\flat$:
+\begin{align*}
+  3 &= 1 + 1 + 1, \qquad 3 = 2 + 1, \qquad 3 = 4 - 1, \\
+  3 &= 6/2, \qquad 3 = \log_e e^3, \qquad
+  3 = \sin(3\pi/2) + 4 .
+\end{align*}
+The expression $\sin(3\pi/2) + 4$ requires the receiver to have a
+trigonometric decoder, but contains no type violation under the calculus.
+A cross-representation expression $(p_1 + t_1 + 1)$ where $p_1$ is
+nominally a position and $t_1$ a time is admissible: each is converted to
+its representation-internal numeric value via the conversion functors before
+the sum proceeds.  The local types are surface features; the global S-value
+is what matters.
+
+Note that the expression $(11 - 10) + (-1 - (-1)) + 3 = 1 + 0 + 3 = 4$
+does \emph{not} evaluate to $3$ and has $S_{\mathcal{R}}(\cdot, x^*)
+\approx 33.3$.  This illustrates that not every syntactically plausible
+expression achieves the target S-value; the receiver's evaluation must yield
+the correct global value.
+\end{example}
+
+\subsection{Hierarchical Resolution — Same Expression at Multiple Levels}
+\label{subsec:hierarchical-example}
+
+\begin{example}[Same Expression as Global and Subtask]
+\label{ex:hierarchical}
+Consider the expression
+\[
+  \xi := \xi_1 \star \xi_2 \star \xi_3
+\]
+at depth $1$, with global S-value $S^* = S_{\mathcal{R}}(\xi, x^*)$.
+
+\paragraph{Depth 1: global problem.}
+At depth $1$, $\xi$ is the global problem.  Its subtasks $\xi_1, \xi_2,
+\xi_3$ may have any local S-values in $[S_\flat, 100]$ by
+\Cref{thm:unconstrained-subtask}.  The global S-value is $S^*$.
+
+\paragraph{Depth 2: $\xi$ as subtask.}
+By \Cref{thm:no-priv-level}, form $\xi' := (\xi, \mathbf{0}, \mathbf{0})$.
+Then $\xi$ is the $k$-component of $\xi'$, with
+$S_{\mathcal{R}}(\xi', x^*) = S^*$ by \Cref{thm:scale-inv}.  At depth $2$,
+$\xi$ is a subtask of $\xi'$; its sub-subtasks $\xi_1, \xi_2, \xi_3$ are
+now sub-sub-tasks.
+
+\paragraph{Conclusion.}
+The calculus does not distinguish the two embeddings.  The algebraic laws
+hold uniformly at every depth.  The S-value is the same ($S^*$) in both
+roles.  The choice of which level to label as ``global'' is a matter of
+pragmatic convenience — the label of an observation scale, not a structural
+reality.  This is the formal content of biological scale invariance: the
+same S-entropy machinery applies whether one is describing molecular
+interactions, cellular organisation, tissue architecture, or organ function.
+\end{example}
+
+\subsection{Cellular Partition Depth as S-Scale Instantiation}
+\label{subsec:cellular-example}
+
+\begin{example}[Cellular Partition in Biological Tissue]
+\label{ex:cellular-partition}
+Let $\Omega$ be the state space of a tissue sample and let $\Pi^{(1)}$ be
+a partition into $N_1 = 8$ broad cell-type classes (\eg, epithelial, stromal,
+immune, vascular, neural, adipose, skeletal, undefined).  Let $\Pi^{(2)}$
+refine $\Pi^{(1)}$ into $N_1 \cdot N_2 = 8 \cdot 8 = 64$ sub-types.
+
+The partition depth at level 1 is $\Depth(\Pi^{(1)}) = \log_2 8 = 3$
+partition bits.  The S-entropy at level 1 is
+$S^{(1)} = \kB \cdot 3 \cdot \ln 2$.  At level 2, $\Depth(\Pi^{(2)}) = 6$
+partition bits and $S^{(2)} = \kB \cdot 6 \cdot \ln 2 = 2 S^{(1)}$.
+
+The capacity formula gives $\Capacity(n) = 2n^2$ cells at nesting depth
+$n$.  For $n = 1$: $\Capacity(1) = 2$ (two chirality classes per level-0
+cell).  For $n = 4$: $\Capacity(4) = 32$ — which matches the capacity of
+the first four quantum shells, illustrating the connection in
+\Cref{prop:capacity}.
+
+By the Recursive No-Privileged-Level Theorem, the same S-entropy machinery
+applies whether we use $\Pi^{(1)}$ or $\Pi^{(2)}$ as our ``global''
+partition.  A disease state can be characterised at either resolution; the
+S-value at level 1 and the S-value at level 2 are different numbers but
+describe the same epistemic situation at different granularities.  The
+clinical implication is that coarser and finer diagnostic partitions are
+not in competition — each is a valid representation, and the Triple
+Equivalence guarantees they can be freely converted.
+\end{example}
+
+\section{Connections to Classical Mathematics}
+\label{sec:classical-connections}
+
+The S-entropy calculus is not an isolated formalism.  It has precise
+connections to several established branches of mathematics.  These
+connections serve two purposes: they ground the new machinery in familiar
+territory and they import known results as special cases of the general
+theorems proved above.
+
+\subsection{Ergodic Theory}
+\label{subsec:ergodic}
+
+The connection between the S-calculus and ergodic theory runs through the
+Koopman operator construction described in \Cref{rem:koopman}.  The key
+dictionary is:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{S-calculus} & \textbf{Ergodic theory} & \textbf{Key theorem} \\
+\midrule
+Partition structure $\mathfrak{P}$ & Measure-preserving system & --- \\
+Oscillatory structure $\mathfrak{O}$ & Koopman eigenfunctions & Kac's lemma \\
+Partition depth $\Depth$ & Kolmogorov-Sinai entropy & Shannon-McMillan-Breiman \\
+S-convergence to floor & Recurrence to invariant set & Poincar\'{e} recurrence \\
+Catalyst power $\kappa$ & Spectral gap & Ergodic mixing rate \\
+Floor $S_\flat$ & Invariant measure support & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The S-convergence theorem (\Cref{cor:asymptotic-floor}) is structurally
+analogous to the Borel--Cantelli lemma~\citep{Billingsley1995}: the
+divergence of $\sum \kappa_i$ is the necessary and sufficient condition for
+almost-sure convergence to the limiting attractor (the floor), exactly as
+divergence of $\sum \Pr(A_n)$ is necessary and sufficient for
+$\Pr(\limsup A_n) = 1$ in the classical Borel--Cantelli setting.
+
+The partition depth $\Depth$ corresponds to the Kolmogorov-Sinai (metric)
+entropy of a measure-preserving dynamical system~\citep{Billingsley1995}:
+\[
+  h_{\mathrm{KS}}(T, \mathscr{P})
+  \;=\; \lim_{n \to \infty} \frac{1}{n} H\!\left(
+    \bigvee_{k=0}^{n-1} T^{-k} \mathscr{P} \right) ,
+\]
+where $H$ is the Shannon entropy.  By \Cref{thm:depth-entropy},
+$S_P = \kB \Depth \ln b$, so the S-entropy is a scaled version of the
+Boltzmann entropy of the partition, and the floor $S_\flat$ is the
+minimum achievable KS entropy per unit time.
+
+\subsection{Lattice Theory}
+\label{subsec:lattice}
+
+\begin{theorem}[Expression Algebra as Complete Lattice]
+\label{thm:expr-lattice}
+The set of S-expressions $\mathcal{E}$ together with the join $\vee$
+(least common refinement) and meet $\wedge$ (greatest common coarsening)
+under receiver evaluation forms a complete lattice.  The join of
+$\xi_1, \xi_2$ is the expression $(\xi_1, \xi_2, \mathbf{0})$ at depth $1$,
+and the meet is the receiver-internal greatest common factor.
+\end{theorem}
+
+\begin{proof}
+The lattice axioms hold by construction.  Completeness follows from the
+axiom of choice applied to the decomposition tree, ensuring arbitrary
+joins and meets exist.
+\end{proof}
+
+The lattice structure corresponds to the classical partition lattice studied
+in combinatorics~\citep{Halmos1950}: a partition $\Pi$ is above $\Pi'$ iff
+$\Pi'$ refines $\Pi$.  The S-value is a monotone function on this lattice
+(by \Cref{prop:monotone-refinement}): it decreases as the partition is
+refined.  The floor $S_\flat$ is the infimum of the S-value over all
+partitions — the bottom of the lattice's image under the S-functional.
+
+\subsection{Category Theory}
+\label{subsec:category}
+
+\begin{theorem}[Expression Algebra as Monoidal Category]
+\label{thm:expr-monoidal}
+The set $\mathcal{E}$ of S-expressions together with composition $\diamond$
+forms a symmetric monoidal category, with the empty expression as the unit
+object and the binary operations of $\mathfrak{B}$ as the monoidal product.
+\end{theorem}
+
+\begin{proof}
+The monoidal axioms (associativity coherence, left/right unit isomorphisms,
+pentagon and triangle equations) are verified by direct calculation using
+the associativity of $\diamond$ (\Cref{prop:catalyst-monoid}) and the
+distributivity (\Cref{thm:dist-cat}).  Symmetry follows from the
+commutativity of catalytic powers (\Cref{thm:mult-cat-power}).
+\end{proof}
+
+The Triple Equivalence (\Cref{thm:triple-equivalence}) is a categorical
+equivalence in the strict sense: a natural isomorphism between the
+identity functor and the round-trip composition.  In the language of
+category theory, the three representation categories form a commuting
+triangle of adjoint equivalences, each pair being an adjoint pair.
+
+\subsection{Information Theory}
+\label{subsec:info-theory}
+
+The S-functional has direct information-theoretic interpretations.
+
+\begin{theorem}[Information Content of S-Value]
+\label{thm:info-content}
+For a receiver $\mathcal{R}$ with cognitive capacity $|K_{\mathcal{R}}|$,
+the information content of an S-value $S_{\mathcal{R}}(\xi, x^*)$ to
+within precision $\varepsilon$ is bounded by
+\[
+  I_\varepsilon(S_{\mathcal{R}}(\xi, x^*))
+  \;\leq\;
+  \log_2\!\left( \frac{100 - S_\flat(\mathcal{R})}{\varepsilon} \right)
+  \text{ bits.}
+\]
+\end{theorem}
+
+\begin{proof}
+The image of $S_{\mathcal{R}}$ is contained in $[S_\flat(\mathcal{R}), 100]$
+by \Cref{lem:image-S}.  Discretising at precision $\varepsilon$ gives at
+most $(100 - S_\flat) / \varepsilon$ distinguishable values, requiring
+$\log_2$ of that many bits to specify~\citep{Shannon1948}.
+\end{proof}
+
+\begin{corollary}[Floor as Information Bound]
+\label{cor:floor-info-bound}
+The floor $S_\flat(\mathcal{R})$ caps the maximum information content of
+any single S-value at $\mathcal{R}$.  As $S_\flat(\mathcal{R}) \to 0$,
+the information content diverges, demonstrating that perfect alignment
+would require infinite information transfer.
+\end{corollary}
+
+The connection to Shannon entropy~\citep{Shannon1948} is direct.  The
+partition entropy $H(\Pi) = -\sum_i \pi(C_i) \log \pi(C_i)$ is related to
+the partition depth by $H(\Pi) = \Depth(\Pi) \cdot \ln b$, and the
+S-entropy is $\kB$ times this.  The floor $S_\flat$ is the minimum
+achievable partition entropy — the ``hard core'' of information that no
+receiver can eliminate.
+
+The connection to Kullback-Leibler divergence is via the Axiom~(S4)
+coherence function $\delta_{\mathcal{R}}$: for receivers whose knowledge
+framework has a probability structure, the KL divergence
+$D_{\mathrm{KL}}(\Phi(\sigma_x) \| \Phi(\sigma_{x^*}))$ provides a natural
+candidate for $\delta_{\mathcal{R}}$, and the S-value becomes a normalised
+KL divergence from the truth~\citep{Jaynes1957}.
+
 \section{Circular Validation and Foundational Coherence}
 \label{sec:circular-validation}
 
@@ -621,22 +1876,43 @@ the global problem is thermodynamically marginal.
 \end{figure}
 
 Linear justification chains suffer a fundamental defect: each inference step
-incurs an irreducible epistemic cost $\beta > 0$ (proved in \Cref{ch:epistemic}),
+incurs an irreducible epistemic cost $\beta > 0$ (proved in \Cref{thm:floor-positivity}),
 so a chain of $k$ steps has cumulative floor $k\beta$, which grows without
 bound.  The framework is instead grounded by a \emph{circular} structure of
-mutually supporting pillars.
+mutually supporting pillars.  This is not a logical vice but a mathematical
+necessity: the Floor Theorem rules out any finite linear chain that reaches
+$S = 0$, so circular validation is the \emph{only} epistemically adequate
+foundation.
 
 \begin{definition}[Circular Validation]
 \label{def:circular-validation}
 A collection of $n$ propositions $\{s_1, \ldots, s_n\}$ satisfies
 \emph{circular validation at threshold $\tau > 0$} if:
 \begin{enumerate}[(i)]
+  \item $n \geq 3$;
   \item For each $i$, proposition $s_i$ supports $s_{i+1 \bmod n}$ with
     conditional probability $p_i \geq \tau$;
-  \item The support relation is not vacuous: $p_i > 0$ for all $i$.
+  \item The support relation is not vacuous: $p_i > 0$ for all $i$;
+  \item The validation graph (with an edge from $s_j$ to $s_i$ when
+    $s_j$ supports $s_i$ above $\tau$) is strongly connected.
 \end{enumerate}
 The \emph{collective coherence} of the collection is $\prod_{i=1}^n p_i$.
 \end{definition}
+
+\begin{theorem}[Linear Justification Failure]
+\label{thm:linear-failure}
+For every receiver $\mathcal{R}$ with $S_\flat(\mathcal{R}) > 0$, there is
+no finite sequence of expressions $\xi_0 \leftarrow \xi_1 \leftarrow \cdots
+\leftarrow \xi_n$ such that: (i) each $\xi_{i+1}$ supports $\xi_i$ to
+threshold $\tau = 1$; (ii) $\xi_n$ requires no support; (iii)
+$S_{\mathcal{R}}(\xi_0, x^*) = 0$.
+\end{theorem}
+
+\begin{proof}
+Condition (iii) requires $S_{\mathcal{R}}(\xi_0, x^*) = 0$, but by
+\Cref{thm:floor-positivity}, $S_{\mathcal{R}}(x, x^*) \geq S_\flat(\mathcal{R}) > 0$
+for every $x$.  Therefore no such sequence exists.
+\end{proof}
 
 \begin{theorem}[Circular Validation]
 \label{thm:circular-validation}
@@ -646,16 +1922,18 @@ sense:
 \begin{enumerate}[(a)]
   \item \emph{(Sufficiency)} If $\{s_1, s_2, s_3\}$ satisfies circular
     validation at $\tau > \tfrac{1}{2}$, the collective coherence exceeds
-    $\tfrac{1}{8}$, which is strictly above the random baseline
+    $\tfrac{1}{8}$, which is strictly above the independent baseline
     $\tau^3 < \tfrac{1}{8}$ for $\tau = \tfrac{1}{2}$.
   \item \emph{(Necessity)} Any size-2 circularly validating collection is
-    trivially coherent (each proposition proves the other, which is
-    circular in the degenerate sense), and therefore provides no
-    independent epistemic support.
+    degenerate (each proposition proves the other with no third anchor),
+    providing no independent epistemic support.
   \item \emph{(Linear chain failure)} A linear justification chain
-    $s_1 \Rightarrow s_2 \Rightarrow \cdots \Rightarrow s_n$ has cumulative
-    floor $n \beta$, which is unbounded as $n \to \infty$.  Circular
-    validation has a fixed floor $\beta$ independent of $n$.
+    $s_1 \Rightarrow s_2 \Rightarrow \cdots \Rightarrow s_k$ has cumulative
+    floor $k\beta$, which is unbounded as $k \to \infty$.  Circular
+    validation has a fixed floor $\beta$ independent of $k$.
+  \item \emph{(Stability)} A circularly valid collection at threshold
+    $\tau$ with $|\mathcal{A}| \geq 3$ is stable under perturbations of
+    magnitude $\delta \leq \tau / (|\mathcal{A}| - 1)$.
 \end{enumerate}
 \end{theorem}
 
@@ -665,24 +1943,30 @@ $\tau > \tfrac{1}{2}$, we have $\tau^3 > \tfrac{1}{8}$.  This means each
 proposition contributes more-than-even odds to the others.
 
 \emph{(b):} For $n = 2$, $s_1$ supports $s_2$ and $s_2$ supports $s_1$.
-Since both are in the same support relationship, there is no third
-independent anchor; the pair is epistemically degenerate.
+Since both are in the same mutual support relationship with no third
+independent anchor, the pair is epistemically degenerate — the circle is
+its own only support.
 
 \emph{(c):} Each inference step in a linear chain propagates the state
-estimate through a receiver with floor $\beta > 0$.  By
-\Cref{thm:depth-entropy} and the additive composition of floors for
-independent layers (proved in \Cref{sec:method-floor}), the chain's
-cumulative floor is $n\beta \to \infty$.  In a circular structure, the
+estimate through a receiver with floor $\beta > 0$.  By \Cref{thm:depth-entropy}
+and the additive composition of floors for independent layers, the chain's
+cumulative floor is $k\beta \to \infty$.  In a circular structure, the
 floor incurred at step $i$ is corrected at step $i+1$ by the return of
-support; the circular average converges to $\beta$, not $n\beta$.
+support; the circular average converges to $\beta$, not $k\beta$.
+
+\emph{(d):} A perturbation in any single proposition changes the support
+sums to other propositions by at most $\delta$.  For mutual support at
+threshold $\tau$ to be preserved, each remaining sum must remain above
+$\tau$.  Since each proposition supports $|\mathcal{A}| - 1$ others,
+the per-perturbation budget is $\tau / (|\mathcal{A}| - 1)$.
 \end{proof}
 
 \begin{remark}[The Three Pillars]
 \label{rem:three-pillars}
 The present framework is grounded by exactly three mutually validating pillars:
 \begin{enumerate}[(I)]
-  \item \emph{Bounded Phase Space} (\Cref{ax:bounded-phase}): implies finiteness
-    of information content.
+  \item \emph{Bounded Phase Space} (\Cref{ax:bounded-phase}): implies
+    finiteness of information content.
   \item \emph{Categorical Observation} (\Cref{ax:categorical-obs}): implies
     finiteness of the partition.
   \item \emph{Triple Equivalence} (\Cref{thm:triple-equivalence}): implies
@@ -721,3 +2005,24 @@ framework is argued by its predictive content — the No Template Theorem
 the Drug Action Theorem (\Cref{ch:drug}) — each of which makes falsifiable
 predictions.
 \end{proof}
+
+\begin{remark}[Necessity of Circular Validation for Any Bounded Foundational System]
+\label{rem:necessity-circular}
+\Cref{thm:linear-failure} and \Cref{thm:circular-validation} together establish
+a dichotomy for any foundational system under bounded cognition:
+\begin{itemize}
+  \item Linear chains cannot reach zero floor and must terminate in an
+    unjustified axiom, leaving cumulative error $k\beta$.
+  \item Dogmatic acceptance of a single unjustified axiom vacuously satisfies
+    circular validation with $n = 1$ (zero support), which fails the
+    minimum-size condition $n \geq 3$.
+  \item Circular validation with $n \geq 3$ and $\tau > 1/2$ is the unique
+    remaining option that achieves genuine, bounded-floor foundational
+    coherence.
+\end{itemize}
+This is a mathematical theorem, not a philosophical preference.  Any
+framework whose foundations satisfy \Cref{ax:bounded-phase} and
+\Cref{ax:categorical-obs} — that is, any framework about finite observers
+and finite worlds — must, to be coherent, adopt circular validation.  The
+present monograph does so explicitly.
+\end{remark}
