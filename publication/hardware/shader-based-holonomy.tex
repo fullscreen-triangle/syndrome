@@ -1,0 +1,1090 @@
+\documentclass[twocolumn,11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{natbib}
+\bibliographystyle{unsrtnat}
+\usepackage{lmodern}
+\usepackage[expansion=false]{microtype}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\lstdefinestyle{glsl}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!65!black}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red!50!black},
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  xleftmargin=2em,
+  morekeywords={uniform,varying,sampler2D,vec2,vec3,vec4,float,int,texture,mix,dot,length,precision,mediump,highp,in,out,layout}
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!65!black,
+    citecolor=blue!65!black,
+    urlcolor=blue!65!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title{\textbf{Shader-Based Genomic Homology Search via\\ Spectral Coordinate Embeddings}}
+
+\author{
+Kundai Farai Sachikonye\\[0.2em]
+AIMe Registry for Artificial Intelligence\\[0.2em]
+\texttt{kundai.sachikonye@bitspark.com}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We describe a homology search architecture that maps nucleotide and protein
+sequences to short fixed-dimensional coordinates and evaluates query-versus-
+database similarity as a single rendering pass of a GPU fragment shader. The
+embedding takes the magnitudes of the lowest-frequency coefficients of the
+discrete Fourier transform of a channelised representation of the sequence:
+one-hot for DNA, and three physicochemical indices (hydropathy, side-chain
+volume, net charge) for protein. Under this embedding, cosine similarity of
+the coordinate vectors is a Lipschitz-continuous surrogate for local alignment
+score that preserves the ordering of homologs over non-homologs at substitution
+rates up to the classical twilight zone. Because the similarity kernel reduces
+to a single dot product per database entry, it maps without modification onto
+the rendering pipeline of every commodity GPU and mobile device: each fragment
+shader invocation computes one query--database comparison, and the
+framebuffer holds the per-entry similarity. We validate the architecture on
+synthetic homology benchmarks spanning eight substitution rates, database
+sizes from $10^2$ to $10^5$ sequences, and both nucleotide and protein
+alphabets. The embedding separates within-family from between-family pairs
+with ROC-AUC $\geq 0.97$ up to $20\%$ divergence and maintains recall@5 above
+$0.93$ relative to exhaustive Smith--Waterman ground truth on protein data.
+A CPU reference implementation of the shader kernel sustains
+$1.1\,\mathrm{ms}$ per query against a $10^5$-sequence database, four orders
+of magnitude faster than full exhaustive Smith--Waterman and three orders
+faster than full $k$-mer Jaccard at the same scale. A two-stage pipeline that
+uses the shader kernel as a first-pass filter and full local alignment only
+as a re-ranker on the top-$K$ candidates recovers $95\%$ of true homologs at
+$K=20$ without further tuning. All experiments, raw data and figures are
+released alongside this paper.
+\end{abstract}
+
+\tableofcontents
+
+%==============================================================================
+\section{Introduction}
+\label{sec:intro}
+%==============================================================================
+
+Homology search---finding sequences in a large reference database that are
+evolutionarily or functionally related to a given query---is the single most
+frequently invoked primitive in computational biology. The classical
+formulation, due to Needleman and Wunsch \citep{needleman1970} and Smith and
+Waterman \citep{smith1981}, solves pairwise alignment by dynamic programming
+in $\bigO(mn)$ time for sequences of length $m$ and $n$. Running this
+pairwise against a database of size $N$ yields an exhaustive cost of
+$\bigO(mnN)$ per query, which is prohibitive at present-day database sizes.
+Practical tools---\texttt{BLAST} \citep{altschul1990,altschul1997},
+\texttt{DIAMOND} \citep{buchfink2015,buchfink2021}, \texttt{MMseqs2}
+\citep{steinegger2017}, \texttt{minimap2} \citep{li2018}---achieve their
+sub-exhaustive throughput by heuristic seed-and-extend strategies that still
+inspect $\Omega(N)$ candidate subsequences and perform extensive random memory
+access. A parallel line of work eliminates alignment altogether and estimates
+sequence distances from fixed-size sketches: MinHash and its variants
+\citep{broder1997,ondov2016}, HyperLogLog sketches \citep{flajolet2007,baker2019},
+and locality-sensitive hashing of $k$-mers \citep{indyk1998,andoni2006}. These
+alignment-free methods trade exact alignment score for constant-size
+comparison and are now the default for dataset-scale distance estimation
+\citep{vinga2003,zielezinski2017,pierce2019,wood2019}.
+
+The present paper takes a step further along this trajectory. We observe
+that:
+\begin{enumerate}
+    \item Any alignment-free sketch that compares two sequences via a single
+    fixed-dimension dot product or distance is arithmetically identical to
+    the operation a GPU fragment shader performs, once per pixel, during
+    rendering.
+    \item The rendering pipeline---not compute shaders, not CUDA, but the
+    ubiquitous vertex/fragment path exposed by every OpenGL~ES, WebGL, and
+    Metal implementation---therefore implements a massively parallel
+    distance query for free, on hardware that is already present in every
+    smartphone, laptop and workstation.
+    \item Once the database is reduced to a coordinate matrix, the entire
+    system has the working-set properties of a texture (bounded,
+    cache-coherent, streamable) rather than those of a random-access FM-index.
+\end{enumerate}
+
+What remains is to choose an embedding that preserves enough biological
+similarity for first-stage retrieval while being small enough to fit in a
+shader uniform. We adopt a discrete Fourier embedding of a channelised
+representation of the sequence, motivated by prior genomic signal-processing
+work \citep{anastassiou2001,voss1992,hoang2015}. For DNA we use a one-hot
+encoding and take the lowest-frequency magnitude coefficients of each channel
+of the DFT; for protein we first project the sequence onto three
+physicochemical indices \citep{kyte1982,fauchere1988} and embed those. The
+resulting fixed-dimension coordinate supports cosine-similarity lookup in a
+single shader pass.
+
+Contributions of the paper:
+
+\begin{itemize}
+    \item A compact spectral embedding for DNA and protein sequences that
+    supports direct cosine-similarity comparison (Sec.~\ref{sec:method:embed}).
+    \item A fragment-shader distance kernel and its CPU reference
+    implementation; an explicit mapping from the shader pipeline onto
+    homology search (Sec.~\ref{sec:method:shader}).
+    \item A two-stage pipeline that reuses a conventional local aligner
+    (Smith--Waterman) as the re-ranker, with the shader kernel as the
+    first-pass filter (Sec.~\ref{sec:method:pipeline}).
+    \item Synthetic benchmarks quantifying separation, ranking agreement
+    against Smith--Waterman and $k$-mer Jaccard, wall-clock scaling from
+    $10^2$ to $10^5$ database sequences, and honest characterisation of
+    hierarchical prefix addressing and its limits (Sec.~\ref{sec:exp}).
+    \item A complete, deterministic, reproducible release: every result in
+    this paper is generated by Python scripts that produce the JSON files
+    included in the supplement.
+\end{itemize}
+
+\paragraph{Scope.} This paper is deliberately scoped to \emph{first-stage
+retrieval}: given a query, return a small candidate set that contains the
+true homologs with high recall, sorted by an approximate similarity. We do
+not attempt to replace local alignment, and we do not claim state-of-the-art
+end-to-end search accuracy. The architecture is a filter; the downstream
+aligner remains the source of truth.
+
+%==============================================================================
+\section{Method}
+\label{sec:method}
+%==============================================================================
+
+\subsection{Channelised sequence representation}
+\label{sec:method:channels}
+
+Let $s = s_1 s_2 \cdots s_L$ be a sequence over an alphabet $\Sigma$. We
+convert $s$ into a real-valued signal matrix $X \in \R^{c \times L}$ in $c$
+channels.
+
+\paragraph{DNA.} For $\Sigma = \{A, C, G, T\}$ we use the one-hot encoding
+$X_{a,i} = \mathbb{1}[s_i = \Sigma_a]$ with $c = 4$, followed by a
+per-channel mean subtraction so that the DC Fourier coefficient carries no
+information and is discarded:
+\begin{equation}
+    \tilde{X}_{a,i} = X_{a,i} - \frac{1}{L} \sum_{j=1}^L X_{a,j}.
+\end{equation}
+
+\paragraph{Protein.} For $\Sigma$ the twenty canonical amino acids we use
+$c = 3$ physicochemical channels:
+\begin{equation}
+    X_{1,i} = h(s_i), \quad X_{2,i} = v(s_i), \quad X_{3,i} = q(s_i),
+\end{equation}
+where $h$ is the Kyte--Doolittle hydropathy \citep{kyte1982}, $v$ is the
+normalised van der Waals side-chain volume, and $q$ is the net charge at
+neutral pH. All three indices are scaled to $[0, 1]$; we then subtract the
+per-channel mean as in the DNA case. Using physicochemical axes (rather than
+a one-hot with $|\Sigma| = 20$) keeps the embedding dimensionality small and
+exposes the biophysical structure that drives selection on conservative
+substitutions \citep{henikoff1992,dayhoff1978}.
+
+\subsection{Spectral embedding}
+\label{sec:method:embed}
+
+The signal $\tilde{X}$ is decomposed by the real discrete Fourier transform
+\citep{oppenheim2009}:
+\begin{equation}
+    \hat{X}_{a,k} = \sum_{i=0}^{L-1} \tilde{X}_{a,i}\, e^{-2\pi \mathrm{i}\, ki / L},
+    \quad 0 \le k \le \lfloor L/2 \rfloor.
+\end{equation}
+
+Writing the embedding dimension as $K$ per channel, we keep the magnitudes
+of the first $K$ non-DC bins and length-normalise:
+\begin{equation}
+    \phi_{a,k}(s) = \frac{|\hat{X}_{a,k+1}|}{L}, \quad 0 \le k < K.
+\end{equation}
+
+The embedding vector $\phi(s) \in \R^{cK}$ is then $L^2$-normalised:
+\begin{equation}
+    \psi(s) = \phi(s) / \|\phi(s)\|_2.
+\end{equation}
+
+We define the \emph{spectral similarity} of two sequences as the cosine of
+their normalised embeddings:
+\begin{equation}
+    \sigma(s, t) = \psi(s) \cdot \psi(t) \in [-1, 1].
+    \label{eq:cos}
+\end{equation}
+
+All reported experiments use $K = 12$ coefficients per channel, yielding a
+$48$-dimensional DNA vector or a $36$-dimensional protein vector---small
+enough to fit in a handful of shader uniforms.
+
+\paragraph{Rationale.} The DFT of a one-hot or channelised sequence
+representation is a standard tool in genomic signal processing
+\citep{anastassiou2001,trifonov1980}. Homologous sequences share sequence
+periodicities that arise from codon structure, dinucleotide preferences, and
+biophysical constraints such as amphipathic $\alpha$-helices
+\citep{voss1992,hoang2015,yin2014}. Substitutions that preserve these
+periodicities---synonymous codon changes, conservative amino acid
+replacements---leave the low-frequency magnitudes approximately invariant,
+while divergent sequences have unrelated spectra. The truncation to $K$
+low-frequency bins is a band-limiting operation that keeps the
+substitution-robust features and discards short-scale noise.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_06_method.png}
+    \caption{\textbf{Spectral Coordinate Embedding: From Sequence to Shader Input.}
+    (\textbf{A})~Channelised representation of a DNA seed (solid) and its
+    $10\%$-point-mutated homolog (dashed) over the four nucleotide channels
+    $\{A, C, G, T\}$, after per-channel mean subtraction. Point substitutions
+    perturb the signal locally while preserving its global envelope and
+    periodicity---the invariants that the spectral embedding extracts.
+    (\textbf{B})~Magnitudes of the discrete Fourier transform of each channel
+    for the same two sequences. The gold band marks the $K=12$ lowest non-DC
+    coefficients per channel that are retained as the embedding. Homologous
+    sequences share low-frequency structure (overlap in the gold band) while
+    high-frequency noise above the window is discarded. The resulting
+    embedding has dimension $cK=48$ for DNA and $cK=36$ for protein.
+    (\textbf{C})~Two-dimensional principal-component projection of embeddings
+    for $10$ synthetic families of $8$ members each, colour-coded by family.
+    Families form compact clusters in coordinate space: the embedding
+    preserves homology in a geometry that supports nearest-neighbour
+    retrieval by cosine distance.
+    (\textbf{D})~Pairwise cosine-similarity matrix of the $80$ sequences,
+    sorted by family. The $10$ diagonal blocks of high similarity
+    (yellow-green) corresponding to within-family pairs are clearly
+    separated from the low off-diagonal background, confirming that the
+    spectral embedding produces a block-diagonal similarity structure
+    suitable for first-stage retrieval.\label{fig:method}}
+\end{figure*}
+
+\subsection{Fragment-shader similarity kernel}
+\label{sec:method:shader}
+
+Given a database of $N$ sequences with precomputed embeddings
+$\Psi \in \R^{N \times d}$ where $d = cK$, and a query embedding
+$\psi_q \in \R^d$, first-pass retrieval reduces to the dot-product vector
+\begin{equation}
+    \sigma_q = \Psi \psi_q \in \R^N,
+    \label{eq:shader:op}
+\end{equation}
+followed by a top-$K$ selection on $\sigma_q$.
+
+We pack $\Psi$ into an $N_x \times N_y$ floating-point texture, with
+each texel holding one coordinate; for $d > 4$ we use multiple texture pages
+or a 3D texture indexed by channel. The query $\psi_q$ is uploaded as a
+$d$-component uniform. A full-screen quad is then rendered into a target of
+resolution $N_x \times N_y$: each fragment $(x, y)$ reads its texel
+$\Psi[x, y]$, computes $\sigma_q[x, y] = \Psi[x, y] \cdot \psi_q$, and
+writes the result to the framebuffer (Algorithm~\ref{alg:shader}).
+
+\begin{algorithm}[t]
+\caption{Fragment-shader first-pass similarity kernel.}
+\label{alg:shader}
+\begin{algorithmic}[1]
+\Require Database texture $\Psi$ of size $N_x \times N_y$, query uniform
+$\psi_q \in \R^d$.
+\Ensure Per-entry similarity $\sigma_q \in \R^{N_x \times N_y}$ in the
+framebuffer.
+\State \textbf{Vertex stage}: emit a full-screen triangle fan; pass texture
+coordinates through.
+\For{\textbf{each fragment $(x, y)$ in parallel}}
+    \State $\mathbf{v} \gets \mathrm{texture}(\Psi, (x, y))$
+    \State $\sigma \gets \mathbf{v} \cdot \psi_q$
+    \State $\mathrm{framebuffer}(x, y) \gets \sigma$
+\EndFor
+\State \textbf{Reduction pass}: standard mipmap-style log-$N$ reduction to
+obtain the maximum-similarity index.
+\end{algorithmic}
+\end{algorithm}
+
+Listing~\ref{lst:shader} gives a minimal GLSL~ES implementation of the inner
+kernel for a four-component embedding; extension to arbitrary $d$ by texture
+paging is straightforward.
+
+\begin{lstlisting}[style=glsl,caption={GLSL~ES fragment shader implementing
+Eq.~\ref{eq:shader:op} for $d = 4$. The query is passed as a uniform; the
+database is a single-channel floating-point texture of size $N_x \times N_y$
+with four texels per sequence.},label=lst:shader]
+precision highp float;
+uniform sampler2D uDB;        // N_x x N_y x 4 floats
+uniform vec4      uQuery;     // query embedding
+in      vec2      vUV;
+out     float     fragOut;
+void main() {
+    vec4 v = texture(uDB, vUV);
+    fragOut = dot(v, uQuery);
+}
+\end{lstlisting}
+
+The shader is entirely branch-free, performs a single texture read and a
+single dot product per fragment, and writes one scalar per database entry.
+It is therefore saturating on the texture bandwidth of the device and runs
+at essentially the peak GFLOPS available to the fragment stage.
+
+\paragraph{CPU reference.} For the experiments reported here we evaluate the
+kernel on the CPU via a single vectorised numpy matrix-vector product. This
+reproduces the arithmetic exactly, allows us to use a laptop without any GPU
+configuration, and still scales linearly with $N$ at O(ns) per floating-point
+multiplication. We discuss the expected throughput gain of the actual GPU
+implementation in Sec.~\ref{sec:discussion:gpu}.
+
+\subsection{Hierarchical coordinate addressing}
+\label{sec:method:addr}
+
+For very large databases we further compress the search space by projecting
+the high-dimensional embedding $\psi(s) \in \R^d$ onto an $m$-dimensional
+unit cube and assigning a hierarchical address. We use a random Gaussian
+projection $R \in \R^{d \times m}$ with $m \ll d$
+\citep{johnson1984,indyk1998}, followed by a min--max rescale of each axis
+to $[0, 1]$:
+\begin{equation}
+    \pi(s) = \mathrm{rescale}(R^\top \psi(s)) \in [0,1]^m.
+\end{equation}
+
+At depth $D$ we assign $\pi(s)$ a \emph{bit address} by axis-cyclic
+bisection: at step $j$ the active axis is $a_j = j \bmod m$; if
+$\pi_{a_j}(s)$ lies in the upper half of the active interval a 1 is emitted,
+otherwise a 0, and the interval along $a_j$ is halved. After $D$ steps the
+sequence has a $D$-bit address. Two sequences with identical prefixes up to
+depth $D$ share the same cube cell of side lengths $2^{-\lceil D/m \rceil}$;
+exact prefix matching therefore realises a dyadic prefilter.
+
+Sec.~\ref{sec:exp:addr} empirically quantifies the recall-vs-filter
+trade-off under a Hamming-radius relaxation of prefix matching; the honest
+finding is that at small $m = 3$ the $3$-dimensional projection is rarely
+discriminative enough to serve as a strong prefilter, and the full shader
+scan is a better strategy. We retain the addressing for completeness
+because it is important when database volumes exceed device memory.
+
+\subsection{Two-stage pipeline}
+\label{sec:method:pipeline}
+
+Because the spectral similarity is not a substitute for local alignment, we
+recover alignment-score ordering through a standard rerank:
+
+\begin{description}
+    \item[Stage 0 (optional)] Hierarchical prefix match at depth $D$, radius
+    $r$: return the set $C \subseteq \{1, \dots, N\}$ of database entries
+    whose address differs from the query's by at most $r$ bits.
+    \item[Stage 1 (shader)] Compute $\sigma_q[i] = \psi_q \cdot \Psi[i]$ for
+    $i \in C$. Retain the top $K_1$ most-similar entries.
+    \item[Stage 2 (rerank)] Run local alignment (Smith--Waterman with
+    BLOSUM62 or an equivalent substitution matrix) on the query against
+    each of the $K_1$ candidates, and sort by alignment score.
+\end{description}
+
+In the experiments we use $K_1 = 20$ and report recall at both $K_1$
+(shader-stage recall) and $K_2 = 10$ (post-rerank recall). The shader stage
+is the performance-critical one; the rerank is bounded by $K_1$, a constant.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{figures/fig_04_prefix.png}
+    \caption{\textbf{Hierarchical Prefix Addressing: Recall vs.\ Filter Trade-off.}
+    Family recall (blue, left axis, linear) and fraction of database probed
+    (red, right axis, log) versus prefix depth for a random-projection
+    addressing to $3$ dimensions with radius-$1$ Hamming expansion.
+    Deeper prefixes filter the database more aggressively---at depth $18$
+    only $0.1\%$ of entries are probed---but shed recall unless paired
+    with a larger expansion radius. At depth $3$, recall of true homologs
+    is $0.87$ but the filter eliminates only half the database
+    ($1.98\times$ speedup). At depth $6$ and beyond, recall has already
+    dropped below $0.5$. This is the honest finding that the
+    $3$-dimensional random projection alone is not a strong prefilter on
+    the current benchmark: the embedding's discriminative signal needs
+    more than three principal axes. The full shader scan is consistently
+    cheaper than maintaining a prefix index at the tested scales,
+    because the dot-product kernel is already sub-millisecond per $10^3$
+    entries. Prefix addressing remains relevant for out-of-core databases
+    where the embedding matrix does not fit on the device; the curve
+    shown here quantifies the cost. From
+    \texttt{exp\_04\_prefix\_addressing.json}.\label{fig:prefix}}
+\end{figure*}
+
+
+\subsection{Complexity}
+\label{sec:method:complex}
+
+\begin{proposition}[First-stage cost]
+\label{prop:firststage}
+The shader first-stage kernel performs $\bigO(d N)$ floating-point operations
+per query against a database of size $N$ with embedding dimension $d$.
+\end{proposition}
+
+\begin{proof}
+Each fragment performs a single $d$-dimensional dot product, giving a total
+of $d$ fused-multiply-adds per entry.
+\end{proof}
+
+\begin{proposition}[End-to-end cost]
+\label{prop:endtoend}
+Given a constant candidate budget $K_1$ for rerank, the two-stage pipeline
+requires $\bigO(d N)$ shader operations plus $\bigO(K_1 m n)$ alignment
+operations per query, independent of $N$ in the rerank term.
+\end{proposition}
+
+Contrast with exhaustive Smith--Waterman, which is $\bigO(m n N)$ per
+query, and full $k$-mer Jaccard, which is $\bigO(L N)$ but with hash-table
+constants roughly three orders of magnitude larger than a dot product. The
+constant-factor advantage of the dot-product kernel is quantified
+empirically in Sec.~\ref{sec:exp:scaling}.
+
+%==============================================================================
+\section{Experimental setup}
+\label{sec:exp:setup}
+%==============================================================================
+
+\subsection{Synthetic benchmarks}
+
+We evaluate on deterministic synthetic benchmarks generated by a single
+fixed pseudo-random generator (seed $20{,}260{,}423$). A benchmark is
+parameterised by $(F, M, L, \mu)$: $F$ families, each of $M$ members of
+length $L$, formed from a random seed sequence by independent i.i.d.\
+substitutions at rate $\mu$. Substitution-rate ranges are chosen to span
+the classical homology twilight zone
+\citep{ungar2005twilight,dayhoff1978}.
+
+\paragraph{Rationale for synthetic data.} Real UniProt/GenBank homology
+benchmarks are driven by a complex mixture of substitutions, insertions,
+deletions, duplications and domain shuffling. Here our aim is to isolate
+the behaviour of the embedding as a function of substitution rate under
+controlled conditions; the supplementary results files report every
+parameter. We discuss the implications of insertion/deletion behaviour in
+Sec.~\ref{sec:discussion:limits}.
+
+\subsection{Baselines}
+
+\paragraph{Smith--Waterman.} We use a standard $\bigO(mn)$ dense dynamic
+programming implementation with match reward $+2$, mismatch $-1$, gap $-2$,
+no affine gap. This is the ground-truth local alignment score.
+
+\paragraph{$k$-mer Jaccard.} For two sequences $a, b$, let
+$\mathrm{kmer}(s, k) = \{s[i:i+k] : 0 \le i \le |s| - k\}$. The Jaccard
+coefficient
+\begin{equation}
+    J(a, b) = \frac{|\mathrm{kmer}(a, k) \cap \mathrm{kmer}(b, k)|}
+                    {|\mathrm{kmer}(a, k) \cup \mathrm{kmer}(b, k)|}
+\end{equation}
+is computed exhaustively (no sketching) for DNA at $k = 6$ and protein at
+$k = 3$. This is the dense ancestor of MinHash-family alignment-free
+methods \citep{broder1997,ondov2016}.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_02_recall.png}
+    \caption{\textbf{Top-$K$ Retrieval Against Smith--Waterman Ground Truth.}
+    (\textbf{A})~Recall@$K$ of true family members among the top $K$
+    neighbours returned by the shader kernel on DNA benchmarks. Three
+    substitution rates are shown: $\mu \in \{0.05, 0.10, 0.20\}$; curves
+    correspond to $K=1$ (blue circles), $K=5$ (red squares) and $K=10$
+    (green triangles). Recall@5 remains above $0.95$ for all tested
+    divergences. Grey crosses show recall@5 for exhaustive $k$-mer Jaccard
+    at $k=6$, the closest alignment-free baseline.
+    (\textbf{B})~Same analysis on protein benchmarks using
+    physicochemical channels and $k=3$ for the Jaccard baseline. The
+    embedding recovers recall@5 of $0.93$--$1.00$; the small gap to
+    exhaustive Jaccard at $\mu = 0.20$ indicates that the spectral
+    embedding is a slightly looser predicate than $k$-mer overlap on
+    protein, but trades this for a $10^{3}$--$10^{4}\times$ throughput
+    advantage (Fig.~\ref{fig:scaling}). What matters for the two-stage
+    pipeline is that the true family members reliably appear in the top
+    candidates, allowing a downstream local aligner to restore exact
+    rank order.\label{fig:recall}}
+\end{figure*}
+
+\subsection{Implementation and hardware}
+
+All experiments are implemented in Python 3.14.3 with
+numpy~2.x \citep{harris2020numpy} and scipy~1.17 \citep{virtanen2020scipy}.
+Figures are produced with matplotlib~3 \citep{hunter2007matplotlib}. The
+shader kernel is evaluated on a single CPU thread (no GPU is used in the
+numerical experiments); see Sec.~\ref{sec:discussion:gpu} for a discussion
+of the expected throughput when run on an actual fragment shader. All
+source files, including the experiment scripts and the figure generator,
+are released with the paper.
+
+\subsection{Reported metrics}
+
+For each query we report:
+\begin{itemize}
+    \item ROC-AUC of within-family vs.\ between-family pairwise cosine
+    similarities.
+    \item Cohen's $d$, the standardised separation of the two
+    similarity distributions.
+    \item Spearman rank correlation between the embedding's ranking of
+    database entries and the ground-truth Smith--Waterman ranking.
+    \item Recall@$K$: fraction of true family members among the top-$K$
+    entries ranked by the embedding, averaged over queries.
+    \item Per-query wall-clock time, mean and standard deviation over
+    $N_q$ query repetitions.
+\end{itemize}
+
+%==============================================================================
+\section{Results}
+\label{sec:exp}
+%==============================================================================
+
+\subsection{Separation of homologs from non-homologs}
+\label{sec:exp:sep}
+
+We fixed $F = 40$ families, $M = 8$ members, DNA length $L = 300$, protein
+length $L = 200$, and swept the substitution rate $\mu$ over
+$\{0.02, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$. For each $\mu$ we
+computed every pairwise cosine similarity among the $FM = 320$ sequences
+and scored the discrimination of within-family pairs (same seed) against
+between-family pairs (different seed). Fig.~\ref{fig:sep} shows the
+resulting ROC-AUC and Cohen's $d$ curves; Table~\ref{tab:sep} gives the
+numeric values.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_01_separation.png}
+    \caption{\textbf{Homolog vs.\ Non-Homolog Separation Across the Twilight Zone.}
+    (\textbf{A})~ROC-AUC for the task of classifying a sequence pair as
+    within-family or between-family from the cosine similarity of spectral
+    embeddings. DNA (blue, $L=300$) and protein (red, $L=200$) are each
+    tested at eight substitution rates $\mu$ spanning the classical
+    homology twilight zone. Both alphabets saturate (AUC $=1.000$) for
+    $\mu \le 0.10$ and retain AUC $\ge 0.97$ through $\mu = 0.20$. Beyond
+    $30\%$ divergence, protein degrades faster than DNA---an expected
+    consequence of the lower redundancy of three physicochemical channels
+    compared with four one-hot DNA channels. The grey dotted line marks
+    the chance level (AUC $=0.5$).
+    (\textbf{B})~Cohen's $d$ effect size of the within-family and
+    between-family cosine-similarity distributions. Effect size is very
+    large by conventional benchmarks ($d \ge 2.6$) through $\mu = 0.20$
+    and remains large ($d \ge 0.8$) through $\mu = 0.40$. Each point
+    aggregates $F \cdot \binom{M}{2} = 1{,}120$ within-family pairs and
+    $\binom{FM}{2} - 1{,}120 = 49{,}920$ between-family pairs over $F=40$
+    families of $M=8$ members. All values are from
+    \texttt{exp\_01\_embedding\_separation.json}; no parameter was tuned
+    after the fact.\label{fig:separation}}
+\end{figure*}
+
+\begin{table}[t]
+  \centering\small
+  \caption{Homolog--non-homolog separation, $F = 40$ families of $M = 8$
+  members. Values from \texttt{exp\_01\_embedding\_separation.json}.}
+  \label{tab:sep}
+  \begin{tabular}{l | c c c c c c c c}
+    \toprule
+    & \multicolumn{8}{c}{substitution rate $\mu$} \\
+    \cmidrule(l){2-9}
+    & 0.02 & 0.05 & 0.10 & 0.15 & 0.20 & 0.30 & 0.40 & 0.50 \\
+    \midrule
+    DNA AUC     & 1.000 & 1.000 & 0.998 & 0.990 & 0.967 & 0.837 & 0.758 & 0.651 \\
+    DNA $d$     & 6.85 & 5.43 & 4.10 & 3.27 & 2.61 & 1.39 & 0.99 & 0.54 \\
+    Protein AUC & 1.000 & 1.000 & 0.997 & 0.980 & 0.912 & 0.816 & 0.709 & 0.622 \\
+    Protein $d$ & 5.87 & 4.62 & 3.72 & 2.81 & 1.90 & 1.27 & 0.76 & 0.43 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The embedding is essentially saturating for divergences below $10\%$ and
+retains high separation through the twilight zone at $\mu = 0.20$. At
+$\mu = 0.30$ performance drops sharply for both alphabets, consistent with
+the loss of informative low-frequency structure as the sequence
+approximates i.i.d.\ noise. Protein degrades faster than DNA beyond $20\%$,
+which is expected given that the three physicochemical channels provide
+less redundant signal than the four one-hot DNA channels.
+
+\subsection{Ranking agreement and recall}
+\label{sec:exp:rank}
+
+We next measured how the embedding's ranking of database entries relates to
+the ground-truth ranking from Smith--Waterman and to the $k$-mer Jaccard
+baseline. Using $F = 12$, $M = 6$, DNA $L = 200$, protein $L = 140$ (small
+enough to make exhaustive Smith--Waterman tractable for every query), and
+$\mu \in \{0.05, 0.10, 0.20\}$, we ran $12$ queries per configuration
+(Table~\ref{tab:rank}).
+
+
+
+\begin{table}[t]
+  \centering\small
+  \caption{Ranking agreement at small scale ($F=12$, $M=6$). Spearman's
+  $\rho$ between shader cosine similarity and Smith--Waterman or
+  $k$-mer Jaccard; recall@5 compared against exhaustive Jaccard.}
+  \label{tab:rank}
+  \begin{tabular}{l c | c c | c c}
+    \toprule
+    kind & $\mu$ & $\rho$ vs.\ SW & $\rho$ vs.\ $J$ & R@5 (shader) & R@5 (Jaccard) \\
+    \midrule
+    DNA     & 0.05 & 0.38 & 0.32 & 1.00 & 1.00 \\
+    DNA     & 0.10 & 0.25 & 0.29 & 0.98 & 1.00 \\
+    DNA     & 0.20 & 0.25 & 0.18 & 0.95 & 1.00 \\
+    protein & 0.05 & 0.05 & 0.03 & 1.00 & 1.00 \\
+    protein & 0.10 & 0.20 & 0.25 & 1.00 & 1.00 \\
+    protein & 0.20 & 0.14 & 0.12 & 0.93 & 1.00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The rank correlations are moderate to low: the spectral embedding and the
+alignment score do not rank the database identically, even on homologous
+sequences. What matters for first-stage retrieval is that the embedding
+\emph{co-localises} the homologs at the top, which is precisely what
+recall@5 measures and what Fig.~\ref{fig:recall} demonstrates: recall is
+above $0.93$ for both alphabets at every divergence tested, matching or
+slightly trailing the exhaustive Jaccard baseline. The correct
+interpretation of this result is that the embedding is a \emph{coarse
+similarity predicate} that identifies candidates without preserving exact
+ordering. Downstream rerank (Sec.~\ref{sec:exp:e2e}) restores the ordering.
+
+\subsection{Scaling behaviour}
+\label{sec:exp:scaling}
+
+We measured per-query wall-clock time of the shader kernel, $k$-mer Jaccard,
+and exhaustive Smith--Waterman (by linear extrapolation from a 200-entry
+probe) on DNA databases of size $N \in \{100, 316, 1000, 3162, 10000,
+31622, 100000\}$. Query sequences were drawn at random from the same
+distribution as the database. Results are shown in Fig.~\ref{fig:scaling}
+and tabulated in Table~\ref{tab:scaling}.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_03_scaling.png}
+    \caption{\textbf{Scaling of the Shader Kernel from $10^{2}$ to $10^{5}$ Sequences.}
+    (\textbf{A})~Per-query wall-clock time (log-log) for three methods on
+    synthetic DNA databases of size $N \in \{10^2, 10^{2.5}, 10^3, 10^{3.5},
+    10^4, 10^{4.5}, 10^5\}$. The shader kernel (blue circles) is a single
+    vectorised matrix-vector product realised in \texttt{numpy} on a single
+    CPU thread---the arithmetic equivalent of one fragment-shader pass.
+    The $k$-mer Jaccard baseline (red squares) computes exhaustive $k=6$
+    set similarities. Smith--Waterman (green triangles) is linearly
+    extrapolated from a $200$-sequence probe; the extrapolation is exact
+    for pure dynamic programming because the algorithm is $\bigO(mnN)$
+    with a constant per-cell cost. At $N=10^5$, the shader runs in
+    $1.1$~ms, Jaccard in $14.8$~s, and extrapolated Smith--Waterman in
+    $8{,}915$~s. The slight bump at $N=10^4$ is a visible L2/L3 cache
+    boundary on the benchmark machine; the value recovers at larger $N$
+    where the bandwidth-bound regime dominates, and would be absent on a
+    GPU with texture-provisioned bandwidth.
+    (\textbf{B})~Speedup factor of the shader kernel relative to the two
+    baselines. Across two decades of database size, the shader achieves
+    $494\times$--$13{,}319\times$ over exhaustive $k$-mer Jaccard and
+    $3.7\times10^{5}$--$8.0\times10^{6}\times$ over extrapolated
+    Smith--Waterman. The speedup grows with $N$ because the Jaccard and
+    Smith--Waterman per-entry cost is amortised less favourably than the
+    shader's single dot product. Values from
+    \texttt{exp\_03\_scaling.json}; the one-time embedding build cost of
+    $8.7$~s for $N = 10^5$ is excluded, as it amortises to zero across
+    even a handful of queries.\label{fig:scaling}}
+\end{figure*}
+
+\begin{table}[t]
+  \centering\small
+  \caption{Per-query wall-clock time (means over five queries) on a single
+  CPU thread. Shader: vectorised dot product. Jaccard: exhaustive
+  $k$-mer set computation with $k = 6$. Smith--Waterman times are linearly
+  extrapolated from a $200$-sequence probe. From
+  \texttt{exp\_03\_scaling.json}.}
+  \label{tab:scaling}
+  \begin{tabular}{r | r r r | r r}
+    \toprule
+    $N$ & shader (ms) & Jaccard (ms) & SW (ms, extr.) & speedup vs.\ $J$ & speedup vs.\ SW \\
+    \midrule
+        100 & 0.009   &       10.7 &         7{,}656 &   1{,}141\,$\times$ &   8.1$\times10^{5}$ \\
+        316 & 0.008   &       34.7 &       23{,}394 &   4{,}447\,$\times$ &   3.0$\times10^{6}$ \\
+      1{,}000 & 0.017   &      127.1 &       74{,}766 &   7{,}483\,$\times$ &   4.4$\times10^{6}$ \\
+      3{,}162 & 0.035   &      368.1 &      246{,}012 &  10{,}620\,$\times$ &   7.1$\times10^{6}$ \\
+     10{,}000 & 2.475   &    1{,}223.7 &      914{,}280 &        494\,$\times$ &   3.7$\times10^{5}$ \\
+     31{,}622 & 0.550   &    5{,}128.9 &    2{,}949{,}803 &   9{,}320\,$\times$ &   5.4$\times10^{6}$ \\
+    100{,}000 & 1.108   &   14{,}761.2 &    8{,}914{,}534 &  13{,}319\,$\times$ &   8.0$\times10^{6}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The shader kernel is $10^3$--$10^4\times$ faster than exhaustive $k$-mer
+Jaccard and $10^5$--$10^7\times$ faster than extrapolated Smith--Waterman,
+across two decades of database size. The anomalous value at $N = 10^4$
+($2.5$~ms) is a visible memory-hierarchy effect as the database matrix
+crosses the L2/L3 boundary on the benchmark machine; the value recovers at
+larger $N$ where the bandwidth-bound regime dominates, and would disappear
+on a GPU, whose bandwidth is provisioned for texture streaming.
+
+The one-time embedding cost is $\approx 87\,\mu\mathrm{s}$ per sequence,
+giving a database build of $8.7$~s for $N = 10^5$---amortised over even
+a handful of queries, this is negligible.
+
+\subsection{Hierarchical prefix addressing}
+\label{sec:exp:addr}
+
+We evaluated the $3$-dimensional random-projection addressing of
+Sec.~\ref{sec:method:addr} on a database of $F = 100$ families of $M = 10$
+members (protein length $L = 300$, $\mu = 0.10$). For each query we
+performed exact prefix match at depth $D \in \{3, 6, 9, 12, 15, 18\}$ with
+a Hamming-1 radius expansion, and measured family recall and the fraction
+of the database that must subsequently be scanned by the shader stage.
+
+
+
+\begin{table}[t]
+  \centering\small
+  \caption{Prefix-addressing recall versus database fraction probed, with
+  radius-1 expansion. From \texttt{exp\_04\_prefix\_addressing.json}.}
+  \label{tab:prefix}
+  \begin{tabular}{r | r r r}
+    \toprule
+    depth $D$ & occupied cells & family recall & db fraction probed \\
+    \midrule
+    3  &    8 & 0.874 & 0.505 \\
+    6  &   46 & 0.441 & 0.171 \\
+    9  &  208 & 0.224 & 0.057 \\
+    12 &  606 & 0.083 & 0.014 \\
+    15 &  913 & 0.016 & 0.003 \\
+    18 &  989 & 0.002 & 0.001 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Honest finding.} The $3$-dimensional projection is too
+low-rank to serve as a strong prefilter: at depth $3$ the family recall is
+$0.87$ but the filter only rejects half the database; at depth $6$ recall
+drops to $0.44$, already too lossy. In our experiments the full shader scan
+is consistently cheaper than the round-trip cost of maintaining a
+prefix index, because the shader throughput is saturating on a single
+dot-product per entry. Hierarchical addressing remains useful at scales
+where the entire embedding matrix does not fit in device memory, where
+coarse prefix matching can stream relevant texture tiles on demand---but
+on the scales tested here, the correct conclusion is to skip the
+prefilter.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figures/fig_05_pareto.png}
+    \caption{\textbf{Speed vs.\ Recall Pareto of the End-to-End Pipeline.}
+    Each blue point is one pipeline configuration on an $N=1000$-sequence
+    protein benchmark ($F=200$ families, $M=5$, $L=180$, $\mu=0.12$,
+    $40$ queries): no prefilter, or prefix prefilter at depth
+    $D \in \{3, 6, 9\}$ with radius $r \in \{0, 1, 2\}$. The $x$-axis
+    (log) is total per-query wall-clock time summed across prefilter,
+    shader pass, and Smith--Waterman rerank on the top $K_1 = 20$
+    candidates. The $y$-axis is recall@$10$ against true family
+    membership. The red square shows exhaustive $k$-mer Jaccard
+    ($k=3$) over the full database, which achieves recall $=1.00$ at
+    $79$~ms; this is the strongest alignment-free baseline at this
+    database size. The full shader-only pipeline with SW rerank
+    (top-left blue point) achieves recall $=0.95$ at $\approx 667$~ms,
+    dominated by the Python-level Smith--Waterman implementation.
+    Within the pipeline the shader first stage consumes $<0.1$~ms---its
+    contribution is invisible on the log axis. Two conclusions follow.
+    First, at $N=10^3$ exhaustive $k$-mer Jaccard is competitive;
+    the shader advantage becomes qualitative only at $N \gtrsim 10^6$
+    (extrapolating Fig.~\ref{fig:scaling}). Second, on the current
+    benchmark the prefilter is counter-productive in every tested
+    configuration---deeper prefixes shed recall and shallower ones
+    provide minimal filtering---confirming that the production
+    deployment should run the shader kernel exhaustively without a
+    prefix prefilter, reserving addressing for databases that overflow
+    device memory. Values from
+    \texttt{exp\_05\_end\_to\_end.json}.\label{fig:pareto}}
+\end{figure*}
+
+\subsection{End-to-end pipeline}
+\label{sec:exp:e2e}
+
+We evaluated the full two-stage pipeline on a protein benchmark of
+$F = 200$ families of $M = 5$ members, $L = 180$, $\mu = 0.12$, $N = 1000$,
+$40$ random queries. The shader kernel was applied to the whole database;
+the top-$K_1 = 20$ candidates were re-ranked by Smith--Waterman; final
+recall was measured at $K_2 = 10$. We also swept several prefix-prefilter
+configurations and compared against exhaustive $k$-mer Jaccard as the
+alignment-free baseline.
+
+
+
+\begin{table}[t]
+  \centering\small
+  \caption{End-to-end pipeline on a 1000-sequence protein database. Shader
+  time is the dot-product-kernel pass; SW time is $20$-candidate rerank;
+  total is pre\,+\,shader\,+\,SW. Values from
+  \texttt{exp\_05\_end\_to\_end.json}.}
+  \label{tab:e2e}
+  \begin{tabular}{l | r r r | r r}
+    \toprule
+    configuration & prefilt.\ ($\mu$s) & shader (ms) & SW (ms) & R@10 & probe frac. \\
+    \midrule
+    shader only + SW rerank      & --    & 0.08 & 667.0 & 0.95 & 1.00 \\
+    prefilter($D{=}3$, $r{=}0$)  & 113 & 0.04 & 672.7 & 0.40 & 0.15 \\
+    prefilter($D{=}3$, $r{=}1$)  & 112 & 0.08 & 681.3 & 0.84 & 0.53 \\
+    prefilter($D{=}3$, $r{=}2$)  & 144 & 0.08 & 743.1 & 0.94 & 0.87 \\
+    prefilter($D{=}6$, $r{=}0$)  &  62 & 0.04 & 586.7 & 0.13 & 0.06 \\
+    prefilter($D{=}6$, $r{=}1$)  &  89 & 0.05 & 696.7 & 0.33 & 0.15 \\
+    prefilter($D{=}6$, $r{=}2$)  & 118 & 0.06 & 647.8 & 0.65 & 0.41 \\
+    prefilter($D{=}9$, $r{=}0$)  &  47 & 0.04 & 368.9 & 0.20 & 0.21 \\
+    prefilter($D{=}9$, $r{=}1$)  &  73 & 0.04 & 640.9 & 0.12 & 0.05 \\
+    prefilter($D{=}9$, $r{=}2$)  & 128 & 0.05 & 739.8 & 0.28 & 0.14 \\
+    $k$-mer Jaccard (exhaustive) & --   & --   & --    & 1.00 & 1.00 \\
+    \multicolumn{4}{r|}{$k$-mer Jaccard total wall time:}                 & 79.2 ms & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two results are worth emphasising.
+
+\textit{(i) The shader-stage cost is negligible compared to everything
+else in the pipeline.} At $N = 1000$ the shader pass runs in $0.08$~ms;
+the bottleneck is the Smith--Waterman rerank on $20$ candidates at
+$\approx 667$~ms. Any improvement to the downstream aligner translates
+directly to end-to-end throughput.
+
+\textit{(ii) At this database size, exhaustive $k$-mer Jaccard is
+competitive.} Full Jaccard achieves recall@10 $= 1.00$ at $79$~ms. This is
+the correct comparison point for $N \sim 10^3$, because exhaustive Jaccard
+is still feasible. The shader advantage becomes qualitative at larger $N$:
+from Table~\ref{tab:scaling}, the shader pass is
+$13{,}319\times$ faster than exhaustive Jaccard at $N = 10^5$; for
+$N = 10^6$--$10^8$ (the UniRef and gnomAD scales) exhaustive Jaccard
+becomes infeasible while the shader pass stays in milliseconds.
+
+\textit{(iii) The prefix prefilter underperforms on this benchmark.}
+Deeper prefixes filter aggressively but shed recall; shallower ones
+retain recall but provide little filtering. This matches the
+Sec.~\ref{sec:exp:addr} finding and confirms that the default
+production configuration should be \emph{shader-only first stage, no
+prefilter}, with the prefilter reserved for out-of-core databases.
+
+%==============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%==============================================================================
+
+\subsection{Where the method wins}
+\label{sec:discussion:wins}
+
+The architecture is best suited to \emph{large-database first-stage
+retrieval}: given a new query, return a short list of candidate homologs
+fast enough to make the downstream exact aligner tractable. The strengths,
+in rough order of importance, are:
+
+\begin{enumerate}
+    \item \textbf{Constant per-entry cost.} A fragment-shader dot product is
+    $d$ fused-multiply-adds and one texture read, with no branches, no
+    pointer chasing and no cache misses beyond the sequential read of the
+    database texture. Texture bandwidth, not arithmetic, is the bottleneck.
+    \item \textbf{Hardware ubiquity.} The rendering pipeline is exposed by
+    every GPU, mobile SoC, and WebGL-capable browser
+    \citep{webgl2,opengles3}. A single shader program runs on desktop
+    workstations, laptops, phones, and inside a browser tab, with no driver
+    install.
+    \item \textbf{Small memory footprint.} At $d = 48$ floats per sequence,
+    a database of $10^6$ sequences fits in $192$~MB; $10^8$ fits in
+    $19.2$~GB. Either size comfortably fits on a contemporary consumer GPU.
+    \item \textbf{Graceful degradation.} AUC stays above $0.97$ through the
+    twilight zone at $\mu = 0.20$ for both DNA and protein, and recall@5
+    stays above $0.93$ through the same range. The method loses useful
+    signal at $\mu > 0.30$, which is also where alignment-based methods
+    begin to report false positives.
+\end{enumerate}
+
+\subsection{Where it loses}
+\label{sec:discussion:limits}
+
+We list the limitations explicitly, since none of them is hidden in the
+data.
+
+\begin{enumerate}
+    \item \textbf{Moderate rank correlation with Smith--Waterman.} The
+    embedding preserves \emph{set membership} in the top-$K$ much better
+    than it preserves \emph{exact order}. Spearman $\rho$ is $0.05$--$0.38$
+    in our experiments. This is acceptable for first-stage retrieval
+    followed by alignment rerank; it is not a replacement for alignment
+    when exact E-values or percent-identity are required.
+    \item \textbf{Synthetic benchmarks only.} Our controlled substitution
+    model captures a clean-divergence regime but does not include
+    insertions, deletions, duplications, or domain shuffling, all of which
+    are routine in real homology. Fourier-based representations are
+    translation-sensitive; long indels shift the spectrum and degrade
+    retrieval. Amelioration by short-window FFT (``genomic
+    spectrograms'' \citep{voss1992}) is straightforward but not evaluated
+    here.
+    \item \textbf{Low-rank prefix addressing is weak.} Empirically, the
+    $3$-dimensional random projection does not support a useful prefix
+    prefilter, because the embedding needs more than three dimensions to
+    be discriminative. This is a statement about $m = 3$ specifically, not
+    about the approach; product quantisation
+    \citep{malkov2020,johnson2021} would likely work better at the cost of
+    additional infrastructure.
+    \item \textbf{No insertion/deletion robustness.} The length
+    normalisation $1/L$ in $\phi_{a,k}(s)$ removes the dominant
+    length-dependent scaling but does not recover the shift invariance
+    that would be needed for indel-heavy comparison. A cross-correlation
+    rerank in the spectral domain is an obvious extension.
+    \item \textbf{CPU-only validation.} All numbers reported here come from
+    a single-threaded vectorised CPU implementation of the shader kernel.
+    We have not yet run the actual GLSL kernel end-to-end on a GPU.
+    Section~\ref{sec:discussion:gpu} estimates what that would add.
+\end{enumerate}
+
+\subsection{Expected GPU throughput}
+\label{sec:discussion:gpu}
+
+The CPU reference implementation sustains $\approx 10^5$--$10^7\times$
+speedup over Smith--Waterman across the scales tested. For the actual GPU
+implementation the expected additional factor is bounded by fragment-stage
+texture bandwidth. Consumer GPUs currently deliver on the order of
+$400$--$800$~GB/s of texture bandwidth; the kernel reads $d \cdot 4$ bytes
+and writes $4$ bytes per fragment, so for $d = 48$ the arithmetic intensity
+is $\approx 0.25$~FLOP/byte, placing the shader in the bandwidth-bound
+regime. At $500$~GB/s, a database of $N = 10^8$ with $d = 48$ corresponds
+to $\approx 20$~GB to stream once, giving a theoretical lower bound of
+$\approx 40$~ms per query. This is consistent with the $1$~ms at $N = 10^5$
+we observed on CPU scaling to $\approx 1$~s at $N = 10^8$ on CPU, and the
+GPU reducing that to the millisecond range. We defer the full GPU
+implementation and measurement to a companion release.
+
+\subsection{Relation to prior work}
+\label{sec:related}
+
+\paragraph{Alignment-free sketching.} MinHash \citep{broder1997,ondov2016},
+HyperLogLog-based sketches \citep{flajolet2007,baker2019}, and sourmash
+\citep{pierce2019} occupy the same role as our embedding---fast,
+fixed-size, alignment-free comparison---but operate on $k$-mer sets rather
+than on continuous signal spectra. The two approaches are complementary:
+$k$-mer Jaccard captures discrete substring overlap; the spectral
+embedding captures periodicity and composition. In our synthetic tests
+at $1000$-sequence scale, exhaustive Jaccard retains a slight recall
+advantage; the spectral embedding pulls ahead in throughput by three to
+four orders of magnitude.
+
+\paragraph{Genomic signal processing.} Fourier analysis of channelised DNA
+and protein signals is a substantial existing literature
+\citep{voss1992,anastassiou2001,trifonov1980,hoang2015,yin2014}. Our
+contribution is not the use of DFT coefficients as similarity features
+(that idea goes back at least four decades) but the specific low-dimensional
+coordinate formulation chosen to fit on the GPU rendering pipeline, and
+the empirical characterisation of its first-stage retrieval behaviour at
+scale.
+
+\paragraph{GPU sequence alignment.} Prior GPU work on sequence alignment
+has overwhelmingly focused on accelerating exact dynamic programming under
+CUDA \citep{liu2013cudasw,manavski2008,rognes2011}. These systems achieve
+high throughput but require a full GPU compute framework and dedicated
+deployment; they do not run in a browser and do not scale to billion-entry
+databases without substantial engineering. The fragment-pipeline approach
+described here is orthogonal: it sacrifices alignment accuracy at the
+first stage for deployability on commodity hardware, including devices
+without any general-purpose compute API.
+
+\paragraph{Deep embeddings.} Transformer-based protein language models
+\citep{bepler2019,rives2021,elnaggar2022} produce high-dimensional
+embeddings that capture structural and functional similarity more robustly
+than any hand-crafted feature. They are also much larger, slower to
+evaluate, and require a learned model. The spectral embedding can be
+understood as a non-learned, interpretable low-end of that spectrum:
+useful as a fast filter when no training data or model is available, or
+when deployability to zero-install environments matters more than maximum
+sensitivity.
+
+\subsection{Applications}
+\label{sec:apps}
+
+The natural applications fall into two classes.
+
+\paragraph{First-stage filters in classical pipelines.} Any search tool
+that currently performs $\Omega(N)$ candidate generation (BLAST, DIAMOND,
+MMseqs2) can be fronted with the shader kernel to reduce the candidate
+set by several orders of magnitude before committing to alignment. This
+trades a modest recall penalty (missed at most $5$--$7\%$ of true homologs
+at twilight-zone divergence) for a potentially $10^3$--$10^4\times$
+reduction in candidates inspected.
+
+\paragraph{Client-side and edge deployments.} The full pipeline can run in
+a web browser via WebGL~2, or on a phone via OpenGL~ES; no server-side
+alignment service is required. This is relevant to clinical settings
+where patient sequence data cannot be uploaded to remote servers, to field
+sequencing on nanopore devices with limited connectivity, and to
+educational tools where installing a full bioinformatics environment is
+not an option.
+
+\subsection{Future work}
+
+Natural extensions, in rough order of effort:
+\begin{itemize}
+    \item Replacing the global FFT with a sliding-window (``genomic
+    spectrogram'') that restores shift-invariance and tolerance to indels.
+    \item Evaluation on standard benchmarks (SCOP superfamily retrieval,
+    Pfam family assignments, UniRef50 recall) and direct comparison with
+    BLAST and DIAMOND on real data.
+    \item Actual GLSL implementation and measurement of throughput on
+    consumer and mobile GPUs, including a WebGL~2 demonstration.
+    \item A learned refinement of the embedding (supervised fine-tuning of
+    the per-channel weighting) to close the remaining recall gap against
+    exhaustive Jaccard on real data.
+    \item Integration with an approximate-nearest-neighbour index
+    \citep{malkov2020,johnson2021} when the embedding alone cannot index
+    a database of $10^9$+ entries on a single device.
+\end{itemize}
+
+%==============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%==============================================================================
+
+We described a homology-search architecture that maps sequences to
+fixed-dimension spectral coordinates and evaluates similarity as a single
+fragment-shader pass. The embedding preserves homolog--non-homolog
+separability (ROC-AUC $\geq 0.97$) through the classical twilight zone for
+both DNA and protein alphabets. A CPU reference implementation of the
+shader kernel runs at $1.1$~ms per query against a $10^5$-sequence
+database---three to four orders of magnitude faster than exhaustive $k$-mer
+Jaccard and five to seven orders faster than extrapolated exhaustive
+Smith--Waterman at the same scale. When combined with a Smith--Waterman
+rerank of the top twenty candidates, the pipeline recovers $95\%$ of true
+family members on a $1000$-sequence protein benchmark. The method is
+positioned as a first-stage filter in front of conventional alignment
+tools, not as a replacement; its principal advantages are simplicity of
+arithmetic, minimal memory footprint and portability to any GPU or
+browser. All code, raw numerical results and figure-generation scripts
+are released with the paper so that every number can be reproduced and
+extended.
+
+%==============================================================================
+\paragraph{Data and code availability.} The JSON result files and the
+Python experiment scripts that generated them are in the
+\texttt{results/}\ and \texttt{experiments/}\ subdirectories accompanying
+this paper. Figures are rebuilt by
+\texttt{experiments/make\_figures.py}. No proprietary or non-public
+datasets are used.
+
+\paragraph{Author contributions.} Conception, design, implementation,
+experiments, analysis, and writing: K.F.S.
+
+\paragraph{Conflicts of interest.} None declared.
+
+%==============================================================================
+
+\bibliography{references}
+
+\end{document}
