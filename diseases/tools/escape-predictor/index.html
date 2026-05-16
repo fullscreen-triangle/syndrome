@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Predictor &mdash; Spectral Landscape</title>
+<style>
+:root{--bg:#0f1117;--sur:#1a1d27;--s2:#22263a;--bd:#2e3350;--ac:#4f8ef7;
+  --gr:#34d399;--rd:#f87171;--yl:#fbbf24;--tx:#e2e8f0;--mu:#64748b;--fn:monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);font-size:13px;
+  min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--sur);border-bottom:1px solid var(--bd);padding:16px 24px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+header h1{font-size:15px;font-weight:600;color:var(--gr)}
+header span{color:var(--mu);font-size:11px}
+a.bk{margin-left:auto;color:var(--mu);text-decoration:none;font-size:11px;
+  border:1px solid var(--bd);padding:4px 10px;border-radius:4px}
+.lay{display:grid;grid-template-columns:340px 1fr;flex:1}
+.side{background:var(--sur);border-right:1px solid var(--bd);padding:20px;
+  display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.main{padding:20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.sl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--mu);margin-bottom:6px}
+label{display:block;color:var(--mu);font-size:11px;margin-bottom:4px}
+textarea{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--tx);
+  font-family:var(--fn);font-size:12px;padding:8px;border-radius:6px;
+  outline:none;resize:vertical}
+textarea:focus{border-color:var(--ac)}
+input[type=range]{width:100%;accent-color:var(--ac);background:none;border:none;padding:0}
+button{background:var(--gr);color:#000;border:none;padding:10px;
+  border-radius:6px;font-family:var(--fn);font-size:12px;font-weight:700;
+  cursor:pointer;width:100%}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.vb{background:var(--s2);border:1px solid var(--bd);padding:2px 8px;
+  border-radius:4px;font-size:12px;min-width:44px;text-align:center}
+.cw{background:var(--sur);border:1px solid var(--bd);border-radius:8px;
+  overflow:hidden;position:relative}
+.clb{position:absolute;top:8px;left:12px;font-size:10px;color:var(--mu);
+  text-transform:uppercase;letter-spacing:.08em;pointer-events:none}
+canvas{display:block;width:100%}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--mu);font-weight:400;font-size:10px;
+  text-transform:uppercase;padding:6px 10px;border-bottom:1px solid var(--bd)}
+td{padding:6px 10px;border-bottom:1px solid rgba(46,51,80,.4)}
+tr:hover td{background:var(--s2)}
+.tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:600}
+.te{background:rgba(248,113,113,.15);color:var(--rd);border:1px solid rgba(248,113,113,.3)}
+.tv{background:rgba(251,191,36,.15);color:var(--yl);border:1px solid rgba(251,191,36,.3)}
+.ts{background:rgba(52,211,153,.15);color:var(--gr);border:1px solid rgba(52,211,153,.3)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sc{background:var(--s2);border:1px solid var(--bd);border-radius:6px;
+  padding:10px;text-align:center}
+.sc .v{font-size:18px;font-weight:700;color:var(--ac)}
+.sc .d{font-size:10px;color:var(--mu);margin-top:2px}
+.gb{display:inline-flex;align-items:center;gap:5px;font-size:10px;
+  color:#a78bfa;background:rgba(167,139,250,.1);
+  border:1px solid rgba(167,139,250,.3);border-radius:4px;padding:3px 8px}
+.gd{width:6px;height:6px;border-radius:50%;background:#a78bfa}
+.gd.on{animation:p 1s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+.pb{height:3px;background:var(--bd);border-radius:2px;overflow:hidden}
+.pf{height:100%;background:var(--gr);border-radius:2px;transition:width .2s}
+.ib{background:var(--sur);border:1px solid var(--bd);border-radius:8px;
+  padding:14px;font-size:11px;line-height:1.7;color:var(--mu)}
+.ib strong{color:var(--tx)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Immune Escape Predictor</h1>
+  <span>Spectral escape landscape &mdash; dual constraint: &rho;(Ab)&lt;&theta;_neut AND &rho;(rec)&gt;&theta;_bind</span>
+  <a class="bk" href="../index.html">&larr; Tools</a>
+</header>
+<div class="lay">
+<div class="side">
+  <div>
+    <div class="sl">Antigen Sequence</div>
+    <label>Target antigen / epitope region</label>
+    <textarea id="antigenSeq" rows="3" spellcheck="false">SIINFEKLGILGFVFTLNLVPMVATV</textarea>
+  </div>
+  <div>
+    <div class="sl">Receptor Binding Domain</div>
+    <label>Host receptor (viability constraint)</label>
+    <textarea id="receptorSeq" rows="2" spellcheck="false">ACENIYRLFGHKSDLQMAVNNLSTVSQLQ</textarea>
+  </div>
+  <div>
+    <div class="sl">Antibody Panel</div>
+    <label>Neutralizing antibody sequences (one per line)</label>
+    <textarea id="abSeqs" rows="4" spellcheck="false">YVDGVEVHNAK
+SGSYISSSSTIY
+HCSGYNLHYWYG
+YSISSGSTIYY</textarea>
+  </div>
+  <div>
+    <div class="sl">Neutralization Threshold &theta;_neut</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <label style="margin:0;flex:1">Max &rho;_Ab for escape</label>
+      <span class="vb" id="tNeutB">0.30</span>
+    </div>
+    <input type="range" id="tNeut" min="0.10" max="0.80" step="0.01" value="0.30">
+  </div>
+  <div>
+    <div class="sl">Binding Threshold &theta;_bind</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <label style="margin:0;flex:1">Min &rho;_receptor for viability</label>
+      <span class="vb" id="tBindB">0.05</span>
+    </div>
+    <input type="range" id="tBind" min="0.01" max="0.50" step="0.01" value="0.05">
+  </div>
+  <div>
+    <div class="sl">Score Weight w</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <label style="margin:0;flex:1">E(v) = -max_k &rho;(v,Ab_k) + w&middot;&rho;(v,rec)</label>
+      <span class="vb" id="wB">0.80</span>
+    </div>
+    <input type="range" id="wS" min="0" max="2" step="0.05" value="0.80">
+  </div>
+  <button id="runBtn">Compute Escape Landscape</button>
+  <div class="ib">
+    <strong>Method.</strong> All single-aa substitutions of the antigen are embedded spectrally
+    via O(cL log L) DFT. Escape score E(v) = -max_k &rho;(v,Ab_k) + w&middot;&rho;(v,receptor).
+    Viable escape: &rho;_Ab &lt; &theta;_neut (evades ALL antibodies) AND
+    &rho;_rec &gt; &theta;_bind (retains receptor binding). No stored database.
+  </div>
+</div>
+<div class="main">
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <div class="gb"><div class="gd" id="gdot"></div><span id="glbl">Initializing...</span></div>
+    <span style="font-size:10px;color:var(--mu)" id="stl">Ready.</span>
+  </div>
+  <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+  <div class="sg" id="sGrid" style="display:none">
+    <div class="sc"><div class="v" id="sT">-</div><div class="d">Variants scored</div></div>
+    <div class="sc"><div class="v" id="sE">-</div><div class="d">Viable escape</div></div>
+    <div class="sc"><div class="v" id="sS">-</div><div class="d">Top score</div></div>
+    <div class="sc"><div class="v" id="sMs">-</div><div class="d">ms</div></div>
+  </div>
+  <div class="cw" style="height:160px">
+    <div class="clb">Escape landscape: score per variant (red=viable, yellow=partial, green=contained)</div>
+    <canvas id="lc" height="160"></canvas>
+  </div>
+  <div id="rw" style="display:none">
+    <div class="sl" style="margin-bottom:8px">Top Escape Variants</div>
+    <div style="background:var(--sur);border:1px solid var(--bd);border-radius:8px;overflow:hidden">
+      <table>
+        <thead><tr><th>#</th><th>Variant (truncated)</th><th>Pos</th><th>Mut</th>
+          <th>&rho;_Ab</th><th>&rho;_rec</th><th>Score</th><th>Verdict</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="cw" style="height:110px">
+    <div class="clb">Antigen spectral embedding (36 coefficients, 3 physicochemical channels)</div>
+    <canvas id="ec" height="110"></canvas>
+  </div>
+</div>
+</div>
+
+<script type="module">
+
+import { embedSequence, similarity } from '../core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+
+const AA = 'ACDEFGHIKLMNPQRSTVWY';
+let gl = null;
+{
+  const o = document.createElement('canvas'); o.width = o.height = 1;
+  try { const g = o.getContext('webgl2'); if (g) { g.getExtension('EXT_color_buffer_float'); gl = g; } } catch(e) {}
+  const d = document.getElementById('gdot'), l = document.getElementById('glbl');
+  if (gl) { d.classList.add('on'); l.textContent = 'GPU (WebGL2) ready'; }
+  else { l.textContent = 'CPU mode (WebGL2 unavailable)'; }
+}
+
+const $ = id => document.getElementById(id);
+$('tNeut').addEventListener('input', () => $('tNeutB').textContent = (+$('tNeut').value).toFixed(2));
+$('tBind').addEventListener('input', () => $('tBindB').textContent = (+$('tBind').value).toFixed(2));
+$('wS').addEventListener('input', () => $('wB').textContent = (+$('wS').value).toFixed(2));
+
+function cleanAA(s) { return s.trim().toUpperCase().replace(/[^ACDEFGHIKLMNPQRSTVWY]/g, ''); }
+
+$('antigenSeq').addEventListener('input', () => {
+  const s = cleanAA($('antigenSeq').value);
+  if (s.length >= 2) drawEmb(s);
+});
+
+$('runBtn').addEventListener('click', async () => {
+  const ant = cleanAA($('antigenSeq').value);
+  const rec = cleanAA($('receptorSeq').value);
+  const abs = $('abSeqs').value.split('\n').map(l => cleanAA(l)).filter(l => l.length >= 4);
+  if (ant.length < 4 || abs.length === 0) { $('stl').textContent = 'Need antigen + at least 1 Ab.'; return; }
+  $('runBtn').disabled = true;
+  const pf = $('pf'); pf.style.width = '10%';
+  const tn = +$('tNeut').value, tb = +$('tBind').value, w = +$('wS').value;
+  $('stl').textContent = 'Generating variants...';
+  const t0 = performance.now();
+  const variants = [];
+  for (let p = 0; p < ant.length; p++)
+    for (const aa of AA) {
+      if (aa === ant[p]) continue;
+      variants.push({ seq: ant.slice(0,p)+aa+ant.slice(p+1), pos: p, wt: ant[p], mut: aa });
+    }
+  pf.style.width = '25%'; $('stl').textContent = `Embedding ${variants.length} variants...`;
+  const recE = embedSequence(rec);
+  const abEs = abs.map(a => embedSequence(a));
+  const vEs = variants.map(v => embedSequence(v.seq));
+  pf.style.width = '60%'; $('stl').textContent = 'Scoring...';
+  const rhoRec = gl && variants.length > 4
+    ? gpuBatchSimilarity(gl, recE, vEs)
+    : new Float32Array(vEs.map(e => similarity(e, recE)));
+  const rhoAbAll = abEs.map(abE => gl && variants.length > 4
+    ? gpuBatchSimilarity(gl, abE, vEs)
+    : new Float32Array(vEs.map(e => similarity(e, abE))));
+  const results = variants.map((v, i) => {
+    const rAb = Math.max(...rhoAbAll.map(r => r[i]));
+    const rRec = rhoRec[i];
+    const score = -rAb + w * rRec;
+    const viable = rAb < tn && rRec > tb;
+    const partial = !viable && (rAb < tn || rRec > tb);
+    return { ...v, rhoAb: rAb, rhoRec: rRec, score, viable, partial };
+  }).sort((a, b) => b.score - a.score);
+  const dt = (performance.now() - t0).toFixed(1);
+  pf.style.width = '100%'; setTimeout(() => pf.style.width = '0%', 600);
+  const nV = results.filter(r => r.viable).length;
+  $('sGrid').style.display = 'grid';
+  $('sT').textContent = results.length; $('sE').textContent = nV;
+  $('sS').textContent = results[0]?.score.toFixed(3) ?? '--'; $('sMs').textContent = dt;
+  $('stl').textContent = `Scored ${results.length} variants in ${dt} ms — ${nV} viable escape variants`;
+  drawLandscape(results, tn, tb);
+  renderTable(results.slice(0, 40), tn, tb);
+  drawEmb(ant);
+  $('runBtn').disabled = false;
+});
+
+function drawLandscape(results, tn, tb) {
+  const c = $('lc'); const W = c.parentElement.clientWidth || 800;
+  c.width = W; const H = 160;
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#1a1d27'; ctx.fillRect(0, 0, W, H);
+  const pad = 8, padT = 22, padB = 16;
+  const pW = W - 2*pad, pH = H - padT - padB;
+  const N = results.length, bW = Math.max(1, pW/N - 0.3);
+  let mn = Infinity, mx = -Infinity;
+  for (const r of results) { if (r.score < mn) mn = r.score; if (r.score > mx) mx = r.score; }
+  const rng = mx - mn || 1;
+  results.forEach((r, i) => {
+    const x = pad + i * (pW/N);
+    const bH = ((r.score - mn) / rng) * pH;
+    const y = padT + pH - bH;
+    ctx.fillStyle = (r.viable ? '#f87171' : r.partial ? '#fbbf24' : '#34d399') + '99';
+    ctx.fillRect(x, y, bW, bH);
+  });
+  ctx.fillStyle = '#94a3b8'; ctx.font = '9px monospace';
+  ctx.fillText('E(v) = -rho_Ab + w*rho_rec', pad+4, 14);
+  [['red=viable escape', pad+220, '#f87171'], ['yellow=partial', pad+340, '#fbbf24'], ['green=contained', pad+440, '#34d399']]
+    .forEach(([t, x, col]) => { ctx.fillStyle = col; ctx.fillText(t, x, 14); });
+}
+
+function renderTable(results, tn, tb) {
+  const body = $('tb'); body.innerHTML = ''; $('rw').style.display = 'block';
+  results.forEach((r, i) => {
+    const tag = r.viable ? '<span class="tag te">ESCAPE</span>'
+              : r.partial ? '<span class="tag tv">PARTIAL</span>'
+              : '<span class="tag ts">SAFE</span>';
+    const abC = r.rhoAb < tn ? 'color:var(--gr)' : 'color:var(--rd)';
+    const rC = r.rhoRec > tb ? 'color:var(--gr)' : 'color:var(--rd)';
+    const name = r.seq.length > 18 ? r.seq.slice(0, 18) + '...' : r.seq;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="color:var(--mu)">${i+1}</td><td style="letter-spacing:.06em">${name}</td>`
+      + `<td>${r.pos+1}</td><td>${r.wt}&rarr;${r.mut}</td>`
+      + `<td style="${abC}">${r.rhoAb.toFixed(3)}</td>`
+      + `<td style="${rC}">${r.rhoRec.toFixed(3)}</td>`
+      + `<td style="font-weight:600;color:var(--ac)">${r.score.toFixed(3)}</td><td>${tag}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+function drawEmb(seq) {
+  const emb = embedSequence(seq);
+  const c = $('ec'); const W = c.parentElement.clientWidth || 800;
+  c.width = W; const H = 110;
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#1a1d27'; ctx.fillRect(0, 0, W, H);
+  const D = emb.length, bW = (W-20)/D, midY = H/2;
+  let mx = 0; for (const x of emb) mx = Math.max(mx, Math.abs(x)); if (!mx) mx = 1;
+  const CC = ['#4f8ef7', '#34d399', '#fbbf24'], K = 12;
+  for (let ch = 0; ch < 3; ch++) {
+    const x = 10 + ch*K*bW;
+    ctx.fillStyle = CC[ch] + '18'; ctx.fillRect(x, 0, K*bW, H);
+    ctx.fillStyle = CC[ch]; ctx.font = '9px monospace';
+    ctx.fillText(['Hydropathy','Volume','Charge'][ch].slice(0,4), x+4, 12);
+  }
+  ctx.strokeStyle = '#2e3350'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(W, midY); ctx.stroke();
+  for (let i = 0; i < D; i++) {
+    const ch = Math.floor(i/K), x = 10+i*bW+1, val = emb[i]/mx;
+    const bH = Math.abs(val) * (H/2 - 12), y = val >= 0 ? midY - bH : midY;
+    ctx.fillStyle = CC[ch]; ctx.globalAlpha = 0.8; ctx.fillRect(x, y, bW-1, bH);
+  }
+  ctx.globalAlpha = 1;
+}
+
+const initSeq = cleanAA(document.getElementById('antigenSeq').value);
+if (initSeq.length >= 2) drawEmb(initSeq);
+
+</script>
+</body>
+</html>

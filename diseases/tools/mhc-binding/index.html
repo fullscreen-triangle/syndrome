@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MHC Binding Predictor — Spectral Interference</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --font: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: var(--accent); }
+  header span { color: var(--muted); font-size: 11px; }
+  .nav-back {
+    margin-left: auto;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .nav-back:hover { color: var(--text); border-color: var(--accent); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 0;
+    flex: 1;
+  }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  .main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+  textarea, input[type=text], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    outline: none;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row label { margin: 0; flex: 1; }
+  .val-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 0.04em;
+  }
+  button:hover { filter: brightness(1.15); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  button.secondary:hover { color: var(--text); border-color: var(--accent); filter: none; }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-weight: 600;
+  }
+  .tag-binder { background: rgba(52,211,153,0.15); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+  .tag-nonbinder { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .tag-weak { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+
+  /* Spectrum canvas */
+  .canvas-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .canvas-label {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  canvas { display: block; }
+
+  /* Results table */
+  .result-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .result-table th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(46,51,80,0.5);
+  }
+  .result-table tr:hover td { background: var(--surface2); }
+
+  .rho-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rho-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .rho-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .info-box strong { color: var(--text); }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .allele-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .allele-chip:hover, .allele-chip.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,142,247,0.08);
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-card .val { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  .gpu-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--accent2);
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 4px;
+    padding: 3px 8px;
+  }
+  .gpu-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .gpu-dot.active { animation: pulse 1s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .error-msg { color: var(--red); font-size: 11px; padding: 8px; }
+  .status-line {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 4px 0;
+    min-height: 18px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MHC Binding Predictor</h1>
+  <span>Spectral oscillator interference · zero database · O(cL log L)</span>
+  <a class="nav-back" href="../index.html">← Tools</a>
+</header>
+
+<div class="layout">
+  <!-- ── Sidebar ── -->
+  <div class="sidebar">
+
+    <div>
+      <div class="section-label">Query Peptide</div>
+      <label>Amino acid sequence (8–15 residues recommended)</label>
+      <textarea id="peptideInput" rows="3" placeholder="e.g. SIINFEKL">SIINFEKL</textarea>
+    </div>
+
+    <div>
+      <div class="section-label">MHC Allele Model</div>
+      <label>Select allele (defines the spectral aperture)</label>
+      <div class="chip-row" id="alleleChips">
+        <div class="allele-chip active" data-allele="HLA-A*02:01">HLA-A*02:01</div>
+        <div class="allele-chip" data-allele="HLA-A*01:01">HLA-A*01:01</div>
+        <div class="allele-chip" data-allele="HLA-A*03:01">HLA-A*03:01</div>
+        <div class="allele-chip" data-allele="HLA-B*07:02">HLA-B*07:02</div>
+        <div class="allele-chip" data-allele="HLA-B*57:01">HLA-B*57:01</div>
+        <div class="allele-chip" data-allele="HLA-C*07:02">HLA-C*07:02</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Binding Threshold ρ*</div>
+      <div class="row">
+        <label>ρ* (minimum similarity for binding)</label>
+        <span class="val-badge" id="rhoStarBadge">0.72</span>
+      </div>
+      <input type="range" id="rhoStar" min="0.40" max="0.95" step="0.01" value="0.72">
+      <div style="margin-top:6px; font-size:10px; color:var(--muted)">
+        Binding ball radius r* = √(2(1−ρ*)) = <span id="radiusBadge">0.748</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Peptide Library Scan</div>
+      <label>Scan multiple peptides (one per line)</label>
+      <textarea id="libraryInput" rows="6"
+        placeholder="SIINFEKL&#10;GILGFVFTL&#10;NLVPMVATV&#10;KLGGALQAK&#10;FMYSDFHFI&#10;ILDTAGREEY&#10;VTEHDTLLY&#10;GLCTLVAML"></textarea>
+      <div style="height:8px"></div>
+      <button id="scanBtn">Scan Library</button>
+    </div>
+
+    <div>
+      <button class="secondary" id="clearBtn">Clear Results</button>
+    </div>
+
+    <div class="info-box">
+      <strong>Method.</strong> Each peptide is channelized into 3 physicochemical channels
+      (hydropathy, volume, charge), DC-subtracted, and transformed by DFT.
+      The normalized spectral embedding ψ ∈ ℝ<sup>36</sup> is compared to the MHC groove
+      spectral aperture via cosine similarity ρ = ⟨ψ<sub>pep</sub>, ψ<sub>MHC</sub>⟩.
+      Predicted binder iff ρ &gt; ρ*. No database lookup; synthesized on demand.
+    </div>
+
+  </div>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <!-- GPU status + stats -->
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <div class="gpu-badge">
+        <div class="gpu-dot" id="gpuDot"></div>
+        <span id="gpuLabel">Initializing GPU…</span>
+      </div>
+      <div class="status-line" id="statusLine">Ready.</div>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="stat-grid" id="statGrid" style="display:none">
+      <div class="stat-card">
+        <div class="val" id="statTotal">—</div>
+        <div class="desc">Peptides scanned</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="statBinders">—</div>
+        <div class="desc">Predicted binders</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="statTopRho">—</div>
+        <div class="desc">Top ρ</div>
+      </div>
+    </div>
+
+    <!-- Spectral canvas row -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="canvas-wrap" style="height:160px">
+        <span class="canvas-label">Peptide spectrum — channels h, v, q</span>
+        <canvas id="spectrumCanvas" width="480" height="160"></canvas>
+      </div>
+      <div class="canvas-wrap" style="height:160px">
+        <span class="canvas-label">ρ distribution over library</span>
+        <canvas id="histCanvas" width="480" height="160"></canvas>
+      </div>
+    </div>
+
+    <!-- Single peptide result -->
+    <div id="singleResult" style="display:none">
+      <div class="section-label">Single Peptide Analysis</div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:4px">Peptide</div>
+          <div id="rPeptide" style="font-size:16px; letter-spacing:0.12em; color:var(--text)"></div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:4px">Allele</div>
+          <div id="rAllele" style="font-size:13px; color:var(--accent2)"></div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:4px">Similarity ρ</div>
+          <div id="rRho" style="font-size:22px; font-weight:700; color:var(--accent)"></div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--muted); margin-bottom:4px">Prediction</div>
+          <div id="rPred"></div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:10px; color:var(--muted); margin-bottom:6px">Spectral similarity vs threshold</div>
+          <div class="rho-bar">
+            <span style="font-size:10px; color:var(--muted)">0</span>
+            <div class="rho-track" style="height:8px; flex:1">
+              <div id="rhoFillBar" class="rho-fill" style="width:0%; background:var(--accent)"></div>
+            </div>
+            <span style="font-size:10px; color:var(--muted)">1</span>
+          </div>
+          <div style="display:flex; justify-content:flex-end; font-size:10px; color:var(--muted); margin-top:2px">
+            ρ* = <span id="rhoStarMarker" style="color:var(--yellow); margin-left:4px"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Library scan results -->
+    <div id="libraryResult" style="display:none">
+      <div class="section-label">Library Scan Results</div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Peptide</th>
+              <th>Length</th>
+              <th>ρ</th>
+              <th>Similarity</th>
+              <th>Prediction</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Embedding visualization -->
+    <div class="canvas-wrap" style="height:120px">
+      <span class="canvas-label">Spectral embedding ψ ∈ ℝ³⁶ (36 coefficients across 3 channels)</span>
+      <canvas id="embCanvas" width="900" height="120"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { embedSequence, channelizeProtein, dft1d, similarity, K } from '../core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+
+// ── MHC Groove Spectral Apertures ─────────────────────────────────────────────
+// Each allele is modeled by its peptide-binding groove anchor residue sequence.
+// These are canonical P2/P9 anchor consensus motifs for HLA supertypes.
+const ALLELE_GROOVES = {
+  'HLA-A*02:01': 'GILGFVFTLGVYDGREHTV', // A2 supertype: L/M at P2, V/L at P9
+  'HLA-A*01:01': 'VTEHDTLLYILDTAGREEY', // A1 supertype: T at P3, Y at P9
+  'HLA-A*03:01': 'KLGGALQAKRQIIFVDLLK', // A3 supertype: K at P2, K/R at P9
+  'HLA-B*07:02': 'RPQGLKAGRNPVVHFFKNIV', // B7 supertype: P at P2, L/V at P9
+  'HLA-B*57:01': 'KAFSPEVIPMFSALSEGATPVHHGVTS', // B57: A/S at P2, W/F at P9
+  'HLA-C*07:02': 'QYDPVAALF', // C7: A at P2, F/L at P9
+};
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let gl = null;
+let currentAllele = 'HLA-A*02:01';
+let lastResults = [];
+
+// ── DOM refs ─────────────────────────────────────────────────────────────────
+const peptideInput = document.getElementById('peptideInput');
+const libraryInput = document.getElementById('libraryInput');
+const rhoStarSlider = document.getElementById('rhoStar');
+const rhoStarBadge = document.getElementById('rhoStarBadge');
+const radiusBadge = document.getElementById('radiusBadge');
+const scanBtn = document.getElementById('scanBtn');
+const clearBtn = document.getElementById('clearBtn');
+const gpuDot = document.getElementById('gpuDot');
+const gpuLabel = document.getElementById('gpuLabel');
+const statusLine = document.getElementById('statusLine');
+
+// ── Canvas contexts ───────────────────────────────────────────────────────────
+const specCanvas = document.getElementById('spectrumCanvas');
+const specCtx = specCanvas.getContext('2d');
+const histCanvas = document.getElementById('histCanvas');
+const histCtx = histCanvas.getContext('2d');
+const embCanvas = document.getElementById('embCanvas');
+const embCtx = embCanvas.getContext('2d');
+
+// ── WebGL init ─────────────────────────────────────────────────────────────
+{
+  const offscreen = document.createElement('canvas');
+  offscreen.width = offscreen.height = 1;
+  gl = initGL(offscreen);
+  if (gl) {
+    gpuDot.classList.add('active');
+    gpuLabel.textContent = 'GPU (WebGL2) · fragment shader active';
+  } else {
+    gpuLabel.textContent = 'CPU mode (WebGL2 unavailable)';
+  }
+}
+
+// ── Allele chips ──────────────────────────────────────────────────────────────
+document.getElementById('alleleChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.allele-chip');
+  if (!chip) return;
+  document.querySelectorAll('.allele-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  currentAllele = chip.dataset.allele;
+  onPeptideChange();
+});
+
+// ── Threshold slider ──────────────────────────────────────────────────────────
+rhoStarSlider.addEventListener('input', () => {
+  const rho = parseFloat(rhoStarSlider.value);
+  rhoStarBadge.textContent = rho.toFixed(2);
+  radiusBadge.textContent = Math.sqrt(2 * (1 - rho)).toFixed(3);
+  if (lastResults.length) renderResults(lastResults);
+  updateSingleResult();
+});
+
+// ── Peptide live update ───────────────────────────────────────────────────────
+peptideInput.addEventListener('input', onPeptideChange);
+
+function onPeptideChange() {
+  const seq = peptideInput.value.trim().toUpperCase().replace(/[^ACDEFGHIKLMNPQRSTVWY]/g, '');
+  if (seq.length < 2) {
+    clearSpectrum(); return;
+  }
+  drawSpectrum(seq);
+  drawEmbedding(seq);
+  computeSingle(seq);
+}
+
+// ── Single peptide computation ────────────────────────────────────────────────
+function computeSingle(seq) {
+  try {
+    const pepEmb = embedSequence(seq);
+    const mhcEmb = embedSequence(ALLELE_GROOVES[currentAllele]);
+    const rho = similarity(pepEmb, mhcEmb);
+    const rhoStar = parseFloat(rhoStarSlider.value);
+    showSingleResult(seq, rho, rhoStar);
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function updateSingleResult() {
+  const seq = peptideInput.value.trim().toUpperCase().replace(/[^ACDEFGHIKLMNPQRSTVWY]/g, '');
+  if (seq.length >= 2) computeSingle(seq);
+}
+
+function showSingleResult(seq, rho, rhoStar) {
+  document.getElementById('singleResult').style.display = 'block';
+  document.getElementById('rPeptide').textContent = seq;
+  document.getElementById('rAllele').textContent = currentAllele;
+  document.getElementById('rRho').textContent = rho.toFixed(4);
+  document.getElementById('rhoStarMarker').textContent = rhoStar.toFixed(2);
+
+  const pct = Math.max(0, Math.min(100, rho * 100));
+  const fill = document.getElementById('rhoFillBar');
+  fill.style.width = pct + '%';
+
+  const isBinder = rho >= rhoStar;
+  const isWeak = !isBinder && rho >= rhoStar - 0.08;
+  const predEl = document.getElementById('rPred');
+  if (isBinder) {
+    fill.style.background = 'var(--green)';
+    predEl.innerHTML = '<span class="tag tag-binder">BINDER</span>';
+  } else if (isWeak) {
+    fill.style.background = 'var(--yellow)';
+    predEl.innerHTML = '<span class="tag tag-weak">WEAK</span>';
+  } else {
+    fill.style.background = 'var(--red)';
+    predEl.innerHTML = '<span class="tag tag-nonbinder">NON-BINDER</span>';
+  }
+}
+
+// ── Library scan ─────────────────────────────────────────────────────────────
+scanBtn.addEventListener('click', runLibraryScan);
+
+async function runLibraryScan() {
+  const lines = libraryInput.value.split('\n')
+    .map(l => l.trim().toUpperCase().replace(/[^ACDEFGHIKLMNPQRSTVWY]/g, ''))
+    .filter(l => l.length >= 2);
+
+  if (lines.length === 0) { statusLine.textContent = 'No valid peptides.'; return; }
+
+  scanBtn.disabled = true;
+  statusLine.textContent = `Computing embeddings for ${lines.length} peptides…`;
+
+  const t0 = performance.now();
+  const mhcEmb = embedSequence(ALLELE_GROOVES[currentAllele]);
+
+  let scores;
+  if (gl && lines.length > 4) {
+    // GPU path
+    const pepEmbs = lines.map(s => embedSequence(s));
+    scores = gpuBatchSimilarity(gl, mhcEmb, pepEmbs);
+  } else {
+    // CPU path
+    scores = new Float32Array(lines.map(s => similarity(embedSequence(s), mhcEmb)));
+  }
+
+  const dt = (performance.now() - t0).toFixed(1);
+  const rhoStar = parseFloat(rhoStarSlider.value);
+
+  lastResults = lines.map((seq, i) => ({ seq, rho: scores[i] }))
+    .sort((a, b) => b.rho - a.rho);
+
+  statusLine.textContent = `Scanned ${lines.length} peptides in ${dt} ms · ${gl ? 'GPU' : 'CPU'}`;
+  renderResults(lastResults);
+  drawHistogram(lastResults.map(r => r.rho), rhoStar);
+  scanBtn.disabled = false;
+}
+
+function renderResults(results) {
+  const rhoStar = parseFloat(rhoStarSlider.value);
+  const body = document.getElementById('resultsBody');
+  body.innerHTML = '';
+  document.getElementById('libraryResult').style.display = 'block';
+
+  const binders = results.filter(r => r.rho >= rhoStar).length;
+  const topRho = results[0]?.rho ?? 0;
+  document.getElementById('statGrid').style.display = 'grid';
+  document.getElementById('statTotal').textContent = results.length;
+  document.getElementById('statBinders').textContent = binders;
+  document.getElementById('statTopRho').textContent = topRho.toFixed(4);
+
+  results.forEach((r, i) => {
+    const isBinder = r.rho >= rhoStar;
+    const isWeak = !isBinder && r.rho >= rhoStar - 0.08;
+    const pct = Math.max(0, Math.min(100, r.rho * 100));
+    const color = isBinder ? 'var(--green)' : isWeak ? 'var(--yellow)' : 'var(--red)';
+    const tag = isBinder ? '<span class="tag tag-binder">BINDER</span>'
+               : isWeak  ? '<span class="tag tag-weak">WEAK</span>'
+                         : '<span class="tag tag-nonbinder">NON-BINDER</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted)">${i + 1}</td>
+      <td style="letter-spacing:0.08em">${r.seq}</td>
+      <td style="color:var(--muted)">${r.seq.length}</td>
+      <td style="color:${color}; font-weight:600">${r.rho.toFixed(4)}</td>
+      <td>
+        <div class="rho-bar">
+          <div class="rho-track"><div class="rho-fill" style="width:${pct}%;background:${color}"></div></div>
+        </div>
+      </td>
+      <td>${tag}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+// ── Spectrum visualization ────────────────────────────────────────────────────
+const CHANNEL_COLORS = ['#4f8ef7', '#34d399', '#fbbf24'];
+const CHANNEL_NAMES = ['Hydropathy', 'Volume', 'Charge'];
+
+function drawSpectrum(seq) {
+  const { channels } = channelizeProtein(seq);
+  const W = specCanvas.width, H = specCanvas.height;
+  specCtx.clearRect(0, 0, W, H);
+  specCtx.fillStyle = '#1a1d27';
+  specCtx.fillRect(0, 0, W, H);
+
+  const L = channels[0].length;
+
+  // Compute magnitudes from DFT
+  const mags = channels.map(ch => dft1d(ch));
+  const K_show = Math.min(20, mags[0].length);
+
+  // Normalize across all channels
+  let maxMag = 0;
+  for (const m of mags) for (let k = 1; k <= K_show; k++) maxMag = Math.max(maxMag, m[k]);
+  if (maxMag === 0) maxMag = 1;
+
+  const padL = 40, padR = 12, padT = 28, padB = 28;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Grid
+  specCtx.strokeStyle = '#2e3350';
+  specCtx.lineWidth = 0.5;
+  for (let g = 0; g <= 4; g++) {
+    const y = padT + plotH * (1 - g / 4);
+    specCtx.beginPath(); specCtx.moveTo(padL, y); specCtx.lineTo(W - padR, y); specCtx.stroke();
+    specCtx.fillStyle = '#64748b';
+    specCtx.font = '9px monospace';
+    specCtx.fillText((g / 4).toFixed(2), 0, y + 3);
+  }
+
+  // Bar groups
+  const barGroupW = plotW / K_show;
+  const barW = barGroupW / 3 - 1;
+
+  for (let k = 0; k < K_show; k++) {
+    for (let c = 0; c < 3; c++) {
+      const val = mags[c][k + 1] / maxMag;
+      const x = padL + k * barGroupW + c * (barW + 0.5);
+      const barH = val * plotH;
+      const y = padT + plotH - barH;
+      specCtx.fillStyle = CHANNEL_COLORS[c] + '99';
+      specCtx.fillRect(x, y, barW, barH);
+    }
+    // x-axis label
+    if (k % 5 === 0) {
+      specCtx.fillStyle = '#64748b';
+      specCtx.font = '9px monospace';
+      specCtx.fillText(k + 1, padL + k * barGroupW + barGroupW / 2 - 4, H - 4);
+    }
+  }
+
+  // Legend
+  for (let c = 0; c < 3; c++) {
+    specCtx.fillStyle = CHANNEL_COLORS[c];
+    specCtx.fillRect(padL + c * 90, 4, 8, 8);
+    specCtx.fillStyle = '#94a3b8';
+    specCtx.font = '9px monospace';
+    specCtx.fillText(CHANNEL_NAMES[c], padL + c * 90 + 11, 12);
+  }
+}
+
+function clearSpectrum() {
+  const W = specCanvas.width, H = specCanvas.height;
+  specCtx.fillStyle = '#1a1d27';
+  specCtx.fillRect(0, 0, W, H);
+}
+
+// ── Embedding bar visualization ───────────────────────────────────────────────
+function drawEmbedding(seq) {
+  const emb = embedSequence(seq);
+  const W = embCanvas.width, H = embCanvas.height;
+  embCtx.clearRect(0, 0, W, H);
+  embCtx.fillStyle = '#1a1d27';
+  embCtx.fillRect(0, 0, W, H);
+
+  const D = emb.length; // 36
+  const barW = (W - 20) / D;
+  const midY = H / 2;
+
+  let maxVal = 0;
+  for (const x of emb) maxVal = Math.max(maxVal, Math.abs(x));
+  if (maxVal === 0) maxVal = 1;
+
+  // Channel separators
+  const Kk = K;
+  for (let c = 0; c < 3; c++) {
+    const x = 10 + c * Kk * barW;
+    embCtx.strokeStyle = '#2e3350';
+    embCtx.setLineDash([3, 3]);
+    embCtx.beginPath(); embCtx.moveTo(x, 0); embCtx.lineTo(x, H); embCtx.stroke();
+    embCtx.setLineDash([]);
+    embCtx.fillStyle = CHANNEL_COLORS[c] + '60';
+    embCtx.fillRect(x, 0, Kk * barW, H);
+    embCtx.fillStyle = CHANNEL_COLORS[c];
+    embCtx.font = '9px monospace';
+    embCtx.fillText(CHANNEL_NAMES[c].slice(0, 5), x + 4, 12);
+  }
+
+  // Center line
+  embCtx.strokeStyle = '#2e3350';
+  embCtx.lineWidth = 1;
+  embCtx.beginPath(); embCtx.moveTo(0, midY); embCtx.lineTo(W, midY); embCtx.stroke();
+
+  // Bars
+  for (let i = 0; i < D; i++) {
+    const c = Math.floor(i / Kk);
+    const x = 10 + i * barW + 1;
+    const val = emb[i] / maxVal;
+    const barH = Math.abs(val) * (H / 2 - 8);
+    const y = val >= 0 ? midY - barH : midY;
+    embCtx.fillStyle = CHANNEL_COLORS[c];
+    embCtx.globalAlpha = 0.85;
+    embCtx.fillRect(x, y, barW - 2, barH);
+  }
+  embCtx.globalAlpha = 1;
+}
+
+// ── Histogram ─────────────────────────────────────────────────────────────────
+function drawHistogram(scores, rhoStar) {
+  const W = histCanvas.width, H = histCanvas.height;
+  histCtx.clearRect(0, 0, W, H);
+  histCtx.fillStyle = '#1a1d27';
+  histCtx.fillRect(0, 0, W, H);
+
+  const bins = 24;
+  const counts = new Array(bins).fill(0);
+  for (const s of scores) {
+    const b = Math.min(bins - 1, Math.floor(((s + 1) / 2) * bins));
+    counts[b]++;
+  }
+  const maxCount = Math.max(...counts, 1);
+
+  const padL = 12, padR = 12, padT = 28, padB = 20;
+  const pW = W - padL - padR, pH = H - padT - padB;
+  const bW = pW / bins;
+
+  // Threshold line
+  const thX = padL + ((rhoStar + 1) / 2) * pW;
+  histCtx.strokeStyle = '#fbbf24';
+  histCtx.lineWidth = 1.5;
+  histCtx.setLineDash([4, 3]);
+  histCtx.beginPath(); histCtx.moveTo(thX, padT); histCtx.lineTo(thX, H - padB); histCtx.stroke();
+  histCtx.setLineDash([]);
+  histCtx.fillStyle = '#fbbf24';
+  histCtx.font = '9px monospace';
+  histCtx.fillText('ρ*', thX + 3, padT + 10);
+
+  for (let b = 0; b < bins; b++) {
+    const x = padL + b * bW;
+    const bCenter = -1 + (b + 0.5) / bins * 2;
+    const barH = (counts[b] / maxCount) * pH;
+    const y = padT + pH - barH;
+    const isBinder = bCenter >= rhoStar;
+    histCtx.fillStyle = isBinder ? '#34d39988' : '#f8717188';
+    histCtx.fillRect(x + 1, y, bW - 2, barH);
+  }
+
+  // X-axis labels
+  histCtx.fillStyle = '#64748b';
+  histCtx.font = '9px monospace';
+  for (const v of [-0.5, 0, 0.5, 1.0]) {
+    const x = padL + ((v + 1) / 2) * pW;
+    histCtx.fillText(v.toFixed(1), x - 6, H - 4);
+  }
+
+  histCtx.fillStyle = '#94a3b8';
+  histCtx.font = '9px monospace';
+  histCtx.fillText('Spectral similarity ρ', padL + pW / 2 - 50, 14);
+}
+
+// ── Clear ─────────────────────────────────────────────────────────────────────
+clearBtn.addEventListener('click', () => {
+  lastResults = [];
+  document.getElementById('libraryResult').style.display = 'none';
+  document.getElementById('singleResult').style.display = 'none';
+  document.getElementById('statGrid').style.display = 'none';
+  clearSpectrum();
+  statusLine.textContent = 'Cleared.';
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+onPeptideChange();
+// Pre-populate library from sidebar defaults
+setTimeout(() => {
+  if (libraryInput.value.trim()) runLibraryScan();
+}, 300);
+</script>
+</body>
+</html>
