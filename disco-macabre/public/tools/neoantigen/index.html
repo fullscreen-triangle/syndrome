@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neoantigen Identifier — Spectral Interference</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --font: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: var(--accent2); }
+  header span { color: var(--muted); font-size: 11px; }
+  .nav-back {
+    margin-left: auto;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .nav-back:hover { color: var(--text); border-color: var(--accent); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 0;
+    flex: 1;
+  }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  .main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+  textarea, input[type=text], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    outline: none;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row label { margin: 0; flex: 1; }
+  .val-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  button {
+    background: var(--accent2);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 0.04em;
+  }
+  button:hover { filter: brightness(1.15); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  button.secondary:hover { color: var(--text); border-color: var(--accent); filter: none; }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-weight: 600;
+  }
+  .tag-neo    { background: rgba(167,139,250,0.18); color: var(--accent2); border: 1px solid rgba(167,139,250,0.4); }
+  .tag-not    { background: rgba(248,113,113,0.15); color: var(--red);     border: 1px solid rgba(248,113,113,0.3); }
+  .tag-partial { background: rgba(251,191,36,0.15); color: var(--yellow);  border: 1px solid rgba(251,191,36,0.3); }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .allele-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .allele-chip:hover, .allele-chip.active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(167,139,250,0.08);
+  }
+
+  /* Decision panel */
+  .decision-panel {
+    border-radius: 10px;
+    padding: 20px 24px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .decision-panel.neo     { border-color: var(--accent2); background: rgba(167,139,250,0.07); }
+  .decision-panel.not     { border-color: var(--red);     background: rgba(248,113,113,0.06); }
+  .decision-panel.partial { border-color: var(--yellow);  background: rgba(251,191,36,0.06); }
+  .decision-panel.idle    { border-color: var(--border);  background: var(--surface); }
+
+  .decision-label {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .decision-label.neo     { color: var(--accent2); }
+  .decision-label.not     { color: var(--red); }
+  .decision-label.partial { color: var(--yellow); }
+  .decision-label.idle    { color: var(--muted); }
+
+  .decision-criteria { font-size: 11px; color: var(--muted); line-height: 1.8; }
+  .crit-ok  { color: var(--green); }
+  .crit-fail { color: var(--red); }
+
+  /* Comparison card */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .pep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .pep-card .card-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .pep-seq {
+    font-size: 15px;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .pep-seq .diff-aa { color: var(--yellow); font-weight: 700; }
+
+  .metric-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .metric-name { font-size: 10px; color: var(--muted); width: 56px; flex-shrink: 0; }
+  .rho-track {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .rho-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .metric-val { font-size: 11px; font-weight: 600; min-width: 44px; text-align: right; }
+
+  /* Canvas */
+  .canvas-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .canvas-label {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  canvas { display: block; }
+
+  /* Results table */
+  .result-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .result-table th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .result-table th:hover { color: var(--text); }
+  .result-table th.sort-asc::after  { content: ' ↑'; color: var(--accent2); }
+  .result-table th.sort-desc::after { content: ' ↓'; color: var(--accent2); }
+  .result-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(46,51,80,0.5);
+  }
+  .result-table tr:hover td { background: var(--surface2); }
+
+  .info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .gpu-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--accent2);
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 4px;
+    padding: 3px 8px;
+  }
+  .gpu-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .gpu-dot.active { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .status-line {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 4px 0;
+    min-height: 18px;
+  }
+
+  .delta-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .delta-name { color: var(--muted); font-size: 11px; }
+  .delta-val  { font-size: 16px; font-weight: 700; }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-card-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .section-card-body { padding: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Neoantigen Identifier</h1>
+  <span>Dual-threshold spectral criterion · WT vs mutant peptide comparison</span>
+  <a class="nav-back" href="../index.html">← Tools</a>
+</header>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <div class="sidebar">
+
+    <div>
+      <div class="section-label">Wild-Type Peptide</div>
+      <label>Amino acid sequence (8–15 residues)</label>
+      <textarea id="wtInput" rows="2" spellcheck="false">SIINFEKL</textarea>
+    </div>
+
+    <div>
+      <div class="section-label">Mutant Peptide</div>
+      <label>Mutated sequence for comparison</label>
+      <textarea id="mutInput" rows="2" spellcheck="false">SIINFRKL</textarea>
+    </div>
+
+    <div>
+      <div class="section-label">MHC Allele</div>
+      <label>Select allele for ρ_MHC computation</label>
+      <div class="chip-row" id="alleleChips">
+        <div class="allele-chip active" data-allele="HLA-A*02:01">HLA-A*02:01</div>
+        <div class="allele-chip" data-allele="HLA-A*01:01">HLA-A*01:01</div>
+        <div class="allele-chip" data-allele="HLA-A*03:01">HLA-A*03:01</div>
+        <div class="allele-chip" data-allele="HLA-B*07:02">HLA-B*07:02</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">ρ* MHC Threshold</div>
+      <div class="row">
+        <label>Minimum MHC similarity for presentation</label>
+        <span class="val-badge" id="rhoStarBadge">0.72</span>
+      </div>
+      <input type="range" id="rhoStarSlider" min="0.40" max="0.95" step="0.01" value="0.72">
+    </div>
+
+    <div>
+      <div class="section-label">Δρ_self Threshold</div>
+      <div class="row">
+        <label>Min spectral displacement from self</label>
+        <span class="val-badge" id="deltaBadge">0.15</span>
+      </div>
+      <input type="range" id="deltaSlider" min="0.05" max="0.50" step="0.01" value="0.15">
+    </div>
+
+    <button id="analyzeBtn">Analyze</button>
+
+    <div>
+      <div class="section-label">Batch Scan Mutations</div>
+      <label>Mutant sequences (one per line)</label>
+      <textarea id="batchInput" rows="6" spellcheck="false">SIINFRKL
+SIINEEKL
+SIINFEKR
+AIINFEKL
+SIINFEKV</textarea>
+      <div style="height:8px"></div>
+      <button id="batchBtn" class="secondary">Run Batch Scan</button>
+    </div>
+
+    <div class="info-box">
+      <strong>Dual-threshold criterion.</strong><br>
+      A peptide is a neoantigen when <em>both</em> conditions hold simultaneously:<br><br>
+      <strong>1.</strong> <code>Δρ_self = ρ(WT, self) − ρ(mut, self) &gt; Δ*</code><br>
+      The mutant is spectrally displaced from the self-peptide ensemble — the immune system can distinguish it.<br><br>
+      <strong>2.</strong> <code>ρ(mut, MHC) &gt; ρ*</code><br>
+      The mutant binds the MHC groove with sufficient affinity for surface presentation.<br><br>
+      <strong>PARTIAL</strong> means only one criterion is met. <strong>NOT_NEOANTIGEN</strong> means neither is met.
+    </div>
+
+  </div>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <!-- Status row -->
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <div class="gpu-badge">
+        <div class="gpu-dot" id="gpuDot"></div>
+        <span id="gpuLabel">Initializing…</span>
+      </div>
+      <div class="status-line" id="statusLine">Ready.</div>
+    </div>
+
+    <!-- Decision panel -->
+    <div class="decision-panel idle" id="decisionPanel">
+      <div>
+        <div class="decision-label idle" id="decisionLabel">AWAITING ANALYSIS</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px">Enter sequences and click Analyze</div>
+      </div>
+      <div class="decision-criteria" id="criteriaDisplay" style="margin-left:auto; text-align:right"></div>
+    </div>
+
+    <!-- Comparison cards -->
+    <div class="compare-grid" id="compareGrid" style="display:none">
+      <!-- WT card -->
+      <div class="pep-card">
+        <div class="card-label">Wild-Type (WT)</div>
+        <div class="pep-seq" id="wtSeqDisplay"></div>
+        <div class="metric-row">
+          <span class="metric-name">ρ_MHC</span>
+          <div class="rho-track"><div class="rho-fill" id="wtMhcFill" style="width:0%"></div></div>
+          <span class="metric-val" id="wtMhcVal">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">ρ_self</span>
+          <div class="rho-track"><div class="rho-fill" id="wtSelfFill" style="width:0%; background:var(--muted)"></div></div>
+          <span class="metric-val" id="wtSelfVal">—</span>
+        </div>
+      </div>
+      <!-- Mutant card -->
+      <div class="pep-card">
+        <div class="card-label">Mutant</div>
+        <div class="pep-seq" id="mutSeqDisplay"></div>
+        <div class="metric-row">
+          <span class="metric-name">ρ_MHC</span>
+          <div class="rho-track"><div class="rho-fill" id="mutMhcFill" style="width:0%"></div></div>
+          <span class="metric-val" id="mutMhcVal">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">ρ_self</span>
+          <div class="rho-track"><div class="rho-fill" id="mutSelfFill" style="width:0%; background:var(--muted)"></div></div>
+          <span class="metric-val" id="mutSelfVal">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delta display -->
+    <div class="delta-display" id="deltaDisplay" style="display:none">
+      <div>
+        <div class="delta-name">Δρ_self = ρ_self(WT) − ρ_self(mutant)</div>
+        <div class="delta-val" id="deltaVal">—</div>
+      </div>
+      <div style="font-size:10px; color:var(--muted); margin-left:auto; text-align:right">
+        Positive = mutant is less self-like<br>
+        Threshold Δ* = <span id="deltaThreshDisplay">0.15</span>
+      </div>
+    </div>
+
+    <!-- Spectral overlay canvas -->
+    <div class="canvas-wrap" style="height:180px">
+      <span class="canvas-label">Spectral overlay — WT (blue) vs Mutant (orange) · 36 coefficients across 3 channels</span>
+      <canvas id="overlayCanvas" width="900" height="180"></canvas>
+    </div>
+
+    <!-- Batch results -->
+    <div class="section-card" id="batchSection" style="display:none">
+      <div class="section-card-header">
+        Batch Scan Results — sorted by neoantigen score (ρ_MHC × Δρ_self)
+        <span id="batchGpuNote" style="margin-left:8px; color:var(--accent2)"></span>
+      </div>
+      <div class="section-card-body">
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th data-col="idx">#</th>
+              <th data-col="seq">Mutant Sequence</th>
+              <th data-col="rhoMhc">ρ_MHC</th>
+              <th data-col="rhoSelf">ρ_self</th>
+              <th data-col="delta">Δρ_self</th>
+              <th data-col="score">Score</th>
+              <th data-col="verdict">Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="batchBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { embedSequence, similarity, K } from '../core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+
+// ── MHC groove apertures ──────────────────────────────────────────────────────
+const ALLELE_GROOVES = {
+  'HLA-A*02:01': 'GILGFVFTLGVYDGREHTV',
+  'HLA-A*01:01': 'VTEHDTLLYILDTAGREEY',
+  'HLA-A*03:01': 'KLGGALQAKRQIIFVDLLK',
+  'HLA-B*07:02': 'RPQGLKAGRNPVVHFFKNIV',
+};
+
+// ── Self-peptide ensemble ─────────────────────────────────────────────────────
+const SELF_PEPTIDES = [
+  'SIINFEKL',  'GILGFVFTL',  'NLVPMVATV',  'KLGGALQAK',
+  'FMYSDFHFI', 'VTEHDTLLY',  'GLCTLVAML',  'RMFPNAPYL',
+  'YLQPRTFLL', 'KTWGQYWQV',  'AVFDRKSDAK', 'LLFGYPVYV',
+  'GVYDGREHTV','MLNIPSINV',  'SYFPEITHI',  'RAKFKQLL',
+  'SLLMWITQC', 'FLPSDFFPSV', 'KVAELVHFL',  'ITDQVPFSV',
+];
+
+// Pre-compute self embeddings once
+const SELF_EMBS = SELF_PEPTIDES.map(sp => embedSequence(sp));
+
+function meanSelfSimilarity(emb) {
+  let sum = 0;
+  for (const se of SELF_EMBS) sum += similarity(emb, se);
+  return sum / SELF_EMBS.length;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let gl = null;
+let currentAllele = 'HLA-A*02:01';
+let lastBatchResults = [];
+let batchSortCol = 'score';
+let batchSortDir = -1; // -1 = desc
+let debounceTimer = null;
+
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const wtInput       = document.getElementById('wtInput');
+const mutInput      = document.getElementById('mutInput');
+const rhoStarSlider = document.getElementById('rhoStarSlider');
+const rhoStarBadge  = document.getElementById('rhoStarBadge');
+const deltaSlider   = document.getElementById('deltaSlider');
+const deltaBadge    = document.getElementById('deltaBadge');
+const analyzeBtn    = document.getElementById('analyzeBtn');
+const batchBtn      = document.getElementById('batchBtn');
+const batchInput    = document.getElementById('batchInput');
+const gpuDot        = document.getElementById('gpuDot');
+const gpuLabel      = document.getElementById('gpuLabel');
+const statusLine    = document.getElementById('statusLine');
+const overlayCanvas = document.getElementById('overlayCanvas');
+const overlayCtx    = overlayCanvas.getContext('2d');
+
+// ── WebGL init ────────────────────────────────────────────────────────────────
+{
+  const offscreen = document.createElement('canvas');
+  offscreen.width = offscreen.height = 1;
+  gl = initGL(offscreen);
+  if (gl) {
+    gpuDot.classList.add('active');
+    gpuLabel.textContent = 'GPU (WebGL2) · batch similarity active';
+  } else {
+    gpuLabel.textContent = 'CPU mode (WebGL2 unavailable)';
+  }
+}
+
+// ── Allele chips ──────────────────────────────────────────────────────────────
+document.getElementById('alleleChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.allele-chip');
+  if (!chip) return;
+  document.querySelectorAll('.allele-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  currentAllele = chip.dataset.allele;
+  scheduleAnalysis();
+});
+
+// ── Sliders ───────────────────────────────────────────────────────────────────
+rhoStarSlider.addEventListener('input', () => {
+  rhoStarBadge.textContent = parseFloat(rhoStarSlider.value).toFixed(2);
+  scheduleAnalysis();
+});
+deltaSlider.addEventListener('input', () => {
+  deltaBadge.textContent = parseFloat(deltaSlider.value).toFixed(2);
+  document.getElementById('deltaThreshDisplay').textContent = parseFloat(deltaSlider.value).toFixed(2);
+  scheduleAnalysis();
+});
+
+// ── Live debounced update ─────────────────────────────────────────────────────
+wtInput.addEventListener('input', scheduleAnalysis);
+mutInput.addEventListener('input', scheduleAnalysis);
+
+function scheduleAnalysis() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(runAnalysis, 200);
+}
+
+analyzeBtn.addEventListener('click', runAnalysis);
+
+// ── Clean sequence ────────────────────────────────────────────────────────────
+function cleanSeq(s) {
+  return s.trim().toUpperCase().replace(/[^ACDEFGHIKLMNPQRSTVWY]/g, '');
+}
+
+// ── Verdict logic ─────────────────────────────────────────────────────────────
+function getVerdict(rhoMhc, delta, rhoStar, deltaThresh) {
+  const mhcOk  = rhoMhc >= rhoStar;
+  const selfOk = delta  >= deltaThresh;
+  if (mhcOk && selfOk)  return 'NEOANTIGEN';
+  if (mhcOk || selfOk)  return 'PARTIAL';
+  return 'NOT_NEOANTIGEN';
+}
+
+function verdictClass(v) {
+  if (v === 'NEOANTIGEN')     return 'neo';
+  if (v === 'PARTIAL')        return 'partial';
+  return 'not';
+}
+
+// ── Main single analysis ──────────────────────────────────────────────────────
+function runAnalysis() {
+  const wtSeq  = cleanSeq(wtInput.value);
+  const mutSeq = cleanSeq(mutInput.value);
+  if (wtSeq.length < 2 || mutSeq.length < 2) {
+    statusLine.textContent = 'Enter valid sequences (min 2 AA each).';
+    return;
+  }
+
+  const rhoStar    = parseFloat(rhoStarSlider.value);
+  const deltaThresh = parseFloat(deltaSlider.value);
+
+  const wtEmb   = embedSequence(wtSeq);
+  const mutEmb  = embedSequence(mutSeq);
+  const mhcEmb  = embedSequence(ALLELE_GROOVES[currentAllele]);
+
+  const wtRhoMhc  = similarity(wtEmb,  mhcEmb);
+  const mutRhoMhc = similarity(mutEmb, mhcEmb);
+  const wtRhoSelf  = meanSelfSimilarity(wtEmb);
+  const mutRhoSelf = meanSelfSimilarity(mutEmb);
+  const delta = wtRhoSelf - mutRhoSelf;
+
+  const verdict = getVerdict(mutRhoMhc, delta, rhoStar, deltaThresh);
+  const vc = verdictClass(verdict);
+
+  // Update decision panel
+  const panel = document.getElementById('decisionPanel');
+  const label = document.getElementById('decisionLabel');
+  panel.className = `decision-panel ${vc}`;
+  label.className = `decision-label ${vc}`;
+  label.textContent = verdict;
+
+  const mhcOk  = mutRhoMhc >= rhoStar;
+  const selfOk = delta >= deltaThresh;
+  document.getElementById('criteriaDisplay').innerHTML = `
+    <span class="${mhcOk ? 'crit-ok' : 'crit-fail'}">${mhcOk ? '✓' : '✗'} ρ(mut, MHC) = ${mutRhoMhc.toFixed(4)} ${mhcOk ? '≥' : '<'} ρ* ${rhoStar.toFixed(2)}</span><br>
+    <span class="${selfOk ? 'crit-ok' : 'crit-fail'}">${selfOk ? '✓' : '✗'} Δρ_self = ${delta.toFixed(4)} ${selfOk ? '≥' : '<'} Δ* ${deltaThresh.toFixed(2)}</span>
+  `;
+
+  // Show comparison cards
+  document.getElementById('compareGrid').style.display = 'grid';
+  renderPepCard('wt',  wtSeq,  mutSeq, wtRhoMhc,  wtRhoSelf,  rhoStar, false);
+  renderPepCard('mut', mutSeq, wtSeq,  mutRhoMhc, mutRhoSelf, rhoStar, true);
+
+  // Delta display
+  document.getElementById('deltaDisplay').style.display = 'flex';
+  const dv = document.getElementById('deltaVal');
+  dv.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(4);
+  dv.style.color = delta >= deltaThresh ? 'var(--green)' : delta > 0 ? 'var(--yellow)' : 'var(--red)';
+
+  // Spectral overlay
+  drawOverlay(wtEmb, mutEmb, wtSeq, mutSeq);
+
+  statusLine.textContent = `Analysis complete · allele ${currentAllele} · verdict: ${verdict}`;
+}
+
+// ── Render peptide card ───────────────────────────────────────────────────────
+function renderPepCard(prefix, seq, refSeq, rhoMhc, rhoSelf, rhoStar, isMut) {
+  // Highlight differing positions vs reference
+  const seqDisplay = document.getElementById(prefix + 'SeqDisplay');
+  let html = '';
+  const maxLen = Math.max(seq.length, refSeq.length);
+  for (let i = 0; i < seq.length; i++) {
+    const isDiff = i < refSeq.length && seq[i] !== refSeq[i];
+    html += isDiff ? `<span class="diff-aa">${seq[i]}</span>` : seq[i];
+  }
+  seqDisplay.innerHTML = html;
+
+  // ρ_MHC bar
+  const mhcPct = Math.max(0, Math.min(100, rhoMhc * 100));
+  const mhcColor = rhoMhc >= rhoStar ? 'var(--green)' : rhoMhc >= rhoStar - 0.08 ? 'var(--yellow)' : 'var(--red)';
+  document.getElementById(prefix + 'MhcFill').style.width  = mhcPct + '%';
+  document.getElementById(prefix + 'MhcFill').style.background = mhcColor;
+  document.getElementById(prefix + 'MhcVal').textContent  = rhoMhc.toFixed(4);
+  document.getElementById(prefix + 'MhcVal').style.color  = mhcColor;
+
+  // ρ_self bar (normalized to [-0.5, 1] range; clamp at 0)
+  const selfPct = Math.max(0, Math.min(100, (rhoSelf + 0.5) / 1.5 * 100));
+  const selfColor = isMut ? 'var(--orange)' : 'var(--accent)';
+  document.getElementById(prefix + 'SelfFill').style.width  = selfPct + '%';
+  document.getElementById(prefix + 'SelfFill').style.background = selfColor;
+  document.getElementById(prefix + 'SelfVal').textContent  = rhoSelf.toFixed(4);
+  document.getElementById(prefix + 'SelfVal').style.color  = selfColor;
+}
+
+// ── Spectral overlay canvas ───────────────────────────────────────────────────
+const CHANNEL_NAMES = ['Hydropathy', 'Volume', 'Charge'];
+const CHANNEL_COLORS_WT  = ['rgba(79,142,247,0.75)', 'rgba(79,142,247,0.75)', 'rgba(79,142,247,0.75)'];
+const CHANNEL_COLORS_MUT = ['rgba(251,146,60,0.75)', 'rgba(251,146,60,0.75)', 'rgba(251,146,60,0.75)'];
+
+function drawOverlay(wtEmb, mutEmb, wtSeq, mutSeq) {
+  const W = overlayCanvas.width;
+  const H = overlayCanvas.height;
+  overlayCtx.clearRect(0, 0, W, H);
+  overlayCtx.fillStyle = '#1a1d27';
+  overlayCtx.fillRect(0, 0, W, H);
+
+  const D = wtEmb.length; // 36
+  const padL = 40, padR = 16, padT = 32, padB = 24;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Find max across both embeddings for shared scale
+  let maxVal = 0;
+  for (let i = 0; i < D; i++) {
+    maxVal = Math.max(maxVal, Math.abs(wtEmb[i]), Math.abs(mutEmb[i]));
+  }
+  if (maxVal === 0) maxVal = 1;
+
+  const KK = 12; // K coefficients per channel
+  const nChan = 3;
+  const chanW = plotW / nChan;
+  const barGroupW = chanW / KK;
+  const barW = (barGroupW - 4) / 2;
+
+  // Grid
+  overlayCtx.strokeStyle = '#2e3350';
+  overlayCtx.lineWidth = 0.5;
+  for (let g = 0; g <= 4; g++) {
+    const y = padT + plotH * (1 - g / 4);
+    overlayCtx.beginPath();
+    overlayCtx.moveTo(padL, y);
+    overlayCtx.lineTo(W - padR, y);
+    overlayCtx.stroke();
+    overlayCtx.fillStyle = '#64748b';
+    overlayCtx.font = '9px monospace';
+    overlayCtx.fillText((g / 4 * maxVal).toFixed(2), 2, y + 3);
+  }
+
+  // Channel background bands and labels
+  for (let c = 0; c < nChan; c++) {
+    const cx = padL + c * chanW;
+    overlayCtx.fillStyle = c % 2 === 0 ? 'rgba(46,51,80,0.12)' : 'rgba(46,51,80,0.05)';
+    overlayCtx.fillRect(cx, padT, chanW, plotH);
+
+    // Channel label
+    overlayCtx.fillStyle = '#4f8ef7';
+    overlayCtx.font = 'bold 9px monospace';
+    overlayCtx.fillText(CHANNEL_NAMES[c], cx + 4, padT - 4);
+
+    // Channel separator
+    if (c > 0) {
+      overlayCtx.strokeStyle = '#2e3350';
+      overlayCtx.lineWidth = 1;
+      overlayCtx.setLineDash([4, 3]);
+      overlayCtx.beginPath();
+      overlayCtx.moveTo(cx, padT);
+      overlayCtx.lineTo(cx, padT + plotH);
+      overlayCtx.stroke();
+      overlayCtx.setLineDash([]);
+    }
+  }
+
+  // Draw bars for each coefficient
+  for (let c = 0; c < nChan; c++) {
+    for (let ki = 0; ki < KK; ki++) {
+      const idx = c * KK + ki;
+      const wv  = wtEmb[idx];
+      const mv  = mutEmb[idx];
+      const diff = Math.abs(wv - mv);
+
+      const groupX = padL + c * chanW + ki * barGroupW + 2;
+
+      // WT bar (left of pair)
+      const wtH = Math.abs(wv) / maxVal * plotH;
+      const wtY = padT + plotH - wtH;
+      overlayCtx.fillStyle = '#4f8ef7';
+      overlayCtx.globalAlpha = 0.75;
+      overlayCtx.fillRect(groupX, wtY, barW, wtH);
+
+      // Mutant bar (right of pair)
+      const muH = Math.abs(mv) / maxVal * plotH;
+      const muY = padT + plotH - muH;
+      overlayCtx.fillStyle = '#fb923c';
+      overlayCtx.globalAlpha = 0.75;
+      overlayCtx.fillRect(groupX + barW + 1, muY, barW, muH);
+
+      overlayCtx.globalAlpha = 1;
+
+      // Red underline if large difference
+      if (diff > 0.05) {
+        overlayCtx.fillStyle = 'var(--red)';
+        overlayCtx.fillStyle = '#f87171';
+        overlayCtx.fillRect(groupX, padT + plotH + 2, barW * 2 + 1, 3);
+      }
+    }
+  }
+
+  // X-axis: coefficient numbers
+  overlayCtx.fillStyle = '#64748b';
+  overlayCtx.font = '8px monospace';
+  for (let c = 0; c < nChan; c++) {
+    for (let ki = 0; ki < KK; ki += 3) {
+      const x = padL + c * chanW + ki * barGroupW + barGroupW / 2 - 4;
+      overlayCtx.fillText(ki + 1, x, H - 6);
+    }
+  }
+
+  // Legend
+  const legItems = [
+    { label: `WT (${wtSeq})`,  color: '#4f8ef7' },
+    { label: `Mut (${mutSeq})`, color: '#fb923c' },
+    { label: '|Δ| > 0.05 — underline', color: '#f87171' },
+  ];
+  let legX = padL;
+  for (const item of legItems) {
+    overlayCtx.fillStyle = item.color;
+    overlayCtx.fillRect(legX, 8, 10, 10);
+    overlayCtx.fillStyle = '#94a3b8';
+    overlayCtx.font = '9px monospace';
+    overlayCtx.fillText(item.label, legX + 14, 17);
+    legX += overlayCtx.measureText(item.label).width + 32;
+  }
+}
+
+// ── Batch scan ────────────────────────────────────────────────────────────────
+batchBtn.addEventListener('click', runBatchScan);
+
+async function runBatchScan() {
+  const wtSeq = cleanSeq(wtInput.value);
+  if (wtSeq.length < 2) {
+    statusLine.textContent = 'Set a valid WT sequence first.';
+    return;
+  }
+
+  const lines = batchInput.value.split('\n')
+    .map(l => cleanSeq(l))
+    .filter(l => l.length >= 2);
+
+  if (lines.length === 0) {
+    statusLine.textContent = 'No valid mutant sequences in batch.';
+    return;
+  }
+
+  batchBtn.disabled = true;
+  statusLine.textContent = `Batch scanning ${lines.length} mutants…`;
+
+  const rhoStar     = parseFloat(rhoStarSlider.value);
+  const deltaThresh = parseFloat(deltaSlider.value);
+  const mhcEmb      = embedSequence(ALLELE_GROOVES[currentAllele]);
+  const wtEmb       = embedSequence(wtSeq);
+  const wtRhoSelf   = meanSelfSimilarity(wtEmb);
+
+  const mutEmbs = lines.map(s => embedSequence(s));
+
+  // GPU path for MHC similarities when N > 4 and WebGL2 available
+  let mhcScores;
+  let usedGPU = false;
+  if (gl && lines.length > 4) {
+    mhcScores = gpuBatchSimilarity(gl, mhcEmb, mutEmbs);
+    usedGPU = true;
+  } else {
+    mhcScores = new Float32Array(mutEmbs.map(e => similarity(e, mhcEmb)));
+  }
+
+  // Self similarities (CPU — self ensemble is small)
+  const selfScores = mutEmbs.map(e => meanSelfSimilarity(e));
+
+  lastBatchResults = lines.map((seq, i) => {
+    const rhoMhc  = mhcScores[i];
+    const rhoSelf = selfScores[i];
+    const delta   = wtRhoSelf - rhoSelf;
+    const score   = rhoMhc * delta;
+    return { idx: i + 1, seq, rhoMhc, rhoSelf, delta, score,
+             verdict: getVerdict(rhoMhc, delta, rhoStar, deltaThresh) };
+  });
+
+  // Default sort: score desc
+  batchSortCol = 'score';
+  batchSortDir = -1;
+  renderBatchTable(rhoStar, deltaThresh);
+
+  document.getElementById('batchGpuNote').textContent =
+    usedGPU ? `[GPU · ${lines.length} peptides]` : `[CPU · ${lines.length} peptides]`;
+  document.getElementById('batchSection').style.display = 'block';
+  statusLine.textContent = `Batch complete · ${lines.length} mutants · ${usedGPU ? 'GPU' : 'CPU'} path`;
+  batchBtn.disabled = false;
+}
+
+// ── Batch table render ────────────────────────────────────────────────────────
+function renderBatchTable(rhoStar, deltaThresh) {
+  if (rhoStar === undefined) rhoStar = parseFloat(rhoStarSlider.value);
+  if (deltaThresh === undefined) deltaThresh = parseFloat(deltaSlider.value);
+
+  // Sort
+  const col = batchSortCol;
+  const dir = batchSortDir;
+  const sorted = [...lastBatchResults].sort((a, b) => {
+    const av = typeof a[col] === 'number' ? a[col] : a[col];
+    const bv = typeof b[col] === 'number' ? b[col] : b[col];
+    return dir * (av < bv ? -1 : av > bv ? 1 : 0);
+  });
+
+  const body = document.getElementById('batchBody');
+  body.innerHTML = '';
+
+  sorted.forEach((r, rowI) => {
+    const mhcColor  = r.rhoMhc >= rhoStar    ? 'var(--green)' : 'var(--red)';
+    const deltaColor = r.delta >= deltaThresh ? 'var(--green)' : 'var(--red)';
+    const vc = verdictClass(r.verdict);
+    const tagClass = vc === 'neo' ? 'tag-neo' : vc === 'partial' ? 'tag-partial' : 'tag-not';
+    const score = (r.rhoMhc * Math.max(0, r.delta));
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted)">${rowI + 1}</td>
+      <td style="letter-spacing:0.08em; color:var(--text)">${r.seq}</td>
+      <td style="color:${mhcColor}; font-weight:600">${r.rhoMhc.toFixed(4)}</td>
+      <td style="color:var(--muted)">${r.rhoSelf.toFixed(4)}</td>
+      <td style="color:${deltaColor}; font-weight:600">${r.delta >= 0 ? '+' : ''}${r.delta.toFixed(4)}</td>
+      <td style="color:var(--accent2); font-weight:600">${score.toFixed(4)}</td>
+      <td><span class="tag ${tagClass}">${r.verdict}</span></td>`;
+    body.appendChild(tr);
+  });
+
+  // Update sort indicators on headers
+  document.querySelectorAll('.result-table th').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.dataset.col === batchSortCol) {
+      th.classList.add(batchSortDir === 1 ? 'sort-asc' : 'sort-desc');
+    }
+  });
+}
+
+// ── Sortable column headers ───────────────────────────────────────────────────
+document.querySelectorAll('.result-table th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (lastBatchResults.length === 0) return;
+    if (batchSortCol === col) {
+      batchSortDir *= -1;
+    } else {
+      batchSortCol = col;
+      batchSortDir = col === 'seq' || col === 'verdict' ? 1 : -1;
+    }
+    renderBatchTable();
+  });
+});
+
+// ── Init: run analysis on default sequences ───────────────────────────────────
+runAnalysis();
+</script>
+</body>
+</html>

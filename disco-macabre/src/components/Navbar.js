@@ -48,6 +48,19 @@ const CustomMobileLink = ({ href, title, className = "", toggle }) => {
   );
 };
 
+const ToolsLink = ({ className = "", onClick }) => (
+  <a
+    href="/tools"
+    className={`${className} rounded relative group text-light/80 hover:text-primary transition-colors text-sm`}
+    onClick={onClick}
+  >
+    Tools
+    <span className="inline-block h-[1px] bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0">
+      &nbsp;
+    </span>
+  </a>
+);
+
 const Navbar = () => {
   const [mode, setMode] = useThemeSwitch();
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +89,7 @@ const Navbar = () => {
           <CustomLink href="/equations" title="Equations of State" />
           <CustomLink href="/collaborate" title="Collaborate" />
           <CustomLink href="/invest" title="Invest" />
+          <ToolsLink />
         </nav>
         <nav className="flex items-center justify-center gap-3">
           <motion.a
@@ -113,6 +127,7 @@ const Navbar = () => {
             <CustomMobileLink toggle={handleClick} href="/equations" title="Equations of State" />
             <CustomMobileLink toggle={handleClick} href="/collaborate" title="Collaborate" />
             <CustomMobileLink toggle={handleClick} href="/invest" title="Invest" />
+            <ToolsLink onClick={handleClick} />
           </nav>
           <nav className="flex items-center justify-center mt-4 gap-3">
             <motion.a
