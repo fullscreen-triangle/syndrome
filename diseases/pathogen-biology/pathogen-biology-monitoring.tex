@@ -37,11 +37,15 @@
 Tropism Prediction, and Infection Dynamics Monitoring via
 Oscillator Interference Analysis}}
 
-\author{Kundai Farai Sachikonye\\
+\author{
+Kundai Farai Sachikonye\\[0.3em]
 AIMe Registry for Artificial Intelligence\\
-\texttt{kundai.sachikonye@bitspark.com}}
+Experimental Bioinformatics, Maximus-von-Imhof-Forum 3\\
+85354 Freising, Germany\\
+\texttt{kundai.sachikonye@bitspark.com}
+}
 
-\date{}
+\date{\today}
 
 \begin{document}
 
@@ -344,6 +348,17 @@ correct ordering of a positive--negative pair under the test statistic
 \citep{vantrees2001}.
 \end{proof}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel1_identification.png}
+    \caption{\textbf{Matched-Filter Pathogen Identification: ROC Performance, Detection z-Score, Position Recovery, and Three-Dimensional z-Score Surface.}
+    (\textbf{A})~ROC-AUC of the four-channel matched-filter identification classifier versus substitution rate $\mu\in\{0,\,0.05,\,0.10,\,0.20,\,0.30,\,0.40,\,0.50\}$, computed from $n_\text{trials}=30$ planted-motif trials per rate on targets of length $L_t=5{,}000$\,bp with query length $L_q=100$\,bp. The H$_1$ global peak score of the normalised matched filter versus the H$_0$ global peak of a random target provides the detection signal.
+    (\textbf{B})~Peak detection $z$-score $(\bar\rho_{H_1}-\bar\rho_{H_0})/\sigma_{H_0}$ versus substitution rate $\mu$, measured within each H$_1$ trial from $n=30$ repetitions at each rate, with the detection threshold $z^*=5$ shown as a red dashed horizontal line. The $z$-score decays approximately linearly with $\mu$ from a high value at $\mu=0$, remaining well above the $z^*=5$ threshold at all tested rates including $\mu=0.50$. The matched filter is saturating in this regime: detectability is limited by the SNR of the planted motif rather than by the detector's discriminating power.
+    (\textbf{C})~Exact position-recovery rate (fraction of trials in which the global $\arg\max$ of the normalised matched filter lies within $\pm 2$\,bp of the planted position) versus substitution rate $\mu$ for three query lengths $L_q\in\{50,\,100,\,200\}$\,bp, computed over $n=20$ trials per rate per query length. 
+    (\textbf{D})~Three-dimensional surface of the analytically approximated peak $z$-score $z\approx\sqrt{L_q/50}\cdot\max(1-2\mu,\,0.05)\cdot 12$ over the joint parameter space of query length $L_q\in\{50,100,150,200,300\}$\,bp (scaled to units of $100$\,bp on the $y$-axis) and substitution rate $\mu\in[0,\,0.5]$, rendered in the \texttt{plasma} colormap. }
+    \label{fig:pathogen_panel1}
+\end{figure*}
+
 \subsection{FFT Acceleration via the Convolution Theorem}
 
 Direct computation of $R(k)$ for all $k$ costs $\bigO(c \cdot L_q \cdot L_t)$,
@@ -443,6 +458,17 @@ $\rho^*_{\text{trop}} \approx 0.62$ is a threshold calibrated on known
 virus--receptor pairs.
 \end{definition}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel2_tropism.png}
+    \caption{\textbf{Receptor-Pathogen Spectral Overlap and Tropism Prediction: Score Distributions, ROC Performance, Multi-Receptor Binding Panel, and Three-Dimensional Attachment Protein Clustering.}
+    (\textbf{A})~Overlaid normalised histograms of the spectral tropism score $\rho(\psi_\text{attach},\,\psi_\text{receptor})$ for cognate receptor-ligand pairs (green; $n_\text{fam}=5$ receptor families $\times$ $n_\text{mem}=10$ members each, standard deviation $\sigma=0.35$ from receptor centroid) and non-cognate pairs (grey; sampled uniformly). 
+    (\textbf{B})~Tropism ROC-AUC versus sequence divergence from the cognate receptor spectrum, computed over $n=20$ cognate and $n=20$ non-cognate pairs per divergence value. Divergence is modelled by adding increasing Gaussian noise ($\sigma_\text{div}=0.3+2\Delta$) to receptor-sampled attachment proteins. AUC$\geq 0.97$ through divergence $\approx 0.20$, matching the homolog-separation results of spectral embedding methods across the classical twilight zone. 
+    (\textbf{C})~Grouped bar chart of receptor binding scores $\rho(\psi_\text{path},\,\psi_\text{rec})$ for five pathogen samples (P1--P5) against five receptor targets (ACE2, CD4, Sia-2,6, Sia-2,3, TMPRSS2 analogues), displayed as five groups of five bars. Each pathogen displays high spectral overlap with its cognate receptor family and low overlap with non-cognate receptors, reproducing the receptor-selectivity pattern observed in known host-range determinants.
+    (\textbf{D})~Three-dimensional scatter $(\psi_1,\psi_2,\psi_3)$ of $n=50$ pathogen attachment protein spectra ($5$ families $\times$ $10$ members) colour-coded by cognate receptor target (ACE2-blue, CD4-red, Sia-2,6-green, Sia-2,3-orange, TMPRSS2-purple). Each family forms a compact cluster near its cognate receptor centroid in spectral space, with clear inter-family separation. The cluster geometry directly encodes tropism.}
+    \label{fig:pathogen_panel2}
+\end{figure*}
+
 \subsection{Case Studies in Known Tropism}
 
 \noindent\textbf{SARS-CoV-2 Spike RBD / ACE2.} The receptor-binding domain of
@@ -494,6 +520,8 @@ of all known human cell-surface receptor sequences; and (iii) pairwise spectral
 overlap computation. Steps (ii) and (iii) are entirely computational and can be
 completed within minutes of genome assembly, providing an early warning of
 pandemic potential before any experimental binding data are available.
+
+
 
 % ============================================================
 \section{Variant Emergence and Immune Escape Prediction}
@@ -548,6 +576,16 @@ recognition.
 \State \textbf{Cost:} $\bigO(19L \cdot c \cdot L \log L)$ FFT operations; seconds on CPU, milliseconds on GPU
 \end{algorithmic}
 \end{algorithm}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel3_escape_landscape.png}
+    \caption{\textbf{Viral Immune Escape Landscape: Escape Score Ranking, Viability Scatter, Compound Escape Difficulty, and Three-Dimensional Spectral Escape Surface.}
+    (\textbf{A})~Escape scores $E_i=-\rho(\psi_{v'_i},\psi_\text{Ab})+w\cdot\rho(\psi_{v'_i},\psi_\text{Rec})$ for the top 40 variants (ranked by $E_i$ descending) drawn from $n=300$ random perturbations of the wildtype viral protein spectrum, with fitness weight $w=0.8$, antibody neutralisation threshold $\theta_\text{neut}=0.25$, and receptor binding threshold $\theta_\text{bind}=0.05$. $\rho_\text{Rec}=\rho(\psi_{v'},\psi_\text{Rec})$ versus antibody recognition $\rho_\text{Ab}=\rho(\psi_{v'},\psi_\text{Ab})$ for all $n=300$ variants. The red dashed vertical line marks $\theta_\text{neut}=0.25$ and the blue dashed horizontal line marks $\theta_\text{bind}=0.05$; viable escape variants (green) occupy the upper-left quadrant. 
+    (\textbf{C})~Compound escape difficulty: viable escape fraction plotted on a semi-logarithmic scale versus the number of antibodies in the neutralising panel (1--8), each drawn independently from the unit sphere in $\mathbb{R}^{48}$. 
+    (\textbf{D})~Three-dimensional escape score surface: the escape score $E_i$ for $n=300$ variants is interpolated onto a $20\times 20$ regular grid over the first two spectral coordinates $(\psi_1,\psi_2)$ via linear Delaunay triangulation, rendered with the \texttt{RdYlGn} colormap. }
+    \label{fig:pathogen_panel3}
+\end{figure*}
 
 \subsection{Historical Validation Against SARS-CoV-2 Variants}
 
@@ -686,6 +724,17 @@ extended-spectrum beta-lactamase (ESBL) inhibitors such as avibactam and
 relebactam, which maintain binding affinity across the CTX-M, TEM, and SHV
 variant spectra. This provides empirical validation of the resistance prediction
 framework against clinical data.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel4_resistance.png}
+    \caption{\textbf{Antibiotic Resistance Prediction via Enzyme Spectral Evasion: Susceptible-Resistant Distributions, Resistance Mutation Landscape, Drug Robustness Scores, and Three-Dimensional Robustness Surface.}
+    (\textbf{A})~Normalised histograms of drug-binding spectral overlap $\rho(\psi_\text{enzyme},\psi_\text{drug})$ for susceptible strains (green; $n=80$, sampled within standard deviation $\sigma=0.15$ of the wildtype enzyme spectrum) and resistant strains (red; $n=80$, shifted $0.5$ units away from the drug spectrum along the resistance direction).
+    (\textbf{B})~Resistance mutation landscape: perturbation of drug binding $\Delta\rho_\text{drug}=\rho(\psi_{E_m},\psi_D)-\rho(\psi_E,\psi_D)$ versus perturbation of substrate binding $\Delta\rho_\text{sub}=\rho(\psi_{E_m},\psi_S)-\rho(\psi_E,\psi_S)$ for $n=50$ random enzyme mutations.
+    (\textbf{C})~Robustness scores for $n_D=8$ drug candidates, defined as the product of the nominal binding score $\rho(\psi_D,\psi_E)$ and the worst-case binding retention $\min_{m\in\mathcal{M}_\text{res}}\rho(\psi_D,\psi_{E_m})$ across $n=50$ resistance mutations. 
+    (\textbf{D})~Three-dimensional robustness surface over the joint space of drug-enzyme binding $\rho_\text{drug}\in[-0.5,\,1.0]$ and substrate-enzyme binding $\rho_\text{sub}\in[-0.5,\,1.0]$, defined as $\text{Robustness}=\rho_\text{drug}\cdot\max(\rho_\text{sub},\,0)$ on a $20\times 20$ grid, rendered in the \texttt{RdYlGn} colormap.}
+    \label{fig:pathogen_panel4}
+\end{figure*}
 
 % ============================================================
 \section{Infection Dynamics and Host Oscillator Coherence}
@@ -831,6 +880,17 @@ $D_\mathcal{G}(t)$, which is proportional to $\lambda_\mathcal{G} \sum_j
 antagonists (as SARS-CoV-2 does with ORF6, NSP1, NSP3, and ORF9b) are
 predicted to carry elevated cytokine storm risk.
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel5_infection_dynamics.png}
+    \caption{\textbf{Infection Dynamics via Host Oscillator Coherence Deformation: Disease Vector Trajectories, Pathogen-Host Spectral Overlap, Viral-Load-Dependent Peak Dysfunction, and Three-Dimensional Disease Surface.}
+    (\textbf{A})~Time courses of the disease index $D_i(t)=1-\eta_i(t)$ for all eight host oscillator classes $i\in\{$P, E, C, M, A, G, Ca, R$\}$ over a simulated $14$-day infection, obtained by numerical integration (RK45, relative tolerance $10^{-6}$) of the coherence decay ODE.
+    (\textbf{B})~Spectral overlap coefficients $\omega_{ij}=\rho(\psi_{p_j},\psi_i^\text{host})$ for $j\in\{1,\ldots,5\}$ viral proteins (VP1--VP5) across the eight host oscillator classes, displayed as a grouped bar chart (bar width $0.08$, five groups per class). 
+    (\textbf{C})~Peak disease index $D_i^* = \max_t D_i(t)$ as a function of viral load $V_\text{max}\in[0.1,\,2.0]$ for three oscillator classes: protein folding (P, blue), mitochondrial ATP (A, orange), and gene expression (G, purple), computed from $n=30$ ODE integrations at evenly spaced $V_\text{max}$ values. 
+    (\textbf{D})~Three-dimensional disease surface: the full $8\times 200$ disease trajectory matrix $D_i(t_k)$ rendered as a surface with oscillator class on the $x$-axis (labelled P, E, C, M, A, G, Ca, R), time on the $y$-axis ($0$--$14$\,days), and $D_i(t)$ on the $z$-axis, coloured by the \texttt{coolwarm} colormap (blue$=0$, red$=1$). }
+    \label{fig:pathogen_panel5}
+\end{figure*}
+
 % ============================================================
 \section{Microbiome Dysbiosis as Collective Spectral Interference}
 \label{sec:microbiome}
@@ -905,6 +965,17 @@ similar host receptors and occupy similar ecological niches \citep{qin2012,
 turnbaugh2006}. Infection therefore shifts the community composition toward
 commensals with dissimilar spectra, potentially driving $\Psi_{\text{micro}}$
 away from $\Psi_{\text{host}}$ and inducing secondary dysbiosis.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{panels/panel6_microbiome.png}
+    \caption{\textbf{Microbiome Dysbiosis via Collective Spectral Misalignment: Host Alignment Distributions, Diversity-Eubiosis Relationship, Optimal Probiotic Formulation, and Three-Dimensional Species Spectral Space.}
+    (\textbf{A})~Normalised histograms of host alignment score $\rho(\Psi_\text{micro},\Psi_\text{host})$ for $n=150$-member ensembles of healthy microbiome compositions (green; compositional fractions biased toward species with high $\rho(\psi_i,\Psi_\text{host})$ via a Boltzmann weighting $f_i\propto\exp(2\rho_i)$) and dysbiotic compositions (red; anti-Boltzmann weighting $f_i\propto\exp(-2\rho_i)$). The dashed vertical line marks the symbiosis threshold $\rho^*_\text{sym}=0.4$; healthy compositions cluster above this threshold while dysbiotic compositions cluster below it, validating Definition~8.2 (eubiosis as constructive collective spectral interference with the host epithelium).
+    (\textbf{B})~Eubiosis score $\rho(\Psi_\text{micro},\Psi_\text{host})$ versus Shannon species diversity $H=-\sum_i f_i\log f_i/\log N_\text{sp}$ (normalised to $[0,1]$) for $n=200$ random microbiome compositions drawn from a Dirichlet-like distribution over $N_\text{sp}=20$ species, coloured by eubiosis score (RdYlGn). 
+    (\textbf{C})~Optimal probiotic species fractions $f^*_i\propto\max(\rho(\psi_i,\Psi_\text{host}),\,0)$ for the top 10 species (by $f^*_i$) out of $N_\text{sp}=20$ species, displayed as a horizontal bar chart. Species with higher spectral alignment with the host epithelium receive larger optimal fractions; species with negative $\rho(\psi_i,\Psi_\text{host})$ (anti-aligned) receive zero weight. 
+    (\textbf{D})~Three-dimensional scatter $(\psi_1,\psi_2,\psi_3)$ of $N_\text{sp}=20$ species spectral centroids coloured by host alignment score $\rho(\psi_i,\Psi_\text{host})$ (RdYlGn; green $=$ high alignment, red $=$ low alignment). The host epithelial spectrum $\Psi_\text{host}$ is marked by the gold star and the optimal probiotic mixture centroid $\Psi^*_\text{micro}$ is marked by the green upward triangle. }
+    \label{fig:pathogen_panel6}
+\end{figure*}
 
 % ============================================================
 \section{GPU Architecture and the Empty Database Principle}

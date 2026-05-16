@@ -3,716 +3,491 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pathogen Identifier — Spectral Matched Filter</title>
+<title>Pathogen Identifier &mdash; Spectral Matched Filter</title>
+<script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+<script src="https://unpkg.com/crossfilter2@1.5.4/crossfilter.min.js"></script>
+<script src="https://unpkg.com/dc@4/dist/dc.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dc@4/dist/style/dc.min.css">
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
-    --accent: #4f8ef7;
-    --accent2: #a78bfa;
-    --green: #34d399;
-    --red: #f87171;
-    --yellow: #fbbf24;
-    --orange: #fb923c;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --font: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-  }
-  header h1 { font-size: 15px; font-weight: 600; color: var(--accent); }
-  header span { color: var(--muted); font-size: 11px; }
-  .nav-back {
-    margin-left: auto;
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 11px;
-    border: 1px solid var(--border);
-    padding: 4px 10px;
-    border-radius: 4px;
-  }
-  .nav-back:hover { color: var(--text); border-color: var(--accent); }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 0;
-    flex: 1;
-  }
-  .sidebar {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    overflow-y: auto;
-  }
-  .main {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    overflow-y: auto;
-  }
-
-  .section-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
-  textarea, input[type=text], select {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    outline: none;
-    resize: vertical;
-  }
-  textarea:focus, input:focus, select:focus { border-color: var(--accent); }
-
-  button {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    letter-spacing: 0.04em;
-  }
-  button:hover { filter: brightness(1.15); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.secondary {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  button.secondary:hover { color: var(--text); border-color: var(--accent); filter: none; }
-
-  .canvas-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-  }
-  .canvas-label {
-    position: absolute;
-    top: 8px;
-    left: 12px;
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    pointer-events: none;
-  }
-  canvas { display: block; width: 100%; }
-
-  .match-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .match-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .rank-badge {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 12px;
-  }
-  .match-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .prop-row { display: flex; justify-content: space-between; align-items: center; }
-  .prop-label { font-size: 10px; color: var(--muted); }
-  .prop-val { font-size: 12px; font-weight: 600; }
-
-  .rho-track {
-    height: 5px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    flex: 1;
-    margin: 0 8px;
-  }
-  .rho-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
-
-  .info-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-  .info-box strong { color: var(--text); }
-
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  .stat-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
-  }
-  .stat-card .val { font-size: 18px; font-weight: 700; color: var(--accent); }
-  .stat-card .desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-  .gpu-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    color: var(--accent2);
-    background: rgba(167,139,250,0.1);
-    border: 1px solid rgba(167,139,250,0.3);
-    border-radius: 4px;
-    padding: 3px 8px;
-  }
-  .gpu-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
-  .gpu-dot.active { animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .progress-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.2s ease;
-  }
-
-  .status-line { font-size: 10px; color: var(--muted); padding: 4px 0; min-height: 18px; }
-
-  .taxon-chip {
-    display: inline-block;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 3px 8px;
-    font-size: 10px;
-    margin: 2px;
-    cursor: pointer;
-  }
-  .taxon-chip:hover { border-color: var(--accent); color: var(--accent); }
-  .taxon-chip.active { border-color: var(--accent); background: rgba(79,142,247,0.12); color: var(--accent); }
+:root{--bg:#0f1117;--sur:#1a1d27;--s2:#22263a;--bd:#2e3350;--ac:#4f8ef7;--ac2:#a78bfa;
+  --gr:#34d399;--rd:#f87171;--yl:#fbbf24;--tx:#e2e8f0;--mu:#64748b;--fn:monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);font-size:13px;
+  min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--sur);border-bottom:1px solid var(--bd);padding:16px 24px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+header h1{font-size:15px;font-weight:600;color:var(--ac)}
+header span{color:var(--mu);font-size:11px}
+a.bk{margin-left:auto;color:var(--mu);text-decoration:none;font-size:11px;
+  border:1px solid var(--bd);padding:4px 10px;border-radius:4px}
+.lay{display:grid;grid-template-columns:340px 1fr;flex:1}
+.side{background:var(--sur);border-right:1px solid var(--bd);padding:20px;
+  display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+.main{padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+.sl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:6px}
+label{display:block;color:var(--mu);font-size:11px;margin-bottom:4px}
+textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--bd);
+  color:var(--tx);font-family:var(--fn);font-size:12px;padding:8px;border-radius:6px;
+  outline:none;resize:vertical}
+textarea:focus,input:focus{border-color:var(--ac)}
+input[type=range]{width:100%;accent-color:var(--ac);background:none;border:none;padding:0}
+button{background:var(--ac);color:#fff;border:none;padding:10px;border-radius:6px;
+  font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;width:100%}
+button:hover{filter:brightness(1.15)} button:disabled{opacity:.4;cursor:not-allowed}
+button.sec{background:var(--s2);border:1px solid var(--bd);color:var(--mu);font-weight:400}
+button.sec:hover{color:var(--tx);border-color:var(--ac);filter:none}
+.cw{background:var(--sur);border:1px solid var(--bd);border-radius:8px;overflow:hidden;position:relative}
+.clb{position:absolute;top:8px;left:12px;font-size:10px;color:var(--mu);
+  text-transform:uppercase;letter-spacing:.08em;pointer-events:none}
+canvas{display:block;width:100%}
+.chip{display:inline-block;background:var(--s2);border:1px solid var(--bd);
+  border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;margin:2px}
+.chip.on{border-color:var(--ac);color:var(--ac);background:rgba(79,142,247,.08)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sc{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:10px;text-align:center}
+.sc .v{font-size:18px;font-weight:700;color:var(--ac)} .sc .d{font-size:10px;color:var(--mu);margin-top:2px}
+.gb{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--ac2);
+  background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);border-radius:4px;padding:3px 8px}
+.gd{width:6px;height:6px;border-radius:50%;background:var(--ac2)}
+.gd.on{animation:p 1s infinite} @keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+.pb{height:3px;background:var(--bd);border-radius:2px;overflow:hidden}
+.pf{height:100%;background:var(--ac);border-radius:2px;transition:width .2s}
+.ib{background:var(--sur);border:1px solid var(--bd);border-radius:8px;padding:13px;
+  font-size:11px;line-height:1.7;color:var(--mu)} .ib strong{color:var(--tx)}
+/* dc.js dark theme overrides */
+.dc-chart g.row rect{fill:var(--ac);opacity:.8}
+.dc-chart g.row rect:hover{fill:#7eb1fa}
+.dc-chart g.row text{fill:#e2e8f0;font-size:11px}
+.dc-chart .axis path,.dc-chart .axis line{stroke:#2e3350}
+.dc-chart .axis text{fill:#64748b;font-size:10px}
+.dc-chart .grid-line line{stroke:#2e3350;stroke-dasharray:3,3}
+.dc-chart .bar{fill:var(--ac);opacity:.75}
+.dc-chart .bar:hover{fill:#7eb1fa}
+.dc-chart rect.brush .extent,.dc-chart .brush rect.selection{fill:rgba(79,142,247,.2);stroke:#4f8ef7}
+.dc-chart path.line{stroke:var(--ac2);stroke-width:1.5px}
+.dc-chart path.area{fill:rgba(167,139,250,.12)}
+.dc-chart .pie-slice path{opacity:.85}
+.dc-chart text.pie-slice{fill:#e2e8f0;font-size:10px}
+.dc-chart .dc-legend-item text{fill:#94a3b8;font-size:10px}
 </style>
 </head>
 <body>
 
 <header>
   <h1>Pathogen Identifier</h1>
-  <span>Spectral matched filter · cross-correlation · empty-database principle</span>
-  <a class="nav-back" href="../index.html">← Tools</a>
+  <span>Spectral matched filter &mdash; synchronized crossfilter dashboard</span>
+  <a class="bk" href="../index.html">&larr; Tools</a>
 </header>
-
-<div class="layout">
-  <!-- ── Sidebar ── -->
-  <div class="sidebar">
-
-    <div>
-      <div class="section-label">Query Sequence</div>
-      <label>DNA/RNA genomic fragment (≥ 50 bp recommended)</label>
-      <textarea id="querySeq" rows="5" spellcheck="false"
-        placeholder="Paste nucleotide sequence here…">ATGGAGAGCCTTGTCCCTGGTTTCAACGAGAAAACACACGTCTGAACTTCGGGGTCAGCTTGCCGTAGGTGGCATCGCCCTCGCCCTCGCTGGACACTGCGTCGAGGTTATGGACATTGGTGGAGCAATCGACCGTATCAACAACCGTCTTGGCCTCCAG</textarea>
-    </div>
-
-    <div>
-      <div class="section-label">Reference Library</div>
-      <label>Select pathogen groups to screen against</label>
-      <div id="taxonChips" style="line-height:2.2">
-        <span class="taxon-chip active" data-group="respiratory">Respiratory viruses</span>
-        <span class="taxon-chip active" data-group="retroviruses">Retroviruses</span>
-        <span class="taxon-chip active" data-group="flaviviruses">Flaviviruses</span>
-        <span class="taxon-chip active" data-group="bacteria">Bacteria (16S)</span>
-        <span class="taxon-chip active" data-group="sars2">SARS-CoV-2 variants</span>
-      </div>
-    </div>
-
-    <div>
-      <div class="section-label">Detection Threshold</div>
-      <label style="margin-bottom:6px">Minimum ρ for a match</label>
-      <input type="range" id="rhoThresh" min="0.10" max="0.90" step="0.01" value="0.35"
-             style="width:100%; accent-color:var(--accent)">
-      <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:3px">
-        <span>0.10 (sensitive)</span>
-        <span id="rhoThreshBadge" style="color:var(--text)">0.35</span>
-        <span>0.90 (specific)</span>
-      </div>
-    </div>
-
-    <button id="identifyBtn">Identify Pathogen</button>
-
-    <div>
-      <div class="section-label">Or Paste Custom Reference</div>
-      <label>Reference sequence (optional — will be added to screen)</label>
-      <input type="text" id="customRefName" placeholder="Name / taxon label">
-      <div style="height:6px"></div>
-      <textarea id="customRefSeq" rows="3" spellcheck="false"
-        placeholder="ATGCGTAACC…"></textarea>
-      <div style="height:6px"></div>
-      <button class="secondary" id="addRefBtn">Add Reference</button>
-    </div>
-
-    <div class="info-box">
-      <strong>Method.</strong> Query is channelized into 4 DNA channels (A,T,G,C).
-      Spectral embedding ψ<sub>query</sub> ∈ ℝ<sup>48</sup> is computed via DFT.
-      Each reference genome segment yields ψ<sub>ref</sub> via the same pipeline.
-      Similarity ρ = ⟨ψ<sub>query</sub>, ψ<sub>ref</sub>⟩ replaces alignment — O(cL log L)
-      per sequence, O(1) working memory. Top-K matches ranked by ρ.
-    </div>
-
+<div class="lay">
+<div class="side">
+  <div>
+    <div class="sl">Query Sequence</div>
+    <label>DNA/RNA fragment (&ge;50 bp recommended)</label>
+    <textarea id="querySeq" rows="5" spellcheck="false">ATGGAGAGCCTTGTCCCTGGTTTCAACGAGAAAACACACGTCTGAACTTCGGGGTCAGCTTGCCGTAGGTGGCATCGCCCTCGCCCTCGCTGGACACTGCGTCGAGGTTATGGACATTGGTGGAGCAATCGACCGTATCAACAACCGTCTTGGCCTCCAG</textarea>
   </div>
-
-  <!-- ── Main ── -->
-  <div class="main">
-
-    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-      <div class="gpu-badge">
-        <div class="gpu-dot" id="gpuDot"></div>
-        <span id="gpuLabel">Initializing…</span>
-      </div>
-      <div class="status-line" id="statusLine">Ready.</div>
+  <div>
+    <div class="sl">Reference Groups</div>
+    <label>Pathogen families to screen</label>
+    <div id="taxonChips">
+      <span class="chip on" data-g="respiratory">Respiratory</span>
+      <span class="chip on" data-g="retroviruses">Retroviruses</span>
+      <span class="chip on" data-g="flaviviruses">Flaviviruses</span>
+      <span class="chip on" data-g="bacteria">Bacteria</span>
+      <span class="chip on" data-g="sars2">SARS-CoV-2</span>
     </div>
-
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-
-    <!-- Stats -->
-    <div class="stat-grid" id="statGrid" style="display:none">
-      <div class="stat-card">
-        <div class="val" id="statRefs">—</div>
-        <div class="desc">References screened</div>
-      </div>
-      <div class="stat-card">
-        <div class="val" id="statMatches">—</div>
-        <div class="desc">Matches (ρ ≥ ρ*)</div>
-      </div>
-      <div class="stat-card">
-        <div class="val" id="statTopRho">—</div>
-        <div class="desc">Top ρ</div>
-      </div>
-      <div class="stat-card">
-        <div class="val" id="statMs">—</div>
-        <div class="desc">ms (CPU)</div>
-      </div>
+  </div>
+  <div>
+    <div class="sl">Detection Threshold &rho;*</div>
+    <input type="range" id="rhoThresh" min="0.10" max="0.90" step="0.01" value="0.35"
+           style="margin-bottom:4px">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mu)">
+      <span>0.10 sensitive</span>
+      <span id="rhoTB" style="color:var(--tx)">0.35</span>
+      <span>0.90 specific</span>
     </div>
-
-    <!-- Cross-correlation canvas -->
-    <div class="canvas-wrap" style="height:140px">
-      <span class="canvas-label">Query spectral embedding ψ ∈ ℝ⁴⁸ (4 DNA channels × 12 bins)</span>
-      <canvas id="embCanvas" height="140"></canvas>
-    </div>
-
-    <!-- Top matches -->
-    <div id="matchesContainer">
-      <div class="section-label" style="margin-bottom:10px">Top Matches</div>
-      <div id="matchCards" style="display:flex; flex-direction:column; gap:10px;">
-        <div style="color:var(--muted); font-size:12px; padding:20px; text-align:center; border:1px dashed var(--border); border-radius:8px;">
-          Paste a query sequence and click Identify Pathogen to begin.
-        </div>
-      </div>
-    </div>
-
-    <!-- Score bar chart -->
-    <div class="canvas-wrap" style="height:160px; display:none" id="scoreChartWrap">
-      <span class="canvas-label">Similarity scores across references</span>
-      <canvas id="scoreChart" height="160"></canvas>
-    </div>
-
+  </div>
+  <button id="idBtn">Identify Pathogen</button>
+  <div>
+    <div class="sl">Custom Reference</div>
+    <input type="text" id="cName" placeholder="Taxon label">
+    <div style="height:5px"></div>
+    <textarea id="cSeq" rows="2" spellcheck="false" placeholder="ATGCGT..."></textarea>
+    <div style="height:5px"></div>
+    <button class="sec" id="addBtn">Add Reference</button>
+  </div>
+  <div class="ib">
+    <strong>Method.</strong> Query channelized into 4 DNA channels (A,T,G,C).
+    Spectral embedding &psi; &isin; &Ropf;<sup>48</sup> compared to each reference via
+    cosine similarity &rho; = &lang;&psi;_query, &psi;_ref&rang;.
+    Dashboard: brush context chart, click pie/rows to cross-filter all views.
   </div>
 </div>
+<div class="main">
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <div class="gb"><div class="gd" id="gdot"></div><span id="glbl">Initializing...</span></div>
+    <span style="font-size:10px;color:var(--mu)" id="stl">Ready.</span>
+  </div>
+  <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+  <div class="sg" id="sGrid" style="display:none">
+    <div class="sc"><div class="v" id="sR">-</div><div class="d">References</div></div>
+    <div class="sc"><div class="v" id="sM" style="color:var(--gr)">-</div><div class="d">Matches</div></div>
+    <div class="sc"><div class="v" id="sTop">-</div><div class="d">Top &rho;</div></div>
+    <div class="sc"><div class="v" id="sMs">-</div><div class="d">ms</div></div>
+  </div>
 
+  <!-- Query embedding canvas -->
+  <div class="cw" style="height:130px">
+    <div class="clb">Query embedding &psi; &isin; &Ropf;<sup>48</sup> (4 DNA channels &times; 12 bins)</div>
+    <canvas id="embCanvas" height="130"></canvas>
+  </div>
+
+  <!-- dc.js dashboard -->
+  <div id="dashboard" style="display:none">
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:12px">
+      Synchronized Crossfilter Dashboard &mdash;
+      <span style="font-size:9px;color:var(--mu);text-transform:none;letter-spacing:0">
+        brush context &bull; click pie or rows to cross-filter
+      </span>
+    </div>
+
+    <!-- Row 1: focus+context (left), group pie + top row chart (right) -->
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:12px;margin-bottom:12px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:10px;color:var(--mu)">&rho; focus (zoomed detail)</div>
+        <div id="focus-chart" style="background:var(--sur);border:1px solid var(--bd);border-radius:6px"></div>
+        <div style="font-size:10px;color:var(--mu)">&rho; context &mdash; brush to zoom</div>
+        <div id="ctx-chart" style="background:var(--sur);border:1px solid var(--bd);border-radius:6px"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:10px;color:var(--mu)">By pathogen group</div>
+        <div id="pie-chart" style="background:var(--sur);border:1px solid var(--bd);border-radius:6px"></div>
+        <div style="font-size:10px;color:var(--mu)">Top matches (click to filter)</div>
+        <div id="row-chart" style="background:var(--sur);border:1px solid var(--bd);border-radius:6px"></div>
+      </div>
+    </div>
+
+    <!-- Score bar chart (all refs, grouped by family) -->
+    <div style="font-size:10px;color:var(--mu);margin-bottom:6px">
+      All reference scores &mdash; bars colored by match status
+      (<span style="color:var(--gr)">&#9632; match</span>
+       <span style="color:var(--yl);margin-left:6px">&#9632; marginal</span>
+       <span style="color:var(--rd);margin-left:6px">&#9632; below threshold</span>)
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bd);border-radius:8px;overflow:hidden">
+      <canvas id="scoreCanvas" height="150"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+
+var _cf = null;
+var _rhoDim = null;
+var _rhoStar = 0.35;
+var _allResults = [];
+
+function renderDashboard(results, rhoStar) {
+  _rhoStar = rhoStar;
+  _allResults = results;
+  if (_cf) dc.chartRegistry.clear();
+
+  var cf = crossfilter(results);
+  _cf = cf;
+
+  // Dimensions
+  var rhoBin = function(d) { return Math.round(d.rho * 20) / 20; };
+  var rhoDim = cf.dimension(function(d) { return d.rho; });
+  _rhoDim = rhoDim;
+  var rhoGroup = rhoDim.group(rhoBin);
+
+  var groupDim = cf.dimension(function(d) { return d.group; });
+  var groupGroup = groupDim.group();
+
+  var nameDim = cf.dimension(function(d) { return d.name; });
+  var nameGroup = nameDim.group().reduceSum(function(d) { return d.rho; });
+
+  var rhos = results.map(function(d) { return d.rho; });
+  var rMin = Math.min.apply(null, rhos);
+  var rMax = Math.max.apply(null, rhos);
+  var pad = (rMax - rMin) * 0.05 || 0.05;
+
+  var ctxW = Math.max(300, (document.getElementById('ctx-chart').clientWidth || 480) - 2);
+  var focW = Math.max(300, (document.getElementById('focus-chart').clientWidth || 480) - 2);
+  var pieW = Math.max(200, (document.getElementById('pie-chart').clientWidth || 240) - 2);
+  var rowW = Math.max(200, (document.getElementById('row-chart').clientWidth || 240) - 2);
+
+  // Context bar chart with brush
+  var ctxChart = dc.barChart('#ctx-chart')
+    .width(ctxW).height(80)
+    .margins({top:4, right:10, bottom:22, left:38})
+    .dimension(rhoDim).group(rhoGroup)
+    .x(d3.scaleLinear().domain([Math.max(0,rMin-pad), Math.min(1,rMax+pad)]))
+    .xUnits(dc.units.fp.precision(0.05))
+    .brushOn(true).gap(1).colors('#4f8ef7')
+    .renderHorizontalGridLines(true);
+
+  // Focus line chart linked to context
+  var focusChart = dc.lineChart('#focus-chart')
+    .width(focW).height(160)
+    .margins({top:10, right:10, bottom:28, left:38})
+    .dimension(rhoDim).group(rhoGroup)
+    .x(d3.scaleLinear().domain([Math.max(0,rMin), Math.min(1,rMax)]))
+    .brushOn(false).rangeChart(ctxChart)
+    .renderArea(true).colors('#a78bfa')
+    .renderHorizontalGridLines(true);
+
+  // Add rho* threshold marker after render
+  focusChart.on('renderlet', function(chart) {
+    var x = chart.x()(rhoStar);
+    var svg = chart.svg();
+    svg.selectAll('.rstar').remove();
+    svg.append('line').attr('class','rstar')
+      .attr('stroke','#fbbf24').attr('stroke-width',1.5)
+      .attr('stroke-dasharray','4,3').style('pointer-events','none')
+      .attr('x1', chart.margins().left+x).attr('x2', chart.margins().left+x)
+      .attr('y1', chart.margins().top).attr('y2', chart.height()-chart.margins().bottom);
+    svg.append('text').attr('class','rstar')
+      .attr('x', chart.margins().left+x+3).attr('y', chart.margins().top+14)
+      .attr('fill','#fbbf24').attr('font-size','9px').attr('font-family','monospace')
+      .text('rho*='+rhoStar.toFixed(2));
+  });
+
+  // Group pie chart
+  var GROUP_COLORS = {'respiratory':'#4f8ef7','retroviruses':'#f87171','flaviviruses':'#fbbf24',
+                      'bacteria':'#34d399','sars2':'#a78bfa','custom':'#fb923c'};
+  var pieChart = dc.pieChart('#pie-chart')
+    .width(pieW).height(pieW)
+    .dimension(groupDim).group(groupGroup)
+    .colors(d3.scaleOrdinal(Object.keys(GROUP_COLORS), Object.values(GROUP_COLORS)))
+    .innerRadius(Math.round(pieW*0.22))
+    .externalLabels(10).externalRadiusPadding(14);
+
+  // Top matches row chart
+  var rowChart = dc.rowChart('#row-chart')
+    .width(rowW).height(220)
+    .margins({top:16, right:8, bottom:16, left:8})
+    .dimension(nameDim).group(nameGroup)
+    .elasticX(true).cap(12)
+    .ordering(function(d) { return -d.value; })
+    .label(function(d) { return d.key.slice(0,22); })
+    .colors(function(d) {
+      return d.value >= rhoStar ? '#34d399' : d.value >= rhoStar*0.8 ? '#fbbf24' : '#f87171';
+    })
+    .colorAccessor(function(d) { return d.value; });
+
+  // Update score canvas on any filter change
+  function onFilter() {
+    drawScoreCanvas(_rhoDim.top(Infinity));
+  }
+  [ctxChart, pieChart, rowChart].forEach(function(c) {
+    c.on('filtered', onFilter);
+  });
+
+  dc.renderAll();
+  drawScoreCanvas(results);
+}
+
+function drawScoreCanvas(filtered) {
+  var el = document.getElementById('scoreCanvas');
+  if (!el) return;
+  var W = el.clientWidth || 700; el.width = W;
+  var H = 150;
+  var ctx = el.getContext('2d');
+  var rhos = _allResults.map(function(d) { return d.rho; });
+  var rhoStar = _rhoStar;
+
+  ctx.fillStyle = '#1a1d27'; ctx.fillRect(0,0,W,H);
+
+  var padL=8, padR=8, padT=22, padB=28;
+  var pW = W-padL-padR, pH = H-padT-padB;
+  var N = _allResults.length;
+  var bW = Math.max(1, pW/N - 0.4);
+
+  // Threshold line
+  var thY = padT + (1-rhoStar)*pH;
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(padL,thY); ctx.lineTo(W-padR,thY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24'; ctx.font='9px monospace';
+  ctx.fillText('rho*='+rhoStar.toFixed(2), padL+4, thY-3);
+
+  var activeSet = new Set(filtered);
+
+  _allResults.forEach(function(r, i) {
+    var x = padL + i*(pW/N);
+    var bH = r.rho * pH;
+    var y = padT + pH - bH;
+    var inFilter = activeSet.has(r);
+    var col = r.rho >= rhoStar ? '#34d399' : r.rho >= rhoStar*0.8 ? '#fbbf24' : '#f87171';
+    ctx.fillStyle = col + (inFilter ? 'bb' : '30');
+    ctx.fillRect(x, y, bW, bH);
+  });
+
+  // X labels (every 5th reference)
+  ctx.fillStyle='#64748b'; ctx.font='8px monospace';
+  _allResults.forEach(function(r, i) {
+    if (i % 4 === 0) {
+      var x = padL + i*(pW/N) + bW/2;
+      ctx.save(); ctx.translate(x, H-padB+4); ctx.rotate(-Math.PI/2.5);
+      ctx.fillText(r.name.slice(0,16), 0, 0); ctx.restore();
+    }
+  });
+}
+
+</script>
 <script type="module">
-import { channelizeDNA, channelizeProtein, embedSequence, similarity, embed, K } from '../core/spectral.js';
-import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
 
-// ── Reference library ──────────────────────────────────────────────────────────
-// Canonical genomic fragments (first ~200 bp of representative genes/genomes)
-const REFERENCE_LIB = {
+import { embedSequence } from '../core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+import { similarity } from '../core/spectral.js';
+
+const REFS = {
   respiratory: [
-    { name: 'Influenza A H1N1 (HA)',
-      seq: 'ATGAAGGCAATACTAGTAGTTCTGCTATATACATTTGCAACCGCAAATGCAGACACATTATGTATAGGTTATCATGCGAACAATTCAACAGACACTGTAGACACAGTACTAGAAAAGAATGTAACAGTAACACACTCTGTTAACCTTCTAGAAGACAAGCATAACGGGAAACTATGCAAACTAAGAGGGGTAGCCCCATTGCATTTGGGTAAATGTAACATTGCTGGCTGGATCCTGGGAAACCCAGAGTGTGAATCACTCTCCACAGCAAGCTCATGGTCCTACATTGTGGAAACATCTA' },
-    { name: 'SARS-CoV-2 Spike (ancestral)',
-      seq: 'ATGTTCGTGTTCCTGGTGCTGCTGCCTCTGGTGTCCAGCCAGTGTGTGAATCTGACCACCCGGACACAGCTGCCCCCAGCCTACACCAACAGCTTCACCCGGGGCGTCTACTACCCCGACAAGGTGTTCCGGAGCAGCGTGCTGCACAGCACCCAGGACCTGTTCCTGCCTTTCTTCAGCAACGTGACCTGGTTCCACGCCATCCACGTGTCCGGCACCAATGGCACCAAGCGGTTCGACAACCCCGTGCTGCCCTTCAACGACGGCGTGTACTTCGCCA' },
-    { name: 'RSV F protein',
-      seq: 'ATGGAGTTGCCCAATTTTCTTGATAATCAGAAAGAGAAACAAATGACTTTGTTTAAATTTCTATTGATGATAGCCTTAATGTTAATAATTTCAACATTATTAACTGCAGCACTTGGGATTATCATTGAAATGCTATGGGTGATGAAAGAAATGACAGAAAATAAACCGAATGACAATAAAGATAAACAGGAAAAGGTCATGGAAAAAATGCAAAAGAAACTGCAG' },
-    { name: 'Adenovirus hexon',
-      seq: 'ATGGCCACCCCTGCTTCGGCCAACACCCCTGCAGCTATACCAGCCACCAATGCCCCCCTGCCTGCCCCCATCACCAACACCATCAGCCTGGACGAGACAACCCAGCTGTCAGAGACAACCATCGCCACGGCCGCCATCGTGGCCTCCCTGACCACCAACATCACCCAGAACCCTGCCATCACGCCCATCACCCCTGCAGCTAACACCACGGCGGCC' },
+    { name:'Influenza A H1N1', seq:'ATGAAGGCAATACTAGTAGTTCTGCTATATACATTTGCAACCGCAAATGCAGACACATTATGTATAGGTTATCATGCGAACAATTCAACAGACACTGTAGACACAGTACTAGAAAAGAATGTAACAGTAACACACTCTGTTAACCTTCTAGAAGACAAGCATAACGGGAAACTATGCAAACTAAGAGGGGTAGCCCCATTGCATTTGGGTAAATGTAACATTGCTGGCTGGATCCTGGGAAACCCAGAGTGTGAATCACTCTCCACAGCAAGCTCATGGTCCTACATTGTGGAAACATCTA' },
+    { name:'SARS-CoV-2 Spike', seq:'ATGTTCGTGTTCCTGGTGCTGCTGCCTCTGGTGTCCAGCCAGTGTGTGAATCTGACCACCCGGACACAGCTGCCCCCAGCCTACACCAACAGCTTCACCCGGGGCGTCTACTACCCCGACAAGGTGTTCCGGAGCAGCGTGCTGCACAGCACCCAGGACCTGTTCCTGCCTTTCTTCAGCAACGTGACCTGGTTCCACGCCATCCACGTGTCCGGCACCAATGGCACCAAGCGGTTCGACAACCCCGTGCTGCCCTTCAACGACGGCGTGTACTTCGCCA' },
+    { name:'RSV F protein', seq:'ATGGAGTTGCCCAATTTTCTTGATAATCAGAAAGAGAAACAAATGACTTTGTTTAAATTTCTATTGATGATAGCCTTAATGTTAATAATTTCAACATTATTAACTGCAGCACTTGGGATTATCATTGAAATGCTATGGGTGATGAAAGAAATGACAGAAAATAAACCGAATGACAATAAAGATAAACAGGAAAAGGTCATGGAAAAAATGCAAAAGAAACTGCAG' },
+    { name:'Adenovirus hexon', seq:'ATGGCCACCCCTGCTTCGGCCAACACCCCTGCAGCTATACCAGCCACCAATGCCCCCCTGCCTGCCCCCATCACCAACACCATCAGCCTGGACGAGACAACCCAGCTGTCAGAGACAACCATCGCCACGGCCGCCATCGTGGCCTCCCTGACCACCAACATCACCCAGAACCCTGCCATCACGCCCATCACCCCTGCAGCTAACACCACGGCGGCC' },
   ],
   retroviruses: [
-    { name: 'HIV-1 gag (NL4-3)',
-      seq: 'ATGGGTGCGAGAGCGTCAGTATTAAGCGGGGGAGAATTAGATCGATGGGAAAAAATTCGGTTAAGGCCAGGGGGAAAGAAAAAATATAAATTAAAACATATAGTATGGGCAAGCAGGGAGCTAGAACGATTCGCAGTTAATCCTGGCCTGTTAGAAACATCAGAAGGCTGTAGACAAATACTGGGACAGCTACAACCATCCCTTCAGACAGGATCAGAAGAACTTAGATCATTATATAATACAGTAGCAACCCTCTATTGTGTGCATCAAAGGATAGAGATAAAAGACACCAAGGAAGCTTTAGAC' },
-    { name: 'HIV-2 pol',
-      seq: 'ATGGATCCTCAAATCACTCTTTGGCAACGACCCCTTGTCACAATAAGGATAGGGGGACAGCTAACAGAAGAACTTGTAGATCTGGTTGGACTAAATAAGGAAGAACTTTTGGATTTGCAAGGGCAAGAGGAAAATCAGATAATTTCAAAATTTCGGGGACCATTTCCACAGAATTGGGGCATCCTCAACCTGATAAATGGACAGTACAACCTATAGT' },
-    { name: 'HTLV-1 tax',
-      seq: 'ATGCCCCGTCTCCGTCAAGTCCTTCGGGGCGTCCGACAGCTTCACTCAGCATCCACTCAACATGCCCCCACCAAAGGGGCTTCCTGCACCAAAAATCCCAAAGCAAGAGAAACAGAAGAAAGAAGCGGAAGAGCAGCAGCAACAGCAGCAACAACAACAGCAGCAGCAG' },
+    { name:'HIV-1 gag', seq:'ATGGGTGCGAGAGCGTCAGTATTAAGCGGGGGAGAATTAGATCGATGGGAAAAAATTCGGTTAAGGCCAGGGGGAAAGAAAAAATATAAATTAAAACATATAGTATGGGCAAGCAGGGAGCTAGAACGATTCGCAGTTAATCCTGGCCTGTTAGAAACATCAGAAGGCTGTAGACAAATACTGGGACAGCTACAACCATCCCTTCAGACAGGATCAGAAGAACTTAGATCATTATATAATACAGTAGCAACCCTCTATTGTGTGCATCAAAGGATAGAGATAAAAGACACCAAGGAAGCTTTAGAC' },
+    { name:'HIV-2 pol', seq:'ATGGATCCTCAAATCACTCTTTGGCAACGACCCCTTGTCACAATAAGGATAGGGGGACAGCTAACAGAAGAACTTGTAGATCTGGTTGGACTAAATAAGGAAGAACTTTTGGATTTGCAAGGGCAAGAGGAAAATCAGATAATTTCAAAATTTCGGGGACCATTTCCACAGAATTGGGGCATCCTCAACCTGATAAATGGACAGTACAACCTATAGT' },
+    { name:'HTLV-1 tax', seq:'ATGCCCCGTCTCCGTCAAGTCCTTCGGGGCGTCCGACAGCTTCACTCAGCATCCACTCAACATGCCCCCACCAAAGGGGCTTCCTGCACCAAAAATCCCAAAGCAAGAGAAACAGAAGAAAGAAGCGGAAGAGCAGCAGCAACAGCAGCAACAACAACAGCAGCAGCAG' },
   ],
   flaviviruses: [
-    { name: 'Dengue virus-2 E protein',
-      seq: 'ATGCGATGCGTAGGAGTAGGAAACAGAGACTTTGTGGAAGGAGTCTCAGGTGGAGCGATGGCCACGGAAACGGTTGGGAGCTTAGTGGTTCTCCTGATGCTCATCATGTTCCGGGCACATGCCACCAGGTCATGGCGGATGAAGGAGTTTGAACATGTCAGCGTGGCACTTCTGTCCAACCCAGCTACGATCAACTCAAATTTCAACTTTGAGAAGCATCCAGAAACCAAATCAGTTGATGGCCCACCACCTTCAAGTCAAATGATGGCAAAGACACCATGATCTGCAAAGCCATTGGAAGCAGGG' },
-    { name: 'Zika virus NS5',
-      seq: 'ATGGGTTGTGAGAATGACTTGGTTCTGAACAAGGAAGCTGAGCGCATCGAAGGAGAAGAAACAGCATCAGCAAGGAAGAAAGCCCCTGGCCCTGGAAACAAAGAAGTATCGGGAGAAATCACTGAAAAGGAGAAGGTCAGTTTCCCTGAATACGGTTTAAAGGCTATGTTGGACATGATGGGCATGGACACTGATCCAAAGGTGCCGAAGGCACACACGACAGATGAGAACCAGAGAGAAGCCCAGGGCTGGTTGGCATCGAGCACAAGAGG' },
-    { name: 'West Nile virus envelope',
-      seq: 'ATGGCTAGTTTGGTGAATCTGGTTGGAATGGGCATATTCCTGGTTCTGGCGCTGATTTCAACCTTGTGGCAAACACGTCCTGGAAATGTGGGAGAGAACCAAGCAAAAGAGTGGAGCAAGATCCCAGGAAGCAAACCAATCATGGGGAGTAATGTTGAAGGAAGAAAAGCATGCACCATCAGGTCAGGAGTTCACAGATGCAAACATCACCATGAGGCAGAGGTGGTTGGCTGTGGCAGGAGTTCAAGGCTCCATGAAGAAAATCCTGAAAGCACCACAGGCGACAG' },
+    { name:'Dengue-2 E protein', seq:'ATGCGATGCGTAGGAGTAGGAAACAGAGACTTTGTGGAAGGAGTCTCAGGTGGAGCGATGGCCACGGAAACGGTTGGGAGCTTAGTGGTTCTCCTGATGCTCATCATGTTCCGGGCACATGCCACCAGGTCATGGCGGATGAAGGAGTTTGAACATGTCAGCGTGGCACTTCTGTCCAACCCAGCTACGATCAACTCAAATTTCAACTTTGAGAAGCATCCAGAAACCAAATCAGTTGATGGCCCACCACCTTCAAGTCAAATGATGGCAAAGACACCATGATCTGCAAAGCCATTGGAAGCAGGG' },
+    { name:'Zika NS5', seq:'ATGGGTTGTGAGAATGACTTGGTTCTGAACAAGGAAGCTGAGCGCATCGAAGGAGAAGAAACAGCATCAGCAAGGAAGAAAGCCCCTGGCCCTGGAAACAAAGAAGTATCGGGAGAAATCACTGAAAAGGAGAAGGTCAGTTTCCCTGAATACGGTTTAAAGGCTATGTTGGACATGATGGGCATGGACACTGATCCAAAGGTGCCGAAGGCACACACGACAGATGAGAACCAGAGAGAAGCCCAGGGCTGGTTGGCATCGAGCACAAGAGG' },
+    { name:'West Nile envelope', seq:'ATGGCTAGTTTGGTGAATCTGGTTGGAATGGGCATATTCCTGGTTCTGGCGCTGATTTCAACCTTGTGGCAAACACGTCCTGGAAATGTGGGAGAGAACCAAGCAAAAGAGTGGAGCAAGATCCCAGGAAGCAAACCAATCATGGGGAGTAATGTTGAAGGAAGAAAAGCATGCACCATCAGGTCAGGAGTTCACAGATGCAAACATCACCATGAGGCAGAGGTGGTTGGCTGTGGCAGGAGTTCAAGGCTCCATGAAGAAAATCCTGAAAGCACCACAGGCGACAG' },
   ],
   bacteria: [
-    { name: 'E. coli 16S rRNA (V3-V4)',
-      seq: 'GTGSTGCWSAACGCTGGCGGCAGGCCTAACACATGCAAGTCGAGCGGTAGCACAGAGAGCTTGCTCTCGGGTGACGAGCGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCCGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATAATGTCGCAAGACCAAAGAGGGGGACCTTCGGGCCTCTTGCCATCAGATGTGCCCAGATGGGATTAGCTAGTAGGTGGGGTAACGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCCATGCCGCGTGTATGAAGAAGGCCTTCGGGTTGTAAAGTACTTTCAGCGGGGAGGAAGGG' },
-    { name: 'S. aureus mecA (MRSA)',
-      seq: 'ATGAAAAAGATAAAAATTGTTCCACTTATTTTAATAGTTGTAGTTGTCGGGTTTGGTATATATTTTTATGCAAAAAAAAGAACAAAATGATGAGCAAATAATCGCATTAATAGATATAAATCCAAAGAATAATCAAGAACAAGTAAAAGATAAAGTAAATGACTTAAAAACAAATAATAAAGATAATATTAATGTTGCAGATAAGTATACG' },
-    { name: 'M. tuberculosis rpoB (rifampicin resistance)',
-      seq: 'ATGACCAGCCAGCTGGAGCGGCTGCTCAAGGAGCCCATCGTCCTCGGGCTCAAGGACTTCCCGCAAGGCGCGGCGACCGTCATCGACGGCATCGCGCTCGATCGCAAAGCCTTGCGCCTCGGCGACCCGCGCACCCAGTTCGGCACCTTCGACCTCATGATCCGCGAGATCCCGCCGCGCATCAACGACGCGCTCGATCAGACCCTCGCCACGGGTGACGAGGCGGCG' },
+    { name:'E. coli 16S rRNA', seq:'GTGSTGCWSAACGCTGGCGGCAGGCCTAACACATGCAAGTCGAGCGGTAGCACAGAGAGCTTGCTCTCGGGTGACGAGCGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCCGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATAATGTCGCAAGACCAAAGAGGGGGACCTTCGGGCCTCTTGCCATCAGATGTGCCCAGATGGGATTAGCTAGTAGGTGGGGTAACGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCCATGCCGCGTGTATGAAGAAGGCCTTCGGGTTGTAAAGTAC' },
+    { name:'S. aureus mecA', seq:'ATGAAAAAGATAAAAATTGTTCCACTTATTTTAATAGTTGTAGTTGTCGGGTTTGGTATATATTTTTATGCAAAAAAAAGAACAAAATGATGAGCAAATAATCGCATTAATAGATATAAATCCAAAGAATAATCAAGAACAAGTAAAAGATAAAGTAAATGACTTAAAAACAAATAATAAAGATAATATTAATGTTGCAGATAAGTATACG' },
+    { name:'M.tb rpoB', seq:'ATGACCAGCCAGCTGGAGCGGCTGCTCAAGGAGCCCATCGTCCTCGGGCTCAAGGACTTCCCGCAAGGCGCGGCGACCGTCATCGACGGCATCGCGCTCGATCGCAAAGCCTTGCGCCTCGGCGACCCGCGCACCCAGTTCGGCACCTTCGACCTCATGATCCGCGAGATCCCGCCGCGCATCAACGACGCGCTCGATCAGACCCTCGCCACGGGTGACGAGGCGGCG' },
   ],
   sars2: [
-    { name: 'SARS-CoV-2 Wuhan (spike RBD)',
-      seq: 'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGTCTCGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAAGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTACAATGTTGGACAGAAAGATTATGATTGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
-    { name: 'SARS-CoV-2 Delta (L452R)',
-      seq: 'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGTCTCGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAAGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTACAATGTTGGACAGAAAGATTATAGGCGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
-    { name: 'SARS-CoV-2 Omicron BA.1 (spike)',
-      seq: 'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGCCCAGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAGGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTATAATGTTGGACAGAAAGATTATAAACGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
-    { name: 'MERS-CoV spike S1',
-      seq: 'ATGTTCCTGCTGCTGCTGGCCGCACTGGTGTCCAGCCAGAAGGCAGCTTCCCTGCAGCTGCCACTGGTCAGCAGCCCAGCCCTGCCCAATGCACTGGCCCTGGCCCTGGGAAGCGTGGCAAACGGCAGCCCAGTGGCCAGCAGCAGCAGCAGCAGCAGCAACTGGAGCAGCAGCAGCAACAGCAGCAGCAACAGAACAGCAGCAGCAGCAGAGCAACAGCAGCAGCAGCAGCAG' },
+    { name:'SARS-CoV-2 Wuhan RBD', seq:'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGTCTCGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAAGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTACAATGTTGGACAGAAAGATTATGATTGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
+    { name:'SARS-CoV-2 Delta', seq:'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGTCTCGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAAGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTACAATGTTGGACAGAAAGATTATAGGCGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
+    { name:'SARS-CoV-2 Omicron', seq:'GTTGGCAATGTTAATCGCACCATTGATTATGACAATAGGCCCAGGTTCAAGAGTTACACCAGTTGAGGATGATATTGATAACCAAACTAGTTATGTGTGTGATGTTCAACAGGGAAGTTACTCGTGTGGTGGTGACAGCTCCACCCATCTATAATGTTGGACAGAAAGATTATAAACGTGACATGTTTCAAGATGGAGCAGTTAATGAAACGCTGGAAGACAAGATC' },
+    { name:'MERS-CoV spike', seq:'ATGTTCCTGCTGCTGCTGGCCGCACTGGTGTCCAGCCAGAAGGCAGCTTCCCTGCAGCTGCCACTGGTCAGCAGCCCAGCCCTGCCCAATGCACTGGCCCTGGCCCTGGGAAGCGTGGCAAACGGCAGCCCAGTGGCCAGCAGCAGCAGCAGCAGCAGCAACTGGAGCAGCAGCAGCAACAGCAGCAGCAACAGAACAGCAGCAGCAGCAGAGCAACAGCAGCAGCAGCAGCAG' },
   ],
 };
 
-// Custom references added at runtime
 const customRefs = [];
-
-// ── State ─────────────────────────────────────────────────────────────────────
 let gl = null;
-let activeGroups = new Set(['respiratory', 'retroviruses', 'flaviviruses', 'bacteria', 'sars2']);
-
-// ── DOM ───────────────────────────────────────────────────────────────────────
-const queryInput = document.getElementById('querySeq');
-const identifyBtn = document.getElementById('identifyBtn');
-const addRefBtn = document.getElementById('addRefBtn');
-const rhoSlider = document.getElementById('rhoThresh');
-const rhoThreshBadge = document.getElementById('rhoThreshBadge');
-const statusLine = document.getElementById('statusLine');
-const progressFill = document.getElementById('progressFill');
-const gpuDot = document.getElementById('gpuDot');
-const gpuLabel = document.getElementById('gpuLabel');
-const embCanvas = document.getElementById('embCanvas');
-const scoreChart = document.getElementById('scoreChart');
-
-const CHANNEL_COLORS_DNA = ['#4f8ef7', '#34d399', '#fbbf24', '#f87171'];
-const CHANNEL_NAMES_DNA = ['A', 'T', 'G', 'C'];
-
-// ── WebGL init ────────────────────────────────────────────────────────────────
 {
-  const off = document.createElement('canvas');
-  off.width = off.height = 1;
-  gl = initGL(off);
-  if (gl) {
-    gpuDot.classList.add('active');
-    gpuLabel.textContent = 'GPU (WebGL2) ready';
-  } else {
-    gpuLabel.textContent = 'CPU mode (WebGL2 unavailable)';
-  }
+  const o = document.createElement('canvas'); o.width = o.height = 1;
+  try {
+    const g = o.getContext('webgl2');
+    if (g) { g.getExtension('EXT_color_buffer_float'); gl = g; }
+  } catch(e) {}
+  const d = document.getElementById('gdot'), l = document.getElementById('glbl');
+  if (gl) { d.classList.add('on'); l.textContent = 'GPU (WebGL2) ready'; }
+  else { l.textContent = 'CPU mode'; }
 }
 
-// ── Taxon chips ───────────────────────────────────────────────────────────────
-document.getElementById('taxonChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('.taxon-chip');
+const $ = id => document.getElementById(id);
+const activeGroups = new Set(['respiratory','retroviruses','flaviviruses','bacteria','sars2']);
+
+$('rhoThresh').addEventListener('input', () => $('rhoTB').textContent = (+$('rhoThresh').value).toFixed(2));
+
+document.getElementById('taxonChips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
   if (!chip) return;
-  const g = chip.dataset.group;
-  if (activeGroups.has(g)) { activeGroups.delete(g); chip.classList.remove('active'); }
-  else { activeGroups.add(g); chip.classList.add('active'); }
+  const g = chip.dataset.g;
+  if (activeGroups.has(g)) { activeGroups.delete(g); chip.classList.remove('on'); }
+  else { activeGroups.add(g); chip.classList.add('on'); }
 });
 
-// ── Threshold slider ──────────────────────────────────────────────────────────
-rhoSlider.addEventListener('input', () => {
-  rhoThreshBadge.textContent = parseFloat(rhoSlider.value).toFixed(2);
+$('addBtn').addEventListener('click', () => {
+  const name = $('cName').value.trim() || 'Custom';
+  const seq = $('cSeq').value.replace(/\s/g,'').toUpperCase();
+  if (seq.length < 10) { $('stl').textContent = 'Sequence too short.'; return; }
+  customRefs.push({ name, seq, group: 'custom' });
+  $('stl').textContent = 'Added: ' + name;
+  $('cName').value = ''; $('cSeq').value = '';
 });
 
-// ── Add custom reference ──────────────────────────────────────────────────────
-addRefBtn.addEventListener('click', () => {
-  const name = document.getElementById('customRefName').value.trim() || 'Custom';
-  const seq = document.getElementById('customRefSeq').value.trim();
-  if (seq.length < 10) { statusLine.textContent = 'Reference too short.'; return; }
-  customRefs.push({ name, seq });
-  statusLine.textContent = `Added: ${name}`;
-  document.getElementById('customRefName').value = '';
-  document.getElementById('customRefSeq').value = '';
-});
-
-// ── Live embedding draw on query change ───────────────────────────────────────
-queryInput.addEventListener('input', () => {
-  const seq = queryInput.value.replace(/\s/g, '').toUpperCase();
+$('querySeq').addEventListener('input', () => {
+  const seq = $('querySeq').value.replace(/\s/g,'').toUpperCase();
   if (seq.length >= 8) drawEmbedding(seq);
 });
 
-// ── Identify ──────────────────────────────────────────────────────────────────
-identifyBtn.addEventListener('click', runIdentification);
+$('idBtn').addEventListener('click', async () => {
+  const query = $('querySeq').value.replace(/\s/g,'').toUpperCase();
+  if (query.length < 10) { $('stl').textContent = 'Query too short.'; return; }
+  $('idBtn').disabled = true;
+  const pf = $('pf'); pf.style.width = '10%';
+  const rhoStar = +$('rhoThresh').value;
 
-async function runIdentification() {
-  const query = queryInput.value.replace(/\s/g, '').toUpperCase();
-  if (query.length < 10) { statusLine.textContent = 'Query too short.'; return; }
-
-  identifyBtn.disabled = true;
-  progressFill.style.width = '10%';
-
-  // Build active reference list
   const refs = [];
-  for (const g of activeGroups) {
-    if (REFERENCE_LIB[g]) refs.push(...REFERENCE_LIB[g]);
-  }
+  for (const g of activeGroups) if (REFS[g]) refs.push(...REFS[g].map(r => ({...r, group:g})));
   refs.push(...customRefs);
-  if (refs.length === 0) { statusLine.textContent = 'No references selected.'; identifyBtn.disabled = false; return; }
+  if (refs.length === 0) { $('stl').textContent = 'No references selected.'; $('idBtn').disabled = false; return; }
 
-  statusLine.textContent = `Computing query embedding…`;
+  $('stl').textContent = `Computing query embedding...`;
   const t0 = performance.now();
 
   const queryEmb = embedSequence(query);
   drawEmbedding(query);
 
-  progressFill.style.width = '30%';
-  statusLine.textContent = `Embedding ${refs.length} references…`;
-
+  pf.style.width = '35%'; $('stl').textContent = `Embedding ${refs.length} references...`;
   const refEmbs = refs.map(r => embedSequence(r.seq));
-  progressFill.style.width = '70%';
+  pf.style.width = '70%'; $('stl').textContent = 'Comparing...';
 
   let scores;
   if (gl && refs.length > 4) {
     scores = gpuBatchSimilarity(gl, queryEmb, refEmbs);
   } else {
-    scores = new Float32Array(refEmbs.map(e => similarity(queryEmb, e)));
+    scores = new Float32Array(refEmbs.map(e => similarity(e, queryEmb)));
   }
 
   const dt = (performance.now() - t0).toFixed(1);
-  const rhoStar = parseFloat(rhoSlider.value);
+  pf.style.width = '100%'; setTimeout(() => pf.style.width = '0%', 600);
 
-  const results = refs.map((r, i) => ({ name: r.name, rho: scores[i] }))
+  const results = refs.map((r, i) => ({ ...r, rho: scores[i] }))
     .sort((a, b) => b.rho - a.rho);
+  const nMatch = results.filter(r => r.rho >= rhoStar).length;
 
-  const matches = results.filter(r => r.rho >= rhoStar);
+  $('sGrid').style.display = 'grid';
+  $('sR').textContent = refs.length; $('sM').textContent = nMatch;
+  $('sTop').textContent = results[0]?.rho.toFixed(4) ?? '--'; $('sMs').textContent = dt;
+  $('stl').textContent = `Identified in ${dt} ms — ${nMatch} match${nMatch!==1?'es':''}`;
 
-  progressFill.style.width = '100%';
-  setTimeout(() => progressFill.style.width = '0%', 600);
+  $('dashboard').style.display = 'block';
+  setTimeout(() => window.renderDashboard(results, rhoStar), 60);
+  $('idBtn').disabled = false;
+});
 
-  document.getElementById('statGrid').style.display = 'grid';
-  document.getElementById('statRefs').textContent = refs.length;
-  document.getElementById('statMatches').textContent = matches.length;
-  document.getElementById('statTopRho').textContent = results[0]?.rho.toFixed(4) ?? '—';
-  document.getElementById('statMs').textContent = dt;
-
-  statusLine.textContent = `Identified in ${dt} ms — ${matches.length} match${matches.length !== 1 ? 'es' : ''} (ρ ≥ ${rhoStar})`;
-
-  renderMatchCards(results.slice(0, 6), rhoStar);
-  drawScoreChart(results.slice(0, Math.min(results.length, 30)), rhoStar);
-
-  identifyBtn.disabled = false;
-}
-
-// ── Match cards ───────────────────────────────────────────────────────────────
-function renderMatchCards(results, rhoStar) {
-  const container = document.getElementById('matchCards');
-  container.innerHTML = '';
-
-  const RANK_COLORS = ['#fbbf24', '#94a3b8', '#b45309', '#4f8ef7', '#34d399', '#a78bfa'];
-
-  results.forEach((r, i) => {
-    const isMatch = r.rho >= rhoStar;
-    const pct = Math.max(0, Math.min(100, r.rho * 100));
-    const color = r.rho >= rhoStar ? 'var(--green)' : r.rho >= rhoStar * 0.8 ? 'var(--yellow)' : 'var(--red)';
-
-    const card = document.createElement('div');
-    card.className = 'match-card';
-    card.style.background = 'var(--surface)';
-
-    card.innerHTML = `
-      <div class="match-header" style="background:rgba(${i===0?'251,191,36':'79,142,247'},0.06)">
-        <div class="rank-badge" style="background:${RANK_COLORS[i]}22; color:${RANK_COLORS[i]}; border:1.5px solid ${RANK_COLORS[i]}44">
-          ${i + 1}
-        </div>
-        <div style="flex:1">
-          <div style="font-weight:600; font-size:13px">${r.name}</div>
-          <div style="font-size:10px; color:var(--muted); margin-top:2px">${isMatch ? '✓ Match detected' : 'Below threshold'}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:20px; font-weight:700; color:${color}">${r.rho.toFixed(4)}</div>
-          <div style="font-size:10px; color:var(--muted)">ρ similarity</div>
-        </div>
-      </div>
-      <div class="match-body">
-        <div style="display:flex; align-items:center; gap:8px">
-          <span style="font-size:10px; color:var(--muted); min-width:20px">0</span>
-          <div class="rho-track"><div class="rho-fill" style="width:${pct}%; background:${color}"></div></div>
-          <span style="font-size:10px; color:var(--muted)">1</span>
-          <span style="font-size:11px; min-width:32px; text-align:right; color:${color}">${r.rho.toFixed(3)}</span>
-        </div>
-        ${i === 0 && r.rho >= rhoStar ? `
-          <div style="margin-top:4px; padding:8px 10px; background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.25); border-radius:6px; font-size:11px; color:var(--green)">
-            ⚑ Top hit — spectral interference pattern consistent with this taxon.
-            Spectral distance d = ${Math.sqrt(2*(1-r.rho)).toFixed(4)}.
-          </div>` : ''}
-      </div>`;
-    container.appendChild(card);
-  });
-}
-
-// ── Score bar chart ───────────────────────────────────────────────────────────
-function drawScoreChart(results, rhoStar) {
-  const wrap = document.getElementById('scoreChartWrap');
-  wrap.style.display = 'block';
-
-  const canvas = scoreChart;
-  const W = canvas.parentElement.clientWidth || 800;
-  canvas.width = W;
-  const H = 160;
-  const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#1a1d27';
-  ctx.fillRect(0, 0, W, H);
-
-  const padL = 8, padR = 8, padT = 24, padB = 28;
-  const pW = W - padL - padR, pH = H - padT - padB;
-  const N = results.length;
-  const barW = pW / N - 2;
-
-  // Threshold line
-  const thY = padT + pH * (1 - rhoStar);
-  ctx.strokeStyle = '#fbbf24';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([4, 3]);
-  ctx.beginPath(); ctx.moveTo(padL, thY); ctx.lineTo(W - padR, thY); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = '9px monospace';
-  ctx.fillText('ρ*=' + rhoStar.toFixed(2), 4, thY - 3);
-
-  results.forEach((r, i) => {
-    const x = padL + i * (pW / N) + 1;
-    const barH = r.rho * pH;
-    const y = padT + pH - barH;
-    const color = r.rho >= rhoStar ? '#34d399' : r.rho >= rhoStar * 0.8 ? '#fbbf24' : '#f87171';
-    ctx.fillStyle = color + 'bb';
-    ctx.fillRect(x, y, barW, barH);
-
-    // Label (truncated)
-    ctx.save();
-    ctx.translate(x + barW / 2, H - padB + 4);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillStyle = '#64748b';
-    ctx.font = '8px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText(r.name.slice(0, 22), 0, 0);
-    ctx.restore();
-  });
-
-  // Y axis
-  for (let v = 0; v <= 1; v += 0.25) {
-    const y = padT + pH * (1 - v);
-    ctx.fillStyle = '#64748b';
-    ctx.font = '9px monospace';
-    ctx.fillText(v.toFixed(2), 0, y + 3);
-  }
-}
-
-// ── Embedding visualization ───────────────────────────────────────────────────
 function drawEmbedding(seq) {
   const emb = embedSequence(seq);
-  const canvas = embCanvas;
+  const canvas = $('embCanvas');
   const W = canvas.parentElement.clientWidth || 800;
-  canvas.width = W;
-  const H = 140;
+  canvas.width = W; const H = 130;
   const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#1a1d27';
-  ctx.fillRect(0, 0, W, H);
-
-  const D = emb.length; // 48
-  const barW = (W - 20) / D;
-  const midY = H / 2;
-
-  let maxVal = 0;
-  for (const x of emb) maxVal = Math.max(maxVal, Math.abs(x));
-  if (maxVal === 0) maxVal = 1;
-
-  // 4 DNA channel regions
-  const Kk = K; // 12
-  for (let c = 0; c < 4; c++) {
-    const x = 10 + c * Kk * barW;
-    ctx.fillStyle = CHANNEL_COLORS_DNA[c] + '18';
-    ctx.fillRect(x, 0, Kk * barW, H);
-    ctx.fillStyle = CHANNEL_COLORS_DNA[c];
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText(CHANNEL_NAMES_DNA[c], x + 4, 14);
+  ctx.fillStyle = '#1a1d27'; ctx.fillRect(0,0,W,H);
+  const D = emb.length, bW = (W-20)/D, midY = H/2;
+  let mx = 0; for (const x of emb) mx = Math.max(mx, Math.abs(x)); if (!mx) mx = 1;
+  const CC = ['#4f8ef7','#34d399','#fbbf24','#f87171'], K = 12;
+  for (let c=0;c<4;c++) {
+    const x=10+c*K*bW;
+    ctx.fillStyle=CC[c]+'18'; ctx.fillRect(x,0,K*bW,H);
+    ctx.fillStyle=CC[c]; ctx.font='bold 10px monospace';
+    ctx.fillText(['A','T','G','C'][c], x+4, 14);
   }
-
-  ctx.strokeStyle = '#2e3350';
-  ctx.lineWidth = 0.5;
-  ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(W, midY); ctx.stroke();
-
-  for (let i = 0; i < D; i++) {
-    const c = Math.floor(i / Kk);
-    const x = 10 + i * barW + 1;
-    const val = emb[i] / maxVal;
-    const barH = Math.abs(val) * (H / 2 - 14);
-    const y = val >= 0 ? midY - barH : midY;
-    ctx.fillStyle = CHANNEL_COLORS_DNA[c];
-    ctx.globalAlpha = 0.8;
-    ctx.fillRect(x, y, barW - 1, barH);
+  ctx.strokeStyle='#2e3350'; ctx.lineWidth=.5;
+  ctx.beginPath(); ctx.moveTo(0,midY); ctx.lineTo(W,midY); ctx.stroke();
+  for (let i=0;i<D;i++) {
+    const c=Math.floor(i/K), x=10+i*bW+1, val=emb[i]/mx;
+    const bH=Math.abs(val)*(H/2-14), y=val>=0?midY-bH:midY;
+    ctx.fillStyle=CC[c]; ctx.globalAlpha=.8; ctx.fillRect(x,y,bW-1,bH);
   }
-  ctx.globalAlpha = 1;
-
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '9px monospace';
-  ctx.fillText('k=1', 10, H - 4);
-  ctx.fillText(`k=${Kk}`, 10 + (Kk-1) * barW, H - 4);
+  ctx.globalAlpha=1;
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-{
-  const seq = queryInput.value.replace(/\s/g, '').toUpperCase();
-  if (seq.length >= 8) drawEmbedding(seq);
-}
+// Init embedding display
+const initSeq = $('querySeq').value.replace(/\s/g,'').toUpperCase();
+if (initSeq.length >= 8) drawEmbedding(initSeq);
+
 </script>
 </body>
 </html>
