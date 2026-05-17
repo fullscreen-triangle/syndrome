@@ -561,43 +561,58 @@ window.renderDashboard = function(results, rhoStar) {
     .gap(1)
     .colors('#4f8ef7');
 
-  // ── Focus line chart (linked to context brush) ────────────────────────────────
-  var focusEl = document.getElementById('mhc-focus-chart');
-  var focusW  = focusEl.clientWidth || 480;
 
-  var focusChart = dc.lineChart('#mhc-focus-chart')
-    .width(focusW)
-    .height(180)
-    .margins({top: 10, right: 10, bottom: 30, left: 40})
-    .dimension(rhoDim)
-    .group(rhoGroup)
-    .x(d3.scaleLinear().domain(xDomain))
-    .brushOn(false)
-    .rangeChart(ctxChart)
-    .renderArea(true)
-    .colors('#34d399')
-    .renderHorizontalGridLines(true)
-    .renderVerticalGridLines(true);
+function renderFocusD3(rhoStar) {
+  var el = document.getElementById('mhc-focus-chart');
+  if (!el) return;
+  d3.select('#mhc-focus-chart').selectAll('*').remove();
+  var W = Math.max(260,(el.clientWidth||480)-4), H = 180;
+  var ml=48, mr=18, mt=18, mb=32;
+  var fw=W-ml-mr, fh=H-mt-mb;
+  var svg = d3.select('#mhc-focus-chart').append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g').attr('transform','translate('+ml+','+mt+')');
+  var xS = d3.scaleLinear().domain([0,1]).range([0,fw]);
+  var yS = d3.scaleLinear().domain([0, Math.SQRT2+0.02]).range([fh,0]);
+  // curve data: r* = sqrt(2(1-rho))
+  var pts = d3.range(0,1.002,0.005).map(function(r){return {r:r,v:Math.sqrt(2*(1-r))};});
+  // fill area
+  var area = d3.area().x(function(d){return xS(d.r);}).y0(fh).y1(function(d){return yS(d.v);}).curve(d3.curveBasis);
+  g.append('path').datum(pts).attr('d',area).attr('fill','#4f8ef7').attr('opacity',0.12);
+  // curve
+  var line = d3.line().x(function(d){return xS(d.r);}).y(function(d){return yS(d.v);}).curve(d3.curveBasis);
+  g.append('path').datum(pts).attr('d',line).attr('fill','none').attr('stroke','#4f8ef7').attr('stroke-width',2);
+  // grid lines
+  g.selectAll('.gy').data([0,0.2,0.4,0.6,0.8,1.0,Math.SQRT2]).enter().append('line')
+    .attr('x1',0).attr('x2',fw).attr('y1',function(d){return yS(d);}).attr('y2',function(d){return yS(d);})
+    .attr('stroke','#2e3350').attr('opacity',0.5);
+  // current rho* marker
+  var rStar = Math.sqrt(2*(1-rhoStar));
+  var xM = xS(rhoStar), yM = yS(rStar);
+  g.append('line').attr('x1',xM).attr('x2',xM).attr('y1',0).attr('y2',fh)
+    .attr('stroke','#fbbf24').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g.append('line').attr('x1',0).attr('x2',xM).attr('y1',yM).attr('y2',yM)
+    .attr('stroke','#fbbf24').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g.append('circle').attr('cx',xM).attr('cy',yM).attr('r',5).attr('fill','#fbbf24').attr('opacity',0.9);
+  g.append('text').attr('x',xM+6).attr('y',yM-5).attr('fill','#fbbf24')
+    .attr('font-size',9).attr('font-family','monospace')
+    .text('ρ*='+rhoStar.toFixed(2)+' → r*='+rStar.toFixed(3));
+  // axes
+  g.append('g').attr('transform','translate(0,'+fh+')')
+    .call(d3.axisBottom(xS).ticks(8))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  g.append('g').call(d3.axisLeft(yS).ticks(6))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  svg.append('text').attr('x',ml+fw/2).attr('y',H-3).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('Binding threshold ρ*');
+  svg.append('text').attr('transform','rotate(-90)').attr('x',-(mt+fh/2)).attr('y',12)
+    .attr('text-anchor','middle').attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('Ball radius r*');
+  svg.append('text').attr('x',ml+fw/2).attr('y',mt-4).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace')
+    .text('r* = √(2(1−ρ*)) — binding ball geometry (Theorem 4.1)');
+}
 
-  // rho* marker line
-  focusChart.on('renderlet', function(chart) {
-    var x   = chart.x()(_rhoStar);
-    var svg = chart.svg();
-    var line = svg.select('.rhostar-line');
-    if (line.empty()) {
-      line = svg.append('line')
-        .attr('class', 'rhostar-line')
-        .attr('stroke', '#fbbf24')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '4,3');
-    }
-    var ml = chart.margins().left;
-    var mt = chart.margins().top;
-    var mb = chart.margins().bottom;
-    line
-      .attr('x1', ml + x).attr('x2', ml + x)
-      .attr('y1', mt).attr('y2', chart.height() - mb);
-  });
+  // D3.js binding ball radius curve (replaces broken dc.js line chart)
+  renderFocusD3(rhoStar);
 
   // ── Pie chart (binding categories) ───────────────────────────────────────────
   var pieChart = dc.pieChart('#mhc-pie-chart')
@@ -631,9 +646,12 @@ window.renderDashboard = function(results, rhoStar) {
   dc.renderAll();
   window.renderEmbHeatmap(results, rhoDim);
 
-  // Re-render heatmap on any filter change
+  // Re-render heatmap and binding ball curve on any filter change
   [ctxChart, pieChart, rowChart].forEach(function(c) {
-    c.on('filtered', function() { window.renderEmbHeatmap(results, rhoDim); });
+    c.on('filtered', function() {
+      renderFocusD3(_rhoStar);
+      window.renderEmbHeatmap(results, rhoDim);
+    });
   });
 };
 

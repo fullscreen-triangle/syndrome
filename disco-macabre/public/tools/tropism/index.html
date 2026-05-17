@@ -198,15 +198,72 @@ function buildDC(results) {
     .colorCalculator(()=>'#fb923c')
     .margins({top:4,right:12,bottom:18,left:40});
 
-  const focGrp = rhoDim.group();
-  const focC = dc.barChart('#foc-chart');
-  focC.width(document.getElementById('foc-chart').parentElement.clientWidth-32).height(180)
-    .dimension(rhoDim).group(focGrp)
-    .x(d3.scaleLinear().domain([-1,1])).xUnits(dc.units.fp.precision(0.05))
-    .barPadding(0.05).outerPadding(0.02).elasticY(true)
-    .colorCalculator(d=>d.key>=rhoStar?'#f87171':'#fb923c')
-    .margins({top:8,right:12,bottom:28,left:40});
-  focC.rangeChart(ctxC);
+
+function renderFocusD3(results) {
+  var el = document.getElementById('foc-chart');
+  if (!el) return;
+  d3.select('#foc-chart').selectAll('*').remove();
+  if (!results || !results.length) return;
+  var W = Math.max(220,(el.parentElement.clientWidth||380)-32), H = 180;
+  var ml=42, mr=12, mt=12, mb=30;
+  var fw=W-ml-mr, fh=H-mt-mb;
+  var rhoStar = parseFloat(document.getElementById('rhostar').value);
+  var positions = d3.map(results, function(d){return d.pos;}).keys().map(Number).sort(function(a,b){return a-b;});
+  var nPos = positions.length;
+  var allRho = results.map(function(d){return d.rho;});
+  var yMin = (d3.min(allRho)||0)-0.03, yMax = (d3.max(allRho)||1)+0.03;
+  var xS = d3.scaleLinear().domain([0,nPos-1]).range([0,fw]);
+  var yS = d3.scaleLinear().domain([yMin,yMax]).range([fh,0]);
+  var posIndex = {};
+  positions.forEach(function(p,i){posIndex[p]=i;});
+  var svg = d3.select('#foc-chart').append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g').attr('transform','translate('+ml+','+mt+')');
+  // grid
+  g.selectAll('.gy').data(yS.ticks(5)).enter().append('line')
+    .attr('x1',0).attr('x2',fw).attr('y1',function(d){return yS(d);}).attr('y2',function(d){return yS(d);})
+    .attr('stroke','#2e3350').attr('opacity',0.45);
+  // rho* threshold
+  g.append('line').attr('x1',0).attr('x2',fw).attr('y1',yS(rhoStar)).attr('y2',yS(rhoStar))
+    .attr('stroke','#f87171').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g.append('text').attr('x',4).attr('y',yS(rhoStar)-3)
+    .attr('fill','#f87171').attr('font-size',8).attr('font-family','monospace').text('ρ*='+rhoStar.toFixed(2));
+  // WT baseline
+  var wtPt = results.filter(function(d){return d.isWT;})[0];
+  if(wtPt){
+    g.append('line').attr('x1',0).attr('x2',fw).attr('y1',yS(wtPt.rho)).attr('y2',yS(wtPt.rho))
+      .attr('stroke','#64748b').attr('stroke-dasharray','2,3').attr('stroke-width',1);
+    g.append('text').attr('x',fw-2).attr('y',yS(wtPt.rho)-3).attr('text-anchor','end')
+      .attr('fill','#64748b').attr('font-size',8).attr('font-family','monospace').text('WT');
+  }
+  // scatter points with deterministic x-jitter (based on mut char code)
+  results.filter(function(d){return !d.isWT;}).forEach(function(d){
+    var pi = posIndex[d.pos];
+    if(pi===undefined) return;
+    var jitter = ((d.mut.charCodeAt(0)%11)-5)*0.4;
+    var col = d.cat==='Tropic'?'#f87171':'#4f8ef7';
+    var op  = d.cat==='Tropic'?0.75:0.25;
+    g.append('circle').attr('cx',xS(pi)+jitter*(fw/nPos)/10).attr('cy',yS(d.rho))
+      .attr('r',2).attr('fill',col).attr('opacity',op);
+  });
+  // axes — show every 10th position label
+  var tickPositions = positions.filter(function(_,i){return i%Math.ceil(nPos/8)===0;});
+  g.append('g').attr('transform','translate(0,'+fh+')')
+    .call(d3.axisBottom(xS).tickValues(tickPositions.map(function(p){return posIndex[p];}))
+      .tickFormat(function(i){return positions[i];}))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  g.append('g').call(d3.axisLeft(yS).ticks(5))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  svg.append('text').attr('x',ml+fw/2).attr('y',H-3).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('Residue position');
+  svg.append('text').attr('transform','rotate(-90)').attr('x',-(mt+fh/2)).attr('y',12)
+    .attr('text-anchor','middle').attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('ρ(variant, receptor)');
+  svg.append('text').attr('x',ml+fw/2).attr('y',mt-2).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace')
+    .text('Mutation scan landscape — red = tropic, blue = non-tropic');
+}
+
+  // D3.js mutation scan landscape (replaces broken dc.js bar chart)
+  renderFocusD3(results);
 
   const posGrp = posDim.group();
   const posC = dc.rowChart('#pos-chart');
@@ -225,9 +282,11 @@ function buildDC(results) {
     .title(d=>d.key+': '+d.value);
 
   dc.renderAll();
-  dcCharts=[ctxC,focC,posC,catC];
-  [posC,catC].forEach(c=>c.on('filtered',()=>updateHeatmap()));
-  focC.on('filtered',()=>updateHeatmap());
+  dcCharts=[ctxC,posC,catC];
+  [posC,catC,ctxC].forEach(c=>c.on('filtered',()=>{
+    updateHeatmap();
+    renderFocusD3(rhoDim.top(Infinity));
+  }));
 }
 
 function updateHeatmap() {

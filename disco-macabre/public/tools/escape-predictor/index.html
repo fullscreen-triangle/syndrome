@@ -254,15 +254,50 @@ function renderDashboard(results, tn, tb) {
     .colors('#4f8ef7')
     .renderHorizontalGridLines(true);
 
-  // Focus line chart linked to context
-  var focusChart = dc.lineChart('#focus-chart')
-    .width(focW).height(160)
-    .margins({top: 10, right: 10, bottom: 28, left: 38})
-    .dimension(scoreDim).group(scoreGroup)
-    .x(d3.scaleLinear().domain([sMin, sMax]))
-    .brushOn(false).rangeChart(ctxChart)
-    .renderArea(true).colors('#34d399')
-    .renderHorizontalGridLines(true);
+
+function renderFocusD3(data, tn, tb) {
+  var el = document.getElementById('focus-chart');
+  if (!el) return;
+  d3.select('#focus-chart').selectAll('*').remove();
+  if (!data || !data.length) return;
+  var W = Math.max(260, (el.clientWidth||480)-4), H = 160;
+  var top = data.slice(0, 22);
+  var sMax = d3.max(top, function(d){return d.score;})||0.01;
+  var sMin = d3.min(top, function(d){return d.score;})||0;
+  var ml=96, mr=12, mt=10, mb=22;
+  var fw=W-ml-mr, fh=H-mt-mb;
+  var svg = d3.select('#focus-chart').append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g');
+  var x = d3.scaleLinear().domain([Math.min(sMin,0), sMax*1.06]).range([0,fw]);
+  var yB = d3.scaleBand().domain(d3.range(top.length)).range([mt,mt+fh]).padding(0.18);
+  var xZero = ml+x(0);
+  // zero line
+  g.append('line').attr('x1',xZero).attr('x2',xZero).attr('y1',mt).attr('y2',mt+fh)
+    .attr('stroke','#2e3350').attr('stroke-width',1);
+  top.forEach(function(r,i){
+    var col = r.viable?'#f87171': r.partial?'#fbbf24':'#34d399';
+    var bw  = Math.abs(x(r.score)-x(0));
+    var bx  = r.score>=0 ? xZero : xZero-bw;
+    g.append('rect').attr('x',bx).attr('y',yB(i)).attr('width',bw).attr('height',yB.bandwidth())
+      .attr('fill',col).attr('opacity',0.78);
+    g.append('text').attr('x',ml-3).attr('y',yB(i)+yB.bandwidth()/2+3).attr('text-anchor','end')
+      .attr('fill','#94a3b8').attr('font-size',8).attr('font-family','monospace')
+      .text((r.pos+1)+r.wt+'→'+r.mut);
+  });
+  g.append('g').attr('transform','translate('+ml+','+(mt+fh)+')')
+    .call(d3.axisBottom(x).ticks(5).tickFormat(function(d){return d.toFixed(2);}))
+    .call(function(a){
+      a.select('.domain').attr('stroke','#2e3350');
+      a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);
+      a.selectAll('.tick line').attr('stroke','#2e3350');
+    });
+  svg.append('text').attr('x',ml+fw/2).attr('y',H-3).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace')
+    .text('Escape score  E₁ = −ρ_Ab + w·ρ_Rec  · top '+top.length+' variants');
+}
+
+  // D3.js escape score bar chart (replaces broken dc.js line chart)
+  renderFocusD3(results, tn, tb);
 
   // Position row chart
   var posChart = dc.rowChart('#pos-chart')
@@ -284,7 +319,9 @@ function renderDashboard(results, tn, tb) {
 
   // Cross-filter: update scatter on any filter change
   function onFilter() {
-    var active = new Set(_scoreDim.top(Infinity));
+    var filtered = _scoreDim.top(Infinity);
+    var active = new Set(filtered);
+    renderFocusD3(filtered, _tn, _tb);
     updateScatter(_results, active, _tn, _tb);
     updateTable(_scoreDim.top(40));
   }

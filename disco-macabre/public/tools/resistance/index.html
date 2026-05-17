@@ -207,15 +207,56 @@ function buildDC(results) {
     .colorCalculator(()=>'#fbbf24')
     .margins({top:4,right:12,bottom:18,left:40});
 
-  const focGrp = deltaDim.group();
-  const focC = dc.barChart('#foc-chart');
-  focC.width(document.getElementById('foc-chart').parentElement.clientWidth-32).height(170)
-    .dimension(deltaDim).group(focGrp)
-    .x(d3.scaleLinear().domain([-1,1])).xUnits(dc.units.fp.precision(0.05))
-    .barPadding(0.05).outerPadding(0.02).elasticY(true)
-    .colorCalculator(d=>d.key<-0.05?'#f87171':d.key>0.05?'#34d399':'#fbbf24')
-    .margins({top:8,right:12,bottom:28,left:40});
-  focC.rangeChart(ctxC);
+
+function renderFocusD3(data) {
+  var el = document.getElementById('foc-chart');
+  if (!el) return;
+  d3.select('#foc-chart').selectAll('*').remove();
+  if (!data || !data.length) return;
+  var W = Math.max(220,(el.parentElement.clientWidth||380)-32), H = 170;
+  var ml=44, mr=12, mt=12, mb=30;
+  var fw=W-ml-mr, fh=H-mt-mb;
+  var allRho = data.map(function(d){return d.rhoWT;}).concat(data.map(function(d){return d.rhoMut;}));
+  var rhoMin = (d3.min(allRho)||0)-0.04, rhoMax = (d3.max(allRho)||1)+0.04;
+  var svg = d3.select('#foc-chart').append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g').attr('transform','translate('+ml+','+mt+')');
+  var x = d3.scaleLinear().domain([rhoMin,rhoMax]).range([0,fw]);
+  var y = d3.scaleLinear().domain([rhoMin,rhoMax]).range([fh,0]);
+  // grid
+  g.selectAll('.gv').data(x.ticks(5)).enter().append('line')
+    .attr('x1',function(d){return x(d);}).attr('x2',function(d){return x(d);})
+    .attr('y1',0).attr('y2',fh).attr('stroke','#2e3350').attr('opacity',0.5);
+  g.selectAll('.gh').data(y.ticks(5)).enter().append('line')
+    .attr('x1',0).attr('x2',fw)
+    .attr('y1',function(d){return y(d);}).attr('y2',function(d){return y(d);})
+    .attr('stroke','#2e3350').attr('opacity',0.5);
+  // diagonal y=x (no change line)
+  g.append('line').attr('x1',x(rhoMin)).attr('y1',y(rhoMin))
+    .attr('x2',x(rhoMax)).attr('y2',y(rhoMax))
+    .attr('stroke','#64748b').attr('stroke-dasharray','4,3').attr('stroke-width',1);
+  // points
+  data.forEach(function(d){
+    var col = d.cat==='Resistant'?'#f87171':d.cat==='Intermediate'?'#fbbf24':'#34d399';
+    g.append('circle').attr('cx',x(d.rhoWT)).attr('cy',y(d.rhoMut))
+      .attr('r',2.2).attr('fill',col).attr('opacity',0.55);
+  });
+  // axes
+  g.append('g').attr('transform','translate(0,'+fh+')')
+    .call(d3.axisBottom(x).ticks(5))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  g.append('g').call(d3.axisLeft(y).ticks(5))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  svg.append('text').attr('x',ml+fw/2).attr('y',H-3).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('ρ(WT drug binding)');
+  svg.append('text').attr('transform','rotate(-90)').attr('x',-(mt+fh/2)).attr('y',12)
+    .attr('text-anchor','middle').attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('ρ(Mut drug binding)');
+  svg.append('text').attr('x',ml+fw/2).attr('y',mt-1).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace')
+    .text('Below diagonal → resistance (reduced drug affinity)');
+}
+
+  // D3.js WT vs Mutant drug-binding scatter (replaces broken dc.js bar chart)
+  renderFocusD3(results);
 
   const posGrp = posDim.group().reduceSum(d=>d.delta<-0.05?1:0);
   const posC = dc.rowChart('#pos-chart');
@@ -234,9 +275,8 @@ function buildDC(results) {
     .title(d=>d.key+': '+d.value);
 
   dc.renderAll();
-  dcCharts=[ctxC,focC,posC,catC];
-  [posC,catC].forEach(c=>c.on('filtered',()=>updateLandscape()));
-  focC.on('filtered',()=>updateLandscape());
+  dcCharts=[ctxC,posC,catC];
+  [posC,catC,ctxC].forEach(c=>c.on('filtered',()=>{updateLandscape();renderFocusD3(deltaDim.top(Infinity));}));
 }
 
 function updateLandscape() {

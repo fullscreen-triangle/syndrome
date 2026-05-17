@@ -223,24 +223,63 @@ function buildDC(results) {
     .margins({top:4,right:12,bottom:20,left:40})
     .yAxisLabel('').xAxisLabel('ρ(TCR, peptide)');
 
-  // Focus bar chart (linked to context)
-  const focGrp = rhoDim.group();
-  const focC = dc.barChart('#foc-chart');
-  focC.width(document.getElementById('foc-chart').parentElement.clientWidth-32).height(180)
-    .dimension(rhoDim).group(focGrp)
-    .x(d3.scaleLinear().domain([-1,1]))
-    .xUnits(dc.units.fp.precision(0.05))
-    .barPadding(0.05).outerPadding(0.02)
-    .elasticY(true).colorCalculator(d=>{
-      if(d.key>=thetaAct) return '#f87171';
-      if(d.key>=thetaAct-0.1) return '#fbbf24';
-      return '#4f8ef7';
-    })
-    .margins({top:8,right:12,bottom:28,left:40});
-  focC.xAxis().ticks(8);
-  focC.yAxis().ticks(4);
 
-  focC.rangeChart(ctxC);
+function renderFocusD3(results) {
+  var el = document.getElementById('foc-chart');
+  if (!el) return;
+  d3.select('#foc-chart').selectAll('*').remove();
+  if (!results || !results.length) return;
+  var W = Math.max(220,(el.parentElement.clientWidth||380)-32), H = 180;
+  var ml=50, mr=14, mt=14, mb=30;
+  var fw=W-ml-mr, fh=H-mt-mb;
+  var thetaAct = parseFloat(document.getElementById('theta').value);
+  var rhos = results.map(function(d){return d.rho;});
+  var n = rhos.length;
+  // compute cross-reactivity fraction at each threshold
+  var thresholds = d3.range(0.05, 0.96, 0.02);
+  var fracs = thresholds.map(function(t){
+    return {t:t, f:Math.max(1e-4, rhos.filter(function(r){return r>=t;}).length/n)};
+  });
+  var svg = d3.select('#foc-chart').append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g').attr('transform','translate('+ml+','+mt+')');
+  var xS = d3.scaleLinear().domain([0.05,0.95]).range([0,fw]);
+  var yS = d3.scaleLog().domain([1e-4,1.5]).range([fh,0]).clamp(true);
+  // grid at decade boundaries
+  [1e-4,1e-3,1e-2,0.1,1].forEach(function(v){
+    g.append('line').attr('x1',0).attr('x2',fw).attr('y1',yS(v)).attr('y2',yS(v))
+      .attr('stroke','#2e3350').attr('opacity',0.55);
+  });
+  // area fill
+  var area = d3.area().x(function(d){return xS(d.t);}).y0(fh).y1(function(d){return yS(d.f);}).curve(d3.curveBasis);
+  g.append('path').datum(fracs).attr('d',area).attr('fill','#34d399').attr('opacity',0.12);
+  // curve
+  var line = d3.line().x(function(d){return xS(d.t);}).y(function(d){return yS(d.f);}).curve(d3.curveBasis);
+  g.append('path').datum(fracs).attr('d',line).attr('fill','none').attr('stroke','#34d399').attr('stroke-width',2);
+  // current theta_act marker
+  var curF = Math.max(1e-4, rhos.filter(function(r){return r>=thetaAct;}).length/n);
+  g.append('line').attr('x1',xS(thetaAct)).attr('x2',xS(thetaAct)).attr('y1',0).attr('y2',fh)
+    .attr('stroke','#fbbf24').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g.append('circle').attr('cx',xS(thetaAct)).attr('cy',yS(curF)).attr('r',5).attr('fill','#fbbf24');
+  g.append('text').attr('x',xS(thetaAct)+6).attr('y',yS(curF)-4)
+    .attr('fill','#fbbf24').attr('font-size',9).attr('font-family','monospace')
+    .text((curF*100).toFixed(1)+'%');
+  // axes
+  g.append('g').attr('transform','translate(0,'+fh+')')
+    .call(d3.axisBottom(xS).ticks(7))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  g.append('g').call(d3.axisLeft(yS).tickValues([1e-4,1e-3,1e-2,0.1,1]).tickFormat(d3.format('.0e')))
+    .call(function(a){a.select('.domain').attr('stroke','#2e3350');a.selectAll('.tick text').attr('fill','#64748b').attr('font-size',9);a.selectAll('.tick line').attr('stroke','#2e3350');});
+  svg.append('text').attr('x',ml+fw/2).attr('y',H-3).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('Activation threshold θ');
+  svg.append('text').attr('transform','rotate(-90)').attr('x',-(mt+fh/2)).attr('y',12)
+    .attr('text-anchor','middle').attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace').text('Cross-reactive fraction (log)');
+  svg.append('text').attr('x',ml+fw/2).attr('y',mt-2).attr('text-anchor','middle')
+    .attr('fill','#64748b').attr('font-size',9).attr('font-family','monospace')
+    .text('Mason’s ≥10⁶ estimate: library of '+n+' peptides');
+}
+
+  // D3.js semi-log cross-reactivity plot (replaces broken dc.js bar chart)
+  renderFocusD3(results);
 
   // Group row chart
   const grpGrp = grpDim.group();
@@ -261,10 +300,12 @@ function buildDC(results) {
     .title(d=>d.key+': '+d.value);
 
   dc.renderAll();
-  dcCharts=[ctxC,focC,grpC,catC];
+  dcCharts=[ctxC,grpC,catC];
 
-  [grpC,catC].forEach(c=>c.on('filtered',()=>updateScatter()));
-  focC.on('filtered',()=>updateScatter());
+  [grpC,catC,ctxC].forEach(c=>c.on('filtered',()=>{
+    updateScatter();
+    renderFocusD3(rhoDim.top(Infinity));
+  }));
 }
 
 function updateScatter() {
