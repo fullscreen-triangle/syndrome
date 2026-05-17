@@ -484,9 +484,10 @@ function drawEmbedding(seq) {
   ctx.globalAlpha=1;
 }
 
-// Init embedding display
+// Init embedding display and auto-run scan
 const initSeq = $('querySeq').value.replace(/\s/g,'').toUpperCase();
 if (initSeq.length >= 8) drawEmbedding(initSeq);
+setTimeout(() => $('idBtn').click(), 600);
 
 </script>
 </body>

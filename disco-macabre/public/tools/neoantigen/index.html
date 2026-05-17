@@ -417,11 +417,26 @@
     <div>
       <div class="section-label">Batch Scan Mutations</div>
       <label>Mutant sequences (one per line)</label>
-      <textarea id="batchInput" rows="6" spellcheck="false">SIINFRKL
+      <textarea id="batchInput" rows="10" spellcheck="false">AIINFEKL
+GIINFEKL
+LIINFEKL
+SLINFEKL
+SFINFEKL
+SITNFEKL
+SIWNFEKL
+SIIDFEKL
+SIIKFEKL
 SIINEEKL
-SIINFEKR
-AIINFEKL
-SIINFEKV</textarea>
+SIINLEKL
+SIINWEKL
+SIINFRKL
+SIINFAKL
+SIINFGKL
+SIINFENL
+SIINFERL
+SIINFELL
+SIINFEKV
+SIINFEKR</textarea>
       <div style="height:8px"></div>
       <button id="batchBtn" class="secondary">Run Batch Scan</button>
     </div>
@@ -998,6 +1013,7 @@ document.querySelectorAll('.result-table th[data-col]').forEach(th => {
 
 // ── Init: run analysis on default sequences ───────────────────────────────────
 runAnalysis();
+setTimeout(() => batchBtn.click(), 500);
 </script>
 </body>
 </html>

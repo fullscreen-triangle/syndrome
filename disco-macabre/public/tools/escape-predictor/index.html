@@ -100,10 +100,14 @@ svg.dc-chart-container{background:transparent}
   <div>
     <div class="sl">Antibody Panel</div>
     <label>Neutralizing sequences (one per line)</label>
-    <textarea id="abSeqs" rows="4" spellcheck="false">YVDGVEVHNAK
+    <textarea id="abSeqs" rows="8" spellcheck="false">YVDGVEVHNAK
 SGSYISSSSTIY
 HCSGYNLHYWYG
-YSISSGSTIYY</textarea>
+YSISSGSTIYY
+ARDRESYFDF
+DRGTYYYGMDV
+ARQKYWSS
+ARAHRLYGMDV</textarea>
   </div>
   <div>
     <div class="sl">Threshold &theta;_neut</div>
@@ -467,6 +471,7 @@ $('runBtn').addEventListener('click', async () => {
   $('runBtn').disabled = false;
 });
 
+setTimeout(() => $('runBtn').click(), 800);
 </script>
 </body>
 </html>
