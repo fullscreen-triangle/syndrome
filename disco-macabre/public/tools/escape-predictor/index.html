@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -83,7 +83,7 @@ svg.dc-chart-container{background:transparent}
 <header>
   <h1>Immune Escape Predictor</h1>
   <span>Spectral escape landscape &mdash; synchronized crossfilter dashboard</span>
-  <a class="bk" href="../index.html">&larr; Tools</a>
+  <a class="bk" href="/tools">&larr; Tools</a>
 </header>
 <div class="lay">
 <div class="side">
@@ -384,8 +384,8 @@ function updateTable(top) {
 </script>
 <script type="module">
 
-import { embedSequence, similarity } from '../core/spectral.js';
-import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+import { embedSequence, similarity } from '/tools/core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '/tools/core/webgl.js';
 
 const AA = 'ACDEFGHIKLMNPQRSTVWY';
 let gl = null;

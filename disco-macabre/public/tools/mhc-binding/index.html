@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -281,7 +281,7 @@
 <header>
   <h1>MHC Binding Predictor</h1>
   <span>Spectral oscillator interference &middot; zero database &middot; O(cL log L)</span>
-  <a class="nav-back" href="../index.html">&larr; Tools</a>
+  <a class="nav-back" href="/tools">&larr; Tools</a>
 </header>
 
 <div class="layout">
@@ -697,8 +697,8 @@ window.renderEmbHeatmap = function(results, rhoDim) {
 
 <!-- ── Block 2: ES module — computation + canvas charts ── -->
 <script type="module">
-import { embedSequence, channelizeProtein, dft1d, similarity, K } from '../core/spectral.js';
-import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+import { embedSequence, channelizeProtein, dft1d, similarity, K } from '/tools/core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '/tools/core/webgl.js';
 
 // ── MHC Groove Spectral Apertures ─────────────────────────────────────────────
 const ALLELE_GROOVES = {

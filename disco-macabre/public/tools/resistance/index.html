@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -62,7 +62,7 @@ tr:hover td{background:var(--surface2);}
     <h1>Antibiotic Resistance Predictor</h1>
     <div class="sub">Drug-enzyme spectral interference &middot; &rho;(drug, enzyme) &lt; &rho;* &rArr; resistant mutation</div>
   </div>
-  <div style="margin-left:auto"><a href="../index.html">&#8592; Tool Hub</a></div>
+  <div style="margin-left:auto"><a href="/tools">&#8592; Tool Hub</a></div>
 </header>
 
 <div class="layout">
@@ -327,7 +327,7 @@ window.renderDashboard = function(results) {
 </script>
 <script type="module">
 
-import {embedSequence, similarity} from '../core/spectral.js';
+import {embedSequence, similarity} from '/tools/core/spectral.js';
 
 async function scan() {
   const sysKey = document.getElementById('sys-sel').value;

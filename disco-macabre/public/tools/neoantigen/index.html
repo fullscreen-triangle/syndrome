@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -363,7 +363,7 @@
 <header>
   <h1>Neoantigen Identifier</h1>
   <span>Dual-threshold spectral criterion · WT vs mutant peptide comparison</span>
-  <a class="nav-back" href="../index.html">← Tools</a>
+  <a class="nav-back" href="/tools">← Tools</a>
 </header>
 
 <div class="layout">
@@ -539,8 +539,8 @@ SIINFEKV</textarea>
 </div>
 
 <script type="module">
-import { embedSequence, similarity, K } from '../core/spectral.js';
-import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
+import { embedSequence, similarity, K } from '/tools/core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '/tools/core/webgl.js';
 
 // ── MHC groove apertures ──────────────────────────────────────────────────────
 const ALLELE_GROOVES = {

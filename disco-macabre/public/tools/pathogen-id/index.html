@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -76,7 +76,7 @@ canvas{display:block;width:100%}
 <header>
   <h1>Pathogen Identifier</h1>
   <span>Spectral matched filter &mdash; synchronized crossfilter dashboard</span>
-  <a class="bk" href="../index.html">&larr; Tools</a>
+  <a class="bk" href="/tools">&larr; Tools</a>
 </header>
 <div class="lay">
 <div class="side">
@@ -338,9 +338,9 @@ function drawScoreCanvas(filtered) {
 </script>
 <script type="module">
 
-import { embedSequence } from '../core/spectral.js';
-import { initGL, gpuBatchSimilarity } from '../core/webgl.js';
-import { similarity } from '../core/spectral.js';
+import { embedSequence } from '/tools/core/spectral.js';
+import { initGL, gpuBatchSimilarity } from '/tools/core/webgl.js';
+import { similarity } from '/tools/core/spectral.js';
 
 const REFS = {
   respiratory: [

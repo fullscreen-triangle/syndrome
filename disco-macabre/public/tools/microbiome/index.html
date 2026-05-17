@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -62,7 +62,7 @@ button.run-btn:hover{opacity:.85;}
     <h1>Microbiome Dysbiosis Scorer</h1>
     <div class="sub">Collective spectrum &Psi;<sub>micro</sub> = &Sigma; f<sub>i</sub>&psi;<sub>i</sub> &middot; Dysbiosis = 1 &minus; &rho;(&Psi;<sub>micro</sub>, &Psi;<sub>host</sub>)</div>
   </div>
-  <div style="margin-left:auto"><a href="../index.html">&#8592; Tool Hub</a></div>
+  <div style="margin-left:auto"><a href="/tools">&#8592; Tool Hub</a></div>
 </header>
 
 <div class="layout">
@@ -300,7 +300,7 @@ window.renderDashboard = function(results, collectEmb, refEmb, dysbiosisScore) {
 </script>
 <script type="module">
 
-import {embedSequence, similarity} from '../core/spectral.js';
+import {embedSequence, similarity} from '/tools/core/spectral.js';
 
 let cachedEmbeddings = null;
 
