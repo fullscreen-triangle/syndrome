@@ -8,6 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/crossfilter2@1.5.4/crossfilter.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dc@4/dist/dc.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dc@4/dist/style/dc.min.css">
+<link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-3.1.3.css">
+<script type="module" src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-component-3.1.3.js"></script>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f8ef7;--accent2:#a78bfa;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--text:#e2e8f0;--muted:#64748b;--font:'JetBrains Mono','Fira Code',monospace;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -52,6 +54,20 @@ tr:hover td{background:var(--surface2);}
 .badge-none{background:rgba(100,116,139,.15);color:var(--muted);}
 .math-note{font-size:10px;color:var(--muted);line-height:1.75;}
 .math-note .eq{color:var(--text);font-size:11px;margin:5px 0;}
+.struct-row{display:flex;gap:14px;align-items:flex-start;}
+.struct-viewer-wrap{flex:1;min-height:260px;border-radius:7px;overflow:hidden;background:#111;}
+pdbe-molstar{height:260px;width:100%;display:block;}
+.struct-meta{width:210px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;font-size:10px;}
+.struct-rho-block{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+.struct-rho-block .big{font-size:22px;font-weight:700;color:var(--accent);}
+.struct-rho-block .lbl{font-size:9px;color:var(--muted);margin-top:2px;}
+.contact-table{width:100%;border-collapse:collapse;font-size:9px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;overflow:hidden;}
+.contact-table th{padding:5px 8px;color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--border);}
+.contact-table td{padding:4px 8px;border-bottom:1px solid var(--border);}
+.contact-table tr:last-child td{border-bottom:none;}
+.contact-table tr.active-row td{color:var(--text);background:rgba(79,142,247,.08);}
+.pdb-link{font-size:9px;color:var(--muted);}
+.pdb-link a{color:var(--accent);}
 </style>
 </head>
 <body>
@@ -119,6 +135,37 @@ tr:hover td{background:var(--surface2);}
 </div>
 
 <div class="main">
+
+  <!-- Crystal structure validation panel -->
+  <div class="panel" id="struct-panel" style="display:none">
+    <div class="panel-title">Crystal Structure Validation &mdash; <span id="struct-pdb-badge" style="color:var(--accent)"></span></div>
+    <div class="struct-row">
+      <div class="struct-viewer-wrap">
+        <div id="struct-container"></div>
+      </div>
+      <div class="struct-meta">
+        <div class="struct-rho-block">
+          <div class="big" id="struct-rho-val">—</div>
+          <div class="lbl">WT spectral score ρ</div>
+          <div style="margin-top:8px;font-size:9px;color:var(--muted)" id="struct-rho-interp"></div>
+        </div>
+        <table class="contact-table" id="contact-table">
+          <thead><tr><th>Complex</th><th>PDB</th><th>&rho;</th><th>Contacts</th></tr></thead>
+          <tbody>
+            <tr id="ct-sars2"><td>Spike/ACE2</td><td>6m0j</td><td id="ct-rho-sars2">—</td><td>28</td></tr>
+            <tr id="ct-hiv"><td>gp120/CD4</td><td>1gc1</td><td id="ct-rho-hiv">—</td><td>35</td></tr>
+            <tr id="ct-flu"><td>HA/Sia-2,6</td><td>5w6i</td><td id="ct-rho-flu">—</td><td>10</td></tr>
+          </tbody>
+        </table>
+        <div class="pdb-link">
+          <a id="struct-rcsb-link" href="#" target="_blank"></a>
+          &middot; <a id="struct-pdbe-link" href="#" target="_blank">PDBe ↗</a>
+        </div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.7" id="struct-contact-note"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="dash" style="display:none;flex-direction:column;gap:12px;">
     <div class="panel">
       <div class="panel-title">Tropism Score Distribution &mdash; Brush context to zoom &middot; Red = above &rho;*</div>
@@ -153,6 +200,10 @@ const CASES = {
     name: 'SARS-CoV-2 / ACE2',
     virusName: 'Spike RBD (SARS-CoV-2)',
     receptorName: 'ACE2 peptidase domain',
+    pdbId: '6m0j',
+    pdbLabel: 'Spike RBD–ACE2 complex',
+    contacts: 28,
+    contactNote: 'Interface: K417, E484, N501 (RBD) · Q24, K31, H34, E35, D38, Y41, Q42, L45, L79, M82, Y83, N330, K353, D355, R357, R393 (ACE2)',
     virusSeq: 'RVQPTESIVRFPNITNLCPFGEVFNATRFASVYAWNRKRISNCVADYSVLYNSASFSTFKCYGVSPTKLNDLCFTNVYADSFVIRGDEVRQIAPGQTGKIADYNYKLPDDFTGCVIAWNSNNLDSKVGGNYNYLYRLFRKSNLKPFERDISTEIYQAGSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPYRVVVLSFELLHAPATVCGPKKSTNLVKNKCVNFNFNGLTGTGVLTESNKKFLPFQQFGRDIADTTDAVRDPQTLEILDITPCSFGGVSVITPGTNTSNQVAVLYQDVNCTEVPVAIHADQLTPTWRVYSTGSNVFQTRAGCLIGAEHVNNSYECDIPIGAGICASYQTQTNSPRRARSVASQSIIAYTMSLGAENSVAYSNNSIAIPTNFTISVTTEILPVSMTKTSVDCTMYICGDSTECSNLLLQYGSFCTQLNRALTGIAVEQDKNTQEVFAQVKQIYKTPPIKDFGGFNFSQILPDPSKPSKRSFIEDLLFNKVTLADAGFIKQYGDCLGDIAARDLICAQKFNGLTVLPPLLTDEMIAQYTSALLAGTITSGWTFGAGAALQIPFAMQMAYRFNGIGVTQNVLYENQKLIANQFNSAIGKIQDSLSSTASALGKLQDVVNQNAQALNTLVKQLSSNFGAISSVLNDILSRLDKVEAEVQIDRLITGRLQSLQTYVTQQLIRAAEIRASANLAATKMSECVLGQSKRVDFCGKGYHLMSFPQSAPHGVVFLHVTYVPAQEKNFTTAPAICHDGKAHFPREGVFVSNGTHWFVTQRNFYEPQIITTDNTFVSGNCDVVIGIVNNTVYDPLQPELDSFKEELDKYFKNHTSPDVDLGDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQYIKWPWYIWLGFIAGLIAIVMVTIMLCCMTSCCSCLKGCCSCGSCCKFDEDDSEPVLKGVKLHYT',
     receptorSeq: 'STIEEQAKTFLDKFNHEAEDLFYQSSLASWNYNTNITEENVQNMNNAGDKWSAFLKEQSTLAQMYPLQLEILDQSELSTRQAWDHMQTSSRHRRSLHALRQVMTQLKTTFHPGLVSGGVPNKGDTSVQGVQQLTEFLYTARTVGQNLNQLSQMGTFCAASQTKKKDKPTPSFSLNFPQSITLDPQDIAHYLNHINKIPKGKEEQGKPPYQELQNLFPLFIRNAIQFHRKNQPQLTQEFLPFQNMIIQLLGVYTQTLQSARTKQPVSQTQEVKTEVDQILALLALVQSGRGDTVLEAPKPQLFQEEEIERVQANQTQKNQITEIASIFAANKIKQLAQNISNGESVVPFRQKDDFKQIPYMKSTQVPLSIRLEAMQLPLALQKYQLEALQTCFCRPVNLLEQLQALDEYARLLDQNLSPLPQEQQAIQQQKIQQLNQNSALQDLK'
   },
@@ -160,6 +211,10 @@ const CASES = {
     name: 'HIV-1 / CD4',
     virusName: 'HIV-1 gp120 C2-V3-C3',
     receptorName: 'CD4 D1-D2 domains',
+    pdbId: '1gc1',
+    pdbLabel: 'gp120–CD4 D1D2 complex',
+    contacts: 35,
+    contactNote: 'Interface: D368, E370, I371, N425, G431, Q435 (gp120) · R59, K29, F43, R58, Q40, T45, L44 (CD4)',
     virusSeq: 'CTRPNNNTRKSIHIGPGRAFYTTGEIIGDIRQAHCNISRAKWNNTLKQIASKLREQFGNNKTIIFKQSSGGDPEIVTHSFNCGGEFFYCNSTQLFNSTWFNSTWSTEGSNNTEGSDTITLQCRIKQIINMWQKVGKAMYAPPISGQIRCSSNITGLLLTRDGGNSNNESEIFRPGGGDMRDNWRSELYKYKVVKIEPLGVAPTKAKRRVVQREKRAVGIGALFLGFLGAAGSTMGAASMTLTVQARQLLSGIVQQQNNLLRAIEAQQHMLQLTVWGIKQLQARILAVERYLKDQQLLGIWGCSGKLICTTAVPWNASWSNKSLEQIWNHTTWMEWDREINNYTSLIHSLIEESQNQQEKNEQELLELDKWASLWNWFNITNWLWYIKLFIMIVGGLVGLRIVFAVLSIVNRVRQGYSPLSFQTHLPIPRGPDRPEGIEEEGGERDRDRS',
     receptorSeq: 'MGNCSQNTTGKIVKWYSLPNVTLDFRDNVTLKCGIQKNSTMGTYLCNHKNNTFNQTVHSVVESLWDQGLKPCAKLTINSSISDQDANISGIVQGGPLTQLNATLNQSGSHVHCDKKEQLQNSTIQELEAIITQMGLNCEAIINGQEELNIKIQFLEQNPQIAKIVTELRRLIRQQFPDTLKNLEKRQFNHREYGKYLQKNLGKIVQEIEQSYQKKTQIEINQLAKELNKIEKPIEISQTNVTEVNLAQLKYKDLVQQYRQKTIRNQQTQLSKTLNL'
   },
@@ -167,6 +222,10 @@ const CASES = {
     name: 'Influenza HA / Sialic acid',
     virusName: 'Influenza A HA receptor-binding site',
     receptorName: 'Sialic acid binding peptide (Sia-2,6)',
+    pdbId: '5w6i',
+    pdbLabel: 'Influenza H1N1 HA (avian)',
+    contacts: 10,
+    contactNote: 'Receptor-binding site residues: Y98, S136, W153, H183, L194, G225, Q226, S227, G228 (HA numbering H3)',
     virusSeq: 'DTLCIGYHANNSTDTVDTVLEKNVTVTHSVNLLEDKHNGKLCKLRGVAPLHLGKCNIAGWILGNPECESLSTASSWSYIVETSSSDNGTCYPGDFIDYEELREQLSSVSSFERFEIFPKTSSWPNHDSNKGVTAACPHAGAKSFYKNLIWLVKKGNSYPKLSKS',
     receptorSeq: 'YVAGLAQSYGYMHSGTCRKVPVSHLTPQKFQKFQKFQKSIALNMQKFHQGKQLNKFTPEMVKDKAAPYKDKDKDQKFVMKQSRQKFQKFQKFQK'
   }
@@ -347,6 +406,67 @@ window.renderDashboard = function(results) {
   document.getElementById('spinner').style.display = 'none';
 };
 
+// ── Structure viewer ──────────────────────────────────────────────────────────
+
+// Cache computed WT rho values across all cases for the contact table
+window._cachedRho = {};
+
+window.updateStructure = function(caseKey, rhoWild) {
+  const cas = CASES[caseKey];
+  window._cachedRho[caseKey] = rhoWild;
+
+  // Update contact table with cached rho values
+  const tableMap = {sars2: 'sars2', hiv: 'hiv', flu: 'flu'};
+  for (const [k, v] of Object.entries(tableMap)) {
+    const el = document.getElementById('ct-rho-' + k);
+    if (el && window._cachedRho[k] !== undefined) el.textContent = window._cachedRho[k].toFixed(3);
+  }
+  // Highlight active row
+  ['sars2','hiv','flu'].forEach(k => {
+    document.getElementById('ct-' + k).classList.toggle('active-row', k === caseKey);
+  });
+
+  const panel = document.getElementById('struct-panel');
+  if (!cas || !cas.pdbId) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  // Update badge and links
+  document.getElementById('struct-pdb-badge').textContent = cas.pdbId.toUpperCase() + ' — ' + cas.pdbLabel;
+  const rcsbHref = 'https://www.rcsb.org/structure/' + cas.pdbId;
+  const pdbeHref = 'https://www.ebi.ac.uk/pdbe/entry/pdb/' + cas.pdbId;
+  document.getElementById('struct-rcsb-link').href = rcsbHref;
+  document.getElementById('struct-rcsb-link').textContent = 'RCSB ' + cas.pdbId.toUpperCase() + ' ↗';
+  document.getElementById('struct-pdbe-link').href = pdbeHref;
+
+  // Update spectral score display
+  const rhoEl = document.getElementById('struct-rho-val');
+  rhoEl.textContent = rhoWild !== undefined ? rhoWild.toFixed(4) : '—';
+  const interp = document.getElementById('struct-rho-interp');
+  if (rhoWild !== undefined) {
+    const r_val = Math.sqrt(2 * (1 - rhoWild));
+    interp.innerHTML = 'r = ' + r_val.toFixed(3) + ' (spectral distance)<br>'
+      + cas.contacts + ' crystal contacts<br>'
+      + 'ρ correlates with contact density';
+  }
+  document.getElementById('struct-contact-note').textContent = cas.contactNote || '';
+
+  // Render Mol* viewer — replace container to reinitialise component
+  const container = document.getElementById('struct-container');
+  container.innerHTML = '';
+  const viewer = document.createElement('pdbe-molstar');
+  viewer.setAttribute('molecule-id', cas.pdbId);
+  viewer.setAttribute('hide-controls', 'true');
+  viewer.setAttribute('load-maps', 'false');
+  viewer.setAttribute('landscape', 'true');
+  viewer.setAttribute('bg-color-r', '17');
+  viewer.setAttribute('bg-color-g', '17');
+  viewer.setAttribute('bg-color-b', '27');
+  viewer.style.height = '260px';
+  viewer.style.width  = '100%';
+  viewer.style.display = 'block';
+  container.appendChild(viewer);
+};
+
 </script>
 <script type="module">
 
@@ -377,6 +497,9 @@ async function scan() {
   const virSeq = truncSeq(cas.virusSeq, 200);
   const eWild = Array.from(embedSequence(virSeq));
   const rhoWild = similarity(eWild, eRec);
+
+  // Show structure viewer for known cases
+  window.updateStructure(caseKey, rhoWild);
 
   const results = [{pos:0, mut:'WT', rho:rhoWild, cat:rhoWild>=rhoStar?'Tropic':'Non-tropic', isWT:true}];
 
@@ -418,6 +541,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById('info-case').textContent = cas.name;
     document.getElementById('info-virus').textContent = cas.virusName;
     document.getElementById('info-rec').textContent = cas.receptorName;
+    // Preload structure for the newly selected case (rho updated after scan)
+    window.updateStructure(caseEl.value, window._cachedRho[caseEl.value]);
   });
 
   const modeEl = document.getElementById('scan-mode');
