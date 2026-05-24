@@ -85,16 +85,58 @@ function channelizeDNA(seq) {
   return { channels: ch, L, type: 'dna' };
 }
 
-// ── DFT (radix-2 Cooley-Tukey) ────────────────────────────────────────────────
+// ── DFT ──────────────────────────────────────────────────────────────────────
 
 function nextPow2(n) { let p = 1; while (p < n) p <<= 1; return p; }
 
+// Trig cache: key = `${L}_${k}` → {re, im} Float64Arrays of size k×L
+const _dftCache = new Map();
+
 /**
- * Real-input DFT of a single channel via Cooley-Tukey.
- * Returns magnitude array of length N/2 (positive frequencies only).
+ * Direct DFT matrix multiply: evaluates DFT at exactly k frequencies (1..k).
+ * O(L*k) — correct for any L, no zero-padding, no phantom zero bins.
+ * Caches trig tables per (L, k) pair for repeated calls on same-length sequences.
+ * Returns Float32Array of k magnitudes (bins 1..k, DC excluded).
+ */
+function dftDirect(signal, k) {
+  const L = signal.length;
+  const key = `${L}_${k}`;
+  let mat = _dftCache.get(key);
+  if (!mat) {
+    const re = new Float64Array(k * L);
+    const im = new Float64Array(k * L);
+    for (let ki = 1; ki <= k; ki++) {
+      for (let n = 0; n < L; n++) {
+        const phase = 2 * Math.PI * ki * n / L;
+        re[(ki - 1) * L + n] = Math.cos(phase);
+        im[(ki - 1) * L + n] = -Math.sin(phase);
+      }
+    }
+    mat = { re, im };
+    _dftCache.set(key, mat);
+  }
+  const { re, im } = mat;
+  const mag = new Float32Array(k);
+  for (let ki = 0; ki < k; ki++) {
+    let r = 0, ix = 0;
+    const off = ki * L;
+    for (let n = 0; n < L; n++) {
+      r  += signal[n] * re[off + n];
+      ix += signal[n] * im[off + n];
+    }
+    mag[ki] = Math.sqrt(r * r + ix * ix);
+  }
+  return mag;
+}
+
+/**
+ * Real-input DFT via Cooley-Tukey FFT.
+ * Pads to max(nextPow2(L), 32) to guarantee ≥16 positive-frequency bins
+ * regardless of sequence length — used for the spectrum visualizer in mhc-binding.
+ * Returns magnitude array of length N/2 (positive frequencies 0..N/2-1).
  */
 function dft1d(signal) {
-  const N = nextPow2(signal.length);
+  const N = Math.max(nextPow2(signal.length), 32);
   const re = new Float64Array(N);
   const im = new Float64Array(N);
   for (let i = 0; i < signal.length; i++) re[i] = signal[i];
@@ -148,11 +190,8 @@ function embed(channelized, k = K) {
   const emb = new Float32Array(c * k);
 
   for (let ci = 0; ci < c; ci++) {
-    const mag = dft1d(channels[ci]);
-    // Take bins 1..k (skip DC at bin 0)
-    for (let ki = 0; ki < k; ki++) {
-      emb[ci * k + ki] = mag[1 + ki];
-    }
+    const mag = dftDirect(channels[ci], k);
+    for (let ki = 0; ki < k; ki++) emb[ci * k + ki] = mag[ki];
   }
 
   // L2-normalize
@@ -277,7 +316,7 @@ function ifftInPlace(re, im, N) {
 // ── Exports ───────────────────────────────────────────────────────────────────
 
 export {
-  channelizeProtein, channelizeDNA, dft1d, embed, embedSequence,
+  channelizeProtein, channelizeDNA, dft1d, dftDirect, embed, embedSequence,
   similarity, spectralDistance, matchedFilter,
   HYDROPATHY, VOLUME, CHARGE, K
 };

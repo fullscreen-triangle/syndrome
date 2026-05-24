@@ -740,15 +740,36 @@ window.renderEmbHeatmap = function(results, rhoDim) {
 import { embedSequence, channelizeProtein, dft1d, similarity, K } from '/tools/core/spectral.js';
 import { initGL, gpuBatchSimilarity } from '/tools/core/webgl.js';
 
-// ── MHC Groove Spectral Apertures ─────────────────────────────────────────────
-const ALLELE_GROOVES = {
-  'HLA-A*02:01': 'GILGFVFTLGVYDGREHTV',
-  'HLA-A*01:01': 'VTEHDTLLYILDTAGREEY',
-  'HLA-A*03:01': 'KLGGALQAKRQIIFVDLLK',
-  'HLA-B*07:02': 'RPQGLKAGRNPVVHFFKNIV',
-  'HLA-B*57:01': 'KAFSPEVIPMFSALSEGATPVHHGVTS',
-  'HLA-C*07:02': 'QYDPVAALF',
+// ── MHC Allele Reference Centroids ───────────────────────────────────────────
+// Each allele reference is the mean unit-norm embedding of its canonical IEDB
+// binders, all embedded at their native length so DFT frequency scales align.
+// (Comparing a 9-mer embedding to a 19-mer embedding via dot product compares
+// different frequency scales — centroid over same-length binders fixes this.)
+const ALLELE_BINDERS = {
+  'HLA-A*02:01': ['GILGFVFTL','NLVPMVATV','GLCTLVAML','KVAELVHFL','CLGGLLTMV',
+                  'SLYNTVATL','IMDQVPFSV','ILKEPVHGV','RTLNAWVKV','CLTEYILWL'],
+  'HLA-A*01:01': ['VTEHDTLLY','ILDTAGREEY','CTELKLSDY','TTDPSFLGRY','ASEKNFATL'],
+  'HLA-A*03:01': ['KLGGALQAK','KIFDLPLAY','RLRPGGKKK','KLNEPVHGV','QIIFVDLLK'],
+  'HLA-B*07:02': ['RPHERNGFTV','TPGPGVRYPL','LPSAGPHIL','RPRGEAKEL','YPHFMPTNL'],
+  'HLA-B*57:01': ['ISPRTLNAW','KAFSPEVIPM','TSTLQEQIGW','LSSPVTKSF'],
+  'HLA-C*07:02': ['QYDPVAALF','QYNPVAALF','QYDPVAALM','AYDPVAALM'],
 };
+
+function computeAlleleCentroid(binders) {
+  const embs = binders.map(embedSequence);
+  const dim  = embs[0].length;
+  const c    = new Float32Array(dim);
+  for (const e of embs) for (let i = 0; i < dim; i++) c[i] += e[i];
+  let norm = 0; for (const x of c) norm += x * x;
+  norm = Math.sqrt(norm) || 1;
+  for (let i = 0; i < dim; i++) c[i] /= norm;
+  return c;
+}
+
+const ALLELE_REFS = {};
+for (const [allele, binders] of Object.entries(ALLELE_BINDERS)) {
+  ALLELE_REFS[allele] = computeAlleleCentroid(binders);
+}
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let gl = null;
@@ -822,7 +843,7 @@ function onPeptideChange() {
 function computeSingle(seq) {
   try {
     const pepEmb = embedSequence(seq);
-    const mhcEmb = embedSequence(ALLELE_GROOVES[currentAllele]);
+    const mhcEmb = ALLELE_REFS[currentAllele];
     const rho    = similarity(pepEmb, mhcEmb);
     showSingleResult(seq, rho, parseFloat(rhoStarSlider.value));
   } catch(e) { console.error(e); }
@@ -873,7 +894,7 @@ async function runLibraryScan() {
   statusLine.textContent = `Computing embeddings for ${lines.length} peptides…`;
 
   const t0     = performance.now();
-  const mhcEmb = embedSequence(ALLELE_GROOVES[currentAllele]);
+  const mhcEmb = ALLELE_REFS[currentAllele];
 
   let scores;
   if (gl && lines.length > 4) {
@@ -956,7 +977,7 @@ function drawSpectrum(seq) {
   specCtx.fillRect(0, 0, W, H);
 
   const mags   = channels.map(ch => dft1d(ch));
-  const K_show = Math.min(20, mags[0].length);
+  const K_show = Math.min(16, mags[0].length - 1);
 
   let maxMag = 0;
   for (const m of mags) for (let k = 1; k <= K_show; k++) maxMag = Math.max(maxMag, m[k]);
