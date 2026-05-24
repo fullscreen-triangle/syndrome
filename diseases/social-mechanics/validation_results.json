@@ -1,0 +1,451 @@
+{
+  "experiment_suite": "Template-Matching Theory Validation (Fast)",
+  "timestamp": "2026-05-24T22:32:29.320147",
+  "experiments": [
+    {
+      "name": "Theorem 1: Exploitation via Overlap Integral",
+      "description": "Verify exploitation rate is proportional to template-state overlap",
+      "tests": [
+        {
+          "template": "perfectly_matched",
+          "overlap": 1.8806319451591875,
+          "exploitation_rate": 1.8806319451591875
+        },
+        {
+          "template": "partially_matched",
+          "overlap": 0.9403159725795938,
+          "exploitation_rate": 0.9403159725795938
+        },
+        {
+          "template": "mismatched",
+          "overlap": 0.18875741553194897,
+          "exploitation_rate": 0.18875741553194897
+        }
+      ],
+      "proportionality_test": {
+        "ratio_perfect_to_partial": 2.0,
+        "expected_approximately": 2.0,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Theorem 2: Template Convergence via Co-Evolution",
+      "description": "Verify templates converge to match agent state distribution",
+      "convergence_trace": [
+        {
+          "generation": 0,
+          "template_location": 0.5,
+          "overlap_with_agent_state": 1.125216447010286
+        },
+        {
+          "generation": 1,
+          "template_location": 0.5285487745892121,
+          "overlap_with_agent_state": 1.1378621470065664
+        },
+        {
+          "generation": 2,
+          "template_location": 0.5543807740766055,
+          "overlap_with_agent_state": 1.1669802818530652
+        },
+        {
+          "generation": 3,
+          "template_location": 0.5777545337954846,
+          "overlap_with_agent_state": 1.2031926828492885
+        },
+        {
+          "generation": 4,
+          "template_location": 0.5989039861893082,
+          "overlap_with_agent_state": 1.239379917477139
+        },
+        {
+          "generation": 5,
+          "template_location": 0.6180408020862099,
+          "overlap_with_agent_state": 1.2710384358629059
+        },
+        {
+          "generation": 6,
+          "template_location": 0.6353565091717921,
+          "overlap_with_agent_state": 1.2958744349188962
+        },
+        {
+          "generation": 7,
+          "template_location": 0.6510244088625772,
+          "overlap_with_agent_state": 1.3131782682962931
+        },
+        {
+          "generation": 8,
+          "template_location": 0.6652013107648336,
+          "overlap_with_agent_state": 1.3232400229419958
+        },
+        {
+          "generation": 9,
+          "template_location": 0.6780291020778202,
+          "overlap_with_agent_state": 1.32689711402491
+        },
+        {
+          "generation": 10,
+          "template_location": 0.6896361676485673,
+          "overlap_with_agent_state": 1.3252218259221507
+        },
+        {
+          "generation": 11,
+          "template_location": 0.7001386748905761,
+          "overlap_with_agent_state": 1.3193247074791534
+        },
+        {
+          "generation": 12,
+          "template_location": 0.7096417364263394,
+          "overlap_with_agent_state": 1.3102427931129386
+        },
+        {
+          "generation": 13,
+          "template_location": 0.7182404620897962,
+          "overlap_with_agent_state": 1.2988849938127274
+        },
+        {
+          "generation": 14,
+          "template_location": 0.7260209108175181,
+          "overlap_with_agent_state": 1.2860133807518153
+        },
+        {
+          "generation": 15,
+          "template_location": 0.733060951955471,
+          "overlap_with_agent_state": 1.2722453384453836
+        },
+        {
+          "generation": 16,
+          "template_location": 0.7394310446016034,
+          "overlap_with_agent_state": 1.2580666273548755
+        },
+        {
+          "generation": 17,
+          "template_location": 0.7451949427841795,
+          "overlap_with_agent_state": 1.2438491133163003
+        },
+        {
+          "generation": 18,
+          "template_location": 0.750410333533524,
+          "overlap_with_agent_state": 1.2298694820342404
+        },
+        {
+          "generation": 19,
+          "template_location": 0.7551294142332095,
+          "overlap_with_agent_state": 1.216326934966423
+        },
+        {
+          "generation": 20,
+          "template_location": 0.7593994150290162,
+          "overlap_with_agent_state": 1.20335891297774
+        },
+        {
+          "generation": 21,
+          "template_location": 0.7632630715241053,
+          "overlap_with_agent_state": 1.191054519200607
+        },
+        {
+          "generation": 22,
+          "template_location": 0.7667590524912998,
+          "overlap_with_agent_state": 1.179465661607113
+        },
+        {
+          "generation": 23,
+          "template_location": 0.7699223468831589,
+          "overlap_with_agent_state": 1.1686161124804189
+        },
+        {
+          "generation": 24,
+          "template_location": 0.7727846140131762,
+          "overlap_with_agent_state": 1.1585087554169087
+        },
+        {
+          "generation": 25,
+          "template_location": 0.7753745004128303,
+          "overlap_with_agent_state": 1.1491313052665872
+        },
+        {
+          "generation": 26,
+          "template_location": 0.7777179265356998,
+          "overlap_with_agent_state": 1.1404607703094447
+        },
+        {
+          "generation": 27,
+          "template_location": 0.7798383461780751,
+          "overlap_with_agent_state": 1.1324668956741315
+        },
+        {
+          "generation": 28,
+          "template_location": 0.7817569812124345,
+          "overlap_with_agent_state": 1.125114792141737
+        },
+        {
+          "generation": 29,
+          "template_location": 0.7834930339830778,
+          "overlap_with_agent_state": 1.1183669202385924
+        }
+      ],
+      "convergence_summary": {
+        "initial_overlap": 1.125216447010286,
+        "final_overlap": 1.1183669202385924,
+        "overlap_increase_factor": 0.9939127029382723,
+        "status": "PARTIAL"
+      }
+    },
+    {
+      "name": "Theorem 3: Coordination-Dependent Vulnerability",
+      "description": "Verify phase-locked ensemble is 5x more vulnerable than turbulent",
+      "regimes": [
+        {
+          "regime": "turbulent",
+          "coordination_value": 0.15,
+          "weighting_function": 0.2,
+          "overlap": 2.121638971598647,
+          "exploitation_probability": 0.4243277943197294
+        },
+        {
+          "regime": "aperture",
+          "coordination_value": 0.4,
+          "weighting_function": 0.4,
+          "overlap": 2.3032942971483497,
+          "exploitation_probability": 0.9213177188593399
+        },
+        {
+          "regime": "cascade",
+          "coordination_value": 0.65,
+          "weighting_function": 0.6,
+          "overlap": 2.3929470195231097,
+          "exploitation_probability": 1.4357682117138657
+        },
+        {
+          "regime": "coherent",
+          "coordination_value": 0.87,
+          "weighting_function": 0.8,
+          "overlap": 2.44119486147154,
+          "exploitation_probability": 1.9529558891772323
+        },
+        {
+          "regime": "phase_locked",
+          "coordination_value": 0.97,
+          "weighting_function": 1.0,
+          "overlap": 2.457742139964171,
+          "exploitation_probability": 2.457742139964171
+        }
+      ],
+      "vulnerability_ratio": {
+        "phase_locked": 2.457742139964171,
+        "turbulent": 0.4243277943197294,
+        "observed_ratio": 5.79208379197586,
+        "expected_ratio": 5.0,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Disease Prevalence: Age-Stratified Incidence (U-Shaped)",
+      "description": "Verify U-shaped mortality pattern",
+      "age_groups": [
+        {
+          "age_group": "infant_0_3",
+          "host_state_location": 0.45,
+          "overlap": 0.3948592255220842,
+          "coordination_weighting": 0.9,
+          "prevalence": 0.3553733029698758
+        },
+        {
+          "age_group": "child_5_12",
+          "host_state_location": 0.4,
+          "overlap": 0.23763617288618216,
+          "coordination_weighting": 0.7,
+          "prevalence": 0.1663453210203275
+        },
+        {
+          "age_group": "adult_20_40",
+          "host_state_location": 0.3,
+          "overlap": 0.0702074876727019,
+          "coordination_weighting": 0.4,
+          "prevalence": 0.028082995069080758
+        },
+        {
+          "age_group": "adult_45_60",
+          "host_state_location": 0.37500000000000006,
+          "overlap": 0.17972223576324242,
+          "coordination_weighting": 0.45,
+          "prevalence": 0.08087500609345909
+        },
+        {
+          "age_group": "elderly_65_plus",
+          "host_state_location": 0.725,
+          "overlap": 1.9252447794146375,
+          "coordination_weighting": 0.85,
+          "prevalence": 1.6364580625024419
+        }
+      ],
+      "u_shape_validation": {
+        "infant_prevalence": 0.3553733029698758,
+        "adult_prevalence": 0.028082995069080758,
+        "elderly_prevalence": 1.6364580625024419,
+        "has_u_shape": true,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Tropical Disease Prevalence via Co-Evolution Time",
+      "description": "Verify tropical regions have higher prevalence due to settlement history",
+      "regions": [
+        {
+          "region": "tropical_Africa",
+          "settlement_years": 500000,
+          "template_convergence": 0.9932620530009145,
+          "prevalence": 0.09932620530009145
+        },
+        {
+          "region": "temperate_Europe",
+          "settlement_years": 50000,
+          "template_convergence": 0.3934693402873666,
+          "prevalence": 0.03934693402873666
+        },
+        {
+          "region": "Americas_temperate",
+          "settlement_years": 20000,
+          "template_convergence": 0.18126924692201818,
+          "prevalence": 0.01812692469220182
+        }
+      ],
+      "prevalence_ratio": {
+        "tropical": 0.09932620530009145,
+        "temperate": 0.03934693402873666,
+        "ratio": 2.5243696301101757,
+        "expected_direction": "tropical > temperate",
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Latent Infection and Reactivation",
+      "description": "Verify latency is transient overlap below manifestation threshold",
+      "age_trajectory": [
+        {
+          "age": 0.0,
+          "host_state_location": 0.2,
+          "overlap": 0.005344047730013022,
+          "status": "latent"
+        },
+        {
+          "age": 5.0,
+          "host_state_location": 0.275,
+          "overlap": 0.02617076852158469,
+          "status": "latent"
+        },
+        {
+          "age": 10.0,
+          "host_state_location": 0.35,
+          "overlap": 0.09835128829431602,
+          "status": "latent"
+        },
+        {
+          "age": 15.0,
+          "host_state_location": 0.425,
+          "overlap": 0.2881484874145951,
+          "status": "active"
+        },
+        {
+          "age": 20.0,
+          "host_state_location": 0.5,
+          "overlap": 0.679312215219458,
+          "status": "active"
+        },
+        {
+          "age": 25.0,
+          "host_state_location": 0.5125,
+          "overlap": 0.7688254815781741,
+          "status": "active"
+        },
+        {
+          "age": 30.0,
+          "host_state_location": 0.525,
+          "overlap": 0.8655314150891312,
+          "status": "active"
+        },
+        {
+          "age": 35.0,
+          "host_state_location": 0.5375,
+          "overlap": 0.9692470521844545,
+          "status": "active"
+        },
+        {
+          "age": 40.0,
+          "host_state_location": 0.55,
+          "overlap": 1.0796167891138408,
+          "status": "active"
+        },
+        {
+          "age": 45.0,
+          "host_state_location": 0.5625,
+          "overlap": 1.1960867063251408,
+          "status": "active"
+        },
+        {
+          "age": 50.0,
+          "host_state_location": 0.575,
+          "overlap": 1.3178816314497146,
+          "status": "active"
+        },
+        {
+          "age": 55.0,
+          "host_state_location": 0.5875,
+          "overlap": 1.443987256892273,
+          "status": "active"
+        },
+        {
+          "age": 60.0,
+          "host_state_location": 0.6,
+          "overlap": 1.573139801417262,
+          "status": "active"
+        },
+        {
+          "age": 65.0,
+          "host_state_location": 0.6416666666666666,
+          "overlap": 2.004490140985937,
+          "status": "active"
+        },
+        {
+          "age": 70.0,
+          "host_state_location": 0.6833333333333333,
+          "overlap": 2.378741950354395,
+          "status": "active"
+        },
+        {
+          "age": 75.0,
+          "host_state_location": 0.725,
+          "overlap": 2.6144219582537875,
+          "status": "active"
+        },
+        {
+          "age": 80.0,
+          "host_state_location": 0.7666666666666666,
+          "overlap": 2.6507661102077233,
+          "status": "active"
+        },
+        {
+          "age": 85.0,
+          "host_state_location": 0.8083333333333333,
+          "overlap": 2.475404115981418,
+          "status": "active"
+        },
+        {
+          "age": 90.0,
+          "host_state_location": 0.85,
+          "overlap": 2.13133639472411,
+          "status": "active"
+        }
+      ],
+      "latency_summary": {
+        "infection_age": 5.0,
+        "latent_period_ages": [
+          0.0,
+          5.0,
+          10.0
+        ],
+        "reactivation_occurs": true,
+        "status": "PASS"
+      }
+    }
+  ]
+}

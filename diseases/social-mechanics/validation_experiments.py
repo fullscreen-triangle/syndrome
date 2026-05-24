@@ -531,9 +531,9 @@ def run_all_experiments():
         try:
             result = exp_func()
             all_results["experiments"].append(result)
-            print(f"  ✓ {exp_name} completed")
+            print(f"  [OK] {exp_name} completed")
         except Exception as e:
-            print(f"  ✗ {exp_name} failed: {str(e)}")
+            print(f"  [FAIL] {exp_name} failed: {str(e)}")
             all_results["experiments"].append({
                 "name": exp_name,
                 "error": str(e),
@@ -545,7 +545,7 @@ def run_all_experiments():
     with open(output_path, 'w') as f:
         json.dump(all_results, f, indent=2)
 
-    print(f"\n✓ Results saved to {output_path}")
+    print(f"\n[OK] Results saved to {output_path}")
 
     # Summary
     print("\n" + "="*70)
