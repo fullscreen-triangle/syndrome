@@ -49,11 +49,36 @@
   {../publication/disease-fuzzy-circuits/figures/}%
   {../publication/disease-state-equations/figures/}%
   {../publication/disease-computing/figures/}%
+  %% Disease-part chapter figures (paths in-chapter are panels/... or figures/...)
+  {../diseases/infectious-diseases/}%
+  {../diseases/pathogen-biology/}%
+  {../diseases/universal-immunology-primitive/}%
+  {../diseases/social-mechanics/}%
 }
 \usepackage{booktabs,array,multirow}
+\usepackage{caption,subcaption}   %% subfigure/subcaption used by Disease-part chapters
+\usepackage{longtable,tabularx}   %% used by ch10 (pathogenic-viruses)
 \usepackage[shortlabels]{enumitem}
 \usepackage{float}
 \usepackage[margin=2.5cm]{geometry}
+
+%% Text-mode Unicode Greek used literally in some Disease-part chapters/captions
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}   % Ω
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}       % μ
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}     % β
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}      % η
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}    % Δ
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}      % ρ
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}    % σ
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}      % τ
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}   % λ
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}      % ℓ
+\DeclareUnicodeCharacter{00B0}{\ensuremath{^\circ}}    % degree
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}         % minus sign
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}   % ≈
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}       % ≤
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}       % ≥
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}    % ×
 
 %% Code listings
 \usepackage{listings,xcolor}
@@ -157,6 +182,25 @@
 \newtheorem{prediction}[theorem]{Prediction}
 \newtheorem{conjecture}[theorem]{Conjecture}
 \newtheorem{claim}[theorem]{Claim}
+
+%% Theorem-like environments used by the Disease-part chapters (ch10-ch14)
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{principle}[theorem]{Principle}
+\newtheorem{rulename}[theorem]{Rule}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{construction}[theorem]{Construction}
+\theoremstyle{remark}
+\newtheorem{notation}[theorem]{Notation}
+\crefname{rulename}{Rule}{Rules}
+\Crefname{rulename}{Rule}{Rules}
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{principle}{Principle}{Principles}
+\Crefname{principle}{Principle}{Principles}
+
+%% Paper-local macros + cfc listing language for the Disease-part chapters
+\input{chapters/disease-macros}
 
 %% Abbreviations
 \newcommand{\ie}{i.e.\@}

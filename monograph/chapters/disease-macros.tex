@@ -1,0 +1,98 @@
+%% disease-macros.tex
+%% Paper-local macros for ch10-ch14, loaded once in the preamble.
+%% All emitted as \providecommand so they never clash with monograph/physics defs.
+
+%% ---- ch14 (Cause-for-Concern) grammar/listing support --------------------
+%% The monograph already defines \cf (=cf.); the .cfc paper used \cf as a
+%% typewriter-terminal macro. Renamed to \cfckw in the chapter body.
+\providecommand{\cfckw}[1]{\texttt{#1}}
+\definecolor{cfckwcol}{RGB}{30,64,175}
+\definecolor{cfccom}{RGB}{22,101,52}
+\definecolor{cfcnum}{RGB}{180,83,9}
+\definecolor{cfcstr}{RGB}{159,18,57}
+\definecolor{cfcbg}{RGB}{250,250,250}
+\lstdefinelanguage{cfc}{
+  morekeywords={floor,patient,probe,panel,measure,localize,cell,gap,
+    close,toward,coherent,using,basis,until,resolved,contested,decline,
+    concern,when,emit,assert,yield,let,in,as,with,import,module,export,
+    monitor,every,observe,against,reference},
+  morekeywords=[2]{Coherence,DiseaseVector,Cell,Gap,Probe,Panel,
+    Intervention,Dose,Reading,Verdict,Concern},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  keywordstyle=\color{cfckwcol}\bfseries,
+  keywordstyle=[2]\color{cfcnum},
+  commentstyle=\color{cfccom}\itshape,
+  stringstyle=\color{cfcstr},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{cfcbg},
+  frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=4pt,
+  breaklines=true,showstringspaces=false,columns=fullflexible,tabsize=2
+}
+%% NB: do NOT globally \lstset language here; the ch14 listings set it locally.
+
+
+\providecommand{\Agent}{\mathsf{A}}
+\providecommand{\Coh}{\Man^{\star}}
+\providecommand{\Convergence}{\mathcal{C}}
+\providecommand{\Coord}{\mathcal{R}}
+\providecommand{\Dcat}{\mathcal{D}}
+\providecommand{\Dom}{\Omega}
+\providecommand{\Exploit}{\mathcal{E}}
+\providecommand{\Man}{\mathcal{M}}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Ncham}{N_{\mathrm{ch}}}
+\providecommand{\Nosc}{N_{\mathrm{osc}}}
+\providecommand{\Overlap}{\mathcal{O}}
+\providecommand{\Phost}{\rho_{\mathrm{host}}}
+\providecommand{\Probe}{\Pi}
+\providecommand{\Qgen}{Q_{\mathrm{gen}}}
+\providecommand{\Qmem}{Q_{\mathrm{mem}}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\RR}{\mathbb{R}}
+\providecommand{\Rcat}{\mathcal{R}}
+\providecommand{\Rcham}{R_{\mathrm{ch}}}
+\providecommand{\Rd}{\rho}
+\providecommand{\Rp}{\R_{\ge 0}}
+\providecommand{\AgState}{\boldsymbol{\rho}}  %% was \State in social-mechanics; renamed (clashes with algpseudocode \State)
+\providecommand{\Template}{\boldsymbol{\chi}}
+\providecommand{\Vulnerability}{\mathcal{V}}
+\providecommand{\X}{\mathcal{X}}
+\providecommand{\Y}{\mathcal{Y}}
+\providecommand{\alt}{\;\mid\;}
+\providecommand{\avg}[1]{\left\langle #1 \right\rangle}
+\providecommand{\basis}{\mathcal{B}}
+\providecommand{\bigO}{\mathcal{O}}
+\providecommand{\bnf}{\;::=\;}
+\providecommand{\cell}{\mathcal{C}}
+\providecommand{\cfc}{\mathcal{L}}
+\providecommand{\chiviral}{\chi_{\mathrm{viral}}}
+\providecommand{\coh}{x^{\star}}
+\providecommand{\diam}{\operatorname{diam}}
+\providecommand{\dist}{\operatorname{dist}}
+\providecommand{\dose}{c}
+\providecommand{\dvec}{\mathbf{D}}
+\providecommand{\ecoh}{\eta}
+\providecommand{\eps}{\varepsilon}
+\providecommand{\epsz}{\varepsilon_{0}}
+\providecommand{\flo}{\beta}
+\providecommand{\fwd}{\Phi}
+\providecommand{\gap}{\mathsf{g}}
+\providecommand{\innerprod}[2]{\langle #1,\, #2 \rangle}
+\providecommand{\intv}{u}
+\providecommand{\lD}{\lambda_{\mathrm{D}}}
+\providecommand{\loc}{\Lambda}
+\providecommand{\nt}[1]{\ensuremath{\langle\textsf{#1}\rangle}}
+\providecommand{\nuRC}{\nu_{\mathrm{RC}}}
+\providecommand{\probe}{\pi}
+\providecommand{\rec}{M}
+\providecommand{\set}[1]{\{#1\}}
+\providecommand{\st}{x}
+\providecommand{\stepto}{\longrightarrow}
+\providecommand{\supp}{\operatorname{supp}}
+\providecommand{\tauRC}{\tau_{\mathrm{RC}}}
+\providecommand{\taucham}{\tau_{\mathrm{ch}}}
+\providecommand{\trace}{\tau}
+\providecommand{\vv}[1]{\boldsymbol{#1}}
+\providecommand{\zstar}{z^{*}}
