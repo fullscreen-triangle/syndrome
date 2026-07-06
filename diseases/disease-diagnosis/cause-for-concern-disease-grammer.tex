@@ -1,0 +1,1915 @@
+% =====================================================================
+%  Cause-for-Concern (.cfc)
+%  A Domain-Specific Language for Disease Diagnosis and Therapy by
+%  Coherence Localization and Gap-Closure.
+%
+%  Self-contained. Every object is defined from first principles; the
+%  reader is assumed to know undergraduate real analysis, elementary
+%  graph theory, and the standard vocabulary of programming-language
+%  semantics. No companion manuscript is required.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[round,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,
+            citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage{cleveref}
+
+% ---- Theorem environments ----
+\newtheoremstyle{cfcthm}{\topsep}{\topsep}{\itshape}{}{\bfseries}{.}{.5em}{}
+\theoremstyle{cfcthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{principle}[theorem]{Principle}
+\newtheorem{rulename}[theorem]{Rule}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{rulename}{Rule}{Rules}
+\Crefname{rulename}{Rule}{Rules}
+\crefname{principle}{Principle}{Principles}
+\Crefname{principle}{Principle}{Principles}
+
+% ---- Shorthand ----
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rp}{\R_{\ge 0}}
+\newcommand{\Man}{\mathcal{M}}          % state manifold
+\newcommand{\st}{x}                     % state
+\newcommand{\coh}{x^{\star}}            % coherent state
+\newcommand{\Coh}{\Man^{\star}}         % coherent set
+\newcommand{\flo}{\beta}                % floor
+\newcommand{\cell}{\mathcal{C}}         % cell
+\newcommand{\probe}{\pi}                % probe
+\newcommand{\Probe}{\Pi}                % probe space
+\newcommand{\trace}{\tau}               % trace
+\newcommand{\Rd}{\rho}                  % readout map
+\newcommand{\fwd}{\Phi}                 % forward model / trace map
+\newcommand{\loc}{\Lambda}              % localization
+\newcommand{\gap}{\mathsf{g}}           % gap
+\newcommand{\basis}{\mathcal{B}}        % intervention basis
+\newcommand{\intv}{u}                   % intervention
+\newcommand{\dose}{c}                   % dose vector
+\newcommand{\cfc}{\mathcal{L}}          % the language
+\newcommand{\ecoh}{\eta}                % coherence index
+\newcommand{\dvec}{\mathbf{D}}          % disease vector
+\newcommand{\Dom}{\Omega}               % oscillator index set
+\newcommand{\rec}{M}                    % committed-measurement count
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\stepto}{\longrightarrow}
+\newcommand{\bnf}{\;::=\;}
+\newcommand{\alt}{\;\mid\;}
+\newcommand{\cf}[1]{\texttt{#1}}
+\newcommand{\nt}[1]{\ensuremath{\langle\textsf{#1}\rangle}}
+
+% ---- .cfc listing style ----
+\definecolor{cfckw}{RGB}{30,64,175}
+\definecolor{cfccom}{RGB}{22,101,52}
+\definecolor{cfcnum}{RGB}{180,83,9}
+\definecolor{cfcstr}{RGB}{159,18,57}
+\definecolor{cfcbg}{RGB}{250,250,250}
+\lstdefinelanguage{cfc}{
+  morekeywords={floor,patient,probe,panel,measure,localize,cell,gap,
+    close,toward,coherent,using,basis,until,resolved,contested,decline,
+    concern,when,emit,assert,yield,let,in,as,with,import,module,export,
+    monitor,every,observe,against,reference},
+  morekeywords=[2]{Coherence,DiseaseVector,Cell,Gap,Probe,Panel,
+    Intervention,Dose,Reading,Verdict,Concern},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  keywordstyle=\color{cfckw}\bfseries,
+  keywordstyle=[2]\color{cfcnum},
+  commentstyle=\color{cfccom}\itshape,
+  stringstyle=\color{cfcstr},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{cfcbg},
+  frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=4pt,
+  breaklines=true,showstringspaces=false,columns=fullflexible,tabsize=2
+}
+\lstset{language=cfc}
+
+\title{\textbf{Cause-for-Concern: A Domain-Specific Language for\\[2pt]
+Disease Diagnosis and Therapy by Coherence Localization\\
+and Gap-Closure}}
+
+\author{%
+Kundai Farai Sachikonye\\
+\small Technical University of Munich\\
+\small Chair of Experimental Bioinformatics\\
+\small AIMe Registry for Artificial Intelligence\\
+\small \texttt{kundai.sachikonye@wzw.tum.de}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% =====================================================================
+\begin{abstract}
+\noindent
+We specify \emph{Cause-for-Concern} (\cf{cfc}; source extension \cf{.cfc}),
+a domain-specific language for clinical reasoning whose semantics dispenses
+with the two classical primitives of medicine---the patient's narrative
+report and the named disease drawn from a catalogue---and replaces them with
+a single primitive: the \emph{characterised perturbation} of a patient's
+physiological state, whose fate is computed against a forward model and read
+back as a measurement. The language is self-contained and rests on five facts
+we prove rather than assume. \textbf{(i)}~A finite observer of a physiological
+system cannot resolve its state to a point; a strictly positive resolution
+floor $\flo>0$ forces every determined state to be a \emph{cell} of diameter
+$\ge\flo$, so a diagnosis is the identification of a cell, never a label
+(\emph{Floor Theorem}). \textbf{(ii)}~Health is not a distinguished catalogue
+entry but membership of a \emph{coherent set}, the states in which the
+system's oscillator ensemble is internally phase-consistent, quantified by a
+scalar coherence $\ecoh\in[0,1]$ and a disease vector
+$\dvec\in[0,1]^{d}$; diagnosis is the \emph{localization} of the patient to a
+cell, provably sufficient exactly when the probe-to-reading map is injective
+down to the floor (\emph{Localization Theorem}). \textbf{(iii)}~Because each
+physiological response is itself a substrate for the next, a probe can be made
+to \emph{cascade}, so its terminal readout \emph{certifies} the trajectory
+that produced it: a false account of the state cannot forge it, as it would
+have to produce products that never formed (\emph{Certificate Theorem}), and
+the correct halting rule is a \emph{rigidity} condition, not a magnitude
+threshold. \textbf{(iv)}~Therapy is closure of the measured \emph{gap} to the
+nearest coherent state by the sparsest combination of characterised
+interventions selected \emph{by effect} and not by indication, solved as an
+$\ell_{1}$ program and executed as a contraction whose fixed point is
+coherence, with no disease ever named (\emph{Gap-Closure} and
+\emph{Convergence Theorems}). \textbf{(v)}~Diagnosis and therapy are one
+operation, since every characterised perturbation simultaneously informs
+(its fate is a measurement) and displaces (its action is an intervention);
+the loop halts precisely when the state is both coherent and rigidly known
+(\emph{Wellness Theorem}). We give \cf{cfc}'s complete lexical grammar,
+context-free grammar in EBNF, an \emph{accountability} type system in which no
+value of zero residue is well-typed and no \cf{close} converges without a
+localized cell, a small-step operational semantics in which evaluation is
+measurement---mutating a monotone committed-measurement clock rather than
+simulating---and proofs of type soundness (progress and preservation),
+determinism, and scheduler soundness (a closed cell is never re-probed and a
+convergent therapy is never starved). We specify complexity, a constructive
+validation protocol requiring no clinical data, and a reference execution
+model. The result is a deterministic, disease-free, report-free calculus in
+which a patient's state is read from a self-certifying physiological program,
+the therapeutic target is a measured gap, and clinical judgment is relocated
+from precedent-retrieval to the specification of \emph{intent} over a derived,
+explorable state.
+\end{abstract}
+
+\noindent\textbf{Keywords:} domain-specific language; disease diagnosis;
+therapy; resolution floor; coherence; state localization; trajectory
+certificate; gap-closure; sparse intervention; contraction to a fixed point;
+accountability type system; operational semantics; measurement-as-evaluation.
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+\subsection{Two primitives medicine cannot justify}
+
+Clinical practice is organised around two primitives that its own
+methodology cannot ground. The first is the \emph{patient's report}: a
+narrative of symptoms, taken as the entry point to diagnosis. The second is
+the \emph{named disease}: a label drawn from a finite nosological catalogue,
+against which the report is matched. Both are load-bearing, and both are
+fragile. A report is a lossy, subjective, and sometimes absent channel; a
+catalogue is a historically contingent partition of a continuous
+pathophysiology, with boundaries that shift between editions and that fit
+poorly the many conditions which are combinations, prodromes, or genuinely
+novel \citep{feinstein1967clinical,scheuermann2009toward,loscalzo2007network}.
+When a clinician reasons ``the report resembles catalogue entry $k$, whose
+standard therapy is $T_k$,'' the inference is retrieval of precedent, and its
+validity is only as good as the catalogue's fit to the individual in front of
+them.
+
+This paper specifies a language whose execution never uses either primitive.
+It replaces both with a single computational act---the administration of a
+\emph{characterised perturbation} to the patient and the reading of its
+fate---and shows that diagnosis, therapy, and the decision of when to stop all
+reduce to operations on that one act. The language is called
+\emph{Cause-for-Concern}, written \cf{cfc}, with source files carrying the
+extension \cf{.cfc}. The name is literal: a \cf{cfc} program does not ask
+``which disease?'' but ``is there a cause for concern, where, and by how
+much?''---and answers with a region of state space and a measured
+displacement, not a name.
+
+\subsection{The one primitive: a characterised perturbation}
+
+Let a patient's physiology be a point $\st$ in a state space $\Man$ (a full
+description of the relevant oscillator ensemble: concentrations, activities,
+conductances, phases). An ingested or administered compound of \emph{known}
+composition is a controlled input to this system; its fate---the time-course
+of products and physiological responses it induces---is a function of the
+patient's state. If the forward model predicting that fate is valid across the
+state space and not merely at a healthy reference, then the measured fate
+\emph{locates} the patient in $\Man$. This single object, the characterised
+perturbation, is read two ways: as a \emph{measurement} (its fate carries
+information about the state) and as an \emph{intervention} (its action
+displaces the state). \cf{cfc} exposes exactly this object, under the keyword
+\cf{probe}, and derives everything else from it.
+
+\subsection{Five facts, proved not assumed}
+
+The language is not an interface pasted over heuristics; its every guarantee
+is a theorem. Five facts organise the development, each established in the
+body from stated premises.
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+\item \textbf{The resolution floor} (\Cref{sec:floor}). A finite observer of a
+physiological system cannot resolve its state to a point: there is a strictly
+positive floor $\flo>0$ below which distinctions cannot be made. ``The state''
+is therefore a \emph{cell} of diameter $\ge\flo$, and the goal of measurement
+is not to name the state but to shrink the admissible region to a single cell.
+\item \textbf{Diagnosis as localization} (\Cref{sec:coherence,sec:diagnosis}).
+Health is membership of a \emph{coherent set} $\Coh$---the states in which the
+oscillator ensemble is internally phase-consistent---quantified by a scalar
+coherence $\ecoh\in[0,1]$ and a disease vector $\dvec$. A probe is
+\emph{diagnostically sufficient} for a region iff its state-to-reading map is
+injective down to the floor, in which case reading the probe pins the patient
+to one cell. No catalogue enters.
+\item \textbf{The trajectory certificate} (\Cref{sec:cascade}). Because a
+physiological response is itself a substrate, a probe can \emph{cascade}: a
+later product exists only if the earlier trajectory occurred as predicted, so
+the readout is a \emph{certificate} of a path, not a snapshot. A false account
+cannot forge it. The correct stopping rule is \emph{rigidity}: halt when every
+account other than the true one is refuted by some observed product it cannot
+explain.
+\item \textbf{Therapy as gap-closure} (\Cref{sec:therapy}). The therapeutic
+target is the vector from the localized state to the nearest coherent state.
+Treatment is the sparsest combination of characterised interventions---drawn
+from a basis indexed by \emph{effect}, not by indication---that drives that
+vector to the floor, solved as an $\ell_1$ program and executed as a
+contraction whose fixed point is coherence. The disease is never named.
+\item \textbf{Diagnosis and therapy are one} (\Cref{sec:unity}). Every
+characterised perturbation both measures and moves; the measure--act--remeasure
+loop needs no external monitor and halts precisely when the state is both
+coherent (gap below floor) and rigidly known (no rival account survives). This
+double condition is the operative definition of \emph{wellness}.
+\end{enumerate}
+
+\subsection{What the language contributes}
+
+On this foundation we build a full language, not a sketch. \Cref{sec:model}
+fixes the semantic model. \Cref{sec:floor,sec:coherence,sec:diagnosis,%
+sec:cascade,sec:therapy,sec:unity} prove the five facts and their supporting
+lemmas. \Cref{sec:runtime} states the one substantive demand on the runtime
+(that the forward model be \emph{derived}, not fitted) as a theorem about
+extrapolation, because the safety of \emph{in silico} experimentation reduces
+to it. \Cref{sec:lexical,sec:grammar} give the lexical and context-free
+grammar; \Cref{sec:types} the accountability type system with proofs;
+\Cref{sec:opsem} the small-step operational semantics with proofs of
+monotonicity, determinism, and scheduler soundness; \Cref{sec:stdlib} the
+standard library binding each verb to a semantic operation. \Cref{sec:examples}
+gives worked programs, \Cref{sec:complexity} the complexity of each judgment,
+\Cref{sec:validation} a constructive validation protocol requiring no clinical
+data, and \Cref{sec:impl} the reference execution model. \Cref{sec:related}
+situates the design; \Cref{sec:conclusion} concludes.
+
+\subsection{Method and standard of rigour}
+
+Every object below is a finite-dimensional dynamical system, a finite weighted
+structure, or a construction on one, and every claim is stated with its
+hypotheses and proved from them. Where a clinical reading is offered---``cell''
+as differential diagnosis, ``gap'' as therapeutic deficit, ``decline'' as an
+honest \emph{non liquet}---it is confined to a remark on which no theorem
+depends. The grammar, type system, and semantics are the language as a
+mathematical object; the present text, not any implementation, is normative.
+
+% =====================================================================
+\section{The Semantic Model}
+\label{sec:model}
+% =====================================================================
+
+\cf{cfc} is defined over a single mathematical object---the physiological
+state system---and three derived constructions: the coherence functional, the
+cell, and the gap. We fix these before any syntax.
+
+\subsection{The state system}
+
+\begin{definition}[Physiological state system]
+\label{def:system}
+A \emph{physiological state system} is a tuple
+$\Sigma=(\Man,F,\Probe,\Rd,\Dom)$ where:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item $\Man\subseteq\Rp^{\,n}$ is the \emph{state space}: a point $\st\in\Man$
+is a full description of the relevant physiology (metabolite concentrations,
+enzyme activities, channel conductances, oscillator phases) at an instant. The
+dimension $n$ is finite but may be large.
+\item $F\colon\Man\times\Probe\to\R^{n}$ is the \emph{dynamics}:
+$\dot\st=F(\st,\intv)$, with $\intv$ an input. $F$ is a kinetic law (mass
+action, Michaelis--Menten \citep{michaelis1913}, or any rate law fixed by
+chemistry) whose parameters are, by hypothesis (\Cref{sec:runtime}), fixed by
+physical constants rather than fitted.
+\item $\Probe$ is the \emph{perturbation space}: admissible inputs (compounds
+of known composition and their dosing profiles).
+\item $\Rd\colon\Man\to\mathcal{Y}$ is the \emph{readout map} into an
+observation space $\mathcal{Y}$: what an instrument reports of a state. The
+canonical readout is an abundance distribution over measurable species,
+$\Rd(\st)=(\text{abundance of species }s\text{ in state }\st)_{s}$.
+\item $\Dom$ is a finite \emph{oscillator index set}: the physiological
+subsystems (\Cref{sec:coherence}) whose phase-consistency defines health.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Probe; fate; trace]
+\label{def:probe}
+A \emph{probe} $\probe\in\Probe$ is a perturbation of \emph{known
+composition}: a compound (or timed sequence) whose molecular identity and
+quantity are exactly specified. Given a state $\st_0$, the \emph{fate} of
+$\probe$ is the trajectory $\st(t;\st_0,\probe)$ obtained by integrating
+$\dot\st=F(\st,\probe)$ from $\st_0$. The \emph{trace} is the time-indexed
+readout $\trace(\st_0,\probe)=(\Rd(\st(t;\st_0,\probe)))_{t\ge0}$; a single
+measurement returns the reading $\Rd(\st(t^{\ast}))$ at a read time
+$t^{\ast}$.
+\end{definition}
+
+\begin{remark}[A probe is a meal of known composition]
+\label{rem:meal}
+Nothing in \Cref{def:probe} requires a probe to be exotic or inert. Any
+administered substance perturbs $\Sigma$; a meal is such a perturbation of
+\emph{unknown} composition, hence of unpredictable fate. A probe is a
+perturbation of the same physical class whose composition is known, and it is
+that knowledge---not inertness---that makes its fate a usable measurement. The
+perturbation is not a hazard to be avoided but the instrument itself. No
+theorem depends on this reading.
+\end{remark}
+
+\subsection{Two structural assumptions}
+
+We adopt two premises and carry them throughout. They are the only assumptions
+of the paper about the observer and the state; everything else is derived.
+
+\begin{assumption}[Finite resolution]
+\label{ass:finite}
+Any physical observer of $\Sigma$ has finite resolving power: there is a
+$\delta>0$ such that states within distance $\delta$ produce observationally
+indistinguishable readouts,
+$\dist(\st,\st')<\delta\Rightarrow\norm{\Rd(\st)-\Rd(\st')}$ below the
+instrument's discrimination threshold.
+\end{assumption}
+
+\begin{assumption}[Non-exhaustibility]
+\label{ass:nonexhaust}
+No finite battery of measurements exhausts the state: for every finite set of
+readouts there remains a distinction the system could exhibit that the battery
+does not resolve. Equivalently, at every scale there is a finer sub-state the
+current resolution collapses. This is an order condition on refinement (no
+terminal stage), not a claim of infinite dimension.
+\end{assumption}
+
+\begin{remark}[Why non-exhaustibility, not infinitude]
+\label{rem:why-nonexhaust}
+\Cref{ass:nonexhaust} is deliberately an order condition and not a cardinality
+claim. A living system is coupled to an environment, a history, and a
+regulatory context that no finite instrument battery closes off; there is
+always a further assay, a further time point, a further covariate. It is
+exactly the impossibility of \emph{finishing} the characterisation of a state
+against everything it is not that forces the positive floor of \Cref{sec:floor},
+and a completed totality is neither needed nor the right object.
+\end{remark}
+
+% =====================================================================
+\section{The Resolution Floor}
+\label{sec:floor}
+% =====================================================================
+
+The first quantitative fact is that resolution has a strictly positive floor,
+and that this floor is not a nuisance to be engineered away but the width of
+the region within which a state counts as determined. It is the reason a
+diagnosis is a region and not a point, and the reason \cf{cfc} returns a
+\cf{Cell} rather than a label.
+
+\begin{definition}[Separation and residue]
+\label{def:residue}
+For a state $\st$, its \emph{separation} $\sigma(\st)$ is the least
+observational effort---the discrimination distance in $\mathcal{Y}$ realised
+over admissible probes---required to distinguish $\st$ from every other state
+of $\Man$. The \emph{residue} $\Rd_{\ast}(\st)\ge0$ is the irreducible part of
+this separation that no admissible measurement removes; it is $0$ iff the
+distinction of $\st$ from the whole of $\Man$ is completed.
+\end{definition}
+
+\begin{theorem}[Floor Theorem]
+\label{thm:floor}
+Under \Cref{ass:finite,ass:nonexhaust} there is a constant $\flo>0$ such that
+$\Rd_{\ast}(\st)\ge\flo$ for every state $\st\in\Man$: no state is resolved to
+a point.
+\end{theorem}
+
+\begin{proof}
+Suppose some state $\st$ had zero residue, $\Rd_{\ast}(\st)=0$. By
+\Cref{def:residue} this means the distinction of $\st$ from every other state
+of $\Man$ is completed by a finite measurement---every state the system could
+exhibit has been brought to bear in separating $\st$ from it. But completing
+the comparison of $\st$ against all of $\Man\setminus\set{\st}$ exhausts the
+system's distinctions at a finite stage, contradicting non-exhaustibility
+(\Cref{ass:nonexhaust}). Hence $\Rd_{\ast}(\st)>0$ for every $\st$. Passing to
+the quotient of $\Man$ under indistinguishability (\Cref{ass:finite}, which
+identifies states closer than $\delta$), the strictly positive residues are
+bounded below by their infimum $\flo:=\inf_{\st}\Rd_{\ast}(\st)>0$: were the
+infimum $0$ there would be states of arbitrarily small residue, i.e.\ nearly
+completed comparisons, and each in the limit would finish the comparison and
+exhaust the system---the same contradiction. Thus $\flo>0$.
+\end{proof}
+
+\begin{corollary}[Solved is a cell]
+\label{cor:cell}
+The finest determination of a state is a \emph{cell} of diameter $\flo$: the
+set of states an ideal measurement cannot separate from the true one. ``The
+state'' is this cell, not its centre.
+\end{corollary}
+
+\begin{definition}[Cell]
+\label{def:cell}
+For $\st\in\Man$, the \emph{cell} of $\st$ is
+$\cell(\st):=\set{\st'\in\Man:\dist(\st,\st')<\flo}$, the ball of radius
+$\flo$ under the state metric. A subset $A\subseteq\Man$ is \emph{cell-tight}
+if $\diam(A)<\flo$, i.e.\ $A$ lies within a single cell.
+\end{definition}
+
+\begin{principle}[The target is the cell, not the point, and not a label]
+\label{prin:goal}
+Two consequences fix the whole language. \textbf{(a)}~Because the target is a
+cell, the diagnostic task is \emph{localization}---shrinking the admissible
+region to one cell-tight set---not \emph{recognition against a catalogue}.
+\textbf{(b)}~Because a cell is defined intrinsically (by indistinguishability),
+it needs no external library of named states to be identified: a diagnosis is
+complete without naming a disease. \cf{cfc}'s diagnostic output type is
+therefore \cf{Cell}, never a nosological label.
+\end{principle}
+
+\begin{remark}[What the Floor Theorem does and does not say]
+\label{rem:floor-scope}
+\Cref{thm:floor} does not assert that instruments are poor; it asserts that a
+genuinely non-exhaustible state cannot, even with an ideal instrument,
+terminate at a residue-free point. A ``perfect'' diagnosis---one returning a
+point---would require completing a comparison against a state that, by
+hypothesis, is never completed. \Cref{sec:diagnosis,sec:cascade} turn this into
+an honest stopping rule rather than a caveat.
+\end{remark}
+
+% =====================================================================
+\section{Coherence: The Geometry of Health}
+\label{sec:coherence}
+% =====================================================================
+
+Diagnosis needs a notion of \emph{where health is} in $\Man$ that does not
+appeal to a catalogue. We supply it through coherence: health is
+phase-consistency of the oscillator ensemble, a geometric property of the
+state, measured by a scalar in $[0,1]$ and refined into a vector over
+oscillator classes.
+
+\subsection{Oscillators and the coherence index}
+
+\begin{definition}[Oscillator; performance metric]
+\label{def:oscillator}
+An \emph{oscillator} $i\in\Dom$ is a physiological subsystem with a
+characteristic frequency and a scalar \emph{performance metric}
+$\Pi_i\colon\Man\to\R$ (a rate, amplitude, open probability, period stability,
+or the like) read from the state. Each oscillator carries an \emph{optimal}
+value $\Pi_i^{\mathrm{opt}}$ (performance at full phase-lock) and a
+\emph{degraded} value $\Pi_i^{\mathrm{deg}}$ (performance at zero phase-lock),
+with $\Pi_i^{\mathrm{opt}}\neq\Pi_i^{\mathrm{deg}}$.
+\end{definition}
+
+\begin{definition}[Coherence index]
+\label{def:coherence-index}
+The \emph{coherence index} of oscillator $i$ at state $\st$ is the clamped
+affine normalisation
+\begin{equation}
+\ecoh_i(\st)\;=\;\operatorname{clip}_{[0,1]}\!
+\left(\frac{\Pi_i(\st)-\Pi_i^{\mathrm{deg}}}
+           {\Pi_i^{\mathrm{opt}}-\Pi_i^{\mathrm{deg}}}\right),
+\qquad
+\operatorname{clip}_{[0,1]}(z)=\max(0,\min(1,z)),
+\label{eq:coherence}
+\end{equation}
+so $\ecoh_i(\st)=1$ at optimal performance and $\ecoh_i(\st)=0$ at degraded
+performance, monotone in $\Pi_i$ between them.
+\end{definition}
+
+\begin{proposition}[Uniqueness of the coherence normalisation]
+\label{prop:coherence-unique}
+Among affine maps $\R\to[0,1]$ carrying $\Pi_i^{\mathrm{deg}}\mapsto0$ and
+$\Pi_i^{\mathrm{opt}}\mapsto1$, \eqref{eq:coherence} is the unique one, and its
+clamp is the unique extension to all of $\R$ that is monotone, idempotent on
+$[0,1]$, and constant outside.
+\end{proposition}
+
+\begin{proof}
+An affine map $z\mapsto az+b$ with two prescribed value pairs has $a,b$
+determined uniquely by solving the two linear equations, giving the ratio in
+\eqref{eq:coherence}. Extending to $\R$ while keeping the image in $[0,1]$,
+monotone, and equal to the affine map on the pre-image of $[0,1]$ forces the
+value $0$ below and $1$ above, which is exactly $\operatorname{clip}_{[0,1]}$.
+\end{proof}
+
+\begin{definition}[Weighted cellular coherence]
+\label{def:cell-coherence}
+Given nonnegative weights $\set{w_i}_{i\in\Dom}$ with $W=\sum_i w_i>0$, the
+\emph{cellular coherence} at state $\st$ is
+\begin{equation}
+\ecoh(\st)\;=\;\frac{1}{W}\sum_{i\in\Dom} w_i\,\ecoh_i(\st)\;\in[0,1].
+\label{eq:cell-coherence}
+\end{equation}
+The \emph{disease index} of oscillator $i$ is $D_i(\st)=1-\ecoh_i(\st)$, and
+the \emph{disease vector} is $\dvec(\st)=(D_i(\st))_{i\in\Dom}\in[0,1]^{|\Dom|}$.
+\end{definition}
+
+\begin{proposition}[Coherence bounds and severity]
+\label{prop:coherence-bounds}
+$\ecoh(\st)\in[0,1]$ for every $\st$, and the total severity
+$1-\ecoh(\st)=\tfrac1W\sum_i w_i D_i(\st)$ is the weighted mean disease index.
+Both are computable in $\mathcal{O}(|\Dom|)$ from the metrics
+$\set{\Pi_i(\st)}$.
+\end{proposition}
+
+\begin{proof}
+Each $\ecoh_i(\st)\in[0,1]$ by the clamp; a weighted average of numbers in
+$[0,1]$ with positive weights lies in $[0,1]$. The severity identity is
+immediate from $D_i=1-\ecoh_i$ and linearity. Each $\ecoh_i$ is
+$\mathcal{O}(1)$; summing over $\Dom$ is $\mathcal{O}(|\Dom|)$.
+\end{proof}
+
+\subsection{The coherent set}
+
+\begin{definition}[Coherent set; health]
+\label{def:coherent}
+Fix a coherence threshold $\theta\in(0,1]$. The \emph{coherent set} is
+\begin{equation}
+\Coh_\theta\;=\;\set{\st\in\Man:\ecoh_i(\st)\ge\theta\ \text{for all }i\in\Dom},
+\label{eq:coherent}
+\end{equation}
+the states in which every oscillator is within tolerance of phase-lock. A
+state is \emph{healthy} iff it lies in $\Coh_\theta$. Where the threshold is
+fixed we write $\Coh$.
+\end{definition}
+
+\begin{remark}[Health is a region, not a catalogue complement]
+\label{rem:health-region}
+$\Coh$ is defined \emph{intrinsically}, by an inequality on the state's own
+oscillator metrics, with no reference to any list of diseases. Disease is then
+simply $\Man\setminus\Coh$: the states failing coherence. This is the geometric
+content of ``disease is loss of phase-consistency,'' and it is what lets
+diagnosis proceed by localization against $\Coh$ rather than by matching
+against named entries. No theorem depends on any clinical reading of the word
+``healthy.''
+\end{remark}
+
+\begin{lemma}[Coherence is Lipschitz where the metrics are]
+\label{lem:coherence-lipschitz}
+If each $\Pi_i$ is $L_i$-Lipschitz on $\Man$, then $\ecoh$ is
+$L$-Lipschitz with
+$L=\tfrac1W\sum_i w_i L_i/\abs{\Pi_i^{\mathrm{opt}}-\Pi_i^{\mathrm{deg}}}$, and
+each cell $\cell(\st)$ has coherence variation at most $L\flo$.
+\end{lemma}
+
+\begin{proof}
+The clamp is $1$-Lipschitz and the affine map has slope
+$1/\abs{\Pi_i^{\mathrm{opt}}-\Pi_i^{\mathrm{deg}}}$, so
+$\ecoh_i$ is $(L_i/\abs{\Pi_i^{\mathrm{opt}}-\Pi_i^{\mathrm{deg}}})$-Lipschitz;
+the weighted average is $L$-Lipschitz by the triangle inequality. Over a cell
+of diameter $\flo$ the coherence changes by at most $L\flo$.
+\end{proof}
+
+% =====================================================================
+\section{Diagnosis as Localization}
+\label{sec:diagnosis}
+% =====================================================================
+
+We now make precise the sense in which a probe's reading \emph{locates} the
+patient, and the exact condition under which a probe is diagnostically
+sufficient. Diagnosis is the shrinking of an admissible region to one cell; it
+succeeds when the map from state to reading loses no information above the
+floor.
+
+\begin{definition}[State-resolved forward model]
+\label{def:stateresolved}
+A forward model of $\Sigma$ is \emph{state-resolved} if it predicts the trace
+$\trace(\st_0,\probe)$ as a function of the initial state $\st_0$ over all of
+$\Man$, not merely at a reference $\st^{\mathrm{ref}}$. Write
+$\fwd_\probe\colon\Man\to\mathcal{Y}$,
+$\fwd_\probe(\st_0)=\Rd(\st(t^{\ast};\st_0,\probe))$, for the predicted reading
+map of probe $\probe$ at read time $t^{\ast}$.
+\end{definition}
+
+\begin{remark}[Why a reference-only model is insufficient]
+\label{rem:reference}
+A model valid only at $\st^{\mathrm{ref}}$ predicts one reading; a measured
+deviation certifies only \emph{that} the patient differs, not \emph{how}.
+Inversion---reading the state off the reading---requires the reading to vary
+with the state, i.e.\ $\fwd_\probe$ as a genuine map of $\st_0$. This is the
+crux of localization and the sole substantive demand the method places on the
+model (discharged in \Cref{sec:runtime}).
+\end{remark}
+
+\begin{definition}[Localization map]
+\label{def:loc}
+Given probe $\probe$ and a measured reading $y\in\mathcal{Y}$ at time
+$t^{\ast}$, the \emph{localization} induced by $\probe$ is the preimage
+\begin{equation}
+\loc_\probe(y)\;=\;\set{\st_0\in\Man:\norm{\fwd_\probe(\st_0)-y}<\delta},
+\label{eq:loc}
+\end{equation}
+the set of states whose predicted reading matches the measurement to within the
+resolution $\delta$ (\Cref{ass:finite}). Reading the probe replaces the prior
+admissible region $A$ by $A\cap\loc_\probe(y)$.
+\end{definition}
+
+\begin{theorem}[Localization Theorem / diagnostic sufficiency]
+\label{thm:localization}
+A probe $\probe$ is \emph{diagnostically sufficient} for a region
+$A\subseteq\Man$ if and only if its reading map restricted to $A$ is injective
+down to the floor: for all $\st_0,\st_0'\in A$,
+\begin{equation}
+\norm{\fwd_\probe(\st_0)-\fwd_\probe(\st_0')}<\delta
+\;\Longrightarrow\;\dist(\st_0,\st_0')<\flo.
+\label{eq:floor-injective}
+\end{equation}
+Under this condition, for every measurement $y$ the localization
+$\loc_\probe(y)\cap A$ is cell-tight, so the probe pins the state to one cell.
+Conversely, if \eqref{eq:floor-injective} fails, there are two states at
+distance $\ge\flo$ producing the same reading within $\delta$, and no single
+reading of $\probe$ separates their cells.
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$) Assume \eqref{eq:floor-injective}. Take
+$\st_0,\st_0'\in\loc_\probe(y)\cap A$. Then
+$\norm{\fwd_\probe(\st_0)-y}<\delta$ and $\norm{\fwd_\probe(\st_0')-y}<\delta$,
+so $\norm{\fwd_\probe(\st_0)-\fwd_\probe(\st_0')}<2\delta$; applying
+\eqref{eq:floor-injective} with the instrument threshold set at $2\delta$ (or,
+equivalently, absorbing the factor into $\delta$, as \Cref{ass:finite}
+tolerates a single fixed discrimination scale) yields
+$\dist(\st_0,\st_0')<\flo$. Hence any two states in the localization are within
+$\flo$, so $\diam(\loc_\probe(y)\cap A)<\flo$: the set is cell-tight.
+($\Rightarrow$) Suppose \eqref{eq:floor-injective} fails: there exist
+$\st_0,\st_0'\in A$ with
+$\norm{\fwd_\probe(\st_0)-\fwd_\probe(\st_0')}<\delta$ yet
+$\dist(\st_0,\st_0')\ge\flo$. Set $y=\fwd_\probe(\st_0)$. Then both states lie
+in $\loc_\probe(y)$ (the second because its reading is within $\delta$ of $y$),
+so the localization contains two points at distance $\ge\flo$, meeting two
+distinct cells; no single reading distinguishes them, and $\probe$ is
+insufficient for $A$.
+\end{proof}
+
+\begin{corollary}[Probe design is an injectivity problem]
+\label{cor:design}
+Designing a diagnostic probe (or panel, \Cref{sec:cascade}) for a region $A$ is
+choosing a probe whose reading map is floor-injective on $A$. Diagnosis is then
+evaluation of $\loc_\probe$ at the measured reading. No disease library enters;
+the output is the cell (\Cref{prin:goal}).
+\end{corollary}
+
+\begin{corollary}[Coherence is read from the cell]
+\label{cor:coherence-from-cell}
+If $\probe$ is diagnostically sufficient for $A$ and each metric $\Pi_i$ is
+$L_i$-Lipschitz, then reading $\probe$ determines every coherence index
+$\ecoh_i$ and hence the disease vector $\dvec$ to within $L_i\flo$
+(\Cref{lem:coherence-lipschitz}): the localized cell fixes the health geometry
+up to the floor.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:localization} the localization is cell-tight, of diameter $<\flo$;
+by \Cref{lem:coherence-lipschitz} each $\ecoh_i$ varies by at most $L_i\flo$
+over a cell, so its value is fixed to that tolerance, and $\dvec$ with it.
+\end{proof}
+
+% =====================================================================
+\section{Cascading Probes and the Trajectory Certificate}
+\label{sec:cascade}
+% =====================================================================
+
+A single reading of a single probe may fail to be floor-injective; more
+information is needed. Rather than administer many independent probes, we
+exploit that each physiological product is itself a reactive species, so a
+probe can generate its own successors---a \emph{cascade}---whose structure
+yields both richer localization and a strong non-forgeability property that a
+mere agreement of magnitudes cannot provide.
+
+\begin{definition}[Cascade probe; panel]
+\label{def:cascade}
+A \emph{cascade probe} is a probe $\probe$ whose fate passes through a designed
+sequence of species $\probe=P_0\to P_1\to P_2\to\cdots$, where each $P_{k+1}$
+is a product of a reaction consuming $P_k$, and each transition $P_k\to
+P_{k+1}$ is \emph{state-gated}: whether $P_{k+1}$ forms in observable quantity
+within the read window depends on the state $\st$. A \emph{panel} is a finite
+family of probes (cascade or single) read together.
+\end{definition}
+
+\begin{definition}[Traversed path; committed record]
+\label{def:trajectory}
+The \emph{traversed path} of a cascade in state $\st_0$ is the maximal prefix
+$P_0\to\cdots\to P_{d(\st_0)}$ of state-gated transitions proceeding to
+observable extent; $d(\st_0)$ is the \emph{depth}. Because each transition
+consumes its predecessor and produces its successor, the species population is
+a \emph{monotone committed record}: a later species' presence is not undone by
+subsequent dynamics on the read timescale, so the reading reports the path, not
+only the instantaneous state.
+\end{definition}
+
+\begin{theorem}[Certificate Theorem]
+\label{thm:certificate}
+Let $P_k$ be a species that forms in observable quantity only if every
+transition $P_0\to\cdots\to P_k$ has occurred. Then observation of $P_k$
+\emph{entails} that the state $\st_0$ enables the whole path: the set of states
+consistent with the reading is contained in
+\begin{equation}
+\bigcap_{j\le k}\set{\st:\text{transition }j\text{ is state-enabled at }\st}.
+\label{eq:consistent-set}
+\end{equation}
+Consequently, a hypothesised state $\hat\st$ that fails to enable some
+transition $j\le k$ is \emph{refuted} by the presence of $P_k$: no such
+$\hat\st$ can reproduce the reading.
+\end{theorem}
+
+\begin{proof}
+The forward implication is the existence condition of \Cref{def:cascade}:
+$P_k$ observable $\Rightarrow$ each prior transition proceeded $\Rightarrow$
+each prior transition was state-enabled at $\st_0$. Hence the consistent-state
+set is the intersection of the enabling sets of transitions $1,\dots,k$, which
+is \eqref{eq:consistent-set}. If $\hat\st$ lies outside the enabling set of
+some $j\le k$, then at $\hat\st$ transition $j$ does not proceed, so $P_j$---and
+therefore $P_k$, which requires $P_j$---is absent; observing $P_k$ contradicts
+$\hat\st$.
+\end{proof}
+
+\begin{principle}[Existence beats consistency]
+\label{prin:existence}
+\Cref{thm:certificate} is a stronger epistemic guarantee than agreement of
+magnitudes. A consistency check asks whether a hypothesis \emph{matches}
+observed values; it can be satisfied by a well-chosen falsehood. A cascade
+reading asks whether the observed species \emph{could have formed}; a falsehood
+failing to enable a transition does not merely mismatch a number---it predicts
+a species that is \emph{absent}, and absence cannot be argued around. The
+terminal products are a constructive proof of their own prerequisites.
+\end{principle}
+
+\begin{theorem}[Rigidity: the correct halting criterion]
+\label{thm:rigidity}
+Let a panel yield observed species $S=\set{P_k}$, and define the
+\emph{surviving set}
+\begin{equation}
+\Man_S\;=\;\bigcap_{P_k\in S}\set{\st:\text{the path to }P_k\text{ is enabled at }\st}.
+\label{eq:surviving}
+\end{equation}
+Then $\Man_S$ is non-increasing as $S$ grows, and the state is
+\emph{sufficiently localized} exactly when $\Man_S$ is cell-tight
+($\diam(\Man_S)<\flo$): every account of the state outside a single cell is
+refuted by the absence it would predict of some observed species. This is a
+\emph{rigidity} condition---no alternative account survives---not a threshold on
+any scalar.
+\end{theorem}
+
+\begin{proof}
+Each observed species adds a constraint $\set{\st:\text{its path enabled}}$;
+$\Man_S$ is the intersection of these constraints, and an intersection is
+non-increasing under the addition of sets, so $\Man_S$ shrinks (weakly) as $S$
+grows. When $\diam(\Man_S)<\flo$, $\Man_S$ lies within one cell
+(\Cref{cor:cell}); any $\st$ outside that cell violates at least one constraint,
+i.e.\ predicts some observed $P_k$ absent, and is refuted by
+\Cref{thm:certificate}. Conversely, if $\diam(\Man_S)\ge\flo$, two states in
+$\Man_S$ occupy distinct cells and both reproduce the reading, so the state is
+not localized. Sufficiency is therefore exactly cell-tightness.
+\end{proof}
+
+\begin{corollary}[Single-measurement richness]
+\label{cor:single}
+A readout returning the full species distribution---the whole population of
+cascade products present, not one terminal product---delivers the entire
+constraint family $S$ in one measurement, hence $\Man_S$ in one shot. The
+instrument's report \emph{is} the committed record of the traversed path.
+\end{corollary}
+
+\begin{remark}[A continuously working probe]
+\label{rem:continuous}
+Because a cascade is self-propagating and its record monotone, a single
+administration installs a process that keeps advancing and recording after
+administration. The state is therefore readable at any later time by any
+observer with the instrument: the probe does not deliver a value once and
+expire; it remains a live, queryable source until the cascade completes.
+``Continuous'' is here a property of the probe---always working---not of the
+measurement schedule. No theorem depends on this reading.
+\end{remark}
+
+% =====================================================================
+\section{Therapy as Gap-Closure Without a Named Disease}
+\label{sec:therapy}
+% =====================================================================
+
+We now define treatment purely in terms of the localized state and coherence,
+with no reference to a disease label. Therapy closes the measured gap to the
+coherent set by the sparsest characterised interventions, executed as a
+contraction.
+
+\begin{definition}[Gap]
+\label{def:gap}
+For a localized state $\st$, the \emph{gap} is the displacement to the nearest
+coherent state,
+\begin{equation}
+\gap(\st)\;=\;\coh-\st,\qquad\coh=\argmin_{z\in\Coh}\dist(\st,z),
+\label{eq:gap}
+\end{equation}
+a measured vector defined without naming what caused the deviation. (If the
+minimiser is non-unique, fix any measurable selection; no theorem depends on
+the choice.)
+\end{definition}
+
+\begin{definition}[Intervention basis]
+\label{def:basis}
+An \emph{intervention basis} $\basis=\set{\intv_1,\dots,\intv_m}$ is a
+collection of characterised compounds, each with a known state-resolved effect:
+applying $\intv_i$ at state $\st$ produces a local displacement
+$e_i(\st)\in\R^n$, the compound's effect at the current state computed by the
+forward model. Compounds are indexed by their displacement vectors
+(\emph{properties}), not by indication.
+\end{definition}
+
+\begin{remark}[Repurposing is the default, not the exception]
+\label{rem:repurpose}
+Because a compound enters therapy through its displacement $e_i(\st)$ and not
+through any indication, any compound whose displacement has a component along
+the gap is admissible for any patient. The distinction
+``on-label / off-label'' does not arise: there are no labels, only properties
+and gaps, and the pharmacopeia is addressable by its effects
+\citep{pushpakom2019drug}. No theorem depends on this reading.
+\end{remark}
+
+\begin{problem}[Minimal gap-closing intervention]
+\label{prob:closure}
+Given a localized state $\st$ with gap $\gap(\st)$ and basis $\basis$, choose
+nonnegative doses $\dose\in\Rp^{m}$ to close the gap with the fewest compounds:
+\begin{equation}
+\min_{\dose\in\Rp^{m}}\ \norm{\dose}_1
+\quad\text{s.t.}\quad
+\Bigl\lVert\gap(\st)-\textstyle\sum_i \dose_i\,e_i(\st)\Bigr\rVert\le\flo.
+\label{eq:closure}
+\end{equation}
+The $\ell_1$ objective selects a sparse intervention set; the constraint
+requires the combined local displacement to close the gap to within the floor.
+\end{problem}
+
+\begin{proposition}[Well-posedness and sparsity]
+\label{prop:closure-wellposed}
+\Cref{prob:closure} is a convex program; it is feasible iff $\gap(\st)$ lies
+within $\flo$ of the cone $\operatorname{cone}\set{e_i(\st)}$, and when feasible
+it attains a minimiser. If the vectors $\set{e_i(\st)}$ are in general position,
+a minimiser is supported on at most $n$ compounds.
+\end{proposition}
+
+\begin{proof}
+The objective $\norm{\dose}_1$ is convex and the constraint set
+$\set{\dose\ge0:\norm{\gap-\sum_i \dose_i e_i}\le\flo}$ is the intersection of
+the nonnegative orthant with the preimage of a closed ball under an affine map,
+hence closed and convex; the problem is convex
+\citep{boyd2004convex}. Feasibility is exactly the stated cone condition by
+definition of the constraint. On the feasible set the objective is coercive on
+the orthant (grows with $\norm{\dose}_1$) and continuous, and the feasible set
+is closed, so a minimiser is attained. Sparsity: the feasible set is a
+polyhedron intersected with a ball; by the representation of basic feasible
+solutions of the linear relaxation, and the sparsity-inducing geometry of the
+$\ell_1$ ball \citep{tibshirani1996lasso,candes2006robust}, a minimiser lies on
+a face of dimension $\le n$, so at most $n$ doses are nonzero when the
+$e_i(\st)$ are in general position.
+\end{proof}
+
+The local displacements $e_i(\st)$ are exact only at $\st$; applying the doses
+moves the state, after which the displacements change. Therapy is therefore
+iterative.
+
+\begin{definition}[Therapeutic map; contraction]
+\label{def:contraction}
+Let $T\colon\Man\to\Man$ send a state to the state resulting from localizing
+it (\Cref{sec:diagnosis}), solving \Cref{prob:closure}, and applying the chosen
+intervention. $T$ is a \emph{gap contraction} on a neighbourhood $U$ of $\Coh$
+if there is $\lambda\in[0,1)$ with $\dist(T\st,\Coh)\le\lambda\,\dist(\st,\Coh)$
+for all $\st\in U$.
+\end{definition}
+
+\begin{theorem}[Convergence to coherence]
+\label{thm:convergence}
+If $T$ is a gap contraction on $U$ with modulus $\lambda$, then iterating $T$
+from any $\st_0\in U$ drives the state to the coherent set: the sequence
+$\st_{k+1}=T\st_k$ satisfies
+$\dist(\st_k,\Coh)\le\lambda^{k}\dist(\st_0,\Coh)\to0$, and reaches
+$\dist(\st_k,\Coh)\le\flo$ after at most
+$k^{\ast}=\bigl\lceil\log_{1/\lambda}(\dist(\st_0,\Coh)/\flo)\bigr\rceil$
+steps, at which point the floor forbids further resolvable contraction. No
+global linearity of drug effects is required---only that each measured,
+locally-composed step contracts the gap.
+\end{theorem}
+
+\begin{proof}
+By the contraction inequality and induction,
+$\dist(\st_k,\Coh)\le\lambda^{k}\dist(\st_0,\Coh)$; since $\lambda\in[0,1)$ this
+tends to $0$. Solving $\lambda^{k}\dist(\st_0,\Coh)\le\flo$ for $k$ gives
+$k\ge\log_{1/\lambda}(\dist(\st_0,\Coh)/\flo)$, i.e.\ the stated $k^{\ast}$.
+Below $\flo$ the states are indistinguishable (\Cref{ass:finite}), so no
+further contraction is resolvable and the iteration halts. This is the standard
+fixed-point iteration of a contraction \citep{banach1922}, specialised to
+distance-to-a-set with the floor as halting threshold.
+\end{proof}
+
+\begin{principle}[Cure without naming]
+\label{prin:cure}
+\Cref{thm:convergence} restores coherence---closes the gap---without ever
+identifying a disease. The therapeutic objective is the measured residual gap,
+and success is its reduction to the floor. Naming, if desired, is a downstream
+description of which cell the state occupied; it is never a prerequisite for
+treatment.
+\end{principle}
+
+% =====================================================================
+\section{Diagnosis and Therapy Are One Operation}
+\label{sec:unity}
+% =====================================================================
+
+The measurement primitive and the therapeutic primitive are the same object
+read in two directions. This is what lets \cf{cfc} expose a single verb for
+both and makes the treatment loop self-monitoring.
+
+\begin{theorem}[Measurement--action identity]
+\label{thm:unity}
+Every characterised perturbation $\intv\in\Probe$ acts simultaneously as a
+measurement and as an intervention:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em,itemsep=2pt]
+\item as a \emph{measurement}, its trace $\trace(\st,\intv)$ localizes the
+state (\Cref{thm:localization});
+\item as an \emph{intervention}, its displacement moves the state
+(\Cref{def:basis});
+\end{enumerate}
+and these are not two applications but one: applying $\intv$ yields a trace
+(information) \emph{by} moving the state (action). A probe is a compound read
+for its fate; a drug is a compound applied for its displacement; they are the
+same primitive, and each does both.
+\end{theorem}
+
+\begin{proof}
+A perturbation induces a single trajectory (\Cref{def:probe}). Its readout is
+the measurement (i); its endpoint is the action (ii). Both are functions of the
+one applied $\intv$: the map $\intv\mapsto(\text{trace},\text{displacement})$
+has one input and two outputs computed from the same induced trajectory.
+\end{proof}
+
+\begin{corollary}[Self-terminating therapeutic loop]
+\label{cor:loop}
+Because the therapeutic step is also a measurement, the contraction of
+\Cref{sec:therapy} needs no external monitor: each applied intervention
+re-localizes the state as a side effect of acting. The loop
+measure--act--remeasure is a single iterated perturbation, and it halts by the
+rigidity criterion (\Cref{thm:rigidity})---when the accumulated record
+over-determines the state to within the floor---which is simultaneously the
+diagnostic sufficiency condition and the therapeutic success condition.
+\end{corollary}
+
+\begin{theorem}[Wellness Theorem]
+\label{thm:wellness}
+Combining \Cref{thm:rigidity,thm:convergence}, the terminal condition of the
+\cf{cfc} loop is a state that is both \emph{coherent} (its gap is below the
+floor) and \emph{rigidly known} (no alternative account survives its own
+probes). This double condition---and only it---is the operative definition of
+wellness in the calculus: a well system returns its probes at full resolution
+and admits no gap-closing intervention beyond the floor.
+\end{theorem}
+
+\begin{proof}
+Termination of the loop requires both sub-conditions. If the gap exceeds the
+floor, \Cref{thm:convergence} supplies a further contracting step, so the loop
+continues; hence at termination $\dist(\st,\Coh)\le\flo$ (coherent). If more
+than one cell survives, \Cref{thm:rigidity} shows a further probe can refute a
+rival account, so the loop continues; hence at termination the surviving set is
+cell-tight (rigidly known). Conversely, when both hold, no probe changes the
+localized cell and no intervention resolvably reduces the gap, so the loop is at
+a fixed point. The two conditions are thus jointly necessary and sufficient for
+termination.
+\end{proof}
+
+\begin{remark}[Concern as the negation of wellness]
+\label{rem:concern}
+The language's name is the negation of \Cref{thm:wellness}: a
+\emph{cause for concern} is any surviving cell whose coherence falls below
+threshold, i.e.\ any $\st$ in the localized set with $\ecoh(\st)<\theta$. A
+\cf{cfc} program's \cf{concern} value carries exactly this---the localized
+cell together with its coherence deficit and disease vector---never a disease
+name. No theorem depends on the reading.
+\end{remark}
+
+% =====================================================================
+\section{The Runtime Must Be Derived, Not Fitted}
+\label{sec:runtime}
+% =====================================================================
+
+Every construction above presupposes a state-resolved forward model
+(\Cref{def:stateresolved}). We now state the one condition this model must
+meet, as a theorem about extrapolation, because the safety of \emph{in silico}
+experimentation---the whole point of running a therapy search against a model
+before touching a patient---reduces to it.
+
+\begin{definition}[Fitted vs.\ derived model]
+\label{def:fitvsder}
+A forward model is \emph{fitted} if its rate parameters are estimated to
+minimise error against observations drawn from a training region
+$A_{\mathrm{tr}}\subseteq\Man$. It is \emph{derived} if its rate laws and their
+parameters are fixed by physical law (thermodynamic and kinetic constants,
+conservation constraints) independently of any observation region
+\citep{palsson2015systems,orth2010fba}.
+\end{definition}
+
+\begin{theorem}[Extrapolation gap of fitted models]
+\label{thm:extrap}
+A fitted model carries no guarantee of accuracy outside $A_{\mathrm{tr}}$:
+there exist state systems agreeing with the training data on $A_{\mathrm{tr}}$
+to any tolerance yet disagreeing arbitrarily on $\Man\setminus A_{\mathrm{tr}}$.
+Consequently a fitted model's reading map $\fwd_\probe$ is trustworthy only
+near $A_{\mathrm{tr}}$, whereas a derived model, whose $F$ is fixed pointwise on
+$\Man$ by law, admits a uniform error bound over $\Man$.
+\end{theorem}
+
+\begin{proof}
+Standard non-identifiability. The training data constrain $F$ only on
+$A_{\mathrm{tr}}$: any extension of $F$ agreeing there is admissible, and two
+admissible extensions may be chosen to diverge by any prescribed amount off
+$A_{\mathrm{tr}}$ (add to one a smooth bump supported in
+$\Man\setminus A_{\mathrm{tr}}$ of arbitrary height). Hence the fitted
+$\fwd_\probe$, obtained by integrating $F$, is pinned only near
+$A_{\mathrm{tr}}$. A derived $F$ is not an extension chosen to fit but a
+function specified on all of $\Man$ by its physical form, so its accuracy is
+governed by the fidelity of the physical law, uniformly, not by proximity to
+data.
+\end{proof}
+
+\begin{principle}[Free exploration requires a derived runtime]
+\label{prin:derived}
+The value of \cf{cfc} is that a clinician may experiment freely against the
+model---searching the intervention basis, testing cascades, exploring the
+gap---at no risk to the patient, applying to the patient only the intervention
+the search selects. But free exploration \emph{is} off-training-region
+evaluation by definition. By \Cref{thm:extrap} a fitted runtime becomes
+unreliable exactly where the search explores; only a derived runtime supports
+risk-free \emph{in silico} search. The requirement is not stylistic: the safety
+of the method reduces to the extrapolation validity of the runtime. A \cf{cfc}
+runtime is \emph{sound} only if its forward model is derived
+(\Cref{def:soundness}).
+\end{principle}
+
+% =====================================================================
+\section{Lexical Structure}
+\label{sec:lexical}
+% =====================================================================
+
+A \cf{cfc} source file is UTF-8 text with extension \cf{.cfc}. Lexing produces
+a token stream from the classes below; tokenisation follows maximal munch, with
+keywords taking priority over identifiers \citep{hopcroft2006automata}.
+
+\begin{definition}[Token classes]
+\label{def:tokens}
+\leavevmode
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item \textbf{Comments.} \cf{--} to end of line; discarded, lexically
+equivalent to whitespace.
+\item \textbf{Keywords.} \cf{floor}, \cf{patient}, \cf{probe}, \cf{panel},
+\cf{measure}, \cf{localize}, \cf{cell}, \cf{gap}, \cf{close}, \cf{toward},
+\cf{coherent}, \cf{using}, \cf{basis}, \cf{until}, \cf{resolved},
+\cf{contested}, \cf{decline}, \cf{concern}, \cf{when}, \cf{emit}, \cf{assert},
+\cf{yield}, \cf{let}, \cf{in}, \cf{as}, \cf{with}, \cf{import}, \cf{module},
+\cf{export}, \cf{monitor}, \cf{every}, \cf{observe}, \cf{against},
+\cf{reference}.
+\item \textbf{Identifiers.} \cf{[A-Za-z\_][A-Za-z0-9\_]*}, excluding keywords.
+\item \textbf{Numbers.} decimal integers and floats with optional exponent and
+optional floor annotation (\Cref{not:floor-literal}).
+\item \textbf{Strings.} double-quoted, with the usual escapes.
+\item \textbf{Operators and punctuation.} \cf{:=} (bind), \cf{>>} (cascade,
+sequential composition of probe stages), \cf{||} (parallel panel dispatch),
+\cf{( ) \{ \} [ ] , : . > < >= <= ==} and the field-access operator \cf{.}\ .
+\end{itemize}
+Whitespace is insignificant except as a token separator; \cf{cfc} is not
+layout-sensitive.
+\end{definition}
+
+\begin{notation}[Floor-annotated literals]
+\label{not:floor-literal}
+A numeric literal may carry an explicit floor annotation with the suffix form
+\cf{value\#floor} (read ``value at floor''); e.g.\ \cf{0.82\#1e-3}. A literal
+without an explicit floor inherits the ambient program floor set by the most
+recent \cf{floor} declaration in scope. There is no way to write a literal of
+zero floor (\Cref{thm:no-zero}).
+\end{notation}
+
+% =====================================================================
+\section{Context-Free Grammar}
+\label{sec:grammar}
+% =====================================================================
+
+We give the grammar in extended Backus--Naur form
+\citep{backus1959,naur1963,aho2006compilers}. Nonterminals are
+\textit{italicised}; terminals are \cf{typewriter}; \cf{\{x\}} is zero-or-more
+repetition, \cf{[x]} optional, \cf{|} alternation. The start symbol is
+\textit{program}.
+
+\begin{definition}[\cf{cfc} grammar]
+\label{def:grammar}
+\begin{align*}
+\textit{program} &\bnf \{\textit{decl}\}\\[2pt]
+\textit{decl} &\bnf \textit{floorDecl}\alt\textit{import}\alt\textit{moduleDecl}
+   \alt\textit{basisDecl}\alt\textit{patientDecl}\\[2pt]
+\textit{floorDecl} &\bnf \cf{floor}\ \textit{number}\\
+\textit{import} &\bnf \cf{import}\ \textit{qname}\\
+\textit{moduleDecl} &\bnf \cf{module}\ \textit{ident}\ \cf{\{}\ \{\textit{decl}\}\ \cf{\}}\\[2pt]
+\textit{basisDecl} &\bnf \cf{basis}\ \textit{ident}\ \cf{\{}\ \{\textit{probeDef}\}\ \cf{\}}\\
+\textit{probeDef} &\bnf \cf{probe}\ \textit{ident}\ \cf{\{}\ \textit{spec}\ \cf{\}}\\
+\textit{spec} &\bnf \cf{reference}\cf{:}\ \textit{expr}\ \cf{observe}\cf{:}\ \textit{stageChain}\\[2pt]
+\textit{patientDecl} &\bnf \cf{patient}\ \textit{ident}\ \cf{\{}\ \{\textit{stmt}\}\ \cf{\}}\\[2pt]
+\textit{stmt} &\bnf \textit{bind}\alt\textit{measureStmt}\alt\textit{diagnoseStmt}
+   \alt\textit{treatStmt}\\
+  &\alt\textit{monitorStmt}\alt\textit{assertStmt}\alt\textit{expr}\\[2pt]
+\textit{bind} &\bnf [\cf{let}]\ \textit{ident}\ \cf{:=}\ \textit{expr}\\[2pt]
+\textit{measureStmt} &\bnf \cf{measure}\ \textit{panelRef}\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{diagnoseStmt} &\bnf \cf{localize}\ \textit{ident}\\
+  &\quad \cf{using}\ \textit{panelRef}\\
+  &\quad \cf{until}\ \textit{admit}\\
+  &\quad \cf{yield}\ \textit{ident}\\[2pt]
+\textit{treatStmt} &\bnf \cf{close}\ \cf{gap}\ \cf{of}\ \textit{ident}\\
+  &\quad \cf{toward}\ \cf{coherent}\\
+  &\quad \cf{using}\ \cf{basis}\ \textit{ident}\\
+  &\quad \cf{until}\ \textit{admit}\\
+  &\quad \cf{yield}\ \textit{ident}\\[2pt]
+\textit{monitorStmt} &\bnf \cf{monitor}\ \textit{ident}\ \cf{every}\ \textit{number}\ \cf{\{}\ \{\textit{stmt}\}\ \cf{\}}\\[2pt]
+\textit{admit} &\bnf \cf{resolved}\ [\cf{otherwise}\ \cf{decline}]\\
+  &\alt\cf{coherent}\ [\cf{otherwise}\ \cf{decline}]\\
+  &\alt\textit{cond}\\[2pt]
+\textit{panelRef} &\bnf \cf{panel}\ \cf{\{}\ \textit{stageChain}\ \cf{\}}\alt\textit{qname}\\
+\textit{stageChain} &\bnf \textit{probeRef}\ \{\cf{>>}\ \textit{probeRef}\}\\
+  &\alt\textit{stageChain}\ \cf{||}\ \textit{stageChain}\\
+\textit{probeRef} &\bnf \textit{qname}\ \cf{(}\ [\textit{argList}]\ \cf{)}\\[2pt]
+\textit{assertStmt} &\bnf \cf{assert}\ \textit{cond}\ [\cf{emit}\ \textit{string}]\\[2pt]
+\textit{cond} &\bnf \textit{expr}\ \textit{relop}\ \textit{expr}\\
+\textit{relop} &\bnf \cf{>}\alt\cf{<}\alt\cf{>=}\alt\cf{<=}\alt\cf{==}\\
+\textit{argList} &\bnf \textit{arg}\ \{\cf{,}\ \textit{arg}\}\\
+\textit{arg} &\bnf [\textit{ident}\ \cf{:}]\ \textit{expr}\\
+\textit{qname} &\bnf \textit{ident}\ \{\cf{.}\ \textit{ident}\}\\
+\textit{expr} &\bnf \textit{ident}\alt\textit{number}\alt\textit{string}
+   \alt\textit{probeRef}\alt\textit{expr}\cf{.}\textit{ident}\alt\cf{(}\ \textit{expr}\ \cf{)}\\
+\textit{type} &\bnf \cf{Cell}\alt\cf{Coherence}\alt\cf{DiseaseVector}\alt\cf{Gap}
+   \alt\cf{Probe}\alt\cf{Panel}\\
+  &\alt\cf{Intervention}\alt\cf{Reading}\alt\cf{Verdict}\alt\cf{Concern}
+\end{align*}
+\end{definition}
+
+\begin{remark}[Reading the core forms]
+\label{rem:core-forms}
+A \cf{cfc} program has three verbs, one per operational theorem.
+\cf{measure} administers a panel and binds its \cf{Reading}
+(\Cref{def:probe}). \cf{localize \ldots until resolved} runs the rigidity loop
+of \Cref{thm:rigidity}, binding a \cf{Cell}; its optional
+\cf{otherwise decline} names the contested-closure outcome
+(\Cref{thm:decline}). \cf{close gap \ldots toward coherent until coherent}
+runs the gap-closing contraction of \Cref{thm:convergence}, binding an
+\cf{Intervention}; \cf{coherent} means ``gap below the floor,'' not a numeric
+threshold. \cf{monitor \ldots every $\Delta t$} re-runs its body on a schedule,
+realising the continuously working probe of \Cref{rem:continuous}.
+\cf{assert} is a pre-flight check that may halt with a message.
+A \cf{patient} block is the unit of orchestration: a sequence of these
+statements whose yields may feed later ones.
+\end{remark}
+
+\begin{theorem}[Unambiguity of the core grammar]
+\label{thm:unambiguous}
+The grammar of \Cref{def:grammar} is unambiguous, and is $LL(1)$ after
+left-factoring the \textit{stmt} and \textit{admit} alternatives, each of which
+is selected by a distinct leading keyword.
+\end{theorem}
+
+\begin{proof}
+Every statement form begins with a distinct keyword (\cf{measure},
+\cf{localize}, \cf{close}, \cf{monitor}, \cf{assert}, \cf{let}) or is an
+\textit{expr}; the leading token thus selects the production, giving $LL(1)$
+selection with one token of lookahead. The \textit{admit} alternatives are
+distinguished by their leading keyword (\cf{resolved}, \cf{coherent}, or an
+\textit{expr} beginning a \textit{cond}). The optional
+\cf{otherwise decline} is bound to its enclosing \textit{admit} by the nearest
+enclosing rule, with no dangling ambiguity because each \textit{admit} occurs
+in exactly one statement. The expression grammar is a standard
+member/call-suffix cascade, unambiguous by the usual argument
+\citep{aho2006compilers}. Hence every sentential form has a unique derivation.
+\end{proof}
+
+% =====================================================================
+\section{The Accountability Type System}
+\label{sec:types}
+% =====================================================================
+
+\cf{cfc}'s types record \emph{what kind of clinical object} a value is and
+\emph{at what floor} it was determined. The system's purpose is to make two
+properties statically checkable: that no value claims a resolution finer than
+the floor (an accountability property), and that no therapy is declared
+\emph{cured} without a localized cell to have closed the gap of.
+
+\subsection{Types and judgements}
+
+\begin{definition}[Types]
+\label{def:types}
+The \cf{cfc} types are
+\[
+\tau \bnf \cf{Reading}\alt\cf{Cell}\alt\cf{Coherence}\alt\cf{DiseaseVector}
+   \alt\cf{Gap}\alt\cf{Probe}\alt\cf{Panel}\alt\cf{Intervention}
+   \alt\cf{Verdict}\alt\cf{Concern}.
+\]
+\cf{Reading} is a raw measured readout (\Cref{def:probe}); \cf{Cell} is a
+localized cell-tight region (\Cref{def:cell}); \cf{Coherence}\,$\in[0,1]$ and
+\cf{DiseaseVector}\,$\in[0,1]^{|\Dom|}$ are the health scalars/vectors
+(\Cref{def:cell-coherence}); \cf{Gap} is a measured displacement
+(\Cref{def:gap}); \cf{Intervention} is a chosen dose vector with its predicted
+displacement; \cf{Verdict} is the outcome of a rigidity or coherence admission
+(\cf{resolved}/\cf{contested}/\cf{coherent}); \cf{Concern} bundles a cell, its
+coherence, and its disease vector (\Cref{rem:concern}). Every value carries a
+\emph{floor annotation} $\flo(v)>0$ and, where it denotes a determined region,
+a \emph{residue} $\Rd_{\ast}(v)\ge\flo(v)$.
+\end{definition}
+
+\begin{definition}[Typing judgement]
+\label{def:judgement}
+A judgement $\Gamma\vdash e:\tau\,@\,\flo$ reads: ``in floor context $\Gamma$
+(fixing the ambient floor and the types of bound identifiers), expression $e$
+has type $\tau$ and, if it denotes a determined region, does so at floor
+$\flo>0$.'' The context carries the ambient floor set by the most recent
+\cf{floor} declaration and the types of bound identifiers.
+\end{definition}
+
+\subsection{The floor-positivity rule}
+
+\begin{rulename}[Floor positivity]
+\label{rule:positivity}
+Every value-introducing rule carries the side condition $\flo>0$ and, for a
+region-denoting value, $\Rd_{\ast}\ge\flo$. A literal or expression whose
+annotation forces $\flo\le0$ or $\Rd_{\ast}<\flo$ is ill-typed. In particular,
+\[
+\frac{\Gamma\vdash e:\cf{Panel}\quad\Gamma\vdash r:\cf{Reading}\quad\flo_\Gamma>0}
+     {\Gamma\vdash \cf{localize}\ \cdots\ \cf{using}\ e\ \cf{until}\ \cf{resolved}\ \cdots:\cf{Cell}\,@\,\flo_\Gamma}
+\]
+where $\flo_\Gamma$ is the ambient floor set by the most recent \cf{floor}
+declaration.
+\end{rulename}
+
+\begin{theorem}[No zero-residue value]
+\label{thm:no-zero}
+There is no well-typed \cf{cfc} expression of residue $0$: every typeable
+region-denoting value (a \cf{Cell}, \cf{Gap}, or \cf{Concern}) has
+$\Rd_{\ast}\ge\flo>0$. Equivalently, a point-resolved diagnosis is not
+expressible.
+\end{theorem}
+
+\begin{proof}
+By induction on typing derivations. The only region-introducing rules are the
+\cf{localize} rule (\Cref{rule:positivity}, side condition $\flo_\Gamma>0$,
+whose result carries residue $=\diam(\Man_S)$ which is $\ge\flo$ by
+\Cref{thm:rigidity} at admission), the \cf{close}/\cf{gap} rules (whose gap
+residue is the post-contraction distance, $\ge\flo$ by \Cref{thm:convergence}),
+and \cf{Concern} construction (which packages a \cf{Cell} and inherits its
+residue). Floor-annotated literals carry residue equal to their positive floor
+by \Cref{not:floor-literal}. No rule introduces a value of residue $<\flo$, and
+$\flo>0$ is a side condition on every floor introduction; no rule lowers the
+residue of an already-typed value. Hence no derivation concludes
+$\Rd_{\ast}=0$.
+\end{proof}
+
+\subsection{The cell-before-cure rule}
+
+\begin{rulename}[Cell before cure]
+\label{rule:cell-first}
+A \cf{close gap} statement type-checks only if its subject is a \cf{Cell}
+(a localized state), never a raw \cf{Reading} or unlocalized region:
+\[
+\frac{\Gamma\vdash x:\cf{Cell}\,@\,\flo\quad\Gamma\vdash b:\cf{Panel}\ \text{(basis)}}
+     {\Gamma\vdash \cf{close}\ \cf{gap}\ \cf{of}\ x\ \cf{toward}\ \cf{coherent}\ \cf{using}\ \cf{basis}\ b\ \cdots:\cf{Intervention}\,@\,\flo}
+\]
+A \cf{close} whose subject is not of type \cf{Cell} is rejected at compile time.
+\end{rulename}
+
+\begin{theorem}[No therapy without localization]
+\label{thm:no-blind-therapy}
+No well-typed \cf{cfc} program applies a gap-closing intervention to a state
+that has not first been localized to a cell. Equivalently, the gap
+$\gap(\st)$ of \Cref{def:gap} is well-defined at every typed \cf{close}, because
+$\st$ is a \cf{Cell}.
+\end{theorem}
+
+\begin{proof}
+By \Cref{rule:cell-first} the only rule producing an \cf{Intervention} from a
+\cf{close} requires its subject to have type \cf{Cell}. A \cf{Cell} is
+introduced only by the \cf{localize} rule (\Cref{rule:positivity}), which runs
+the rigidity loop to cell-tightness. Hence any typed \cf{close} acts on a
+localized cell, and $\gap$ (defined via the nearest coherent state to a state,
+\Cref{def:gap}) is well-defined on it. A \cf{close} on a \cf{Reading} or other
+non-\cf{Cell} value has no typing derivation.
+\end{proof}
+
+\begin{theorem}[Type soundness]
+\label{thm:soundness}
+\cf{cfc} typing is sound for the operational semantics of \Cref{sec:opsem}: if
+$\Gamma\vdash e:\tau\,@\,\flo$ and $e$ evaluates to a value $v$, then $v$ has
+type $\tau$, floor $\flo>0$, and (if $\tau$ is region-denoting) residue
+$\Rd_{\ast}(v)\ge\flo$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Standard syntactic soundness by progress and preservation
+\citep{wright1994syntactic,pierce2002types}. \emph{Progress}: a well-typed
+closed expression is a value or takes a step, by inspection of the reduction
+rules of \Cref{sec:opsem}, each of which has a syntactically disjoint premise
+from every other rule of the same constructor. \emph{Preservation}: each
+reduction preserves the static type and floor annotation of
+\Cref{rule:positivity}, and, by \Cref{thm:no-zero} applied at every step,
+preserves $\Rd_{\ast}\ge\flo>0$ for every region value. The only non-standard
+element is that reduction is state-mutating (\Cref{sec:opsem}: evaluating
+\cf{measure}/\cf{localize}/\cf{close} commits measurements and advances the
+committed-measurement count); preservation still holds because the count is
+monotone (\Cref{thm:monotone}), so no reduction retroactively lowers a
+previously-established residue below its floor. Soundness of the runtime
+additionally requires a derived forward model (\Cref{def:soundness}); with a
+fitted model the type system remains sound as a syntactic discipline but the
+values' correspondence to the patient is only local (\Cref{thm:extrap}).
+\end{proof}
+
+% =====================================================================
+\section{Operational Semantics}
+\label{sec:opsem}
+% =====================================================================
+
+We give a small-step semantics \citep{plotkin2004structural} over
+configurations $\langle\Sigma,\rec,e\rangle$, where $\Sigma$ is the current
+state system with its accumulated committed measurements, $\rec\in\N$ is the
+\emph{committed-measurement count} (the program clock), and $e$ is the
+expression under evaluation. We write
+$\langle\Sigma,\rec,e\rangle\stepto\langle\Sigma',\rec',e'\rangle$ for one
+step. Evaluation \emph{is} measurement: a \cf{measure}/\cf{localize}/\cf{close}
+step commits measurements into $\Sigma$ and advances $\rec$.
+
+\subsection{Committed measurements and the intrinsic clock}
+
+\begin{definition}[Committed measurement; committed record]
+\label{def:committed}
+A \emph{committed measurement} is a reduction that administers one probe and
+records its reading against $\Sigma$ (refining the surviving set $\Man_S$ or
+applying one contraction step). The \emph{committed record} $\rec\in\N$ counts
+committed measurements taken so far in the current evaluation.
+\end{definition}
+
+\begin{theorem}[Monotonicity of the committed record]
+\label{thm:monotone}
+Along any evaluation, $\rec$ is non-decreasing and strictly increases at every
+committed measurement. No reduction decrements $\rec$; re-evaluating a probe
+already administered is a new committed measurement at a strictly higher $\rec$,
+never a cached recomputation.
+\end{theorem}
+
+\begin{proof}
+Every rule administering a probe (\Cref{rule:measure-step,rule:localize-step,%
+rule:close-step} below) increments $\rec$ by the number of probes it commits,
+which is $\ge1$. No rule of \Cref{sec:opsem} removes a committed measurement or
+decrements $\rec$: an ``undo'' (e.g.\ a compensating counter-probe) is itself a
+further committed measurement, incrementing $\rec$. Hence $\rec$ is monotone and
+strictly increases per committed measurement, and two configurations differing
+only in $\rec$ are distinct states.
+\end{proof}
+
+\begin{corollary}[Measurement, not simulation]
+\label{cor:measure}
+Because evaluation mutates $\Sigma$ and advances $\rec$, a \cf{cfc} probe cannot
+be a pure function memoised across calls: each occurrence performs the
+measurement afresh and is recorded in the clock. Running the program \emph{is}
+performing the measurements it names.
+\end{corollary}
+
+\subsection{Reduction rules}
+
+\begin{rulename}[Measure commits and counts]
+\label{rule:measure-step}
+\[
+\frac{y=\textsc{Administer}(\Sigma,\Probe_{\mathrm{panel}})}
+     {\langle\Sigma,\rec,\cf{measure}\ p\ \cf{yield}\ r\rangle\stepto
+      \langle\Sigma\oplus y,\ \rec+\abs{p},\ v_{\cf{Reading}}(y)\rangle}
+\]
+where $\textsc{Administer}$ integrates the panel's probes against the model and
+returns the reading $y$, $\Sigma\oplus y$ records it, and $\abs{p}$ is the
+number of probes in the panel.
+\end{rulename}
+
+\begin{rulename}[Localize converges]
+\label{rule:localize-step}
+\[
+\frac{\begin{array}{c}
+\Man_S=\textsc{Survive}(\Sigma,p)\qquad\diam(\Man_S)<\flo\\
+\abs{\text{cells of }\Man_S}=1
+\end{array}}
+{\langle\Sigma,\rec,\cf{localize}\ x\ \cf{using}\ p\ \cf{until}\ \cf{resolved}\ \cf{yield}\ c\rangle\stepto
+ \langle\Sigma',\ \rec+k,\ v_{\cf{Cell}}(\Man_S)\rangle}
+\]
+where $\textsc{Survive}$ accumulates $k$ probe readings into the surviving set
+of \Cref{thm:rigidity} and $v_{\cf{Cell}}$ is the resulting accountable cell.
+If instead $\Man_S$ stabilises with more than one cell, the
+\cf{otherwise decline} branch fires:
+\[
+\frac{\textsc{Survive}(\Sigma,p)=\Man_S\text{ stable},\ \abs{\text{cells}}>1}
+{\langle\Sigma,\rec,\cf{localize}\ x\ \cf{using}\ p\ \cf{until}\ \cf{resolved}\ \cf{otherwise}\ \cf{decline}\ \cf{yield}\ c\rangle\stepto
+ \langle\Sigma',\ \rec+k,\ v_{\cf{decline}}(\Man_S)\rangle}
+\]
+\end{rulename}
+
+\begin{rulename}[Close contracts to coherence]
+\label{rule:close-step}
+\[
+\frac{\begin{array}{c}
+\dose^{\ast}=\textsc{Solve}(\gap(x),\basis_b)\quad x'=x+\textstyle\sum_i \dose^{\ast}_i e_i(x)\\
+\dist(x',\Coh)\le\flo
+\end{array}}
+{\langle\Sigma,\rec,\cf{close}\ \cf{gap}\ \cf{of}\ x\ \cf{toward}\ \cf{coherent}\ \cf{using}\ \cf{basis}\ b\ \cf{until}\ \cf{coherent}\ \cf{yield}\ t\rangle\stepto
+ \langle\Sigma',\ \rec+1,\ v_{\cf{Intervention}}(\dose^{\ast})\rangle}
+\]
+where $\textsc{Solve}$ solves \Cref{prob:closure}. If $\dist(x',\Coh)>\flo$ the
+state is re-localized and the rule re-fires on $x'$ (one contraction step per
+firing), realising the iteration of \Cref{thm:convergence}; the
+\cf{otherwise decline} branch fires if $\textsc{Solve}$ is infeasible
+(\Cref{prop:closure-wellposed}).
+\end{rulename}
+
+\begin{theorem}[Determinism]
+\label{thm:determinism}
+For a fixed initial configuration and a fixed forward model and basis, \cf{cfc}
+evaluation has at most one normal form: if
+$\langle\Sigma,\rec,e\rangle\stepto^{\ast}\langle\cdot,\cdot,v_1\rangle$ and
+$\langle\Sigma,\rec,e\rangle\stepto^{\ast}\langle\cdot,\cdot,v_2\rangle$ then
+$v_1=v_2$.
+\end{theorem}
+
+\begin{proof}
+$\textsc{Administer}$, $\textsc{Survive}$, and $\textsc{Solve}$ are total,
+deterministic functions of $\Sigma$ and the syntactic clauses (integration of a
+fixed model, intersection of enabling sets, and a convex program with a fixed
+tie-break, respectively). A \cf{localize} terminates in exactly one of the two
+mutually exclusive states of \Cref{rule:localize-step}, determined by whether
+$\Man_S$ stabilises at one cell or more---a fact about the fixed model, not a
+runtime choice. Two cell-tight surviving sets containing the state are
+observationally identical (same cell), so the representative cell is unique. A
+\cf{close} likewise deterministically produces the unique minimal-$\ell_1$
+displacement under the fixed tie-break, or declines on infeasibility. Hence the
+normal form is unique.
+\end{proof}
+
+\begin{theorem}[Convergent closure or honest decline]
+\label{thm:decline}
+Every \cf{localize} over a panel with finitely many registered probes
+terminates in exactly one of two states: \textbf{(i)}~\emph{resolved} ---
+$\Man_S$ stabilises to a single cell, reported as a \cf{Cell}; or
+\textbf{(ii)}~\emph{contested} --- $\Man_S$ stabilises but contains more than
+one cell, reported as a \cf{decline} carrying the distinct surviving cells. No
+\cf{localize} over a finite panel runs forever without reaching one of these.
+\end{theorem}
+
+\begin{proof}
+The registered panel is finite, so the reachable set of readings is finite and
+$\Man_S$ (an intersection of finitely many enabling constraints) can shrink by
+only finitely many steps before every remaining probe has been tried; at that
+point $\Man_S$ is stable (rigidity by exhaustion, \Cref{thm:rigidity}). If the
+stable $\Man_S$ is cell-tight, case (i) holds; else it meets $>1$ cell and, by
+\Cref{cor:cell}, no single cell is licensed, so case (ii) holds and the program
+reports the contested cells. The cases are exhaustive and mutually exclusive on
+a non-empty surviving set.
+\end{proof}
+
+\begin{remark}[Decline is not failure]
+\label{rem:decline-not-failure}
+\Cref{thm:decline}(ii) formalises the requirement that a clinical runtime be
+able to report ``the evidence does not single out one state'' as a first-class,
+correctly-terminating outcome---an honest \emph{non liquet}---rather than
+looping or silently emitting one contested cell as if unique. A contested
+closure is itself useful output: it identifies precisely which cells remain and
+what further probe would separate them.
+\end{remark}
+
+\begin{theorem}[Scheduler soundness]
+\label{thm:scheduler}
+The \cf{cfc} scheduler never re-probes a cell already resolved to
+cell-tightness, and never starves a convergent \cf{close}: every
+gap-contracting step that reduces $\dist(\cdot,\Coh)$ by a fixed factor is
+eventually taken, so a contraction (\Cref{def:contraction}) reaches
+$\dist\le\flo$ in finitely many steps.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:monotone} the committed record is monotone, so a resolved cell
+(recorded in $\Sigma$) is not revisited: re-probing it would strictly increase
+$\rec$ without shrinking the already-cell-tight $\Man_S$, and the scheduler,
+which advances only on strict progress in $\Man_S$ or $\dist(\cdot,\Coh)$, does
+not schedule such a step. For non-starvation: each \cf{close} firing applies one
+contraction step reducing $\dist(\cdot,\Coh)$ by a factor $\le\lambda<1$
+(\Cref{def:contraction}); by \Cref{thm:convergence} the distance reaches
+$\le\flo$ after $k^{\ast}=\lceil\log_{1/\lambda}(\dist_0/\flo)\rceil$ firings,
+a finite bound, so the convergent therapy completes.
+\end{proof}
+
+% =====================================================================
+\section{The Standard Library}
+\label{sec:stdlib}
+% =====================================================================
+
+Each \cf{cfc} verb binds to a named semantic operation of \Cref{sec:model}--%
+\ref{sec:unity}. We state the contract (inputs, output, invoked operation); the
+operation's construction is fixed by the semantic model.
+
+\begin{definition}[\textsc{Administer}]
+\label{def:administer}
+\cf{measure p yield r} invokes $\textsc{Administer}(\Sigma,p)$: integrate each
+probe of panel $p$ against the forward model from the current state, returning
+the reading $r$ (the species distribution at read time, \Cref{def:probe}). The
+reading is a \cf{Reading} value carrying its floor annotation.
+\end{definition}
+
+\begin{definition}[\textsc{Survive}, \textsc{Localize}]
+\label{def:localize}
+\cf{localize x using p until resolved yield c} invokes
+$\textsc{Survive}(\Sigma,p)$: accumulate the panel's readings into the surviving
+set $\Man_S$ (\Cref{thm:rigidity}) and admit when cell-tight, yielding the
+\cf{Cell} $c$; on stable non-cell-tight $\Man_S$ it declines
+(\Cref{thm:decline}). The cell carries its coherence $\ecoh$ and disease vector
+$\dvec$ (\Cref{cor:coherence-from-cell}).
+\end{definition}
+
+\begin{definition}[\textsc{Gap}, \textsc{Solve}, \textsc{Close}]
+\label{def:close}
+\cf{close gap of x toward coherent using basis b until coherent yield t}
+invokes $\textsc{Gap}(x)$ to compute the displacement to the nearest coherent
+state (\Cref{def:gap}), then $\textsc{Solve}$ to solve the minimal-$\ell_1$
+program (\Cref{prob:closure}) over basis $b$, applies the chosen doses, and
+iterates as a contraction (\Cref{thm:convergence}) until the gap is below the
+floor, yielding the \cf{Intervention} $t$ (the sparse dose vector with its
+predicted displacement). Infeasibility declines
+(\Cref{prop:closure-wellposed}).
+\end{definition}
+
+\begin{definition}[Soundness of the runtime]
+\label{def:soundness}
+A \cf{cfc} runtime is \emph{sound} if \textbf{(i)}~$\textsc{Administer}$ agrees
+with the true reading up to the uniform derived-model bound of
+\Cref{thm:extrap}; \textbf{(ii)}~$\textsc{Survive}$ returns a superset of the
+true surviving set (no false exclusion of the actual state);
+\textbf{(iii)}~$\textsc{Solve}$ returns a feasible intervention whose simulated
+displacement matches its physical displacement up to the same bound. Soundness
+reduces to the derived-model guarantee (\Cref{prin:derived}).
+\end{definition}
+
+\begin{remark}[The verbs are one primitive]
+\label{rem:one-primitive}
+$\textsc{Administer}$, $\textsc{Survive}$, and $\textsc{Solve}$ are the single
+characterised-perturbation primitive read three ways: as a raw reading, as an
+accumulation of readings into a cell, and as a displacement chosen to close a
+gap. By \Cref{thm:unity} the measuring and moving faces are the same act; the
+standard library is therefore not three independent operations but one act
+exposed at three roles. No theorem depends on this reading.
+\end{remark}
+
+% =====================================================================
+\section{Worked Programs}
+\label{sec:examples}
+% =====================================================================
+
+\subsection{Localize a patient to a cell}
+
+\begin{lstlisting}[caption={Diagnosis is localization to a cell, never a label.}]
+-- localize.cfc
+floor 1e-3                 -- ambient floor; nothing resolves finer
+
+basis Metabolic {
+  probe glucose_challenge {
+    reference: healthy_ref
+    observe:   ingest("glucose", 75) >> glycolysis >> tca >> etc
+  }
+  probe lactate_probe {
+    reference: healthy_ref
+    observe:   ingest("pyruvate", 10) >> ldh_branch
+  }
+}
+
+patient P {
+  measure panel { glucose_challenge() || lactate_probe() } yield r
+
+  -- run the rigidity loop: keep probing until one cell survives,
+  -- otherwise honestly decline (the evidence does not single out a state)
+  localize r
+    using panel { glucose_challenge() >> tca_followup() }
+    until resolved otherwise decline
+    yield here
+
+  -- `here : Cell` carries coherence and the disease vector; no disease name
+  assert here.coherence >= 0.0#1e-3
+  yield here
+}
+\end{lstlisting}
+
+\subsection{Close the gap without naming a disease}
+
+\begin{lstlisting}[caption={Therapy is gap-closure to the coherent set.}]
+-- treat.cfc
+floor 1e-3
+import Metabolic
+
+patient Q {
+  localize baseline
+    using panel { glucose_challenge() >> tca_followup() }
+    until resolved
+    yield here              -- here : Cell (must be a Cell before `close`)
+
+  -- close the measured gap toward coherence with the sparsest set of
+  -- characterised interventions, chosen by effect, not by indication
+  close gap of here
+    toward coherent
+    using basis Metabolic
+    until coherent otherwise decline
+    yield plan             -- plan : Intervention (sparse dose vector)
+
+  emit "gap closed to floor; no disease named"
+  yield plan
+}
+\end{lstlisting}
+
+\subsection{Monitor continuously}
+
+\begin{lstlisting}[caption={A continuously working probe re-reads the state.}]
+-- monitor.cfc
+floor 1e-3
+import Metabolic
+
+patient R {
+  monitor R every 3600 {          -- re-run every 3600 time units
+    measure panel { lactate_probe() } yield r
+    localize r using panel { lactate_probe() } until resolved yield now
+    -- raise concern iff coherence falls below threshold (Remark on concern)
+    assert now.coherence >= 0.7#1e-3
+      emit "cause for concern: coherence below threshold"
+  }
+}
+\end{lstlisting}
+
+\begin{remark}[The same keyword set, three clinical jobs]
+\label{rem:three-jobs}
+Across the three programs, \cf{measure} reads, \cf{localize} diagnoses (to a
+cell, or declines), and \cf{close} treats (to the floor, or declines). No
+program names a disease; each returns a cell, an intervention, or an honest
+decline. A reader who understands the characterised perturbation understands
+the whole language.
+\end{remark}
+
+% =====================================================================
+\section{Complexity}
+\label{sec:complexity}
+% =====================================================================
+
+\begin{proposition}[Per-judgment complexity]
+\label{prop:complexity}
+Let $n=\dim\Man$, $m=\abs{\basis}$, $d=\abs{\Dom}$, and let a cascade have
+depth $\ell$ and a reading return $q$ species. Then:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em,itemsep=2pt]
+\item \cf{measure} costs one numerical integration of an $n$-dimensional system
+to the read time, plus $\mathcal{O}(q)$ to read back the species;
+\item \cf{localize} costs $\mathcal{O}(q)$ constraint intersections against
+precomputed enabling sets per probe, and $\mathcal{O}(d)$ to compute the cell's
+coherence and disease vector (\Cref{prop:coherence-bounds});
+\item \cf{close} is a projection onto $\Coh$ plus an $\ell_1$-regularised convex
+program in $m$ variables and $n$ constraints, solvable in polynomial time
+\citep{boyd2004convex};
+\item the \cf{close} contraction loop multiplies (iii) by
+$\mathcal{O}(\log_{1/\lambda}(1/\flo))$ steps (\Cref{thm:convergence}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) is one integration and a linear read-back. (ii) each probe adds one
+enabling-set intersection over $q$ species; coherence and disease vector are
+$\mathcal{O}(d)$ by \Cref{prop:coherence-bounds}. (iii) the gap projection is a
+nearest-point computation onto the convex $\Coh$ and the dose solve is a convex
+program of the stated size. (iv) \Cref{thm:convergence} bounds the number of
+contraction steps by $\lceil\log_{1/\lambda}(\dist_0/\flo)\rceil$, each of cost
+(iii).
+\end{proof}
+
+% =====================================================================
+\section{Constructive Validation}
+\label{sec:validation}
+% =====================================================================
+
+Because every object is a dynamical system on a finite-dimensional space and
+every quantity is an integration, a projection, an intersection, or a sparse
+program, each theorem is checkable by direct computation on explicit model
+instances, without clinical data. The following protocol validates the calculus
+and any conforming implementation \citep{sandve2013ten,wilkinson2016fair}.
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+\item \textbf{Floor} (\Cref{thm:floor}). On a model $\Sigma$ with fixed readout
+resolution $\delta$, confirm the induced state-discrimination has a positive
+infimum $\flo$ and that no state resolves below it.
+\item \textbf{Coherence} (\Cref{def:cell-coherence}, \Cref{prop:coherence-bounds}).
+Confirm $\ecoh_i,\ecoh\in[0,1]$ at optimal/degraded metric values and that the
+coherent set $\Coh_\theta$ is exactly the states with all
+$\ecoh_i\ge\theta$.
+\item \textbf{Localization} (\Cref{thm:localization}). Sample state pairs;
+confirm a floor-injective probe never maps distinct cells to the same reading
+within $\delta$, and exhibit a non-injective probe that does, demonstrating
+insufficiency.
+\item \textbf{Certificate} (\Cref{thm:certificate}). Construct a state-gated
+cascade; confirm species $P_k$ appears iff every prior transition is
+state-enabled, and that states failing a transition produce $P_k$ absent.
+\item \textbf{Rigidity} (\Cref{thm:rigidity}). Grow the observed species set and
+confirm $\Man_S$ is non-increasing and becomes cell-tight exactly when no
+alternative cell survives.
+\item \textbf{Gap-closure} (\Cref{prob:closure}, \Cref{thm:convergence}). On
+states off $\Coh$, solve the sparse program and iterate the contraction; confirm
+geometric contraction of $\dist(\cdot,\Coh)$ and sparsity of the selected
+intervention set.
+\item \textbf{Unity} (\Cref{thm:unity}). Confirm a single simulated perturbation
+yields both a localizing trace and a state displacement from one integration.
+\item \textbf{Decline} (\Cref{thm:decline}). Construct a model with two disjoint
+enabling clusters reachable by different probes; confirm \cf{localize} reports
+\emph{contested} decline when a probe separating them is withheld and
+\emph{resolved} when it is supplied.
+\item \textbf{Derived vs.\ fitted} (\Cref{thm:extrap}). Fit a surrogate model on
+a training region, then evaluate both surrogate and derived model off-region;
+confirm the surrogate's trace error grows off-region while the derived model
+stays within its uniform bound---quantifying why free exploration requires the
+derived runtime.
+\item \textbf{Type safety} (\Cref{thm:no-zero,thm:no-blind-therapy,thm:soundness}).
+Confirm the type checker rejects (a) any literal or value of zero residue and
+(b) any \cf{close} whose subject is not a \cf{Cell}.
+\end{enumerate}
+
+Each check is a finite, deterministic computation whose predicted and measured
+outcomes agree exactly for identities and within the stated bound for
+inequalities. The suite validates the calculus on explicit model instances; its
+fidelity to a real patient is inherited entirely from the fidelity of the
+derived forward model, the separate physical question the runtime must answer.
+
+% =====================================================================
+\section{Reference Execution Model and Implementation}
+\label{sec:impl}
+% =====================================================================
+
+A conforming \cf{cfc} implementation must provide, from this specification:
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+\item the shared front end: lexer (\Cref{sec:lexical}), parser to the grammar
+(\Cref{def:grammar}), and accountability type checker (\Cref{sec:types})
+enforcing \Cref{thm:no-zero,thm:no-blind-therapy};
+\item the operational semantics of \Cref{sec:opsem}: a state-system
+configuration, a monotone committed-measurement count, and the
+\cf{measure}/\cf{localize}/\cf{close}/\cf{monitor} reductions, with evaluation
+mutating state (\Cref{cor:measure});
+\item the standard-library bindings of \Cref{sec:stdlib} to
+$\textsc{Administer}$, $\textsc{Survive}$, $\textsc{Solve}$;
+\item a \emph{derived} forward model (\Cref{def:fitvsder}) satisfying
+runtime soundness (\Cref{def:soundness}); a fitted surrogate may be offered only
+for exploration within its training region, and must be flagged as such.
+\end{enumerate}
+
+\begin{remark}[Reference interpreter]
+\label{rem:reference-impl}
+A direct interpreter of \Cref{sec:opsem} over an exact solver---numerical
+integration for $\textsc{Administer}$, exact enabling-set intersection for
+$\textsc{Survive}$, and a convex-program solver for $\textsc{Solve}$---is the
+simplest conforming implementation and serves as the oracle against which
+faster or approximate runtimes are checked. A conformance suite must verify the
+validation protocol of \Cref{sec:validation} and, in particular, that the type
+checker rejects zero-residue values and blind therapies.
+\end{remark}
+
+% =====================================================================
+\section{Related Paradigms and Scope}
+\label{sec:related}
+% =====================================================================
+
+\cf{cfc} draws its formal machinery from three standard traditions and departs
+from clinical convention in one decisive respect.
+
+From \textbf{programming-language theory} it inherits the discipline of a
+lexical grammar, a context-free grammar in EBNF, a static type system with
+progress-and-preservation soundness, and a small-step operational semantics
+\citep{aho2006compilers,pierce2002types,wright1994syntactic,plotkin2004structural};
+its gradual-accountability flavour (every value carrying the floor at which it
+was determined) is a domain-specific refinement of the idea that types can
+track a quantitative invariant.
+
+From \textbf{systems biology and constraint-based modelling} it inherits the
+view of physiology as a kinetic dynamical system and of intervention as
+constrained flux redirection \citep{kitano2002systems,palsson2015systems,%
+orth2010fba}; the demand that the runtime be derived rather than fitted
+(\Cref{sec:runtime}) is the formal counterpart of the modelling community's
+preference for mechanistic over regression models when extrapolation matters.
+
+From \textbf{optimization} it inherits the sparse-selection geometry of the
+$\ell_1$ program \citep{tibshirani1996lasso,candes2006robust,boyd2004convex} and
+the contraction-mapping fixed-point theory \citep{banach1922} that make therapy
+a convergent, minimal-intervention procedure.
+
+Its \textbf{departure from convention} is the elimination of the named disease.
+Where nosology partitions a continuous pathophysiology into catalogue entries
+\citep{feinstein1967clinical,scheuermann2009toward,loscalzo2007network},
+\cf{cfc} returns a cell of state space and a measured gap. Naming, if desired,
+is a downstream description of which cell was occupied; it is never a
+prerequisite for either diagnosis or therapy (\Cref{prin:goal,prin:cure}). The
+scope of the language is exactly this: to reduce clinical reasoning to
+localization and gap-closure over a derived state, relocating the clinician from
+precedent-retrieval to the specification of \emph{intent}---which coherent
+target, how far, and at what cost to the particular person---the one input the
+calculus does not compute.
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+
+We have specified Cause-for-Concern as a language whose single primitive is the
+characterised perturbation---an administered compound of known composition read
+simultaneously for its fate (a measurement) and its displacement (an
+intervention)---and whose every operation follows from five proved facts. From a
+strictly positive resolution floor we obtained that a state is a cell, so
+diagnosis is localization to a cell rather than recognition against a disease
+catalogue (\Cref{thm:floor}, \Cref{prin:goal}). Health was defined intrinsically
+as membership of a coherent set, quantified by a scalar coherence and a disease
+vector, so no nosology is needed to say where health lies
+(\Cref{sec:coherence}). A probe localizes the state exactly when its reading map
+is floor-injective (\Cref{thm:localization}); a cascading probe strengthens this
+to a trajectory certificate, since its later products exist only if the earlier
+path occurred, so a false account cannot forge the reading and the correct
+stopping rule is rigidity, not a threshold (\Cref{thm:certificate,thm:rigidity}).
+Therapy is the closure of the measured gap to the coherent set by the sparsest
+combination of characterised interventions selected by effect, executed as a
+contraction to a fixed point, with no disease ever named
+(\Cref{prob:closure,thm:convergence}). Diagnosis and therapy coincide, because
+every characterised perturbation both measures and moves, and the loop halts
+precisely when the state is coherent and rigidly known---the operative
+definition of wellness (\Cref{thm:unity,thm:wellness}).
+
+On this foundation we built the language in full: a lexical and context-free
+grammar; an accountability type system in which no zero-residue value and no
+blind therapy are well-typed, proved sound by progress and preservation; a
+small-step operational semantics in which evaluation is measurement, with a
+monotone committed-measurement clock, proved deterministic and scheduler-sound;
+a standard library binding each verb to its semantic operation; a complexity
+account; a constructive validation protocol requiring no clinical data; and a
+reference execution model. The one substantive demand---that the forward model
+be derived, not fitted---was established as a theorem about extrapolation,
+because the safety of risk-free \emph{in silico} experimentation reduces to it.
+The result is a deterministic, disease-free, report-free calculus of medicine in
+which the patient's state is read from a self-certifying physiological program,
+the therapeutic target is a measured gap, and the clinician's role is relocated
+from precedent-retrieval to judgment over a derived, explorable state. The
+specification is complete and implementable as written.
+
+\section*{Data Availability}
+No empirical data was used in this specification. The validation protocol of
+\Cref{sec:validation} specifies how model instances and, subsequently, clinical
+data should be collected and compared to the language's predictions.
+
+\section*{Code Availability}
+Implementation requirements are given in \Cref{sec:impl}. A reference
+interpreter realises the operational semantics of \Cref{sec:opsem} directly over
+an exact solver.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
