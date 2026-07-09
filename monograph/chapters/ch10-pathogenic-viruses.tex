@@ -177,10 +177,9 @@ The classical oscillation frequency within each well is:
   \label{v:eq:hbond_freq}
 \end{equation}
 where $m_p = 1.673 \times 10^{-27}$\,kg is the proton mass:
-\begin{equation}
+\fiteq{
   \nu_{\mathrm{HB}} = \frac{1}{2\pi}\sqrt{\frac{4 \times 0.04 \times 1.602 \times 10^{-19}}{1.673 \times 10^{-27} \times (0.63 \times 10^{-10})^2}} \approx 9.9 \times 10^{12}\,\mathrm{Hz} \approx 10\,\mathrm{THz}
-  \label{v:eq:hbond_freq_numerical}
-\end{equation}
+}
 
 This frequency ($\sim\!10$\,THz) falls in the far-infrared regime and has been observed in dielectric spectroscopy studies of hydrated DNA~\cite{Weidlich1990,Woolard2002}. The parameters $V_0 = 0.04$\,eV and $a = 0.63$\,\AA\ correspond to the H-bond stretching vibration mode, which is distinct from both the covalent N--H stretch ($\nu \approx 90$\,THz, $V_0 \approx 4$\,eV) and the proton tautomeric transfer barrier ($V_0 \approx 0.4$\,eV); the H-bond stretching mode is the appropriate oscillation for charge-pattern dynamics at the double-helix level. The proton oscillation within each hydrogen bond represents a charge displacement of $\Delta x \approx 0.8$\,\AA\ associated with charge redistribution of order $\Delta q \approx e \cdot \Delta x / d_{\mathrm{DA}} \approx 0.3e$ where $d_{\mathrm{DA}} \approx 2.9$\,\AA\ is the donor-acceptor distance.
 
@@ -1026,7 +1025,10 @@ The host categorical density $\Phost(\vv{c}, t)$ is the probability density that
 \begin{definition}[Viral Categorical Indicator]
 The viral categorical indicator $\chiviral(\vv{c})$ is the characteristic function of the region of categorical space compatible with successful viral template recognition:
 \begin{equation}
-  \chiviral(\vv{c}) = \begin{cases} 1 & \text{if the host cell in state } \vv{c} \text{ has active translation/transcription machinery that recognises the viral charge template} \\ 0 & \text{otherwise} \end{cases}
+  \chiviral(\vv{c}) = \begin{cases}
+    1 & \parbox[t]{0.62\columnwidth}{\raggedright if the host cell in state $\vv{c}$ has active translation/transcription machinery that recognises the viral charge template}\\[1.2em]
+    0 & \text{otherwise}
+  \end{cases}
 \end{equation}
 \end{definition}
 
@@ -1163,9 +1165,9 @@ Specifically, the viral genome must create a charge perturbation visible within 
 For larger host cells ($R_{\mathrm{host}}$ larger), the background genomic field $\abs{\Qgen}^{\mathrm{host}} / R_{\mathrm{host}}^2$ has a denominator that grows faster than the numerator, reducing the per-unit-charge influence of the genomic field at the membrane. To create a detectable charge perturbation in a larger cell, a larger charge perturbation $\abs{Q_V}$ (i.e., larger viral genome) is required.
 
 Formally, the minimum viral genome charge required to generate a chamber of depth $z^{*}_{\mathrm{min}}$ in a host cell of radius $R_{\mathrm{host}}$ with genomic charge $\Qgen^{\mathrm{host}} \propto R_{\mathrm{host}}^{9/4}$ (from \cref{v:thm:cvalue} and $V \propto R^3$) is:
-\begin{equation}
+\fiteq{
   \abs{Q_V}^{\mathrm{min}} \propto \frac{(z^{*}_{\mathrm{min}})^3 \abs{\Qgen}^{\mathrm{host}}}{a^2 R_{\mathrm{host}}^2} \propto \frac{R_{\mathrm{host}}^{9/4}}{R_{\mathrm{host}}^2} = R_{\mathrm{host}}^{1/4}
-\end{equation}
+}
 
 Since $\abs{Q_V} = 2e N_V$, the minimum viral genome size scales as:
 \begin{equation}

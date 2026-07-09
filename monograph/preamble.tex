@@ -119,6 +119,18 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems}
 
+%% Full-width display math in two-column layout.
+%% Uses stfloats so that starred floats (figure*/table*) can appear at the
+%% bottom of a page as well as the top, and provides a "widestrip" for display
+%% equations that must span both columns (mirroring the source papers).
+\usepackage{stfloats}
+\usepackage{cuted}   %% \begin{strip}...\end{strip} spans both columns (text/listings)
+%% \fiteq{<math>} shrinks an over-wide display formula to exactly the column
+%% width so it never spills into the gutter (guaranteed via \resizebox).
+%% Use for single-line formulas too wide for a 10pt two-column measure.
+\newcommand{\fiteq}[1]{%
+  \[\resizebox{\columnwidth}{!}{$\displaystyle #1$}\]}
+
 %% -------------------------------------------------------------------------
 %% Unified notation
 %% -------------------------------------------------------------------------

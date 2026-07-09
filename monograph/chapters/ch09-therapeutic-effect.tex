@@ -9,7 +9,7 @@
 \label{ch:therapeutic}
 \label{ch:therapeutic-effect}\label{ch:therapy}\label{ch:drug}
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/part4_therapeutic.png}
   \caption{\textbf{Part~IV summary: Therapeutic Intervention.}
@@ -32,7 +32,7 @@
   Restoration saturates near $1$ with sufficient drug count, confirming
   the adequacy of the sparse LP solution.}
   \label{fig:part4-therapeutic}
-\end{figure}
+\end{figure*}
 
 %% =============================================================================
 \section{Drug as Sparse Conductance Perturbation}
@@ -101,7 +101,7 @@ $\|\drugvec\|_1 = 0.9$ and $\|\drugvec\|_0 = 1$.
 \label{sec:therapeutic-criterion}
 %% =============================================================================
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel_5_self_consistency.png}
   \caption{\textbf{Self-consistency and the therapeutic criterion.}
@@ -115,7 +115,7 @@ $\|\drugvec\|_1 = 0.9$ and $\|\drugvec\|_0 = 1$.
   criterion (\Cref{thm:therapeutic-criterion}) targets the uniquely
   complete disease signature.}
   \label{fig:ch09-self-consistency}
-\end{figure}
+\end{figure*}
 
 \Cref{ch:fuzzy-circuits} established that disease at the circuit level is
 equivalent to non-trivial loop holonomy: a cell is diseased in loop $\ell$
@@ -339,7 +339,7 @@ treatment cycles.
 \label{sec:variance-free-energy}
 %% =============================================================================
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel5_therapeutic.png}
   \caption{\textbf{Therapeutic trajectory in circuit state space.}
@@ -353,7 +353,7 @@ treatment cycles.
   from the validation set (\Cref{sec:validation}) converging to the
   healthy basin under LP-guided therapy.}
   \label{fig:ch09-therapeutic-trajectory}
-\end{figure}
+\end{figure*}
 
 Having established the structural condition for therapeutic success, we turn
 to a quantitative efficacy measure that is both scale-invariant and detectable
@@ -480,7 +480,7 @@ correspond to distinct ray--matter interaction channels, each realising
 \eqref{eq:optical-obs}--\eqref{eq:circuit-obs} through a specific physical
 mechanism.  Table~\ref{tab:oscillator-ray} summarises these correspondences.
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Oscillator classes and their ray--matter interaction channels.
 Each class is identified with an experimental modality that realises the
@@ -500,7 +500,7 @@ Ca & Calcium       & Ray--calcium                  & Calcium-sensitive fluoresce
 R  & Receptor      & Ray--receptor                 & Ligand--receptor binding assay \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 %% =============================================================================
 \section{GPU Ray-Tracing Pipeline}
@@ -544,7 +544,7 @@ GPU frame buffer to CPU memory via a single \texttt{glReadPixels} call.
 The LP \eqref{eq:sparse-LP} is then solved on CPU using the holonomy
 data, completing the therapeutic decision pipeline.
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{GPU pipeline timing on an integrated GPU (OpenGL 4.5 compute
 shaders, $1920\times1080$ input image, $N_{\mathrm{vox}} = 10^6$).}
@@ -562,7 +562,7 @@ Pass & Operation & Time (ms) \\
   & \textbf{Total}                  & \textbf{43} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{lstlisting}[style=glsl, caption={Pass~3 ray-march shader (excerpt).
 Each invocation processes one ray; the three integrals are accumulated
@@ -885,7 +885,7 @@ The Triple Observation Identity is operationalised in the five-pass GPU
 pipeline of \Cref{sec:gpu-pipeline}.  The complete specification with timing
 is reproduced in \Cref{tab:ch09-gpu-5pass}.
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Five-pass GPU pipeline: operations, data flow, and wall-clock
 timing on an integrated GPU (OpenGL~4.5, $1920\times1080$ input,
@@ -911,7 +911,7 @@ Pass & Operation & Time (ms) \\
   & \textbf{Total} & \textbf{43} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{remark}[Variance--Free Energy Identity in the GPU context]
 The scalar $\Vcell$ delivered in Pass~5 encodes the Kuramoto order parameter
@@ -1154,7 +1154,7 @@ Cases~(a) and~(b) are computable before treatment selection.
 \subsection{Pharmacologically Reversible vs Irreversible Disease Classes}
 \label{subsec:ch09-disease-classes}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Disease classification by pharmacological reversibility.
 $\checkmark$: reversible ($\det(\HolL)\neq 0$, LP feasible);
@@ -1175,7 +1175,7 @@ Severe MI (scar)           & Cardiomyocyte node loss      & Topological     & $\
 Advanced Parkinson's       & Substantia nigra node loss   & Topological     & $\times$     \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{example}[Hypertension: reversible by conductance restoration]
 \label{ex:ch09-hypertension}

@@ -5,7 +5,7 @@
 \chapter{Multimodal Reaction Localization}
 \label{ch:localization}
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{six_modality_comparison_panel.png}
   \caption{\textbf{Part~II localization summary.}
@@ -25,7 +25,7 @@
   partition depth $\Depth$) overlaid on the five physical surfaces,
   demonstrating modality-independence of $v_K$.}
   \label{fig:part2-localization}
-\end{figure}
+\end{figure*}
 
 % ---------------------------------------------------------------------------
 \section{The Localization Problem}
@@ -129,7 +129,7 @@ $t_A \ll t_T \ll t_C$ holds for all $r \in [1\,\text{nm}, 100\,\mu\text{m}]$.
 \label{sec:modalities}
 % ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{six_modality_comparison_panel.png}
   \caption{\textbf{Six-modality comparison.}
@@ -140,7 +140,7 @@ $t_A \ll t_T \ll t_C$ holds for all $r \in [1\,\text{nm}, 100\,\mu\text{m}]$.
   The categorical modality (K) is the only one with no exclusion factor,
   penetrating every physical barrier without attenuation.}
   \label{fig:ch06-six-modalities}
-\end{figure}
+\end{figure*}
 
 Each modality is characterised by its carrier, its tissue propagation law,
 and its \emph{exclusion factor} — the physiological condition under which it
@@ -416,7 +416,7 @@ is performed on the system (the categorical state is read, not changed), the
 Landauer bound does not apply.
 \end{proof}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Summary of six propagation modalities with physical parameters.}
 \label{tab:modalities}
@@ -432,7 +432,7 @@ Vibrational    & V  & $v_V \approx 10\text{--}100$ m/s  & Constraint sphere  & V
 Categorical    & K  & $v_K \gg v_C$                & Depth isopotential    & \textbf{None} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 % ---------------------------------------------------------------------------
 \section{Arrival-Time Surfaces}
@@ -506,7 +506,7 @@ $\{\nabla T_k(\mathbf{r}^{*})\}$ must span $\mathbb{R}^3$.  With six
 modalities, three non-parallel normals are guaranteed for all physiologically
 relevant geometries (\Cref{thm:uniqueness}).
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Arrival-time surface characteristics.}
 \label{tab:arrival-surfaces}
@@ -522,7 +522,7 @@ Vibrational & Fixed     & $r \le 0.1$~nm         & Hard (quantum)             & 
 Categorical & Isopotential & $\Delta\Depth$ based & Exact (Kronecker)        & Instantaneous \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 % ---------------------------------------------------------------------------
 \section{The Intersection Theorem}
@@ -787,7 +787,7 @@ with the $0.05$~nm precision of the six-modality system.
 \label{sec:localization-alg}
 % ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{multimodal_localization_panel.png}
   \caption{\textbf{Multimodal localization algorithm result.}
@@ -799,7 +799,7 @@ with the $0.05$~nm precision of the six-modality system.
   within 20 iterations, with the categorical modality providing the critical
   constraint that prevents the estimate from collapsing onto a symmetry axis.}
   \label{fig:ch06-localization-result}
-\end{figure}
+\end{figure*}
 
 \begin{definition}[Multimodal Localization Input]
 \label{def:localization-input}
@@ -1054,7 +1054,7 @@ depends only on partition coordinates, which are invariant under opacity,
 $T_\mathrm{cat}^{(\tau)} = T_\mathrm{cat}^{(0)}$ for all $\tau$.
 \end{proof}
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{panel5_opacity_independent.png}
 \caption{Three-dimensional illustration of opacity independence.
@@ -1069,7 +1069,7 @@ and categorical modalities remain operative; the four-modality intersection
 still uniquely determines $\mathbf{r}^*$.  The categorical surface $\mathcal{S}_K$
 is identical in all three panels, confirming \Cref{thm:opacity-proof}.}
 \label{fig:opacity-3d}
-\end{figure}
+\end{figure*}
 
 \begin{corollary}[Guaranteed Localisation]
 \label{cor:guaranteed-loc}
@@ -1096,7 +1096,7 @@ operative.
 \label{sec:comparison}
 % ---------------------------------------------------------------------------
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Comparison of localization methods for intracellular reactions.}
 \label{tab:comparison}
@@ -1114,7 +1114,7 @@ Neutron scattering          & $\sim 0.1$~nm & Penetrating & Yes & No \\
 \textbf{Six-modality (this work)} & $\sim 0.05$~nm & Independent & Yes & Yes \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The six-modality framework is the only approach combining sub-angstrom
 resolution, opacity independence, label-free detection, and compatibility
@@ -2623,7 +2623,7 @@ receptors, altering its lipid partition state.
 \label{sec:ch06-comparison-thresholds}
 % ---------------------------------------------------------------------------
 
-\begin{table}[ht]
+\begin{table*}[ht]
 \centering
 \caption{Detection thresholds: multimodal localisation vs.\ current imaging.}
 \label{tab:ch06-detection-thresholds}
@@ -2639,7 +2639,7 @@ Cryo-EM & 0.2\,nm & Single molecule & $1$ & N/A (ex vivo) \\
 \textbf{Multimodal (this work)} & \textbf{0.05\,nm} & \textbf{$\sim\!10^5$ events} & \textbf{1} & \textbf{$-10$ to $-5$ yr} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The multimodal localisation framework achieves the spatial resolution of
 cryo-EM while operating \emph{in vivo} and detecting events at the

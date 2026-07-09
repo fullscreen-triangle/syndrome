@@ -1480,6 +1480,7 @@ exposed at three roles. No theorem depends on this reading.
 
 \subsection{Localize a patient to a cell}
 
+\begin{strip}
 \begin{lstlisting}[language=cfc,caption={Diagnosis is localization to a cell, never a label.}]
 -- localize.cfc
 floor 1e-3                 -- ambient floor; nothing resolves finer
@@ -1510,9 +1511,11 @@ patient P {
   yield here
 }
 \end{lstlisting}
+\end{strip}
 
 \subsection{Close the gap without naming a disease}
 
+\begin{strip}
 \begin{lstlisting}[language=cfc,caption={Therapy is gap-closure to the coherent set.}]
 -- treat.cfc
 floor 1e-3
@@ -1536,9 +1539,11 @@ patient Q {
   yield plan
 }
 \end{lstlisting}
+\end{strip}
 
 \subsection{Monitor continuously}
 
+\begin{strip}
 \begin{lstlisting}[language=cfc,caption={A continuously working probe re-reads the state.}]
 -- monitor.cfc
 floor 1e-3
@@ -1554,6 +1559,7 @@ patient R {
   }
 }
 \end{lstlisting}
+\end{strip}
 
 \begin{remark}[The same keyword set, three clinical jobs]
 \label{cfc:rem:three-jobs}

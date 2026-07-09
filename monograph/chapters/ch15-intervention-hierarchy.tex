@@ -455,7 +455,7 @@ studies.
 
 \subsection{Summary Table}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Intervention hierarchy: mathematical form, tractability, and
 indication for each level.}
@@ -470,14 +470,14 @@ Lvl & Name & Mathematical form & Tractability & Indication \\
 4 & Hub stabilisation & $\varpotential_h(t)\!\equiv\!\varpotential_h^*$ & Boundary-value (PDE) & Drifting hub potential \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 %% =============================================================================
 \section{Polypharmacy Analysis}
 \label{sec:polypharmacy}
 %% =============================================================================
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel7_drug_design.png}
   \caption{\textbf{Sparse LP drug design for multi-loop holonomy restoration.}
@@ -491,7 +491,7 @@ Lvl & Name & Mathematical form & Tractability & Indication \\
   one agent per diseased loop (\Cref{prop:polypharmacy}) and that polypharmacy
   emerges from LP geometry rather than empirical synergy screens.}
   \label{fig:ch10-drug-design}
-\end{figure}
+\end{figure*}
 
 \subsection{When Single-Drug Therapy Fails: Loop Non-Closure Analysis}
 
@@ -781,7 +781,7 @@ modification).  Key results:
 \label{sec:validation}
 %% =============================================================================
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel_validation_summary.png}
   \caption{\textbf{Validation record across four disease case studies.}
@@ -794,7 +794,7 @@ modification).  Key results:
   predicts drug response in all four cases.
   \textbf{(D)} Computational timing: LP solving time versus circuit size.}
   \label{fig:ch10-validation}
-\end{figure}
+\end{figure*}
 
 Four disease circuits drawn from distinct biological domains have been
 subjected to the full pipeline: holonomy measurement, LP optimisation,
@@ -843,7 +843,7 @@ Pass.
 
 \subsection{AUC Comparison Table}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Diagnostic AUC comparison across three strategies for the four
 disease case studies.  Holonomy achieves perfect classification (AUC $= 1.00$)
@@ -859,11 +859,11 @@ Local edge inspection  & 0.54 & 0.51 & 0.53 & 0.50 & 0.520 \\
 Wegscheider holonomy   & 1.00 & 1.00 & 1.00 & 1.00 & \textbf{1.000} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Prediction Accuracy Across Case Studies}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{LP prediction accuracy across the four disease case studies.  For
 each case, the table shows the LP-predicted optimal drug combination, the
@@ -881,11 +881,11 @@ SCID & Level-3 + ADA activator & Gene therapy + PEG-ADA & Yes \\
 \multicolumn{3}{l}{\textbf{Overall pass rate}} & \textbf{4/4 (100\%)} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Computational Timing}
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Computational timing for the LP therapeutic optimisation pipeline.
 Polynomial (Level~1,2) cases complete in milliseconds; NP-hard (Level~3) cases
@@ -903,7 +903,7 @@ Glycolysis & 1  & 12     & 18    & $< 2$ ms \\
 Complex I  & 1+4 & 7     & 10    & $< 1$ ms \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{remark}[100\% pass rate]
 All four validation cases pass: the LP correctly identifies the optimal
@@ -1597,7 +1597,7 @@ The computational complexity of finding an optimal intervention is:
 holonomy type, illustrating the diversity of the framework across disease
 categories.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Classification of six diseases by dominant holonomy type.
 $d$: holonomy matrix dimension; $\det$: representative determinant value;
@@ -1616,7 +1616,7 @@ CML (T315I)                   & Topological & 2 & $0.00$       & NP-hard  & 3 \\
 SCID (ADA deficiency)         & Topological & 3 & $0.00$       & NP-hard  & 3 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The table confirms the clinical intuition that early-stage metabolic diseases
 present with drift holonomy (amenable to lifestyle and low-dose pharmacotherapy),
@@ -1643,7 +1643,7 @@ current clinical standard-of-care, and whether the LP prediction matches
 current standard (``Match'' column: $\checkmark$ = match, $\approx$ = partial
 match, $\times$ = mismatch).
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Thirty validation experiments.  $|V|$: circuit vertices; $|E|$: circuit
 edges; $|L_D|$: disease loops; Type: dominant holonomy type (D = drift, Ph =
@@ -1699,7 +1699,7 @@ Phenylketonuria (classic)      & 11 & 17 & 1 & T & PAH gene therapy & Phenylalan
 Duchenne muscular dystrophy    & 26 & 43 & 4 & T & Exon-skipping + glucocorticoids & Deflazacort & $\approx$ \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Group Results by Holonomy Type}
 
@@ -1809,7 +1809,7 @@ The four holonomy types (drift, phase, amplitude, topological) define
 natural trial strata.  Randomisation within strata controls for
 holonomy-type confounding:
 
-\begin{table}[!htbp]
+\begin{table*}[!htbp]
 \centering
 \caption{Trial stratification by holonomy type.}
 \label{tab:ch10-strata}
@@ -1823,7 +1823,7 @@ III & Amplitude  & Level 1 (LP solution) & $\geq 85\%$ \\
 IV  & Topological & Level 3 + Level 1 cascade & $\geq 60\%$ \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Sample Size and Power}
 

@@ -295,7 +295,7 @@ dimensional reduction is the key computational gain.
 \label{sec:three-primitives}
 %% ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel1_partition_geometry.png}
   \caption{Partition geometry for trajectory completion.  The left panel shows
@@ -308,7 +308,7 @@ dimensional reduction is the key computational gain.
   to remain within the feasible region, motivating the trajectory completion
   formulation over forward simulation.}
   \label{fig:ch05-partition-geometry}
-\end{figure}
+\end{figure*}
 
 Three primitive operations form the computational basis of Poincaré computing,
 replacing Boolean AND/OR/NOT as fundamental primitives.
@@ -432,7 +432,7 @@ independent of $\ell$).  Summing over $k$ levels gives $\mathcal{O}(k)$ total.
 \label{sec:viterbi}
 %% ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel4_trajectory.png}
   \caption{Trajectory completion by the Project-Complete-Compose (PCC)
@@ -444,7 +444,7 @@ independent of $\ell$).  Summing over $k$ levels gives $\mathcal{O}(k)$ total.
   panel compares computational cost: PCC ($\mathcal{O}(mk)$, linear) versus
   forward simulation ($\mathcal{O}(e^{kT})$, exponential).}
   \label{fig:ch05-trajectory-completion}
-\end{figure}
+\end{figure*}
 
 The MAP backward trajectory \Cref{eq:map-traj} is computed by the Viterbi
 algorithm~\citep{viterbi1967} applied to the trit string.
@@ -2157,7 +2157,7 @@ encoding the poised state between TCA continuation and glutamate export.
 \subsection{Benchmark Table}
 %% ---------------------------------------------------------------------------
 
-\begin{table}[ht]
+\begin{table*}[ht]
 \centering
 \caption{PCC Benchmark: Complexity Comparison Across Biological Systems}
 \label{tab:ch05-benchmark}
@@ -2184,7 +2184,7 @@ Speedup = ratio Forward/PCC (order of magnitude).
 For HIV-RT, the speedup exceeds the computational capacity of any physical
 system and should be understood as an impossibility bound on forward
 simulation rather than a practical speedup.
-\end{table}
+\end{table*}
 
 \begin{remark}[Cell Cycle Estimate]
 The cell cycle entry ($d_{\mathrm{cat}} = 15$) is estimated from the

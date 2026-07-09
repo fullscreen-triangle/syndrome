@@ -7,7 +7,7 @@
 \label{ch:cellular-state}
 \label{ch:cell-circuits}
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/part2_healthy_cell.png}
   \caption{\textbf{Part~II summary: The Healthy Cell.}
@@ -23,7 +23,7 @@
   \textbf{(D)}~Three-dimensional synchrony landscape $r(K, N)$: order parameter
   as a function of coupling strength and ensemble size $N$.}
   \label{fig:part2-healthy}
-\end{figure}
+\end{figure*}
 
 The previous chapter established partition algebra as an abstract framework for
 state resolution.  We now ground that framework in the living cell.  The cell
@@ -424,7 +424,7 @@ acceptor identity changes the depth gradient.
 \label{sec:phase-lock}
 %% ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{phase_lock_network_panel.png}
   \caption{Phase-lock network structure in a biochemical Kuramoto ensemble.
@@ -438,7 +438,7 @@ acceptor identity changes the depth gradient.
   phases).  The physiological value $K_c \approx 1.6$ sets the health/disease
   phase boundary of \Cref{def:health-phase}.}
   \label{fig:ch03-phase-lock}
-\end{figure}
+\end{figure*}
 
 A biochemical network operates not merely in the concentration domain but also
 in the oscillatory phase domain.  We model the network as a Kuramoto ensemble~\citep{Kuramoto1984,Strogatz2000}:
@@ -499,7 +499,7 @@ compartmentation) permit tighter phase coordination.
 \label{sec:aperture}
 %% ---------------------------------------------------------------------------
 
-\begin{figure}[!htbp]
+\begin{figure*}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{panel5_aperture_dynamics.png}
   \caption{Enzyme aperture dynamics.  The catalytic efficiency $k_\mathrm{cat}/K_m$
@@ -513,7 +513,7 @@ compartmentation) permit tighter phase coordination.
   across diverse enzyme families, validating the intermediate-depth optimum
   predicted by \Cref{thm:depth-optimum}.}
   \label{fig:ch03-aperture-dynamics}
-\end{figure}
+\end{figure*}
 
 We now unite the categorical aperture picture of \Cref{sec:protein-function}
 with the Michaelis--Menten kinetics~\citep{michaelis1913kinetik} it must reproduce.
@@ -2028,7 +2028,7 @@ of the bit-depth needed by binary.  In other words, ternary requires
 cellular molecular species, each described by three oscillator modes
 ($k=3$), yielding a 15-trit cellular state vector.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Ternary code table for five cellular species with three oscillator
          modes each.  Trits: $-1=$ below threshold, $0=$ at boundary,
@@ -2045,7 +2045,7 @@ O$_2$      &  $0$ & $-1$ & $-1$ & Hypoxic onset \\
 Pyruvate   & $-1$ & $-1$ & $-1$ & Severely depleted \\
 \hline
 \end{tabular}
-\end{table}
+\end{table*}
 
 The full cellular state is then the concatenated 15-trit string
 $(\boldsymbol{\tau}_{\mathrm{Glc}},\boldsymbol{\tau}_{\mathrm{ATP}},
@@ -2269,7 +2269,7 @@ reactions.  Each enzyme constitutes one aperture in the cascade.
 Representative exclusion probabilities and cumulative specificity are
 shown in~\Cref{tab:ch03-glycolysis}.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Glycolytic cascade: per-step exclusion probability $\varepsilon_i$
          and cumulative exclusion $\varepsilon_{\leq i}=\prod_{j\leq i}\varepsilon_j$.}
@@ -2292,7 +2292,7 @@ Step & Enzyme & Substrate & $\varepsilon_i$ & $\varepsilon_{\leq i}$ \\
 \multicolumn{4}{l}{Overall specificity:} & $\varepsilon_{\mathrm{total}}\approx 10^{-31}$ \\
 \hline
 \end{tabular}
-\end{table}
+\end{table*}
 
 The cascade achieves $\varepsilon_{\mathrm{total}}\approx 10^{-31}$: for every
 $10^{31}$ candidate molecules in the cytoplasm, only one glucose molecule
@@ -2353,7 +2353,7 @@ coupled to three proton-pumping apertures (transmembrane subunits ND2,
 ND4, ND5).  Representative parameters are listed in
 \Cref{tab:ch03-complex1}.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Complex~I sequential exclusion cascade: healthy vs.\ MELAS
          mitochondria (m.3243A$>$G mutation reducing Complex~I assembly
@@ -2375,7 +2375,7 @@ Step & Sub-complex & $\varepsilon_i^{\mathrm{healthy}}$ &
 $\varepsilon_{\mathrm{total}}$ && $10^{-22}$ & $1.6\times10^{-13}$ & $10^{9}$ \\
 \hline
 \end{tabular}
-\end{table}
+\end{table*}
 
 The MELAS mutation affects mitochondrial tRNA$^{\mathrm{Leu}}$, reducing
 synthesis of the hydrophobic ND subunits.  Steps 4--7 increase from

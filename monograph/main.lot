@@ -1,55 +1,55 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces Cumulative composite floor through the 5-level health-system S-functional stack ($\Sigma = 100$). Each level adds an approximately additive increment to the composite floor, with small negative corrections from the cross-term.}}{61}{table.caption.44}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces Cumulative composite floor through the 5-level health-system S-functional stack ($\Sigma = 100$). Each level adds an approximately additive increment to the composite floor, with small negative corrections from the cross-term.}}{40}{table.caption.44}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Summary of 20 numerical experiments validating Group Blindness and related theorems. All experiments pass to machine precision.}}{81}{table.caption.47}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Summary of 20 numerical experiments validating Group Blindness and related theorems. All experiments pass to machine precision.}}{53}{table.caption.47}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Ternary code table for five cellular species with three oscillator modes each. Trits: $-1=$ below threshold, $0=$ at boundary, $+1=$ above threshold.}}{124}{table.caption.51}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Glycolytic cascade: per-step exclusion probability $\varepsilon _i$ and cumulative exclusion $\varepsilon _{\leq i}=\DOTSB \prod@ \slimits@ _{j\leq i}\varepsilon _j$.}}{127}{table.caption.52}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Complex~I sequential exclusion cascade: healthy vs.\ MELAS mitochondria (m.3243A$>$G mutation reducing Complex~I assembly by $\sim 50\%$).}}{128}{table.caption.53}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Ternary code table for five cellular species with three oscillator modes each. Trits: $-1=$ below threshold, $0=$ at boundary, $+1=$ above threshold.}}{82}{table.caption.51}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Glycolytic cascade: per-step exclusion probability $\varepsilon _i$ and cumulative exclusion $\varepsilon _{\leq i}=\DOTSB \prod@ \slimits@ _{j\leq i}\varepsilon _j$.}}{84}{table.caption.52}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Complex~I sequential exclusion cascade: healthy vs.\ MELAS mitochondria (m.3243A$>$G mutation reducing Complex~I assembly by $\sim 50\%$).}}{84}{table.caption.53}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Cellular processes as partition algebra operations.}}{140}{table.caption.56}%
-\contentsline {table}{\numberline {5.2}{\ignorespaces Eight cellular oscillator classes with frequency ranges and coherence metrics.}}{142}{table.caption.58}%
-\contentsline {table}{\numberline {5.3}{\ignorespaces Comparison of Quantupartite Microscopy with Existing Methods.}}{159}{table.caption.62}%
-\contentsline {table}{\numberline {5.4}{\ignorespaces HDP Turnaround Time vs.\ Standard Oncology Workup.}}{162}{table.caption.66}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Cellular processes as partition algebra operations.}}{93}{table.caption.56}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Eight cellular oscillator classes with frequency ranges and coherence metrics.}}{94}{table.caption.58}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Comparison of Quantupartite Microscopy with Existing Methods.}}{105}{table.caption.62}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces HDP Turnaround Time vs.\ Standard Oncology Workup.}}{107}{table.caption.66}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces PCC Benchmark: Complexity Comparison Across Biological Systems}}{193}{table.caption.69}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces PCC Benchmark: Complexity Comparison Across Biological Systems}}{127}{table.caption.69}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {7.1}{\ignorespaces Summary of six propagation modalities with physical parameters.}}{205}{table.caption.72}%
-\contentsline {table}{\numberline {7.2}{\ignorespaces Arrival-time surface characteristics.}}{207}{table.caption.73}%
-\contentsline {table}{\numberline {7.3}{\ignorespaces Comparison of localization methods for intracellular reactions.}}{215}{table.caption.76}%
-\contentsline {table}{\numberline {7.4}{\ignorespaces Detection thresholds: multimodal localisation vs.\ current imaging.}}{235}{table.caption.106}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Summary of six propagation modalities with physical parameters.}}{134}{table.caption.72}%
+\contentsline {table}{\numberline {7.2}{\ignorespaces Arrival-time surface characteristics.}}{134}{table.caption.73}%
+\contentsline {table}{\numberline {7.3}{\ignorespaces Comparison of localization methods for intracellular reactions.}}{140}{table.caption.76}%
+\contentsline {table}{\numberline {7.4}{\ignorespaces Detection thresholds: multimodal localisation vs.\ current imaging.}}{153}{table.caption.106}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {8.1}{\ignorespaces Disease categories by dominant oscillator class.}}{241}{table.caption.110}%
-\contentsline {table}{\numberline {8.2}{\ignorespaces Summary of quantitative predictions from the disease state formalism. All predictions are falsifiable by the stated protocol.}}{267}{table.caption.113}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {10.1}{\ignorespaces Backbone charge of representative viral genomes.}}{316}{table.caption.123}%
-\contentsline {table}{\numberline {10.2}{\ignorespaces Viral genome size vs.\ host cell volume.}}{330}{table.caption.126}%
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {11.1}{\ignorespaces Computational scaling of the five surveillance tasks. CPU estimates assume $10^9$ floating-point operations per second on a single thread; GPU estimates assume $10^3{\times }$ parallelism on a modern compute GPU \citep {moreland2003, govindaraju2008}.}}{359}{table.caption.134}%
+\contentsline {table}{\numberline {8.1}{\ignorespaces Disease categories by dominant oscillator class.}}{159}{table.caption.110}%
+\contentsline {table}{\numberline {8.2}{\ignorespaces Summary of quantitative predictions from the disease state formalism. All predictions are falsifiable by the stated protocol.}}{176}{table.caption.113}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {10.1}{\ignorespaces Backbone charge of representative viral genomes.}}{205}{table.caption.123}%
+\contentsline {table}{\numberline {10.2}{\ignorespaces Viral genome size vs.\ host cell volume.}}{215}{table.caption.126}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {11.1}{\ignorespaces Computational scaling of the five surveillance tasks. CPU estimates assume $10^9$ floating-point operations per second on a single thread; GPU estimates assume $10^3{\times }$ parallelism on a modern compute GPU \citep {moreland2003, govindaraju2008}.}}{234}{table.caption.134}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {15.1}{\ignorespaces Oscillator classes and their ray--matter interaction channels. Each class is identified with an experimental modality that realises the Triple Observation Identity (\Cref {thm:triple-observation}).}}{447}{table.caption.183}%
-\contentsline {table}{\numberline {15.2}{\ignorespaces GPU pipeline timing on an integrated GPU (OpenGL 4.5 compute shaders, $1920\times 1080$ input image, $N_{\mathrm {vox}} = 10^6$).}}{448}{table.caption.189}%
-\contentsline {table}{\numberline {15.3}{\ignorespaces Five-pass GPU pipeline: operations, data flow, and wall-clock timing on an integrated GPU (OpenGL~4.5, $1920\times 1080$ input, $N_{\mathrm {vox}} = 10^6$).}}{453}{table.caption.190}%
-\contentsline {table}{\numberline {15.4}{\ignorespaces Disease classification by pharmacological reversibility. $\text {$\mathsurround \z@ \mathchar "458$}$: reversible ($\det (H_\ell )\neq 0$, LP feasible); $\times $: irreversible (topology loss or $\det (H_\ell )=0$).}}{456}{table.caption.191}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {16.1}{\ignorespaces Intervention hierarchy: mathematical form, tractability, and indication for each level.}}{483}{table.caption.227}%
-\contentsline {table}{\numberline {16.2}{\ignorespaces Diagnostic AUC comparison across three strategies for the four disease case studies. Holonomy achieves perfect classification (AUC $= 1.00$) in all cases, while template comparison and local edge inspection are consistently inferior.}}{489}{table.caption.230}%
-\contentsline {table}{\numberline {16.3}{\ignorespaces LP prediction accuracy across the four disease case studies. For each case, the table shows the LP-predicted optimal drug combination, the clinical standard of care, and the match verdict.}}{489}{table.caption.231}%
-\contentsline {table}{\numberline {16.4}{\ignorespaces Computational timing for the LP therapeutic optimisation pipeline. Polynomial (Level~1,2) cases complete in milliseconds; NP-hard (Level~3) cases require heuristic or approximation methods.}}{489}{table.caption.232}%
-\contentsline {table}{\numberline {16.5}{\ignorespaces Classification of six diseases by dominant holonomy type. $d$: holonomy matrix dimension; $\det $: representative determinant value; LP: applicable LP objective; Level: prescribed intervention level.}}{500}{table.caption.233}%
-\contentsline {table}{\numberline {16.6}{\ignorespaces Thirty validation experiments. $|V|$: circuit vertices; $|E|$: circuit edges; $|L_D|$: disease loops; Type: dominant holonomy type (D = drift, Ph = phase, Am = amplitude, T = topological); Predicted: LP-predicted drug or class; Standard: clinical standard of care; Match: prediction quality.}}{501}{table.caption.234}%
-\contentsline {table}{\numberline {16.7}{\ignorespaces Trial stratification by holonomy type.}}{503}{table.caption.235}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {17.1}{\ignorespaces Complete postulate reduction table. Ten standard biology/pharmacology postulates are each eliminated and replaced by a consequence of the two foundational axioms.}}{514}{table.caption.237}%
-\contentsline {table}{\numberline {17.2}{\ignorespaces Falsification timeline: which tests are achievable now versus in future years, and what falsification would imply.}}{527}{table.caption.240}%
-\contentsline {table}{\numberline {17.3}{\ignorespaces Diagnostic AUC by strategy. The holonomy classifier is the unique reference-free strategy achieving perfect classification.}}{528}{table.caption.241}%
-\contentsline {table}{\numberline {17.4}{\ignorespaces Epistemic floor $\beta = \sigma /\sqrt {N}$ at biological scales.}}{528}{table.caption.242}%
-\contentsline {table}{\numberline {17.5}{\ignorespaces Master table of all falsifiable quantitative predictions from Chapters~1--11. Codes \textbf {Pij}: $i$ = chapter, $j$ = index. ``Agree'' means agreement across all three modalities to within 5\%.}}{535}{table.caption.252}%
-\contentsline {table}{\numberline {17.6}{\ignorespaces Prediction density comparison. Prediction density $=$ number of falsifiable quantitative predictions per 100 pages of theoretical text.}}{536}{table.caption.253}%
-\contentsline {table}{\numberline {17.7}{\ignorespaces Minimum effective drug count from RCT evidence vs.\ LP prediction. ``LP rank'' = $\mathrm {rank}(A)$ for the disease's circuit constraint matrix. Empirical minimum from systematic review of phase-III RCT guidelines.}}{538}{table.caption.259}%
-\contentsline {table}{\numberline {17.8}{\ignorespaces The theorem web: 28 principal theorems in dependency order. ``Prerequisites'' lists only direct (immediate) dependencies.}}{544}{table.caption.263}%
+\contentsline {table}{\numberline {15.1}{\ignorespaces Oscillator classes and their ray--matter interaction channels. Each class is identified with an experimental modality that realises the Triple Observation Identity (\Cref {thm:triple-observation}).}}{296}{table.caption.183}%
+\contentsline {table}{\numberline {15.2}{\ignorespaces GPU pipeline timing on an integrated GPU (OpenGL 4.5 compute shaders, $1920\times 1080$ input image, $N_{\mathrm {vox}} = 10^6$).}}{296}{table.caption.189}%
+\contentsline {table}{\numberline {15.3}{\ignorespaces Five-pass GPU pipeline: operations, data flow, and wall-clock timing on an integrated GPU (OpenGL~4.5, $1920\times 1080$ input, $N_{\mathrm {vox}} = 10^6$).}}{300}{table.caption.190}%
+\contentsline {table}{\numberline {15.4}{\ignorespaces Disease classification by pharmacological reversibility. $\text {$\mathsurround \z@ \mathchar "458$}$: reversible ($\det (H_\ell )\neq 0$, LP feasible); $\times $: irreversible (topology loss or $\det (H_\ell )=0$).}}{302}{table.caption.191}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {16.1}{\ignorespaces Intervention hierarchy: mathematical form, tractability, and indication for each level.}}{317}{table.caption.227}%
+\contentsline {table}{\numberline {16.2}{\ignorespaces Diagnostic AUC comparison across three strategies for the four disease case studies. Holonomy achieves perfect classification (AUC $= 1.00$) in all cases, while template comparison and local edge inspection are consistently inferior.}}{320}{table.caption.230}%
+\contentsline {table}{\numberline {16.3}{\ignorespaces LP prediction accuracy across the four disease case studies. For each case, the table shows the LP-predicted optimal drug combination, the clinical standard of care, and the match verdict.}}{321}{table.caption.231}%
+\contentsline {table}{\numberline {16.4}{\ignorespaces Computational timing for the LP therapeutic optimisation pipeline. Polynomial (Level~1,2) cases complete in milliseconds; NP-hard (Level~3) cases require heuristic or approximation methods.}}{321}{table.caption.232}%
+\contentsline {table}{\numberline {16.5}{\ignorespaces Classification of six diseases by dominant holonomy type. $d$: holonomy matrix dimension; $\det $: representative determinant value; LP: applicable LP objective; Level: prescribed intervention level.}}{327}{table.caption.233}%
+\contentsline {table}{\numberline {16.6}{\ignorespaces Thirty validation experiments. $|V|$: circuit vertices; $|E|$: circuit edges; $|L_D|$: disease loops; Type: dominant holonomy type (D = drift, Ph = phase, Am = amplitude, T = topological); Predicted: LP-predicted drug or class; Standard: clinical standard of care; Match: prediction quality.}}{328}{table.caption.234}%
+\contentsline {table}{\numberline {16.7}{\ignorespaces Trial stratification by holonomy type.}}{330}{table.caption.235}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {17.1}{\ignorespaces Complete postulate reduction table. Ten standard biology/pharmacology postulates are each eliminated and replaced by a consequence of the two foundational axioms.}}{339}{table.caption.237}%
+\contentsline {table}{\numberline {17.2}{\ignorespaces Falsification timeline: which tests are achievable now versus in future years, and what falsification would imply.}}{348}{table.caption.240}%
+\contentsline {table}{\numberline {17.3}{\ignorespaces Diagnostic AUC by strategy. The holonomy classifier is the unique reference-free strategy achieving perfect classification.}}{348}{table.caption.241}%
+\contentsline {table}{\numberline {17.4}{\ignorespaces Epistemic floor $\beta = \sigma /\sqrt {N}$ at biological scales.}}{348}{table.caption.242}%
+\contentsline {table}{\numberline {17.5}{\ignorespaces Master table of all falsifiable quantitative predictions from Chapters~1--11. Codes \textbf {Pij}: $i$ = chapter, $j$ = index. ``Agree'' means agreement across all three modalities to within 5\%.}}{353}{table.caption.252}%
+\contentsline {table}{\numberline {17.6}{\ignorespaces Prediction density comparison. Prediction density $=$ number of falsifiable quantitative predictions per 100 pages of theoretical text.}}{354}{table.caption.253}%
+\contentsline {table}{\numberline {17.7}{\ignorespaces Minimum effective drug count from RCT evidence vs.\ LP prediction. ``LP rank'' = $\mathrm {rank}(A)$ for the disease's circuit constraint matrix. Empirical minimum from systematic review of phase-III RCT guidelines.}}{355}{table.caption.259}%
+\contentsline {table}{\numberline {17.8}{\ignorespaces The theorem web: 28 principal theorems in dependency order. ``Prerequisites'' lists only direct (immediate) dependencies.}}{359}{table.caption.263}%
