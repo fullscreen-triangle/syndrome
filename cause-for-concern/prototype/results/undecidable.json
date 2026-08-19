@@ -1,0 +1,201 @@
+{
+  "source": "examples/undecidable.cfc",
+  "status": "OK",
+  "floor": 1e-09,
+  "committed_measurements": 4,
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "mach_u": 1.1102230246251565e-16,
+    "RT_kJ_per_mol": 2.577,
+    "z_alpha": 2.5758293035489004
+  },
+  "circuits": {
+    "C_good": {
+      "species": 3,
+      "reactions": 3,
+      "cyclomatic_number": 1,
+      "max_abs_node_balance": 4.656577415599534,
+      "potential_min": -180.0,
+      "potential_max": -100.0,
+      "centred": false,
+      "gauge_offset": 0.0
+    },
+    "C_poor": {
+      "species": 3,
+      "reactions": 3,
+      "cyclomatic_number": 1,
+      "max_abs_node_balance": 4.656577415599534,
+      "potential_min": -180.0,
+      "potential_max": -100.0,
+      "centred": false,
+      "gauge_offset": 0.0
+    }
+  },
+  "tolerances": [
+    {
+      "loop": "cyc_AB",
+      "numerical": 1.5987211554602267e-13,
+      "data": 0.08922934450742903,
+      "star": 0.08922934450742903,
+      "data_available": true
+    },
+    {
+      "loop": "cyc_PQ",
+      "numerical": 1.5987211554602267e-13,
+      "data": 13.384401676114356,
+      "star": 13.384401676114356,
+      "data_available": true
+    }
+  ],
+  "verdicts": [
+    {
+      "verdict": "INCONSISTENT",
+      "holonomy": {
+        "loop": "cyc_AB",
+        "value": 3.0,
+        "abs_value": 3.0,
+        "length": 3,
+        "potential_range": 40.0
+      },
+      "tolerance": {
+        "loop": "cyc_AB",
+        "numerical": 1.5987211554602267e-13,
+        "data": 0.08922934450742903,
+        "star": 0.08922934450742903,
+        "data_available": true
+      }
+    },
+    {
+      "verdict": "UNDECIDABLE",
+      "holonomy": {
+        "loop": "cyc_PQ",
+        "value": 3.0,
+        "abs_value": 3.0,
+        "length": 3,
+        "potential_range": 40.0
+      },
+      "tolerance": {
+        "loop": "cyc_PQ",
+        "numerical": 1.5987211554602267e-13,
+        "data": 13.384401676114356,
+        "star": 13.384401676114356,
+        "data_available": true
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "line": 70,
+      "passed": true,
+      "otherwise": null,
+      "message": "same defect is UNDECIDABLE at this data quality"
+    }
+  ],
+  "emissions": [
+    {
+      "line": 70,
+      "message": "same defect is UNDECIDABLE at this data quality"
+    },
+    {
+      "line": 74,
+      "message": "the verdict depends on the data quality, as it must"
+    }
+  ],
+  "reports": [
+    {
+      "line": 39,
+      "values": [
+        "well_characterised",
+        {
+          "loop": "cyc_AB",
+          "length": 3,
+          "edges": [
+            "AB",
+            "BC",
+            "CA"
+          ]
+        },
+        {
+          "loop": "cyc_AB",
+          "value": 3.0,
+          "abs_value": 3.0,
+          "length": 3,
+          "potential_range": 40.0
+        },
+        {
+          "loop": "cyc_AB",
+          "numerical": 1.5987211554602267e-13,
+          "data": 0.08922934450742903,
+          "star": 0.08922934450742903,
+          "data_available": true
+        },
+        {
+          "verdict": "INCONSISTENT",
+          "holonomy": {
+            "loop": "cyc_AB",
+            "value": 3.0,
+            "abs_value": 3.0,
+            "length": 3,
+            "potential_range": 40.0
+          },
+          "tolerance": {
+            "loop": "cyc_AB",
+            "numerical": 1.5987211554602267e-13,
+            "data": 0.08922934450742903,
+            "star": 0.08922934450742903,
+            "data_available": true
+          }
+        }
+      ]
+    },
+    {
+      "line": 67,
+      "values": [
+        "poorly_characterised",
+        {
+          "loop": "cyc_PQ",
+          "length": 3,
+          "edges": [
+            "PQ",
+            "QR",
+            "RP"
+          ]
+        },
+        {
+          "loop": "cyc_PQ",
+          "value": 3.0,
+          "abs_value": 3.0,
+          "length": 3,
+          "potential_range": 40.0
+        },
+        {
+          "loop": "cyc_PQ",
+          "numerical": 1.5987211554602267e-13,
+          "data": 13.384401676114356,
+          "star": 13.384401676114356,
+          "data_available": true
+        },
+        {
+          "verdict": "UNDECIDABLE",
+          "holonomy": {
+            "loop": "cyc_PQ",
+            "value": 3.0,
+            "abs_value": 3.0,
+            "length": 3,
+            "potential_range": 40.0
+          },
+          "tolerance": {
+            "loop": "cyc_PQ",
+            "numerical": 1.5987211554602267e-13,
+            "data": 13.384401676114356,
+            "star": 13.384401676114356,
+            "data_available": true
+          }
+        }
+      ]
+    }
+  ],
+  "witness_set": null,
+  "error": null
+}

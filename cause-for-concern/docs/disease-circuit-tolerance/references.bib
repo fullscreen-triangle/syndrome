@@ -1,0 +1,503 @@
+% =====================================================================
+%  References for:
+%  The Solver Tolerance Is Not a Solver Parameter
+%
+%  All entries are to the standard published literature. No entry refers
+%  to unpublished or companion work; the paper is self-contained.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% Reaction-network thermodynamics
+% ---------------------------------------------------------------------
+
+@article{wegscheider1901,
+  author  = {Wegscheider, Rudolf},
+  title   = {{\"U}ber simultane Gleichgewichte und die Beziehungen zwischen
+             Thermodynamik und Reactionskinetik homogener Systeme},
+  journal = {Monatshefte f{\"u}r Chemie},
+  volume  = {22},
+  number  = {8},
+  pages   = {849--906},
+  year    = {1901},
+  doi     = {10.1007/BF01517498}
+}
+
+@article{onsager1931,
+  author  = {Onsager, Lars},
+  title   = {Reciprocal Relations in Irreversible Processes. {I}.},
+  journal = {Physical Review},
+  volume  = {37},
+  number  = {4},
+  pages   = {405--426},
+  year    = {1931},
+  doi     = {10.1103/PhysRev.37.405}
+}
+
+@article{schuster1989,
+  author  = {Schuster, Stefan and Schuster, Reinhart},
+  title   = {A generalization of the {W}egscheider condition. {I}mplications
+             for properties of steady states and for quasi-steady-state
+             approximation},
+  journal = {Journal of Mathematical Chemistry},
+  volume  = {3},
+  number  = {1},
+  pages   = {25--42},
+  year    = {1989},
+  doi     = {10.1007/BF01171883}
+}
+
+@article{beard2002,
+  author  = {Beard, Daniel A. and Liang, Shou-dan and Qian, Hong},
+  title   = {Energy Balance for Analysis of Complex Metabolic Networks},
+  journal = {Biophysical Journal},
+  volume  = {83},
+  number  = {1},
+  pages   = {79--86},
+  year    = {2002},
+  doi     = {10.1016/S0006-3495(02)75150-3}
+}
+
+@article{qian2005,
+  author  = {Qian, Hong and Beard, Daniel A.},
+  title   = {Thermodynamics of stoichiometric biochemical networks in living
+             systems far from equilibrium},
+  journal = {Biophysical Chemistry},
+  volume  = {114},
+  number  = {2--3},
+  pages   = {213--220},
+  year    = {2005},
+  doi     = {10.1016/j.bpc.2004.12.001}
+}
+
+@article{oster1971,
+  author  = {Oster, George F. and Perelson, Alan S. and Katchalsky, Aharon},
+  title   = {Network Thermodynamics},
+  journal = {Nature},
+  volume  = {234},
+  pages   = {393--399},
+  year    = {1971},
+  doi     = {10.1038/234393a0}
+}
+
+@book{peusner1986,
+  author    = {Peusner, Leonardo},
+  title     = {Studies in Network Thermodynamics},
+  publisher = {Elsevier},
+  address   = {Amsterdam},
+  year      = {1986}
+}
+
+@book{atkins2018,
+  author    = {Atkins, Peter and de Paula, Julio and Keeler, James},
+  title     = {Atkins' Physical Chemistry},
+  edition   = {11},
+  publisher = {Oxford University Press},
+  address   = {Oxford},
+  year      = {2018}
+}
+
+@article{alberty1998,
+  author  = {Alberty, Robert A.},
+  title   = {Calculation of standard transformed {G}ibbs energies and standard
+             transformed enthalpies of biochemical reactants},
+  journal = {Archives of Biochemistry and Biophysics},
+  volume  = {353},
+  number  = {1},
+  pages   = {116--130},
+  year    = {1998},
+  doi     = {10.1006/abbi.1998.0638}
+}
+
+@article{noor2013,
+  author  = {Noor, Elad and Haraldsd{\'o}ttir, Hulda S. and Milo, Ron and
+             Fleming, Ronan M. T.},
+  title   = {Consistent Estimation of {G}ibbs Energy Using Component
+             Contributions},
+  journal = {PLoS Computational Biology},
+  volume  = {9},
+  number  = {7},
+  pages   = {e1003098},
+  year    = {2013},
+  doi     = {10.1371/journal.pcbi.1003098}
+}
+
+@article{flamholz2012,
+  author  = {Flamholz, Avi and Noor, Elad and Bar-Even, Arren and Milo, Ron},
+  title   = {{eQuilibrator} --- the biochemical thermodynamics calculator},
+  journal = {Nucleic Acids Research},
+  volume  = {40},
+  number  = {D1},
+  pages   = {D770--D775},
+  year    = {2012},
+  doi     = {10.1093/nar/gkr874}
+}
+
+% ---------------------------------------------------------------------
+% Numerical analysis: floating point, conditioning, error analysis
+% ---------------------------------------------------------------------
+
+@book{higham2002,
+  author    = {Higham, Nicholas J.},
+  title     = {Accuracy and Stability of Numerical Algorithms},
+  edition   = {2},
+  publisher = {SIAM},
+  address   = {Philadelphia},
+  year      = {2002},
+  doi       = {10.1137/1.9780898718027}
+}
+
+@article{goldberg1991,
+  author  = {Goldberg, David},
+  title   = {What Every Computer Scientist Should Know About Floating-Point
+             Arithmetic},
+  journal = {ACM Computing Surveys},
+  volume  = {23},
+  number  = {1},
+  pages   = {5--48},
+  year    = {1991},
+  doi     = {10.1145/103162.103163}
+}
+
+@book{ieee754,
+  author    = {{IEEE}},
+  title     = {{IEEE} Standard for Floating-Point Arithmetic,
+               {IEEE} Std 754-2019},
+  publisher = {IEEE},
+  address   = {New York},
+  year      = {2019},
+  doi       = {10.1109/IEEESTD.2019.8766229}
+}
+
+@article{kahan1965,
+  author  = {Kahan, William},
+  title   = {Pracniques: Further Remarks on Reducing Truncation Errors},
+  journal = {Communications of the ACM},
+  volume  = {8},
+  number  = {1},
+  pages   = {40},
+  year    = {1965},
+  doi     = {10.1145/363707.363723}
+}
+
+@book{trefethen1997,
+  author    = {Trefethen, Lloyd N. and Bau, David},
+  title     = {Numerical Linear Algebra},
+  publisher = {SIAM},
+  address   = {Philadelphia},
+  year      = {1997}
+}
+
+@book{golub2013,
+  author    = {Golub, Gene H. and Van Loan, Charles F.},
+  title     = {Matrix Computations},
+  edition   = {4},
+  publisher = {Johns Hopkins University Press},
+  address   = {Baltimore},
+  year      = {2013}
+}
+
+@article{skeel1979,
+  author  = {Skeel, Robert D.},
+  title   = {Scaling for Numerical Stability in {G}aussian Elimination},
+  journal = {Journal of the ACM},
+  volume  = {26},
+  number  = {3},
+  pages   = {494--526},
+  year    = {1979},
+  doi     = {10.1145/322139.322148}
+}
+
+% ---------------------------------------------------------------------
+% Graph theory and cycle bases
+% ---------------------------------------------------------------------
+
+@article{kavitha2009,
+  author  = {Kavitha, Telikepalli and Liebchen, Christian and Mehlhorn, Kurt
+             and Michail, Dimitrios and Rizzi, Romeo and Ueckerdt, Torsten
+             and Zweig, Katharina A.},
+  title   = {Cycle bases in graphs: characterization, algorithms, complexity,
+             and applications},
+  journal = {Computer Science Review},
+  volume  = {3},
+  number  = {4},
+  pages   = {199--243},
+  year    = {2009},
+  doi     = {10.1016/j.cosrev.2009.08.001}
+}
+
+@article{horton1987,
+  author  = {Horton, Joseph Douglas},
+  title   = {A Polynomial-Time Algorithm to Find the Shortest Cycle Basis of a
+             Graph},
+  journal = {SIAM Journal on Computing},
+  volume  = {16},
+  number  = {2},
+  pages   = {358--366},
+  year    = {1987},
+  doi     = {10.1137/0216026}
+}
+
+@book{diestel2017,
+  author    = {Diestel, Reinhard},
+  title     = {Graph Theory},
+  edition   = {5},
+  publisher = {Springer},
+  series    = {Graduate Texts in Mathematics},
+  volume    = {173},
+  year      = {2017}
+}
+
+@book{bollobas1998,
+  author    = {Bollob{\'a}s, B{\'e}la},
+  title     = {Modern Graph Theory},
+  publisher = {Springer},
+  series    = {Graduate Texts in Mathematics},
+  volume    = {184},
+  year      = {1998}
+}
+
+% ---------------------------------------------------------------------
+% Metabolic reconstructions and kinetic data
+% ---------------------------------------------------------------------
+
+@article{brunk2018,
+  author  = {Brunk, Elizabeth and Sahoo, Swagatika and Zielinski, Daniel C.
+             and Altunkaya, Ali and Dr{\"a}ger, Andreas and Mih, Nathan and
+             others},
+  title   = {{Recon3D} enables a three-dimensional view of gene variation in
+             human metabolism},
+  journal = {Nature Biotechnology},
+  volume  = {36},
+  number  = {3},
+  pages   = {272--281},
+  year    = {2018},
+  doi     = {10.1038/nbt.4072}
+}
+
+@article{teusink2000,
+  author  = {Teusink, Bas and Passarge, Jasper and Reijenga, Corinne A. and
+             Esgalhado, Elzbieta and van der Weijden, Coen C. and
+             Schepper, Mario and others},
+  title   = {Can yeast glycolysis be understood in terms of in vitro kinetics
+             of the constituent enzymes? {T}esting biochemistry},
+  journal = {European Journal of Biochemistry},
+  volume  = {267},
+  number  = {17},
+  pages   = {5313--5329},
+  year    = {2000},
+  doi     = {10.1046/j.1432-1327.2000.01527.x}
+}
+
+@article{mulquiney1999,
+  author  = {Mulquiney, Peter J. and Kuchel, Philip W.},
+  title   = {Model of 2,3-bisphosphoglycerate metabolism in the human
+             erythrocyte based on detailed enzyme kinetic equations},
+  journal = {Biochemical Journal},
+  volume  = {342},
+  number  = {3},
+  pages   = {581--596},
+  year    = {1999},
+  doi     = {10.1042/bj3420581}
+}
+
+@article{rapoport1975,
+  author  = {Rapoport, Tom A. and Heinrich, Reinhart},
+  title   = {Mathematical analysis of multienzyme systems. {I}. {M}odelling of
+             the glycolysis of human erythrocytes},
+  journal = {Biosystems},
+  volume  = {7},
+  number  = {1},
+  pages   = {120--129},
+  year    = {1975},
+  doi     = {10.1016/0303-2647(75)90049-0}
+}
+
+@article{zanella2005,
+  author  = {Zanella, Alberto and Fermo, Elisa and Bianchi, Paola and
+             Valentini, Giovanna},
+  title   = {Red cell pyruvate kinase deficiency: molecular and clinical
+             aspects},
+  journal = {British Journal of Haematology},
+  volume  = {130},
+  number  = {1},
+  pages   = {11--25},
+  year    = {2005},
+  doi     = {10.1111/j.1365-2141.2005.05527.x}
+}
+
+@article{orth2010,
+  author  = {Orth, Jeffrey D. and Thiele, Ines and Palsson, Bernhard {\O}.},
+  title   = {What is flux balance analysis?},
+  journal = {Nature Biotechnology},
+  volume  = {28},
+  number  = {3},
+  pages   = {245--248},
+  year    = {2010},
+  doi     = {10.1038/nbt.1614}
+}
+
+@article{bordbar2014,
+  author  = {Bordbar, Aarash and Monk, Jonathan M. and King, Zachary A. and
+             Palsson, Bernhard {\O}.},
+  title   = {Constraint-based models predict metabolic and associated cellular
+             functions},
+  journal = {Nature Reviews Genetics},
+  volume  = {15},
+  number  = {2},
+  pages   = {107--120},
+  year    = {2014},
+  doi     = {10.1038/nrg3643}
+}
+
+% ---------------------------------------------------------------------
+% Metrology, detection limits, measurement uncertainty
+% ---------------------------------------------------------------------
+
+@book{gum2008,
+  author    = {{JCGM}},
+  title     = {Evaluation of Measurement Data --- Guide to the Expression of
+               Uncertainty in Measurement},
+  publisher = {Joint Committee for Guides in Metrology},
+  year      = {2008},
+  note      = {JCGM 100:2008}
+}
+
+@article{currie1968,
+  author  = {Currie, Lloyd A.},
+  title   = {Limits for qualitative detection and quantitative determination.
+             {A}pplication to radiochemistry},
+  journal = {Analytical Chemistry},
+  volume  = {40},
+  number  = {3},
+  pages   = {586--593},
+  year    = {1968},
+  doi     = {10.1021/ac60259a007}
+}
+
+@book{vantrees2001,
+  author    = {Van Trees, Harry L.},
+  title     = {Detection, Estimation, and Modulation Theory, Part {I}},
+  publisher = {Wiley},
+  address   = {New York},
+  year      = {2001}
+}
+
+% ---------------------------------------------------------------------
+% Validation methodology and reproducibility
+% ---------------------------------------------------------------------
+
+@article{simmons2011,
+  author  = {Simmons, Joseph P. and Nelson, Leif D. and Simonsohn, Uri},
+  title   = {False-Positive Psychology: {U}ndisclosed Flexibility in Data
+             Collection and Analysis Allows Presenting Anything as
+             Significant},
+  journal = {Psychological Science},
+  volume  = {22},
+  number  = {11},
+  pages   = {1359--1366},
+  year    = {2011},
+  doi     = {10.1177/0956797611417632}
+}
+
+@article{sandve2013,
+  author  = {Sandve, Geir Kjetil and Nekrutenko, Anton and Taylor, James and
+             Hovig, Eivind},
+  title   = {Ten Simple Rules for Reproducible Computational Research},
+  journal = {PLoS Computational Biology},
+  volume  = {9},
+  number  = {10},
+  pages   = {e1003285},
+  year    = {2013},
+  doi     = {10.1371/journal.pcbi.1003285}
+}
+
+@article{hanley1982,
+  author  = {Hanley, James A. and McNeil, Barbara J.},
+  title   = {The meaning and use of the area under a receiver operating
+             characteristic ({ROC}) curve},
+  journal = {Radiology},
+  volume  = {143},
+  number  = {1},
+  pages   = {29--36},
+  year    = {1982},
+  doi     = {10.1148/radiology.143.1.7063747}
+}
+
+% ---------------------------------------------------------------------
+% Programming-language semantics and typed DSLs
+% ---------------------------------------------------------------------
+
+@article{plotkin2004,
+  author  = {Plotkin, Gordon D.},
+  title   = {A structural approach to operational semantics},
+  journal = {Journal of Logic and Algebraic Programming},
+  volume  = {60--61},
+  pages   = {17--139},
+  year    = {2004},
+  doi     = {10.1016/j.jlap.2004.05.001}
+}
+
+@book{pierce2002,
+  author    = {Pierce, Benjamin C.},
+  title     = {Types and Programming Languages},
+  publisher = {MIT Press},
+  address   = {Cambridge, MA},
+  year      = {2002}
+}
+
+@article{wright1994,
+  author  = {Wright, Andrew K. and Felleisen, Matthias},
+  title   = {A Syntactic Approach to Type Soundness},
+  journal = {Information and Computation},
+  volume  = {115},
+  number  = {1},
+  pages   = {38--94},
+  year    = {1994},
+  doi     = {10.1006/inco.1994.1093}
+}
+
+@inproceedings{kennedy1997,
+  author    = {Kennedy, Andrew},
+  title     = {Relational parametricity and units of measure},
+  booktitle = {Proceedings of the 24th ACM SIGPLAN-SIGACT Symposium on
+               Principles of Programming Languages (POPL)},
+  pages     = {442--455},
+  year      = {1997},
+  doi       = {10.1145/263699.263761}
+}
+
+% ---------------------------------------------------------------------
+% Software
+% ---------------------------------------------------------------------
+
+@article{harris2020,
+  author  = {Harris, Charles R. and Millman, K. Jarrod and
+             van der Walt, St{\'e}fan J. and Gommers, Ralf and others},
+  title   = {Array programming with {NumPy}},
+  journal = {Nature},
+  volume  = {585},
+  pages   = {357--362},
+  year    = {2020},
+  doi     = {10.1038/s41586-020-2649-2}
+}
+
+@article{virtanen2020,
+  author  = {Virtanen, Pauli and Gommers, Ralf and Oliphant, Travis E. and
+             Haberland, Matt and Reddy, Tyler and others},
+  title   = {{SciPy} 1.0: fundamental algorithms for scientific computing in
+             {P}ython},
+  journal = {Nature Methods},
+  volume  = {17},
+  pages   = {261--272},
+  year    = {2020},
+  doi     = {10.1038/s41592-019-0686-2}
+}
+
+@inproceedings{hagberg2008,
+  author    = {Hagberg, Aric A. and Schult, Daniel A. and Swart, Pieter J.},
+  title     = {Exploring Network Structure, Dynamics, and Function using
+               {NetworkX}},
+  booktitle = {Proceedings of the 7th Python in Science Conference},
+  pages     = {11--15},
+  year      = {2008}
+}

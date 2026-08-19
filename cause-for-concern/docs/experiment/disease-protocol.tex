@@ -1,0 +1,1457 @@
+% =====================================================================
+%  Experimental Protocols for the Validation of Circuit-Based
+%  Disease Diagnosis via the Cause-for-Concern Calculus
+%
+%  Designs five experiments against public data, specifies the
+%  CFC syntax extensions each requires, states success and failure
+%  criteria, and gives the complete CFC programs.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[round,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,
+            citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage{cleveref}
+\usepackage{longtable}
+\usepackage{multirow}
+
+% ---- Theorem environments ----
+\newtheoremstyle{expthm}{\topsep}{\topsep}{\itshape}{}{\bfseries}{.}{.5em}{}
+\theoremstyle{expthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{principle}[theorem]{Principle}
+\newtheorem{protocol}[theorem]{Protocol}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- .cfc listing style ----
+\definecolor{cfckw}{RGB}{30,64,175}
+\definecolor{cfccom}{RGB}{22,101,52}
+\definecolor{cfcnum}{RGB}{180,83,9}
+\definecolor{cfcstr}{RGB}{159,18,57}
+\definecolor{cfcbg}{RGB}{250,250,250}
+\lstdefinelanguage{cfc}{
+  morekeywords={floor,patient,probe,panel,measure,localize,cell,gap,
+    close,toward,coherent,using,basis,until,resolved,contested,decline,
+    concern,when,emit,assert,yield,let,in,as,with,import,module,export,
+    monitor,every,observe,against,reference,circuit,from,holonomy,
+    spectrum,overlap,address,propagate,loops,conductance,potential,
+    flux,wegscheider,check,network,species,reaction,solve,
+    foreach,collect,rank,threshold,classify,scan,enumerate,
+    synthesise,compare,select,where,report,batch},
+  morekeywords=[2]{Coherence,DiseaseVector,Cell,Gap,Probe,Panel,
+    Intervention,Dose,Reading,Verdict,Concern,Circuit,Holonomy,
+    Spectrum,Overlap,Address,Loop,HolonomyVector,ROC,AUC,
+    SpectrumDB,GrooveSpectrum,EscapeScore,Network},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  keywordstyle=\color{cfckw}\bfseries,
+  keywordstyle=[2]\color{cfcnum},
+  commentstyle=\color{cfccom}\itshape,
+  stringstyle=\color{cfcstr},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{cfcbg},
+  frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=4pt,
+  breaklines=true,showstringspaces=false,columns=fullflexible,tabsize=2
+}
+\lstset{language=cfc}
+
+% ---- Shorthand ----
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rp}{\R_{\ge 0}}
+\newcommand{\flo}{\beta}
+\newcommand{\ecoh}{\eta}
+\newcommand{\dvec}{\mathbf{D}}
+\newcommand{\HolL}{H_\ell}
+\newcommand{\Gcond}{\mathcal{G}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\cf}[1]{\texttt{#1}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{\textbf{Experimental Protocols for the Validation of\\
+Circuit-Based Disease Diagnosis\\
+via the Cause-for-Concern Calculus}\\[6pt]
+\large Five Experiments on Public Data, with CFC Programs,\\
+Syntax Extensions, and Falsification Criteria}
+
+\author{%
+Kundai Farai Sachikonye\\
+\small Technical University of Munich\\
+\small Chair of Proteomics and Bioanalytics\\
+\small AIMe Registry for Artificial Intelligence\\
+\small \texttt{kundai.sachikonye@bitspark.com}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% =====================================================================
+\begin{abstract}
+\noindent
+We design five experiments that test the principal claims of the
+circuit-based disease framework against publicly available data, using the
+Cause-for-Concern (CFC) domain-specific language as the implementation
+vehicle. Each experiment is specified to the level at which it can be
+executed without further design decisions: data source, extraction
+protocol, CFC program, success criterion, failure criterion, and the
+theorem it tests. Three syntax extensions to CFC are required and are
+specified in full: a \cf{circuit} module for constructing and solving
+metabolic circuits from reaction network databases, a \cf{spectrum}
+module for Fourier-based spectral embeddings of biological sequences, and
+a \cf{scan} form for batch evaluation over external databases. Each
+extension is conservative: it introduces no new semantic primitive but
+binds existing CFC operations to domain-specific data types. The five
+experiments are: (E1)~holonomy-based diagnosis on the Recon3D human
+metabolic reconstruction, testing whether loop inconsistency localises
+enzyme defects without being told which enzyme is deficient;
+(E2)~spectral MHC-peptide binding prediction on the Immune Epitope
+Database, testing whether a zero-training-data spectral classifier
+achieves competitive discrimination; (E3)~spectral codon-usage overlap
+between human-infecting viruses and bacteriophages, testing the
+housekeeping-mimicry prediction; (E4)~prospective immune escape
+prediction on SARS-CoV-2, testing whether known Omicron mutations rank
+in the top decile of spectral escape candidates; and (E5)~CFC reference
+implementation on a five-node glycolytic circuit, validating the
+ten-step protocol of the CFC specification. For each experiment we state
+the quantitative threshold below which the result is negative and what
+the negative result would falsify. No experiment requires wet-lab work,
+proprietary data, or computational resources beyond a single workstation.
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+\subsection{The validation gap}
+
+The disease framework developed across the companion manuscripts rests on
+a sequence of mathematical results: floor positivity, loop-holonomy
+self-consistency, spectral matched-filter optimality, trajectory
+certification, and gap-closure convergence. Every result is proved from
+stated hypotheses, and every numerical check reported in those manuscripts
+passes. The gap is that every check is either (a)~evaluated on synthetic
+data generated under the same model the check assumes, or
+(b)~consistent with known clinical orderings reproduced post hoc. No
+experiment applies the framework to a dataset where the answer is not
+already known and shows it outperforms an existing method or produces a
+genuinely novel finding.
+
+This paper closes the gap by designing five experiments that are
+executable on public data, that test the framework's distinctive
+predictions against established baselines, and that have quantitative
+failure criteria stated in advance.
+
+\subsection{Why CFC is the implementation language}
+
+The Cause-for-Concern calculus \citep{sachikonye2026cfc} specifies a
+language whose semantics is measurement, whose types enforce that no
+therapy is applied without a localised cell, and whose operational
+semantics is a monotone committed-measurement clock. The experiments
+below are clinical-reasoning protocols---they localise a state, compute
+a gap, and close it or decline---and CFC is the language designed to
+express exactly that. Using CFC forces each experiment to satisfy the
+accountability constraints the framework imposes: no zero-residue value,
+no blind therapy, no unfounded allocation.
+
+Three extensions are needed. They are specified in \Cref{sec:extensions}
+and are conservative: each binds an existing CFC semantic operation
+(probe, reading, localisation) to a domain-specific data type (circuit,
+spectrum, database row) without introducing new semantic primitives.
+
+\subsection{What this paper does and does not do}
+
+It \emph{does} specify five experiments at sufficient detail to execute
+them, including the CFC programs, the data extraction steps, and the
+statistical tests. It \emph{does not} report results: no experiment has
+been run. The paper is a protocol, not a report. It \emph{does} state
+failure criteria: each experiment has a quantitative threshold below
+which the result is negative and a statement of what the negative result
+falsifies. It \emph{does not} claim that any experiment will succeed.
+
+% =====================================================================
+\section{CFC Syntax Extensions}
+\label{sec:extensions}
+% =====================================================================
+
+The base CFC grammar of \citep{sachikonye2026cfc} exposes \cf{measure},
+\cf{localize}, and \cf{close} over a physiological state system. The five
+experiments below require three domain-specific modules that bind these
+verbs to concrete data types. Each module is a conservative extension: it
+adds keywords and type constructors but no new reduction rules. The
+semantic model (\cf{measure} commits a reading, \cf{localize} shrinks a
+surviving set, \cf{close} solves an $\ell_1$ program) is unchanged.
+
+\subsection{The \texttt{circuit} module}
+\label{sec:ext-circuit}
+
+\begin{definition}[\cf{circuit} module: grammar extension]
+\label{def:circuit-grammar}
+The following productions are added to the CFC grammar.
+\begin{align*}
+\textit{circuitDecl} &\;::=\; \cf{circuit}\ \textit{ident}\
+  \cf{from}\ \textit{expr}\ \cf{\{}\ \{\textit{circuitStmt}\}\ \cf{\}}\\[2pt]
+\textit{circuitStmt} &\;::=\; \cf{species}\ \textit{ident}\
+  \cf{:}\ \textit{speciesSpec}\\
+  &\;\mid\; \cf{reaction}\ \textit{ident}\
+  \cf{:}\ \textit{reactionSpec}\\
+  &\;\mid\; \cf{solve}\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{speciesSpec} &\;::=\; \cf{mu0}\ \cf{:}\ \textit{number}\
+  \cf{,}\ \cf{concentration}\ \cf{:}\ \textit{number}\\[2pt]
+\textit{reactionSpec} &\;::=\; \textit{ident}\ \cf{->}\ \textit{ident}\
+  \cf{,}\ \cf{k}\ \cf{:}\ \textit{number}\\[2pt]
+\textit{holonomyStmt} &\;::=\; \cf{holonomy}\ \cf{loops}\
+  \cf{of}\ \textit{ident}\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{wegscheiderStmt} &\;::=\; \cf{wegscheider}\ \cf{check}\
+  \textit{ident}\ \cf{yield}\ \textit{ident}
+\end{align*}
+\end{definition}
+
+\begin{definition}[\cf{circuit} module: types]
+\label{def:circuit-types}
+\leavevmode
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \cf{Circuit}: a solved steady-state resistive circuit
+  $\Gcond=(V,E,w)$ with node potentials $\mu_i$, conductances $G_{ij}$,
+  and fluxes $J_{ij}$. Carries its floor annotation.
+\item \cf{Loop}: a directed cycle in $\Gcond$, identified by its vertex
+  sequence.
+\item \cf{Holonomy}: the scalar $\norm{\HolL - \mathrm{Id}}_F$ for a
+  single loop.
+\item \cf{HolonomyVector}: the vector
+  $\dvec_H = (\norm{\HolL - \mathrm{Id}}_F)_{\ell \in \mathcal{L}}$
+  over all independent loops. This is a \cf{DiseaseVector} specialisation.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[\cf{circuit} module: semantics]
+\label{def:circuit-sem}
+\leavevmode
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \cf{circuit C from data \{...\}} constructs $\Gcond$ by computing
+  $\mu_i = \mu_i^\circ + RT \ln c_i$, $G_{ij} = k_{ij} c_i / (RT)$,
+  $J_{ij} = G_{ij}(\mu_i - \mu_j)$ for each declared species and
+  reaction. The \cf{solve} verb checks Kirchhoff's current law at every
+  node and yields a \cf{Circuit} value. This is \cf{measure} specialised
+  to the circuit domain: it commits the solved circuit as a reading.
+\item \cf{holonomy loops of C yield H} enumerates all independent directed
+  cycles in $\Gcond$, computes the Wegscheider sum
+  $\sum_{\text{cycle}} \Delta\mu_{ij}$ for each, and yields the
+  \cf{HolonomyVector}. This is \cf{localize} specialised to loop space:
+  it shrinks the surviving set to the loops whose holonomy exceeds the
+  floor.
+\item \cf{wegscheider check C yield V} verifies
+  $\abs{\sum_{\text{cycle}} \Delta\mu_{ij}} < \epsilon$ for every
+  independent cycle, yielding a \cf{Verdict}. This is \cf{assert}
+  specialised to thermodynamic consistency.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Why these are conservative extensions]
+\label{rem:conservative-circuit}
+Each verb is a binding of an existing CFC semantic operation to a
+domain-specific computation. \cf{solve} is \cf{measure} (it commits a
+reading). \cf{holonomy loops} is \cf{localize} (it shrinks a surviving
+set). \cf{wegscheider check} is \cf{assert} (it tests a condition and
+may halt). The monotone committed-measurement clock advances at each
+verb, the accountability type system applies, and no new reduction rule
+is introduced. The extension is therefore sound by the soundness of the
+base calculus (\citep{sachikonye2026cfc}, Theorem~10.1).
+\end{remark}
+
+\subsection{The \texttt{spectrum} module}
+\label{sec:ext-spectrum}
+
+\begin{definition}[\cf{spectrum} module: grammar extension]
+\label{def:spectrum-grammar}
+\begin{align*}
+\textit{spectrumStmt} &\;::=\; \cf{synthesise}\ \cf{spectrum}\
+  \cf{of}\ \textit{expr}\ [\cf{channels}\ \textit{number}]\
+  [\cf{bins}\ \textit{number}]\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{overlapStmt} &\;::=\; \cf{overlap}\ \textit{ident}\
+  \textit{ident}\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{batchStmt} &\;::=\; \cf{scan}\ \textit{ident}\
+  \cf{against}\ \textit{expr}\\
+  &\quad [\cf{where}\ \textit{cond}]\\
+  &\quad \cf{collect}\ \textit{expr}\\
+  &\quad \cf{yield}\ \textit{ident}
+\end{align*}
+\end{definition}
+
+\begin{definition}[\cf{spectrum} module: types]
+\label{def:spectrum-types}
+\leavevmode
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \cf{Spectrum}: an $\ell^2$-normalised vector
+  $\psi(s) \in S^{cK-1}$ computed from a biological sequence $s$ by the
+  channelised DFT embedding of \citep{sachikonye2026immuno}. Carries its
+  floor annotation (the spectral Lipschitz constant bounds the
+  resolution).
+\item \cf{Overlap}: a scalar $\rho = \psi(q) \cdot \psi(t) \in [-1,1]$,
+  the cosine similarity between two spectra. This is a \cf{Reading}
+  specialisation.
+\item \cf{GrooveSpectrum}: a \cf{Spectrum} computed from the 57
+  polymorphic groove residues of an MHC allele. A \cf{Spectrum}
+  subtype.
+\item \cf{EscapeScore}: a scalar
+  $E(v') = -\max_k \rho(\psi(v'), \psi(\mathrm{Ab}_k)) + w \cdot
+  \rho(\psi(v'), \psi(R))$. A \cf{Reading} specialisation.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[\cf{spectrum} module: semantics]
+\label{def:spectrum-sem}
+\leavevmode
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \cf{synthesise spectrum of seq channels c bins K yield psi}
+  computes the channelised DFT: mean-subtract the $c \times L$ signal
+  matrix, apply the real FFT to each channel, extract the first $K$
+  magnitude bins, $\ell^2$-normalise. This is \cf{measure} specialised
+  to spectral synthesis: it commits the spectrum as a reading. Cost:
+  $\mathcal{O}(cL \log L)$.
+\item \cf{overlap psi1 psi2 yield rho} computes the dot product
+  $\psi_1 \cdot \psi_2$. This is a scalar \cf{Reading}. Cost:
+  $\mathcal{O}(cK)$.
+\item \cf{scan query against database where cond collect expr yield
+  results} iterates over database entries, synthesises each spectrum on
+  demand (empty database principle), evaluates \cf{cond}, and collects
+  the expression. This is the batch form of \cf{measure}: each iteration
+  commits one reading and advances the clock. The database is streamed;
+  working memory is $\mathcal{O}(cK)$ per entry.
+\end{itemize}
+\end{definition}
+
+\subsection{The \texttt{network} module}
+\label{sec:ext-network}
+
+\begin{definition}[\cf{network} module: grammar extension]
+\label{def:network-grammar}
+\begin{align*}
+\textit{networkDecl} &\;::=\; \cf{network}\ \textit{ident}\
+  \cf{from}\ \textit{expr}\\[2pt]
+\textit{propagateStmt} &\;::=\; \cf{propagate}\ \textit{ident}\
+  \cf{from}\ \textit{ident}\ \cf{yield}\ \textit{ident}\\[2pt]
+\textit{addressStmt} &\;::=\; \cf{address}\ \textit{ident}\
+  \cf{depth}\ \textit{number}\ \cf{yield}\ \textit{ident}
+\end{align*}
+\end{definition}
+
+This module binds the CKG propagation operator $\mathcal{T}$ of
+\citep{sachikonye2026ckg} to CFC's \cf{localize} semantics. A
+\cf{propagate} call is a \cf{localize} restricted to the circuit's
+contact graph: it returns the admissible set (a \cf{Cell} in CFC's
+sense) of species causally reachable from a starting vertex under the
+solved circuit's resting process. An \cf{address} call computes the
+ternary interleaved address of a species from its solved-circuit
+coordinate.
+
+% =====================================================================
+\section{Experiment 1: Holonomy Diagnosis on Recon3D}
+\label{sec:exp1}
+% =====================================================================
+
+\subsection{Claim tested}
+
+The Self-Consistency Primacy Theorem
+(\citep{sachikonye2026blind}, Theorem~8.1): a cell is healthy if and only
+if $\HolL = \mathrm{Id}$ for every reaction cycle $\ell$; disease is the
+condition $\HolL \neq \mathrm{Id}$ for some $\ell$. The holonomy test
+achieves perfect discrimination (AUC = 1.00 on synthetic circuits) and
+\emph{localises} the defect to the broken loop without being told which
+enzyme is deficient.
+
+\subsection{Data source}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{Recon3D} \citep{brunk2018recon3d}: the most comprehensive
+  human metabolic reconstruction. We extract the glycolytic, pentose
+  phosphate, and TCA cycle subnetwork ($\approx 80$ reactions,
+  $\approx 60$ metabolites) with standard free energies $\Delta G^\circ$
+  from the model's thermodynamic annotations.
+\item \textbf{Healthy erythrocyte fluxes}: Rapoport \& Heinrich (1975),
+  Mulquiney \& Kuchel (1999). Measured glycolytic flux
+  $J_{\mathrm{glycolysis}} = 1.1 \pm 0.1$ mmol/L/h; metabolite
+  concentrations from physiological reference ranges.
+\item \textbf{Pyruvate kinase (PK) deficiency}: Zanella et al.\ (2005).
+  PK activity reduced to $5$--$30\%$ of normal; upstream metabolite
+  accumulation (2,3-BPG, PEP) and downstream depletion (pyruvate, ATP)
+  documented.
+\item \textbf{Cancer metabolic profiles}: Jain et al.\ (2012), NCI-60
+  panel. Metabolic consumption and release rates for 60 cancer cell
+  lines across 219 metabolites.
+\end{enumerate}
+
+\subsection{Protocol}
+
+\begin{protocol}[Holonomy diagnosis]
+\label{prot:holonomy}
+\leavevmode
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Circuit construction.} For each dataset (healthy, PK-deficient,
+  cancer), construct the circuit graph $\Gcond = (V, E, w)$:
+  \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+  \item Node potential: $\mu_i = \mu_i^\circ + RT \ln c_i$ with
+    $RT = 2.577$ kJ/mol at $T = 310$ K.
+  \item Edge conductance: $G_{ij} = k_{ij} c_i / (RT)$.
+  \item Flux: $J_{ij} = G_{ij}(\mu_i - \mu_j)$.
+  \end{itemize}
+\item \textbf{KCL verification.} At every internal node, verify
+  $\abs{\sum J_{\mathrm{in}} - \sum J_{\mathrm{out}}} < \epsilon$ with
+  $\epsilon = 10^{-6}$. Any node failing this check invalidates the
+  circuit and halts the experiment.
+\item \textbf{Cycle enumeration.} Enumerate all independent directed
+  cycles in the subnetwork using the cycle space basis of the directed
+  graph (rank of the cycle matrix = $\abs{E} - \abs{V} + 1$).
+\item \textbf{Holonomy computation.} For each cycle $\ell$, compute the
+  Wegscheider sum:
+  \begin{equation}
+  \HolL = \sum_{(i,j) \in \ell} (\mu_j - \mu_i).
+  \label{eq:holonomy-sum}
+  \end{equation}
+  By the voltage law (\citep{sachikonye2026ckg}, Theorem~2.1), this
+  telescopes to zero for a consistent circuit. Disease is
+  $\abs{\HolL} > \flo$ for some $\ell$.
+\item \textbf{Classifier construction.} Define two classifiers:
+  \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+  \item \emph{Holonomy classifier}: threshold on
+    $\max_\ell \abs{\HolL}$.
+  \item \emph{Template classifier}: Euclidean distance
+    $\norm{\mathbf{c}_{\mathrm{patient}} -
+    \mathbf{c}_{\mathrm{healthy}}}$ from the healthy metabolite
+    concentration vector.
+  \end{itemize}
+\item \textbf{Discrimination.} Compute ROC-AUC for both classifiers on
+  the healthy-vs-diseased discrimination task.
+\item \textbf{Localisation.} For PK-deficient circuits, identify which
+  loop(s) have $\abs{\HolL} > \flo$. The prediction is that the ATP
+  production loop (containing the PK step) is flagged, and the pentose
+  phosphate pathway loops are not.
+\end{enumerate}
+\end{protocol}
+
+\subsection{CFC program}
+
+\begin{lstlisting}[caption={E1: holonomy diagnosis on Recon3D.}]
+-- exp1_holonomy.cfc
+floor 1e-6
+
+import Recon3D              -- Recon3D thermodynamic annotations
+import Erythrocyte.Healthy   -- Rapoport & Heinrich concentrations
+import Erythrocyte.PKDeficient -- Zanella et al. concentrations
+
+-- construct the healthy circuit
+circuit Healthy from Recon3D.glycolysis_tca {
+  solve yield C_healthy
+}
+
+-- construct the PK-deficient circuit
+circuit PKDef from Recon3D.glycolysis_tca {
+  -- override PK activity to 15% of normal
+  reaction PK : PEP -> Pyruvate, k : 0.15 * Recon3D.k_PK
+  solve yield C_pkdef
+}
+
+-- verify Kirchhoff current law on both
+wegscheider check C_healthy yield V_h
+assert V_h == resolved emit "healthy circuit consistent"
+
+wegscheider check C_pkdef yield V_pk
+-- PK-deficient circuit may or may not pass Wegscheider;
+-- failure is itself a finding
+
+-- compute holonomy on all independent loops
+holonomy loops of C_healthy yield H_healthy
+holonomy loops of C_pkdef yield H_pkdef
+
+-- the diagnostic question: which loops are inconsistent?
+patient Erythrocyte_PKDef {
+  -- localise using the holonomy vector as the probe reading
+  measure panel { holonomy loops of C_pkdef } yield reading
+
+  localize reading
+    using panel { holonomy loops of C_pkdef }
+    until resolved otherwise decline
+    yield here
+
+  -- here.disease_vector is the holonomy vector;
+  -- its nonzero entries are the broken loops
+  let broken_loops := here.disease_vector
+    where abs(H) > floor
+
+  -- the prediction: PK-containing loop is broken
+  assert broken_loops contains "ATP_production_loop"
+    emit "localisation succeeded: PK loop identified"
+
+  -- gap: displacement to the nearest consistent circuit
+  close gap of here
+    toward coherent
+    using basis Recon3D.enzymes
+    until coherent otherwise decline
+    yield plan
+
+  -- plan.intervention names the enzyme(s) whose conductance
+  -- modification restores loop consistency
+  report plan
+}
+\end{lstlisting}
+
+\subsection{Success and failure criteria}
+
+\begin{criterion}[E1 success]
+\label{crit:e1-success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em,itemsep=2pt]
+\item The healthy circuit has $\abs{\HolL} < 10^{-12}$ on every
+  independent cycle (machine-precision zero).
+\item The PK-deficient circuit has $\abs{\HolL} > 10^{-3}$ on at
+  least one cycle containing the PK reaction step.
+\item The holonomy classifier achieves ROC-AUC $\geq 0.95$ on the
+  healthy-vs-PK-deficient discrimination.
+\item The holonomy vector localises the defect to the PK-containing
+  loop(s) without being told which enzyme is deficient.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[E1 failure]
+\label{crit:e1-failure}
+If the healthy circuit has $\abs{\HolL} > 10^{-6}$ on any cycle, the
+circuit construction is incorrect and the experiment is invalid (not
+negative). If the PK-deficient circuit has $\abs{\HolL} < 10^{-6}$ on
+all cycles, the holonomy test does not detect the defect, and the
+Self-Consistency Primacy Theorem is empirically unsupported on real
+metabolic data. If the holonomy classifier achieves AUC $< 0.80$, the
+method does not outperform template comparison, and the claimed
+superiority of self-consistency over template-based diagnosis is not
+confirmed.
+\end{criterion}
+
+\begin{remark}[What a negative result would mean]
+A negative result on criterion (b) would not falsify the theorem, which
+is a mathematical identity about Kirchhoff's voltage law. It would show
+that the concentrations and rate constants available from public databases
+are not accurate enough to produce a detectable holonomy defect, which is
+a limitation of the data, not of the theory. The experiment is designed
+to distinguish these two cases: criterion (a) tests whether the healthy
+circuit is thermodynamically consistent (a property of the data quality),
+and only if (a) passes does (b) test the theory.
+\end{remark}
+
+% =====================================================================
+\section{Experiment 2: Spectral MHC Binding on IEDB}
+\label{sec:exp2}
+% =====================================================================
+
+\subsection{Claim tested}
+
+The molecular recognition framework
+(\citep{sachikonye2026immuno}, Definition~3.2): a peptide $p$ binds MHC
+allele $M$ if and only if
+$\rho(p, M) \equiv \psi(p) \cdot \Gamma(M) > \rho^*_{\mathrm{MHC}}$.
+The spectral matched filter is Neyman-Pearson optimal
+(\citep{sachikonye2026immuno}, Theorem~2.1) and requires zero training
+data.
+
+\subsection{Data source}
+
+The Immune Epitope Database (IEDB; \texttt{iedb.org}):
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item Download: all human HLA class I peptide-MHC binding assays with
+  IC$_{50}$ measurements.
+\item Filter: 9-mer peptides only; HLA-A, -B, -C alleles with $\geq 200$
+  measurements each.
+\item Expected yield: $\approx 500{,}000$ peptide-allele pairs across
+  $\approx 100$ alleles.
+\item Binarisation: IC$_{50} \leq 500$ nM $\Rightarrow$ binder (positive);
+  IC$_{50} > 500$ nM $\Rightarrow$ non-binder (negative). This is the
+  standard threshold used by NetMHCpan \citep{reynisson2020}.
+\end{itemize}
+
+HLA groove residue sequences: IPD-IMGT/HLA database
+(\texttt{ebi.ac.uk/ipd/imgt/hla/}). For each allele $M$, extract the 57
+polymorphic binding-groove residues of the $\alpha_1$ and $\alpha_2$
+domains.
+
+\subsection{Protocol}
+
+\begin{protocol}[Spectral MHC binding]
+\label{prot:mhc}
+\leavevmode
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Groove spectrum computation.} For each HLA allele $M$:
+  \begin{enumerate}[label=(\roman*),leftmargin=1.8em]
+  \item Extract the 57 groove residues from IPD-IMGT/HLA.
+  \item Compute the three-channel protein signal matrix
+    $X \in \R^{3 \times 57}$: hydropathy (Kyte-Doolittle, normalised to
+    $[0,1]$), van der Waals volume (normalised to $[0,1]$), net charge
+    ($\{-1, 0, +1\}$).
+  \item Mean-subtract each channel.
+  \item Apply the real FFT; retain the first $K = 16$ non-DC magnitude
+    bins per channel.
+  \item $\ell^2$-normalise to obtain
+    $\Gamma(M) \in S^{47}$.
+  \end{enumerate}
+\item \textbf{Peptide spectrum computation.} For each 9-mer peptide $p$,
+  compute $\psi(p) \in S^{47}$ identically.
+\item \textbf{Binding score.} For each peptide-allele pair, compute
+  $\rho = \psi(p) \cdot \Gamma(M)$.
+\item \textbf{Per-allele ROC-AUC.} For each allele with $\geq 200$
+  measurements, compute the ROC-AUC of $\rho$ as a classifier against
+  the IC$_{50} \leq 500$ nM binarisation.
+\item \textbf{Comparison.} Compare per-allele AUC against published
+  NetMHCpan 4.1 benchmark AUCs \citep{reynisson2020}.
+\item \textbf{Rare-allele analysis.} Stratify alleles by IEDB
+  measurement count. Compute the mean AUC in each stratum for both the
+  spectral method and NetMHCpan. The prediction is that the spectral
+  method's AUC is allele-frequency-independent (because it uses zero
+  training data), while NetMHCpan degrades on rare alleles.
+\item \textbf{Supertype validation.} Compute
+  $\Gamma(M_i) \cdot \Gamma(M_j)$ for all allele pairs. Cluster at
+  cosine similarity $\geq 0.85$. Compare clusters against the Sette \&
+  Sidney (1999) HLA supertypes.
+\end{enumerate}
+\end{protocol}
+
+\subsection{CFC program}
+
+\begin{lstlisting}[caption={E2: spectral MHC binding on IEDB.}]
+-- exp2_mhc_binding.cfc
+floor 1e-3
+
+import IEDB                  -- peptide-MHC binding assays
+import IPD_IMGT_HLA          -- HLA allele groove sequences
+
+-- compute groove spectra for all alleles
+basis HLA_Grooves {
+  probe groove_spectrum(allele) {
+    reference: IPD_IMGT_HLA.groove_residues(allele)
+    observe: synthesise spectrum of reference
+               channels 3 bins 16
+  }
+}
+
+-- the experiment: scan all IEDB peptide-allele pairs
+patient IEDB_Benchmark {
+  -- for each allele with >= 200 measurements
+  foreach allele in IPD_IMGT_HLA.alleles
+    where IEDB.count(allele) >= 200 {
+
+    -- compute groove spectrum
+    synthesise spectrum of
+      IPD_IMGT_HLA.groove_residues(allele)
+      channels 3 bins 16
+      yield groove
+
+    -- scan all peptides for this allele
+    scan groove against IEDB.peptides(allele)
+      where IEDB.peptide_length == 9
+      collect overlap(groove, synthesise spectrum of
+                IEDB.peptide channels 3 bins 16)
+      yield scores
+
+    -- compute ROC-AUC against IC50 <= 500nM
+    let auc := ROC(scores, IEDB.binders(allele, 500))
+    report allele, auc
+  }
+
+  -- rare-allele stratification
+  let rare_alleles := IPD_IMGT_HLA.alleles
+    where IEDB.count(allele) < 50
+  let common_alleles := IPD_IMGT_HLA.alleles
+    where IEDB.count(allele) >= 1000
+
+  report "rare_mean_auc", mean(auc for rare_alleles)
+  report "common_mean_auc", mean(auc for common_alleles)
+}
+\end{lstlisting}
+
+\subsection{Success and failure criteria}
+
+\begin{criterion}[E2 success]
+\label{crit:e2-success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em,itemsep=2pt]
+\item Mean per-allele AUC $\geq 0.80$ across all alleles with
+  $\geq 200$ measurements.
+\item Mean AUC on rare alleles ($< 50$ IEDB measurements) is within
+  $0.05$ of mean AUC on common alleles ($\geq 1000$ measurements).
+\item HLA supertype clusters recovered at cosine $\geq 0.85$ match the
+  Sette \& Sidney supertypes with adjusted Rand index $\geq 0.60$.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[E2 failure]
+\label{crit:e2-failure}
+If mean AUC $< 0.70$, the magnitude-only spectral embedding is too
+lossy for MHC binding prediction, and the phase-discarding design of the
+spectral fingerprint is falsified as a binding predictor. If the rare/common
+AUC gap exceeds $0.10$ in favour of common alleles, the spectral method
+is not allele-frequency-independent and the zero-training-data advantage
+is not confirmed.
+\end{criterion}
+
+% =====================================================================
+\section{Experiment 3: Spectral Codon-Usage Overlap}
+\label{sec:exp3}
+% =====================================================================
+
+\subsection{Claim tested}
+
+The housekeeping-mimicry prediction
+(\citep{sachikonye2026viral}, Proposition~5.1): viral RNA genomes must
+present charge-oscillation profiles matching the host's constitutively
+expressed housekeeping genes, because those are the templates the host
+machinery is calibrated to process. Cross-kingdom non-overlap
+(\citep{sachikonye2026viral}, Proposition~8.1): bacteriophage proteins
+have zero spectral overlap with human housekeeping centroids because
+phage codons are tuned to bacterial ribosomal decoding.
+
+\subsection{Data source}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{Human housekeeping genes.} Eisenberg \& Levanon (2013)
+  consensus list: $\approx 3{,}800$ genes. CDS sequences from Ensembl
+  GRCh38.
+\item \textbf{Human-infecting viral proteins.} UniProt reviewed entries
+  for HIV-1, SARS-CoV-2, Influenza A (H1N1, H3N2), HCV, EBV, HSV-1,
+  HPV-16: $\approx 200$ proteins total.
+\item \textbf{Bacteriophage proteins.} PhagesDB and NCBI phage genomes:
+  T4, $\lambda$, P22, T7, $\phi$X174, $\approx 300$ proteins.
+\item \textbf{E.\ coli housekeeping genes.} Baba et al.\ (2006), Keio
+  collection essential genes: $\approx 300$ genes.
+\end{enumerate}
+
+\subsection{Protocol}
+
+\begin{protocol}[Codon-usage spectral overlap]
+\label{prot:codon}
+\leavevmode
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Compute housekeeping centroids.}
+  \begin{enumerate}[label=(\roman*),leftmargin=1.8em]
+  \item For each human housekeeping protein, compute the 3-channel
+    spectral embedding $\psi(g_k)$ with $K = 16$.
+  \item Compute
+    $\Gamma_{\mathrm{HK}}^{\mathrm{human}} =
+    \frac{1}{N}\sum_k \psi(g_k) /
+    \norm{\frac{1}{N}\sum_k \psi(g_k)}$.
+  \item Repeat for E.\ coli housekeeping genes to obtain
+    $\Gamma_{\mathrm{HK}}^{E.\,coli}$.
+  \end{enumerate}
+\item \textbf{Compute viral and phage spectra.} For each protein $v_j$
+  (human virus) or $p_j$ (phage), compute $\psi(v_j)$ or $\psi(p_j)$.
+\item \textbf{Compute overlap scores.}
+  \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+  \item $\rho_{\mathrm{human}}(v_j) =
+    \psi(v_j) \cdot \Gamma_{\mathrm{HK}}^{\mathrm{human}}$
+    for each human virus protein.
+  \item $\rho_{\mathrm{human}}(p_j) =
+    \psi(p_j) \cdot \Gamma_{\mathrm{HK}}^{\mathrm{human}}$
+    for each phage protein.
+  \item $\rho_{E.\,coli}(v_j) =
+    \psi(v_j) \cdot \Gamma_{\mathrm{HK}}^{E.\,coli}$
+    for each human virus protein.
+  \item $\rho_{E.\,coli}(p_j) =
+    \psi(p_j) \cdot \Gamma_{\mathrm{HK}}^{E.\,coli}$
+    for each phage protein.
+  \end{itemize}
+\item \textbf{Statistical test.} Wilcoxon rank-sum test comparing
+  $\{\rho_{\mathrm{human}}(v_j)\}$ against
+  $\{\rho_{\mathrm{human}}(p_j)\}$: the prediction is that human virus
+  proteins have significantly higher overlap with human housekeeping
+  centroids than phage proteins do ($p < 0.001$). Symmetrically, phage
+  proteins should have higher overlap with E.\ coli centroids.
+\item \textbf{Visualisation.} Plot each protein in the
+  $(\rho_{\mathrm{human}}, \rho_{E.\,coli})$ plane. The prediction is
+  that human viruses cluster in the high-$\rho_{\mathrm{human}}$ region
+  and phages in the high-$\rho_{E.\,coli}$ region, with clean
+  separation.
+\end{enumerate}
+\end{protocol}
+
+\subsection{CFC program}
+
+\begin{lstlisting}[caption={E3: spectral codon-usage overlap.}]
+-- exp3_codon_overlap.cfc
+floor 1e-3
+
+import Ensembl.GRCh38        -- human CDS sequences
+import Eisenberg2013         -- housekeeping gene list
+import UniProt.Viral         -- human virus proteins
+import PhagesDB              -- bacteriophage proteins
+import Baba2006              -- E. coli essential genes
+
+-- compute human housekeeping centroid
+let hk_human := Eisenberg2013.genes
+scan each in hk_human
+  collect synthesise spectrum of
+    Ensembl.CDS(each) channels 3 bins 16
+  yield hk_spectra_human
+
+let centroid_human := normalise(mean(hk_spectra_human))
+
+-- compute E. coli housekeeping centroid
+let hk_ecoli := Baba2006.essential_genes
+scan each in hk_ecoli
+  collect synthesise spectrum of each channels 3 bins 16
+  yield hk_spectra_ecoli
+
+let centroid_ecoli := normalise(mean(hk_spectra_ecoli))
+
+-- scan human virus proteins
+scan v in UniProt.Viral.human_infecting
+  collect {
+    rho_human: overlap(synthesise spectrum of v
+                 channels 3 bins 16, centroid_human),
+    rho_ecoli: overlap(synthesise spectrum of v
+                 channels 3 bins 16, centroid_ecoli)
+  }
+  yield virus_scores
+
+-- scan phage proteins
+scan p in PhagesDB.proteins
+  collect {
+    rho_human: overlap(synthesise spectrum of p
+                 channels 3 bins 16, centroid_human),
+    rho_ecoli: overlap(synthesise spectrum of p
+                 channels 3 bins 16, centroid_ecoli)
+  }
+  yield phage_scores
+
+-- statistical test
+assert wilcoxon(virus_scores.rho_human,
+                phage_scores.rho_human).p < 0.001
+  emit "human viruses have higher human-HK overlap"
+
+assert wilcoxon(phage_scores.rho_ecoli,
+                virus_scores.rho_ecoli).p < 0.001
+  emit "phages have higher ecoli-HK overlap"
+
+report virus_scores, phage_scores
+\end{lstlisting}
+
+\subsection{Success and failure criteria}
+
+\begin{criterion}[E3 success]
+\label{crit:e3-success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em,itemsep=2pt]
+\item Mean $\rho_{\mathrm{human}}$ for human virus proteins exceeds mean
+  $\rho_{\mathrm{human}}$ for phage proteins by $> 0.05$, with Wilcoxon
+  $p < 0.001$.
+\item Mean $\rho_{E.\,coli}$ for phage proteins exceeds mean
+  $\rho_{E.\,coli}$ for human virus proteins by $> 0.05$, with Wilcoxon
+  $p < 0.001$.
+\item In the $(\rho_{\mathrm{human}}, \rho_{E.\,coli})$ plane, the two
+  populations are separable by a linear classifier with AUC $\geq 0.80$.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[E3 failure]
+If the distributions overlap substantially (Wilcoxon $p > 0.05$ on either
+test), the spectral embedding does not capture the host-specificity
+signature that the housekeeping-mimicry hypothesis predicts, and the
+cross-kingdom non-overlap claim is empirically unsupported.
+\end{criterion}
+
+% =====================================================================
+\section{Experiment 4: Prospective Escape Prediction}
+\label{sec:exp4}
+% =====================================================================
+
+\subsection{Claim tested}
+
+The immune escape landscape
+(\citep{sachikonye2026immuno}, Definition~5.1;
+\citep{sachikonye2026pathogen}, Algorithm~2): escape variants are
+mutations that shift the pathogen spectrum out of antibody recognition
+bands while retaining receptor-binding overlap. Known Omicron mutations
+should rank in the top decile of predicted escape candidates.
+
+\subsection{Data source}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{Spike RBD sequence.} Wuhan-Hu-1 (GenBank MN908947),
+  residues 319--541 (223 amino acids).
+\item \textbf{ACE2 receptor.} Human ACE2 ectodomain (UniProt Q9BYF1),
+  residues 19--615.
+\item \textbf{Pre-Omicron antibody panel.} Cameroni et al.\ (2022,
+  PMID 35016198): heavy and light chain CDR sequences for S309, S2E12,
+  S2H58, S2K146, S2X259, S2D106 ($\geq 6$ antibodies).
+\item \textbf{Ground truth.} Omicron BA.1 RBD mutations: K417N, N440K,
+  G446S, S477N, T478K, E484A, Q493R, G496S, Q498R, N501Y, Y505H (11
+  substitutions).
+\end{enumerate}
+
+\subsection{Protocol}
+
+\begin{protocol}[Escape prediction]
+\label{prot:escape}
+\leavevmode
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Receptor and antibody spectra.} Compute $\psi(\mathrm{ACE2})$
+  and $\Gamma(\mathrm{Ab}_k)$ for each antibody (from concatenated CDR
+  sequences) using 3-channel protein embedding, $K = 16$.
+\item \textbf{Variant enumeration.} Enumerate all $19 \times 223 = 4{,}237$
+  single-amino-acid substitutions in the RBD.
+\item \textbf{Escape scoring.} For each variant $v'$:
+  \begin{enumerate}[label=(\roman*),leftmargin=1.8em]
+  \item Synthesise $\psi(v')$.
+  \item $\rho_{\mathrm{bind}} = \psi(v') \cdot \psi(\mathrm{ACE2})$.
+  \item $\rho_{\mathrm{escape}} = \max_k \psi(v') \cdot \Gamma(\mathrm{Ab}_k)$.
+  \item $E(v') = -\rho_{\mathrm{escape}} + 0.8 \cdot \rho_{\mathrm{bind}}$.
+  \end{enumerate}
+\item \textbf{Ranking.} Sort all 4{,}237 variants by $E(v')$ descending.
+\item \textbf{Evaluation.} For each of the 11 Omicron BA.1 mutations,
+  record its percentile rank in the sorted list.
+\item \textbf{Statistical test.} Under the null hypothesis that Omicron
+  mutations are uniformly distributed, compute the probability that all
+  11 fall in the top $p$-percentile: $P = p^{11}$. Report the minimum
+  $p$ at which the null is rejected at $\alpha = 0.01$.
+\item \textbf{Control.} Repeat with a random ``antibody'' spectrum
+  (uniform on $S^{47}$) replacing the real panel. The enrichment should
+  vanish.
+\end{enumerate}
+\end{protocol}
+
+\subsection{CFC program}
+
+\begin{lstlisting}[caption={E4: SARS-CoV-2 escape prediction.}]
+-- exp4_escape.cfc
+floor 1e-3
+
+import GenBank.MN908947       -- Wuhan-Hu-1 Spike
+import UniProt.Q9BYF1         -- human ACE2
+import Cameroni2022           -- antibody CDR sequences
+
+let RBD := GenBank.MN908947.spike[319:541]
+
+-- compute receptor spectrum
+synthesise spectrum of UniProt.Q9BYF1.ectodomain
+  channels 3 bins 16 yield psi_ACE2
+
+-- compute antibody panel spectra
+foreach ab in Cameroni2022.antibodies {
+  synthesise spectrum of ab.CDR_concatenated
+    channels 3 bins 16 yield psi_ab
+}
+
+-- enumerate all single-AA substitutions
+let variants := enumerate_substitutions(RBD)
+  -- yields 19 * 223 = 4237 variants
+
+-- score each variant
+scan v in variants
+  collect {
+    mutation: v.label,
+    psi_v: synthesise spectrum of v.sequence
+             channels 3 bins 16,
+    rho_bind: overlap(psi_v, psi_ACE2),
+    rho_escape: max(
+      foreach ab in Cameroni2022.antibodies
+        collect overlap(psi_v, psi_ab)),
+    E: -rho_escape + 0.8 * rho_bind
+  }
+  yield escape_landscape
+
+-- rank by escape score
+let ranked := rank(escape_landscape, by: E, descending)
+
+-- evaluate Omicron BA.1 mutations
+let omicron_mutations := [
+  "K417N","N440K","G446S","S477N","T478K",
+  "E484A","Q493R","G496S","Q498R","N501Y","Y505H"
+]
+
+foreach m in omicron_mutations {
+  let percentile := ranked.percentile(m)
+  report m, percentile
+}
+
+-- statistical test
+let min_percentile := max(
+  foreach m in omicron_mutations collect ranked.percentile(m))
+assert min_percentile <= 0.10
+  emit "all Omicron mutations in top 10%"
+
+-- negative control: random antibody panel
+let random_panel := uniform_sphere(48, seed: 42)
+scan v in variants
+  collect {
+    E_random: -overlap(psi_v, random_panel) + 0.8 * rho_bind
+  }
+  yield random_landscape
+
+report "real_enrichment", enrichment(ranked, omicron_mutations)
+report "random_enrichment",
+  enrichment(rank(random_landscape), omicron_mutations)
+\end{lstlisting}
+
+\subsection{Success and failure criteria}
+
+\begin{criterion}[E4 success]
+\label{crit:e4-success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em,itemsep=2pt]
+\item At least $8/11$ Omicron BA.1 mutations rank in the top $10\%$ of
+  escape candidates.
+\item The median percentile of Omicron mutations is $\leq 15\%$.
+\item The enrichment under the real antibody panel is at least $3\times$
+  higher than under the random control.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[E4 failure]
+If fewer than $6/11$ Omicron mutations fall in the top $20\%$, the
+spectral escape landscape does not capture real immunological selection
+pressure, and the claim that escape variants are spectrally predictable
+is empirically unsupported. If the random control achieves comparable
+enrichment, the result is an artefact of the scoring function geometry
+rather than a biological signal.
+\end{criterion}
+
+% =====================================================================
+\section{Experiment 5: CFC Reference Implementation}
+\label{sec:exp5}
+% =====================================================================
+
+\subsection{Claim tested}
+
+The CFC specification (\citep{sachikonye2026cfc}): the ten-step
+validation protocol of \S13, establishing that the Floor Theorem,
+Localization Theorem, Certificate Theorem, Gap-Closure Theorem, and
+Wellness Theorem hold on an explicit model instance.
+
+\subsection{Model}
+
+A five-node glycolytic circuit:
+\begin{equation}
+\text{Glucose} \xrightarrow{k_1} \text{G6P}
+\xrightarrow{k_2} \text{FBP}
+\xrightarrow{k_3} \text{G3P}
+\xrightarrow{k_4} \text{Pyruvate}
+\label{eq:glycolysis-model}
+\end{equation}
+with one feedback loop: ATP/ADP ratio coupled to the hexokinase ($k_1$)
+and phosphofructokinase ($k_2$) steps. Mass-action kinetics with
+textbook rate constants from Teusink et al.\ (2000).
+
+Three oscillator classes: glycolytic flux ($\Pi_1 = J_{\mathrm{total}}$),
+ATP/ADP ratio ($\Pi_2 = [\mathrm{ATP}]/[\mathrm{ADP}]$), redox state
+($\Pi_3 = [\mathrm{NADH}]/[\mathrm{NAD}^+]$).
+
+\subsection{Protocol}
+
+\begin{protocol}[CFC reference implementation]
+\label{prot:cfc}
+The ten validation steps from \citep{sachikonye2026cfc}, \S13:
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Floor.} Set readout resolution $\delta = 10^{-3}$.
+  Confirm the induced state-discrimination has $\flo > 0$. Perturb
+  states by $\Delta x < \flo$ and confirm readouts are
+  indistinguishable. Perturb by $\Delta x > \flo$ and confirm readouts
+  differ.
+\item \textbf{Coherence.} Compute $\ecoh_i$ for each oscillator class
+  at optimal and degraded values. Confirm $\ecoh_i \in [0,1]$. Confirm
+  the coherent set $\mathcal{M}^*_\theta$ equals the states with all
+  $\ecoh_i \geq \theta$.
+\item \textbf{Localization.} Construct a glucose-challenge probe
+  (ingestion of 75 units glucose, observe G6P at $t = 10$). Confirm it
+  is floor-injective on the glycolytic subspace: distinct metabolic
+  states produce distinct traces. Construct a probe that is \emph{not}
+  floor-injective (observe total carbon only) and confirm it fails to
+  localise.
+\item \textbf{Certificate.} Build a cascade probe:
+  glucose $\to$ (state-gated glycolysis) $\to$ pyruvate $\to$
+  (state-gated LDH) $\to$ lactate. Confirm lactate presence certifies
+  the entire upstream path. Block LDH ($k_{\mathrm{LDH}} = 0$); confirm
+  lactate is absent.
+\item \textbf{Rigidity.} Grow the observed species set $S$ and confirm
+  $\mathcal{M}_S$ is non-increasing. Confirm it becomes cell-tight
+  ($\mathrm{diam}(\mathcal{M}_S) < \flo$) after a panel of $3$ probes.
+  Confirm that with only $1$ probe, $\mathcal{M}_S$ is not cell-tight
+  and \cf{localize} returns \cf{decline}.
+\item \textbf{Gap-closure.} Place the model in a PK-deficient state
+  ($k_4 = 0.15 k_4^{\mathrm{normal}}$). Compute the gap
+  $\mathbf{g} = x^* - x$ to the nearest coherent state. Solve the
+  $\ell_1$ program over the enzyme basis. Confirm the selected
+  intervention is sparse ($\leq 3$ nonzero doses). Iterate the
+  contraction; confirm $\mathrm{dist}(x_k, \mathcal{M}^*) \leq
+  \lambda^k \mathrm{dist}(x_0, \mathcal{M}^*)$ with $\lambda < 1$.
+\item \textbf{Unity.} Confirm the glucose probe simultaneously
+  localises (its trace pins the state to a cell) and displaces (its
+  metabolic products shift the state).
+\item \textbf{Decline.} Construct a model variant with two metabolically
+  distinct states (aerobic vs.\ anaerobic) that produce identical
+  glucose-challenge readouts. Confirm \cf{localize} returns
+  \cf{contested decline} and names the two surviving cells.
+\item \textbf{Derived vs.\ fitted.} Fit a polynomial surrogate on
+  $[\mathrm{ATP}] \in [0.5, 2.0]$ mM. Evaluate both the derived
+  (mass-action) and surrogate models at $[\mathrm{ATP}] = 5.0$ mM
+  (off-training). Confirm the surrogate error exceeds the derived-model
+  error by $> 10\times$.
+\item \textbf{Type safety.} Confirm the type checker rejects: (a)~a
+  literal of zero floor; (b)~a \cf{close} whose subject is a
+  \cf{Reading}, not a \cf{Cell}; (c)~a probe with floor annotation
+  $\flo = 0$.
+\end{enumerate}
+\end{protocol}
+
+\subsection{CFC program}
+
+\begin{lstlisting}[caption={E5: CFC reference implementation.}]
+-- exp5_reference.cfc
+floor 1e-3
+
+-- the five-node glycolytic model
+circuit Glycolysis from Teusink2000 {
+  species Glucose     : mu0 : -917.0, concentration : 5.0
+  species G6P         : mu0 : -1760.0, concentration : 0.5
+  species FBP         : mu0 : -2600.0, concentration : 0.1
+  species G3P         : mu0 : -1510.0, concentration : 0.05
+  species Pyruvate    : mu0 : -474.0, concentration : 0.1
+
+  reaction HK  : Glucose -> G6P,    k : 0.1
+  reaction PFK : G6P -> FBP,        k : 0.05
+  reaction Ald : FBP -> G3P,        k : 0.08
+  reaction PK  : G3P -> Pyruvate,   k : 0.12
+
+  solve yield C_normal
+}
+
+-- V1: floor positivity
+patient V1_Floor {
+  measure panel { glucose_challenge(75) } yield r1
+  let perturbed := perturb(C_normal, G6P, delta: 0.5e-3)
+  measure panel { glucose_challenge(75) } yield r2
+  assert abs(r1 - r2) < floor
+    emit "V1: sub-floor perturbation indistinguishable"
+
+  let perturbed2 := perturb(C_normal, G6P, delta: 5e-3)
+  measure panel { glucose_challenge(75) } yield r3
+  assert abs(r1 - r3) > floor
+    emit "V1: supra-floor perturbation distinguishable"
+}
+
+-- V2: coherence
+patient V2_Coherence {
+  let eta_flux := coherence(C_normal, "glycolytic_flux",
+    optimal: 1.1, degraded: 0.0)
+  assert eta_flux >= 0.0 emit "V2: coherence >= 0"
+  assert eta_flux <= 1.0 emit "V2: coherence <= 1"
+}
+
+-- V3: localization
+patient V3_Localize {
+  measure panel { glucose_challenge(75) >> observe(G6P) }
+    yield r_injective
+
+  localize r_injective
+    using panel { glucose_challenge(75) >> observe(G6P) }
+    until resolved otherwise decline
+    yield cell_or_decline
+
+  assert cell_or_decline == resolved
+    emit "V3: floor-injective probe localises"
+}
+
+-- V5: rigidity
+patient V5_Rigidity {
+  -- single probe: should decline
+  localize baseline
+    using panel { glucose_challenge(75) }
+    until resolved otherwise decline
+    yield result_1probe
+
+  assert result_1probe == decline
+    emit "V5: single probe declines (correct)"
+
+  -- three probes: should resolve
+  localize baseline
+    using panel {
+      glucose_challenge(75) >> observe(G6P)
+      || lactate_probe(10)
+      || atp_ratio_probe()
+    }
+    until resolved otherwise decline
+    yield result_3probes
+
+  assert result_3probes == resolved
+    emit "V5: three probes resolve"
+}
+
+-- V6: gap-closure
+patient V6_GapClosure {
+  -- PK-deficient state
+  circuit PKDef from Glycolysis {
+    reaction PK : G3P -> Pyruvate, k : 0.15 * 0.12
+    solve yield C_pkdef
+  }
+
+  localize C_pkdef
+    using panel {
+      glucose_challenge(75) >> observe(G6P)
+      || lactate_probe(10)
+      || atp_ratio_probe()
+    }
+    until resolved
+    yield here
+
+  close gap of here
+    toward coherent
+    using basis Glycolysis.enzymes
+    until coherent otherwise decline
+    yield plan
+
+  -- confirm sparsity
+  assert plan.nonzero_doses <= 3
+    emit "V6: intervention is sparse"
+
+  -- confirm contraction
+  assert plan.contraction_factor < 1.0
+    emit "V6: gap contracts"
+
+  report plan
+}
+
+-- V10: type safety (these must be rejected)
+-- The following lines are commented because they MUST NOT compile:
+-- let bad1 := 0.5#0         -- zero floor: ill-typed
+-- close gap of r_raw        -- r_raw : Reading, not Cell
+--   toward coherent using basis Glycolysis.enzymes
+--   until coherent yield bad_plan
+\end{lstlisting}
+
+\subsection{Success and failure criteria}
+
+\begin{criterion}[E5 success]
+All ten validation steps pass on the five-node model. The type checker
+rejects all three ill-typed programs. The gap-closure contraction
+achieves $\mathrm{dist}(x_k, \mathcal{M}^*) < \flo$ within $k^* \leq 20$
+iterations.
+\end{criterion}
+
+\begin{criterion}[E5 failure]
+If any of steps V1--V9 fail on the five-node model, the CFC specification
+has a bug that the constructive validation protocol was designed to catch.
+If step V10 fails (the type checker accepts an ill-typed program), the
+accountability type system is unsound.
+\end{criterion}
+
+% =====================================================================
+\section{Implementation Plan}
+\label{sec:implementation}
+% =====================================================================
+
+\subsection{Execution order}
+
+The experiments are ordered by dependency and by diagnostic value:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{E5} (CFC reference implementation) executes first, because
+  every subsequent experiment runs on the CFC runtime and a broken
+  runtime invalidates all downstream results. Estimated time: 1--2 weeks.
+\item \textbf{E2} (spectral MHC binding) and \textbf{E3} (codon-usage
+  overlap) execute in parallel, as both are FFT-and-dot-product
+  computations on public sequence data with no shared dependencies.
+  Estimated time: 2--3 days each.
+\item \textbf{E1} (holonomy diagnosis) executes next, testing the core
+  disease theory on real metabolic data. Estimated time: 1--2 weeks (data
+  curation is the bottleneck).
+\item \textbf{E4} (escape prediction) executes last, as it has the most
+  complex data extraction (antibody CDR sequences from supplementary
+  tables). Estimated time: 2--3 days.
+\end{enumerate}
+
+\subsection{Computational requirements}
+
+No experiment requires GPU computation, distributed computing, or
+proprietary software. Each runs on a single workstation with:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item Python 3.10+ with NumPy, SciPy, scikit-learn.
+\item The CFC reference interpreter (to be implemented as part of E5).
+\item Internet access for database downloads (IEDB, Recon3D, NCBI,
+  UniProt, IPD-IMGT/HLA).
+\end{itemize}
+
+Total estimated computation time across all five experiments:
+$< 24$ CPU-hours.
+
+\subsection{Reporting standard}
+
+Each experiment will report:
+\begin{enumerate}[leftmargin=1.4em,itemsep=2pt]
+\item The raw data extraction script (reproducible download).
+\item The CFC program (as given above, with any corrections from
+  implementation).
+\item The numerical results, keyed to the success/failure criteria.
+\item Any corrections to the CFC syntax required by implementation
+  (documenting the gap between specification and practice).
+\item Any negative results, with the same prominence as positive ones.
+\end{enumerate}
+
+% =====================================================================
+\section{Syntax Corrections Anticipated}
+\label{sec:corrections}
+% =====================================================================
+
+The CFC programs above use constructs that extend the base grammar. We
+anticipate three categories of correction during implementation:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Iteration.} The base CFC grammar has no \cf{foreach}
+  construct. The \cf{scan} form of the \cf{spectrum} module subsumes
+  iteration over database entries, but E1 and E5 require iteration over
+  model parameters (rate constants, perturbation magnitudes). We
+  anticipate adding:
+  \begin{align*}
+  \textit{foreachStmt} &\;::=\; \cf{foreach}\ \textit{ident}\
+    \cf{in}\ \textit{expr}\ \cf{\{}\ \{\textit{stmt}\}\ \cf{\}}
+  \end{align*}
+  This is a sugar for sequential \cf{measure} calls and introduces no new
+  semantic primitive.
+
+\item \textbf{Collection.} The \cf{collect} clause of \cf{scan} returns a
+  list. Operations on lists (mean, max, rank, sort, filter) are needed
+  by every experiment. We anticipate a standard library of list
+  operations, each typed as \cf{Reading -> Reading} (they transform
+  readings into readings, preserving floor annotations).
+
+\item \textbf{External data binding.} The \cf{import} statements above
+  assume a binding between CFC identifiers and external databases (IEDB,
+  Recon3D, GenBank). The CFC specification does not define this binding.
+  We anticipate a \cf{data} module that maps CFC identifiers to file
+  paths or URLs, with the contract that the imported data is read-only
+  and carries no floor annotation (it is raw input, not a committed
+  measurement).
+\end{enumerate}
+
+Each correction will be documented as a diff against the grammar of
+\citep{sachikonye2026cfc}, \S9, and proved conservative by the argument
+of \Cref{rem:conservative-circuit}: each new form binds an existing
+semantic operation to a domain-specific type, advancing the
+committed-measurement clock and preserving the accountability
+invariants.
+
+% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+% =====================================================================
+
+\subsection{What success would establish}
+
+If all five experiments succeed by their stated criteria:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{E1} establishes that holonomy-based diagnosis works on real
+  metabolic data, localises enzyme defects without being told which
+  enzyme is deficient, and does so using a method (Wegscheider cycle
+  consistency) that no existing metabolic analysis tool uses as a
+  diagnostic classifier. This is a methods contribution to computational
+  metabolomics.
+\item \textbf{E2} establishes that a zero-training-data spectral method
+  achieves competitive MHC binding prediction, with the distinctive
+  property that its performance does not degrade on rare alleles. This is
+  a methods contribution to computational immunology.
+\item \textbf{E3} establishes a spectral signature of host tropism in
+  protein sequences, supporting the housekeeping-mimicry and
+  cross-kingdom non-overlap predictions. This is a novel finding in
+  computational virology.
+\item \textbf{E4} establishes that the spectral escape landscape captures
+  real immunological selection pressure, ranking known escape mutations
+  in the top decile of candidates. This has direct implications for
+  vaccine design and pandemic preparedness.
+\item \textbf{E5} establishes that CFC is implementable as specified and
+  that its accountability guarantees (no zero-residue value, no blind
+  therapy) hold on a concrete model. This is a software contribution.
+\end{itemize}
+
+\subsection{What failure would establish}
+
+Each failure criterion is stated so that a negative result is informative
+rather than merely disappointing:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{E1 failure} distinguishes data-quality limitations (healthy
+  circuit fails KCL) from theory limitations (healthy circuit passes but
+  disease circuit shows no holonomy defect).
+\item \textbf{E2 failure} at AUC $< 0.70$ would show that Fourier
+  magnitudes without phase are insufficient for binding prediction,
+  motivating complex-valued embeddings.
+\item \textbf{E3 failure} would show the spectral embedding does not
+  capture host-specificity, motivating codon-level rather than
+  amino-acid-level analysis.
+\item \textbf{E4 failure} would show the spectral escape landscape does
+  not capture real selection, motivating structural rather than
+  sequence-based escape prediction.
+\item \textbf{E5 failure} would identify a bug in the CFC specification.
+\end{itemize}
+
+\subsection{What is not tested}
+
+These experiments do not test:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item The template-matching epidemiology of \citep{sachikonye2026template}
+  (requires population-level data not currently in scope).
+\item The attention-allocated retrieval of
+  \citep{sachikonye2026attention} (requires live federated endpoints).
+\item The four-column alignment of \citep{sachikonye2026fourcolumn}
+  (requires a canonical response construction, which that paper
+  identifies as an open problem).
+\item Any wet-lab experiment.
+\end{itemize}
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+
+We have designed five experiments that test the principal claims of the
+circuit-based disease framework against public data, using the CFC
+domain-specific language as the implementation vehicle. Three syntax
+extensions to CFC are specified: a circuit module, a spectrum module, and
+a network module, each conservative in the sense that it binds existing
+CFC semantic operations to domain-specific types without introducing new
+reduction rules.
+
+Each experiment has a quantitative success criterion and a quantitative
+failure criterion stated in advance, so that the outcome---positive or
+negative---is informative. No experiment requires wet-lab work,
+proprietary data, or computational resources beyond a single workstation.
+The total estimated computation time is under 24 CPU-hours.
+
+The experiments are executable as written. What remains is to execute
+them.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

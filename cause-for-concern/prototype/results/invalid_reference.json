@@ -1,0 +1,116 @@
+{
+  "source": "examples/invalid_reference.cfc",
+  "status": "INVALID",
+  "floor": 1e-09,
+  "committed_measurements": 2,
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "mach_u": 1.1102230246251565e-16,
+    "RT_kJ_per_mol": 2.577,
+    "z_alpha": 2.5758293035489004
+  },
+  "circuits": {
+    "C_bad": {
+      "species": 3,
+      "reactions": 3,
+      "cyclomatic_number": 1,
+      "max_abs_node_balance": 4.656577415599534,
+      "potential_min": -180.0,
+      "potential_max": -100.0,
+      "centred": false,
+      "gauge_offset": 0.0
+    }
+  },
+  "tolerances": [
+    {
+      "loop": "cyc_XY",
+      "numerical": 1.5987211554602267e-13,
+      "data": 0.044614672253714516,
+      "star": 0.044614672253714516,
+      "data_available": true
+    }
+  ],
+  "verdicts": [
+    {
+      "verdict": "INCONSISTENT",
+      "holonomy": {
+        "loop": "cyc_XY",
+        "value": 25.0,
+        "abs_value": 25.0,
+        "length": 3,
+        "potential_range": 40.0
+      },
+      "tolerance": {
+        "loop": "cyc_XY",
+        "numerical": 1.5987211554602267e-13,
+        "data": 0.044614672253714516,
+        "star": 0.044614672253714516,
+        "data_available": true
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "line": 51,
+      "passed": false,
+      "otherwise": "invalid",
+      "message": "reference fails its own consistency check: annotations are not internally consistent"
+    }
+  ],
+  "emissions": [
+    {
+      "line": 51,
+      "message": "reference fails its own consistency check: annotations are not internally consistent"
+    }
+  ],
+  "reports": [
+    {
+      "line": 49,
+      "values": [
+        {
+          "loop": "cyc_XY",
+          "length": 3,
+          "edges": [
+            "XY",
+            "YZ",
+            "ZX"
+          ]
+        },
+        {
+          "loop": "cyc_XY",
+          "value": 25.0,
+          "abs_value": 25.0,
+          "length": 3,
+          "potential_range": 40.0
+        },
+        {
+          "loop": "cyc_XY",
+          "numerical": 1.5987211554602267e-13,
+          "data": 0.044614672253714516,
+          "star": 0.044614672253714516,
+          "data_available": true
+        },
+        {
+          "verdict": "INCONSISTENT",
+          "holonomy": {
+            "loop": "cyc_XY",
+            "value": 25.0,
+            "abs_value": 25.0,
+            "length": 3,
+            "potential_range": 40.0
+          },
+          "tolerance": {
+            "loop": "cyc_XY",
+            "numerical": 1.5987211554602267e-13,
+            "data": 0.044614672253714516,
+            "star": 0.044614672253714516,
+            "data_available": true
+          }
+        }
+      ]
+    }
+  ],
+  "witness_set": null,
+  "error": "line 51: reference fails its own consistency check: annotations are not internally consistent"
+}

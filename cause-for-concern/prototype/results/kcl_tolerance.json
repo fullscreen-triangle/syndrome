@@ -1,0 +1,374 @@
+{
+  "source": "examples/kcl_tolerance.cfc",
+  "status": "OK",
+  "floor": 1e-09,
+  "committed_measurements": 5,
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "mach_u": 1.1102230246251565e-16,
+    "RT_kJ_per_mol": 2.577,
+    "z_alpha": 2.5758293035489004
+  },
+  "circuits": {
+    "C_ref": {
+      "species": 5,
+      "reactions": 6,
+      "cyclomatic_number": 2,
+      "max_abs_node_balance": 164.3775876829231,
+      "potential_min": -2605.933761784646,
+      "potential_max": -479.93376178464564,
+      "centred": false,
+      "gauge_offset": 0.0
+    }
+  },
+  "tolerances": [
+    {
+      "loop": "cyc_ALD",
+      "numerical": 4.248601470635552e-12,
+      "data": 11.336575636486572,
+      "star": 11.336575636486572,
+      "data_available": true
+    },
+    {
+      "loop": "cyc_GNG",
+      "numerical": 7.553069281129873e-12,
+      "data": 8.926651565859663,
+      "star": 8.926651565859663,
+      "data_available": true
+    },
+    {
+      "loop": "cyc_ALD",
+      "numerical": 4.248601470635552e-12,
+      "data": 11.336575636486572,
+      "star": 11.336575636486572,
+      "data_available": true
+    },
+    {
+      "loop": "cyc_GNG",
+      "numerical": 7.553069281129873e-12,
+      "data": 8.926651565859663,
+      "star": 8.926651565859663,
+      "data_available": true
+    }
+  ],
+  "verdicts": [
+    {
+      "verdict": "CONSISTENT",
+      "holonomy": {
+        "loop": "cyc_ALD",
+        "value": 0.0,
+        "abs_value": 0.0,
+        "length": 3,
+        "potential_range": 1063.0
+      },
+      "tolerance": {
+        "loop": "cyc_ALD",
+        "numerical": 4.248601470635552e-12,
+        "data": 11.336575636486572,
+        "star": 11.336575636486572,
+        "data_available": true
+      }
+    },
+    {
+      "verdict": "CONSISTENT",
+      "holonomy": {
+        "loop": "cyc_GNG",
+        "value": 0.0,
+        "abs_value": 0.0,
+        "length": 4,
+        "potential_range": 1063.0000000000002
+      },
+      "tolerance": {
+        "loop": "cyc_GNG",
+        "numerical": 7.553069281129873e-12,
+        "data": 8.926651565859663,
+        "star": 8.926651565859663,
+        "data_available": true
+      }
+    },
+    {
+      "verdict": "INCONSISTENT",
+      "holonomy": {
+        "loop": "cyc_ALD",
+        "value": -40.0,
+        "abs_value": 40.0,
+        "length": 3,
+        "potential_range": 1063.0
+      },
+      "tolerance": {
+        "loop": "cyc_ALD",
+        "numerical": 4.248601470635552e-12,
+        "data": 11.336575636486572,
+        "star": 11.336575636486572,
+        "data_available": true
+      }
+    },
+    {
+      "verdict": "INCONSISTENT",
+      "holonomy": {
+        "loop": "cyc_GNG",
+        "value": 40.0,
+        "abs_value": 40.0,
+        "length": 4,
+        "potential_range": 1063.0000000000002
+      },
+      "tolerance": {
+        "loop": "cyc_GNG",
+        "numerical": 7.553069281129873e-12,
+        "data": 8.926651565859663,
+        "star": 8.926651565859663,
+        "data_available": true
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "line": 62,
+      "passed": true,
+      "otherwise": "invalid",
+      "message": "reference cycle consistent"
+    },
+    {
+      "line": 62,
+      "passed": true,
+      "otherwise": "invalid",
+      "message": "reference cycle consistent"
+    },
+    {
+      "line": 102,
+      "passed": true,
+      "otherwise": "decline",
+      "message": "defect localised to a non-empty witness set"
+    }
+  ],
+  "emissions": [
+    {
+      "line": 62,
+      "message": "reference cycle consistent"
+    },
+    {
+      "line": 62,
+      "message": "reference cycle consistent"
+    },
+    {
+      "line": 68,
+      "message": "validity gate passed: reference is self-consistent"
+    },
+    {
+      "line": 102,
+      "message": "defect localised to a non-empty witness set"
+    }
+  ],
+  "reports": [
+    {
+      "line": 44,
+      "values": [
+        "cycles_in_basis",
+        2
+      ]
+    },
+    {
+      "line": 60,
+      "values": [
+        {
+          "loop": "cyc_ALD",
+          "length": 3,
+          "edges": [
+            "ALD",
+            "PFK",
+            "SHNT"
+          ]
+        },
+        {
+          "loop": "cyc_ALD",
+          "value": 0.0,
+          "abs_value": 0.0,
+          "length": 3,
+          "potential_range": 1063.0
+        },
+        {
+          "loop": "cyc_ALD",
+          "numerical": 4.248601470635552e-12,
+          "data": 11.336575636486572,
+          "star": 11.336575636486572,
+          "data_available": true
+        },
+        {
+          "verdict": "CONSISTENT",
+          "holonomy": {
+            "loop": "cyc_ALD",
+            "value": 0.0,
+            "abs_value": 0.0,
+            "length": 3,
+            "potential_range": 1063.0
+          },
+          "tolerance": {
+            "loop": "cyc_ALD",
+            "numerical": 4.248601470635552e-12,
+            "data": 11.336575636486572,
+            "star": 11.336575636486572,
+            "data_available": true
+          }
+        }
+      ]
+    },
+    {
+      "line": 60,
+      "values": [
+        {
+          "loop": "cyc_GNG",
+          "length": 4,
+          "edges": [
+            "GNG",
+            "HK",
+            "PK",
+            "SHNT"
+          ]
+        },
+        {
+          "loop": "cyc_GNG",
+          "value": 0.0,
+          "abs_value": 0.0,
+          "length": 4,
+          "potential_range": 1063.0000000000002
+        },
+        {
+          "loop": "cyc_GNG",
+          "numerical": 7.553069281129873e-12,
+          "data": 8.926651565859663,
+          "star": 8.926651565859663,
+          "data_available": true
+        },
+        {
+          "verdict": "CONSISTENT",
+          "holonomy": {
+            "loop": "cyc_GNG",
+            "value": 0.0,
+            "abs_value": 0.0,
+            "length": 4,
+            "potential_range": 1063.0000000000002
+          },
+          "tolerance": {
+            "loop": "cyc_GNG",
+            "numerical": 7.553069281129873e-12,
+            "data": 8.926651565859663,
+            "star": 8.926651565859663,
+            "data_available": true
+          }
+        }
+      ]
+    },
+    {
+      "line": 91,
+      "values": [
+        {
+          "loop": "cyc_ALD",
+          "length": 3,
+          "edges": [
+            "ALD",
+            "PFK",
+            "SHNT"
+          ]
+        },
+        {
+          "loop": "cyc_ALD",
+          "value": -40.0,
+          "abs_value": 40.0,
+          "length": 3,
+          "potential_range": 1063.0
+        },
+        {
+          "loop": "cyc_ALD",
+          "numerical": 4.248601470635552e-12,
+          "data": 11.336575636486572,
+          "star": 11.336575636486572,
+          "data_available": true
+        },
+        {
+          "verdict": "INCONSISTENT",
+          "holonomy": {
+            "loop": "cyc_ALD",
+            "value": -40.0,
+            "abs_value": 40.0,
+            "length": 3,
+            "potential_range": 1063.0
+          },
+          "tolerance": {
+            "loop": "cyc_ALD",
+            "numerical": 4.248601470635552e-12,
+            "data": 11.336575636486572,
+            "star": 11.336575636486572,
+            "data_available": true
+          }
+        }
+      ]
+    },
+    {
+      "line": 91,
+      "values": [
+        {
+          "loop": "cyc_GNG",
+          "length": 4,
+          "edges": [
+            "GNG",
+            "HK",
+            "PK",
+            "SHNT"
+          ]
+        },
+        {
+          "loop": "cyc_GNG",
+          "value": 40.0,
+          "abs_value": 40.0,
+          "length": 4,
+          "potential_range": 1063.0000000000002
+        },
+        {
+          "loop": "cyc_GNG",
+          "numerical": 7.553069281129873e-12,
+          "data": 8.926651565859663,
+          "star": 8.926651565859663,
+          "data_available": true
+        },
+        {
+          "verdict": "INCONSISTENT",
+          "holonomy": {
+            "loop": "cyc_GNG",
+            "value": 40.0,
+            "abs_value": 40.0,
+            "length": 4,
+            "potential_range": 1063.0000000000002
+          },
+          "tolerance": {
+            "loop": "cyc_GNG",
+            "numerical": 7.553069281129873e-12,
+            "data": 8.926651565859663,
+            "star": 8.926651565859663,
+            "data_available": true
+          }
+        }
+      ]
+    },
+    {
+      "line": 99,
+      "values": [
+        "witness_set",
+        [
+          "SHNT"
+        ]
+      ]
+    },
+    {
+      "line": 100,
+      "values": [
+        "witness_cardinality",
+        1
+      ]
+    }
+  ],
+  "witness_set": [
+    "SHNT"
+  ],
+  "error": null
+}

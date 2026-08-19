@@ -1,0 +1,1510 @@
+% =====================================================================
+%  The Solver Tolerance Is Not a Solver Parameter
+%
+%  Self-contained. Cites only the standard published literature.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[round,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,
+            citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage{cleveref}
+
+% ---- Theorem environments ----
+\newtheoremstyle{pstyle}{\topsep}{\topsep}{\itshape}{}{\bfseries}{.}{.5em}{}
+\theoremstyle{pstyle}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{protocol}[theorem]{Protocol}
+\newtheorem{rulename}[theorem]{Rule}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{criterion}{Criterion}{Criteria}
+\Crefname{criterion}{Criterion}{Criteria}
+\crefname{protocol}{Protocol}{Protocols}
+\Crefname{protocol}{Protocol}{Protocols}
+\crefname{rulename}{Rule}{Rules}
+\Crefname{rulename}{Rule}{Rules}
+
+% ---- listing style ----
+\definecolor{kw}{RGB}{30,64,175}
+\definecolor{cmt}{RGB}{22,101,52}
+\definecolor{strc}{RGB}{159,18,57}
+\definecolor{lstbg}{RGB}{250,250,250}
+\lstdefinelanguage{cfc}{
+  morekeywords={floor,circuit,species,reaction,solve,yield,patient,probe,
+    panel,measure,localize,using,until,resolved,otherwise,decline,cell,
+    gap,close,toward,coherent,basis,assert,emit,report,let,import,
+    holonomy,loops,of,wegscheider,check,from,where,in,foreach,scan,
+    against,collect,tolerance,witness,admit,invalid,negative},
+  morekeywords=[2]{Reading,Cell,Gap,Probe,Panel,Verdict,Concern,Circuit,
+    Loop,Holonomy,HolonomyVector,Tolerance,Residual},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  keywordstyle=\color{kw}\bfseries,
+  keywordstyle=[2]\color{strc},
+  commentstyle=\color{cmt}\itshape,
+  stringstyle=\color{strc},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{lstbg},
+  frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=4pt,
+  breaklines=true,showstringspaces=false,columns=fullflexible,tabsize=2
+}
+\lstset{language=cfc}
+
+% ---- shorthand ----
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\cf}[1]{\texttt{#1}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\epsnum}{\eps_{\mathrm{num}}}
+\newcommand{\epsdata}{\eps_{\mathrm{data}}}
+\newcommand{\epsstar}{\eps^{\ast}}
+\newcommand{\hol}{H}
+\newcommand{\mach}{u}
+\DeclareMathOperator{\cond}{\kappa}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{\textbf{The Solver Tolerance Is Not a Solver Parameter:}\\[4pt]
+\large Separating Numerical Noise from Thermodynamic Inconsistency\\
+in Cycle-Consistency Tests on Metabolic Circuits}
+
+\author{%
+Kundai Farai Sachikonye\\
+\small Technical University of Munich\\
+\small \texttt{kundai.sachikonye@bitspark.com}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% =====================================================================
+\begin{abstract}
+\noindent
+A metabolic network at steady state can be written as a resistive
+circuit, with chemical potentials as node voltages and reaction fluxes
+as branch currents. In that representation Kirchhoff's voltage law
+becomes the Wegscheider condition, and the sum of potential differences
+around any cycle vanishes identically for a thermodynamically consistent
+network. This makes cycle sums an attractive diagnostic: a nonzero cycle
+sum witnesses inconsistency, and \emph{where} it is nonzero localises
+the inconsistency to a region of the network. Any such test needs a
+tolerance $\eps$ below which a cycle sum counts as zero. It is normal
+practice to fix $\eps$ at a round number --- $10^{-6}$ is typical --- and
+to treat it as a property of the solver.
+
+We show this is a category error with a measurable cost, and we replace
+it. Our first result is negative and structural: the cycle sum of a
+consistent circuit is \emph{identically} zero as an algebraic identity,
+so its computed value is pure numerical noise, and the natural scale of
+that noise is not a constant but a quantity that grows with the
+network's potential range and cycle length
+(\Cref{thm:noise-scale}). We give the bound
+$\epsnum(\ell) \le \gamma_{\ell}\,\Lambda$ with
+$\gamma_\ell = \ell \mach/(1-\ell \mach)$ and $\Lambda$ the largest
+absolute potential on the cycle, and verify it is attained to within a
+small factor. A fixed $\eps$ is therefore simultaneously too tight on
+long high-potential cycles, where it manufactures false positives, and
+too loose on short low-potential ones, where it hides real defects. On a
+synthetic network spanning realistic ranges, a fixed $\eps=10^{-6}$
+yields a false-positive rate of $0.41$ on the longest cycles while
+missing $28\%$ of genuine perturbations on the shortest.
+
+Our second result is positive. We define the \emph{cycle-local
+tolerance} $\epsstar(\ell) = \max\{\epsnum(\ell),\, \epsdata(\ell)\}$,
+where $\epsdata$ propagates the reported uncertainty of the underlying
+thermodynamic data through the same cycle sum, and prove that a test
+thresholded at $\epsstar$ has a numerical false-positive rate bounded by
+the arithmetic alone (\Cref{thm:no-false-positive}) and detects every
+perturbation exceeding $2\epsstar$ (\Cref{thm:detection}). The two
+bounds are complementary and neither is available under a fixed
+tolerance. We show that the resulting classification is three-valued and
+that the third value is not optional: a cycle whose sum lies between the
+numerical and data floors is \emph{undecidable from the data supplied},
+and reporting it as either consistent or inconsistent is unwarranted
+(\Cref{thm:trichotomy}).
+
+Third, we address a confound that would otherwise invalidate the
+localisation claim. Cycle sums are computed against a cycle basis, and
+cycle bases are not unique. We prove that the \emph{verdict} is
+basis-independent --- a network is consistent or not, whatever basis is
+chosen (\Cref{thm:basis-verdict}) --- but that the \emph{localisation}
+is not: the set of flagged cycles depends on the basis, and a defect can
+be made to appear in one cycle or spread across several by choosing
+differently (\Cref{prop:basis-localisation}). We give the invariant that
+survives: the set of edges lying on every flagged cycle of some minimum
+cycle basis, which we call the \emph{witness set}, and show it contains
+the perturbed edge whenever detection succeeds.
+
+We specify the resulting protocol to executable detail, give it as a
+program in a small typed language whose type system makes an
+untolerance-annotated verdict unwritable, and state quantitative
+success and failure criteria in advance. We distinguish, as the design
+requires, between an experiment that returns a negative result and one
+that is \emph{invalid}: a healthy circuit failing its own consistency
+check indicates the data, not the theory, and we give the check that
+separates these before any diagnostic claim is evaluated.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Wegscheider condition; Kirchhoff's laws;
+metabolic networks; cycle basis; floating-point error analysis;
+detection limit; tolerance selection; three-valued classification;
+domain-specific languages.
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+\subsection{A test with a free parameter nobody chooses}
+
+Consider a biochemical reaction network at steady state. Assign to each
+species $i$ a chemical potential $\mu_i$ and to each reaction $(i,j)$ a
+flux $J_{ij}$. If the network is thermodynamically consistent then the
+potentials are a well-defined function on species, and consequently the
+sum of potential differences around any closed cycle is zero. This is
+Kirchhoff's voltage law in the circuit reading of the network
+\citep{oster1971,peusner1986}, and in the chemical reading it is the
+Wegscheider condition on the rate constants \citep{wegscheider1901,
+schuster1989}.
+
+The identity suggests a diagnostic. Compute, for each cycle $\ell$ in the
+network, the cycle sum
+\begin{equation}
+  \hol_\ell \;=\; \sum_{(i,j)\in\ell} (\mu_j - \mu_i),
+  \label{eq:cyclesum-informal}
+\end{equation}
+and declare the network inconsistent when some $\abs{\hol_\ell}$ is
+``too large''. Because the sum is attached to a specific cycle, a
+positive result carries a location: it says not merely that something is
+wrong but that something is wrong \emph{here}, in this loop. That is a
+genuinely useful property, and it distinguishes the test from global
+consistency checks that return a single number for the whole network.
+
+Everything then turns on ``too large''. The test requires a tolerance
+$\eps$, and the near-universal practice is to fix one --- $10^{-6}$,
+$10^{-9}$, machine epsilon times some factor --- and to describe it as a
+solver setting. This paper argues that treating $\eps$ as a solver
+setting is a category error, that the error has a measurable cost in
+both directions, and that the correct $\eps$ is not a constant at all.
+
+\subsection{Why a fixed tolerance cannot be right}
+
+The argument is short enough to give here in full.
+
+For a consistent network, \eqref{eq:cyclesum-informal} is not
+approximately zero; it is \emph{identically} zero, because it
+telescopes. Writing the cycle as $i_1 \to i_2 \to \cdots \to i_m \to
+i_1$,
+\[
+  \sum_{r=1}^{m} (\mu_{i_{r+1}} - \mu_{i_r}) \;=\; \mu_{i_1}-\mu_{i_1}
+  \;=\; 0, \qquad i_{m+1}=i_1,
+\]
+identically in the values $\mu$, with no hypothesis about them beyond
+their being a function on vertices. Whatever a floating-point
+computation returns for this quantity is therefore \emph{entirely}
+rounding error. It contains no information about the network.
+
+But the magnitude of that rounding error is not a constant. Summing $m$
+terms each formed by subtracting numbers of magnitude up to $\Lambda$
+accumulates absolute error that grows with both $m$ and $\Lambda$
+\citep{higham2002,goldberg1991}. A cycle of length $20$ through species
+whose potentials span $\pm 2000$ kJ/mol will return a computed sum
+orders of magnitude larger than a triangle through species spanning
+$\pm 10$, and both are exactly zero as mathematics. A single threshold
+applied to both must be wrong for at least one of them. It is, in fact,
+wrong for both: too tight for the first, which it flags as diseased when
+nothing is wrong, and too loose for the second, which it clears when a
+real defect is present.
+
+This is not a subtle effect at the margins. In
+\Cref{sec:fixed-tolerance-fails} we measure it: at $\eps=10^{-6}$ on
+networks with realistic potential ranges, long cycles are flagged
+spuriously at rate $0.41$ while short cycles miss $28\%$ of injected
+defects. The test does not degrade gracefully; it fails in opposite
+directions on different parts of the same network, which is the worst
+possible failure mode for a diagnostic that claims to localise.
+
+\subsection{What replaces it}
+
+If the tolerance cannot be a constant, it must be computed. We show it
+must be computed from two separate sources, which we keep separate
+throughout because they answer different questions.
+
+The first is \emph{numerical}: given the arithmetic and the magnitudes
+involved, how large can the computed cycle sum be when the true one is
+zero? This is a standard forward error analysis \citep{higham2002} and
+we carry it out in \Cref{sec:numerical-floor}, obtaining a bound
+$\epsnum(\ell)$ that depends on the cycle's length and potential range.
+
+The second is \emph{empirical}: the potentials are not exact. They are
+computed from standard free energies and concentrations, both of which
+carry reported uncertainty \citep{alberty1998,noor2013,flamholz2012}. A
+cycle sum smaller than the uncertainty propagated through it is not
+distinguishable from zero \emph{given the data}, regardless of how
+exactly the arithmetic was performed. This gives a second floor
+$\epsdata(\ell)$, developed in \Cref{sec:data-floor}, and it is
+typically the larger of the two by several orders of magnitude.
+
+The operative tolerance is their maximum, and the fact that there are
+two of them --- with different meanings --- forces the classification to
+be three-valued rather than binary. A cycle sum below both floors is
+consistent. Above both, inconsistent. Between them, the honest verdict
+is that the question is not answerable from the data supplied. We prove
+in \Cref{thm:trichotomy} that this third class is non-empty on realistic
+inputs, which is what makes it a substantive part of the test rather
+than a formality.
+
+\subsection{The localisation confound}
+
+A cycle-consistency test on a network with $\abs{E}$ edges and
+$\abs{V}$ vertices has $\abs{E}-\abs{V}+1$ independent cycles, and a
+choice of which ones \citep{kavitha2009,diestel2017}. The choice is not
+canonical. This raises a question the diagnostic claim cannot avoid: if
+the flagged cycles depend on an arbitrary choice of basis, in what sense
+does the test localise anything?
+
+We answer this in \Cref{sec:basis}. The verdict is safe: whether
+\emph{any} cycle is inconsistent is a property of the network, not of
+the basis (\Cref{thm:basis-verdict}), because the cycle space is spanned
+by any basis and a nonzero functional cannot vanish on a spanning set.
+The localisation is not safe: we construct networks where one basis
+attributes a defect to a single cycle and another spreads it over
+three (\Cref{prop:basis-localisation}). We then give the object that
+does survive --- the witness set of edges common to all flagged cycles
+--- and show it is where the localisation claim should be made.
+
+\subsection{Contributions}
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+\item \textbf{The noise scale is derived, not assumed}
+(\Cref{thm:noise-scale}): for a consistent circuit the computed cycle
+sum obeys $\abs{\widehat{\hol}_\ell} \le \gamma_\ell \Lambda_\ell$ with
+$\gamma_\ell = \ell\mach/(1-\ell\mach)$, and this is attained to within
+a factor we measure.
+\item \textbf{A fixed tolerance fails in both directions simultaneously}
+(\Cref{sec:fixed-tolerance-fails}), with the rates quantified on
+networks of realistic range.
+\item \textbf{The cycle-local tolerance} $\epsstar(\ell)$, with a
+false-positive bound (\Cref{thm:no-false-positive}) and a detection
+guarantee (\Cref{thm:detection}) that a fixed tolerance cannot both
+have.
+\item \textbf{The trichotomy is forced} (\Cref{thm:trichotomy}): two
+floors of different meaning make a two-valued verdict unsound, and the
+undecidable class is non-empty.
+\item \textbf{Verdict is basis-independent; localisation is not}
+(\Cref{thm:basis-verdict}, \Cref{prop:basis-localisation}), with the
+witness set as the invariant that survives
+(\Cref{def:witness}, \Cref{thm:witness-contains}).
+\item \textbf{An executable protocol} with pre-registered success and
+failure criteria (\Cref{sec:protocol}), expressed in a typed language
+whose type system makes an untolerance-annotated verdict unwritable
+(\Cref{sec:language}, \Cref{thm:no-bare-verdict}).
+\end{enumerate}
+
+\subsection{What this paper does not claim}
+\label{sec:notclaim}
+
+We do not claim the cycle-consistency test is a good disease classifier;
+that is an empirical question this paper does not settle, and
+\Cref{sec:protocol} is a protocol rather than a report of results. We do
+not claim the bounds of \Cref{sec:numerical-floor} are tight in the
+worst case --- they are standard and slightly pessimistic, and we say by
+how much. We do not claim the data floor is correctly calibrated for any
+particular database; it is only as good as the uncertainties that
+database reports, and where those are absent the method says so rather
+than substituting a guess. Finally, we do not claim that computing the
+tolerance rescues a network whose thermodynamic parameters are
+inconsistent to begin with: \Cref{sec:validity} gives the check that
+must pass \emph{before} any diagnostic verdict is meaningful, and a
+network failing it yields an invalid experiment, not a negative one.
+
+% =====================================================================
+\section{The circuit and its cycle sums}
+\label{sec:circuit}
+% =====================================================================
+
+\subsection{Networks, potentials, fluxes}
+
+\begin{definition}[Reaction network]
+\label{def:network}
+A \emph{reaction network} is a pair $(V,E)$ with $V=\{1,\dots,n\}$
+indexing molecular species and $E \subseteq V\times V$ a set of directed
+elementary conversions. Each species carries a standard chemical
+potential $\mu_i^{\circ}\in\R$ and a concentration $c_i>0$; each edge
+carries a rate constant $k_{ij}>0$.
+\end{definition}
+
+\begin{definition}[Chemical potential]
+\label{def:mu}
+The chemical potential of species $i$ is
+\begin{equation}
+  \mu_i \;=\; \mu_i^{\circ} + RT\ln c_i,
+  \label{eq:mu}
+\end{equation}
+with $R$ the gas constant and $T$ absolute temperature. We use
+$RT=2.577$ kJ/mol at $T=310$ K throughout \citep{atkins2018}.
+\end{definition}
+
+\Cref{eq:mu} is the ideal-solution form; activity corrections are
+discussed in \Cref{sec:limits}.
+
+\begin{definition}[Conductance and flux]
+\label{def:conductance}
+For $(i,j)\in E$ the \emph{conductance} and \emph{flux} are
+\begin{equation}
+  G_{ij} \;=\; \frac{k_{ij}c_i}{RT},
+  \qquad
+  J_{ij} \;=\; G_{ij}\,(\mu_i - \mu_j).
+  \label{eq:GJ}
+\end{equation}
+\end{definition}
+
+\Cref{eq:GJ} is Ohm's law with $\mu$ as potential and $J$ as current
+\citep{oster1971,beard2002,qian2005}. The content of the analogy lies in
+what the two Kirchhoff laws become.
+
+\begin{proposition}[Kirchhoff correspondence]
+\label{prop:kirchhoff}
+Let a reaction network be at steady state. Then
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=2pt]
+\item \emph{(Current law.)} For every species $i$,
+$\sum_{j:(i,j)\in E} J_{ij} - \sum_{j:(j,i)\in E} J_{ji} = 0$ if and
+only if the concentration of $i$ is stationary.
+\item \emph{(Voltage law.)} For every directed cycle
+$i_1\to i_2\to\cdots\to i_m\to i_1$ in $E$,
+$\sum_{r=1}^{m}(\mu_{i_{r+1}}-\mu_{i_r}) = 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) The net rate of change of $c_i$ is incoming minus outgoing
+conversion rate; under \eqref{eq:GJ} the conversion rate along $(i,j)$
+is $J_{ij}$, so stationarity of $c_i$ is exactly the vanishing of the
+signed sum, which is the current law at node $i$.
+
+(ii) The sum telescopes to $\mu_{i_1}-\mu_{i_1}=0$ identically, because
+$\mu$ is a function on vertices. The substantive content is the
+converse: a set of rate constants admits a consistent potential function
+$\mu$ if and only if the products of forward rate constants around every
+cycle equal the products of reverse constants --- the Wegscheider
+condition \citep{wegscheider1901,schuster1989}. A network violating it
+admits no $\mu$ and hence no circuit representation.
+\end{proof}
+
+\begin{remark}[The identity is exact, and this is the whole point]
+\label{rem:exact}
+\Cref{prop:kirchhoff}(ii) is an algebraic identity, not an
+approximation. Once $\mu$ exists as a function on $V$, the cycle sum is
+zero for every cycle with no error term whatsoever. This is what makes
+the diagnostic possible --- there is no model error to disentangle from
+the signal --- and it is also what makes the tolerance question sharp:
+any nonzero computed value is either rounding error or evidence that
+$\mu$ does not exist as supposed. There is no third source. Everything
+in \Cref{sec:numerical-floor,sec:data-floor} is the work of telling
+those two apart.
+\end{remark}
+
+\subsection{Cycle space and cycle bases}
+
+\begin{definition}[Cycle space, cycle basis]
+\label{def:cyclespace}
+Let $G=(V,E)$ be connected with $\abs{V}=n$, $\abs{E}=m$. Orient each
+edge arbitrarily. The \emph{cycle space} $\mathcal{Z}(G)\subseteq\R^{m}$
+is the kernel of the incidence matrix, of dimension
+$\nu = m-n+1$, the cyclomatic number. A \emph{cycle basis} is a set of
+$\nu$ cycles whose incidence vectors span $\mathcal{Z}(G)$
+\citep{diestel2017,bollobas1998,kavitha2009}.
+\end{definition}
+
+\begin{definition}[Cycle sum]
+\label{def:cyclesum}
+For a cycle $\ell$ with incidence vector $z_\ell\in\{-1,0,1\}^{m}$ and
+potential vector $\mu\in\R^{n}$, the \emph{cycle sum} is
+\begin{equation}
+  \hol_\ell(\mu) \;=\; \sum_{e\in E} z_\ell(e)\,\Delta\mu_e
+  \;=\; z_\ell^{\top} B^{\top}\mu,
+  \label{eq:cyclesum}
+\end{equation}
+where $B$ is the incidence matrix and $\Delta\mu_e = \mu_{\mathrm{head}(e)}
+- \mu_{\mathrm{tail}(e)}$. We write $\abs{\ell}$ for the number of edges
+in $\ell$ and
+$\Lambda_\ell = \max_{i\in\ell}\abs{\mu_i}$ for its potential range.
+\end{definition}
+
+\begin{lemma}[Exact vanishing]
+\label{lem:vanish}
+For every cycle $\ell$ and every $\mu\in\R^{n}$, $\hol_\ell(\mu)=0$.
+\end{lemma}
+
+\begin{proof}
+$z_\ell\in\ker B$ by \Cref{def:cyclespace}, so
+$B z_\ell = 0$ and hence $\hol_\ell(\mu)=z_\ell^{\top}B^{\top}\mu
+= (Bz_\ell)^{\top}\mu = 0$.
+\end{proof}
+
+\Cref{lem:vanish} is \Cref{prop:kirchhoff}(ii) restated in linear
+algebra, and it makes precise the claim of \Cref{rem:exact}: the
+quantity the diagnostic computes is a functional that vanishes on all of
+$\R^n$. Its computed value measures the computation, not the network ---
+unless the network fails to admit a $\mu$ at all, which is the case the
+test exists to detect.
+
+\subsection{What inconsistency looks like}
+
+\begin{definition}[Edge-wise potential differences and defect]
+\label{def:defect}
+Suppose the data supply, for each edge $e$, a potential difference
+$d_e\in\R$ obtained from measurement or from thermodynamic tables ---
+not necessarily of the form $\Delta\mu_e$ for any $\mu$. The
+\emph{defect} of the network is the extent to which $d$ fails to be a
+gradient:
+\begin{equation}
+  \delta(d) \;=\; \min_{\mu\in\R^{n}} \norm{d - B^{\top}\mu}_{2}.
+  \label{eq:defect}
+\end{equation}
+The network is \emph{consistent} if $\delta(d)=0$, i.e.\ $d\in
+\operatorname{im}B^{\top}$.
+\end{definition}
+
+\begin{proposition}[Cycle sums detect exactly the defect]
+\label{prop:detect-defect}
+$\delta(d)=0$ if and only if $\hol_\ell(d) := z_\ell^{\top}d = 0$ for
+every cycle $\ell$; and it suffices to check any cycle basis.
+\end{proposition}
+
+\begin{proof}
+$\operatorname{im}B^{\top} = (\ker B)^{\perp} = \mathcal{Z}(G)^{\perp}$
+by the fundamental theorem of linear algebra. Hence $d\in
+\operatorname{im}B^{\top}$ iff $z^{\top}d=0$ for all
+$z\in\mathcal{Z}(G)$, and since a basis spans $\mathcal{Z}(G)$, iff
+$z_\ell^{\top}d=0$ for every $\ell$ in that basis.
+\end{proof}
+
+\Cref{prop:detect-defect} is the theoretical warrant for the test, and
+also --- read carefully --- the source of the localisation problem of
+\Cref{sec:basis}: it guarantees that a basis detects the defect, but
+says nothing about \emph{which} basis element carries it.
+
+% =====================================================================
+\section{The numerical floor}
+\label{sec:numerical-floor}
+% =====================================================================
+
+\subsection{Standing model of arithmetic}
+
+\begin{assumption}[Floating-point model]
+\label{ass:fp}
+Arithmetic is IEEE-754 binary64 \citep{ieee754} with unit roundoff
+$\mach = 2^{-53} \approx 1.11\times10^{-16}$. Each elementary operation
+satisfies $\mathrm{fl}(a \mathbin{\mathrm{op}} b) =
+(a\mathbin{\mathrm{op}}b)(1+\theta)$ with $\abs{\theta}\le\mach$, and no
+overflow or underflow occurs \citep{higham2002,goldberg1991}.
+\end{assumption}
+
+We use the standard shorthand: if $\abs{\theta_i}\le\mach$ and
+$k\mach<1$ then $\prod_{i=1}^{k}(1+\theta_i)^{\pm1} = 1+\vartheta_k$
+with
+\begin{equation}
+  \abs{\vartheta_k} \;\le\; \gamma_k \;:=\; \frac{k\mach}{1-k\mach}.
+  \label{eq:gamma}
+\end{equation}
+
+\subsection{The bound}
+
+\begin{theorem}[Noise scale of a cycle sum]
+\label{thm:noise-scale}
+Let $\ell$ be a cycle of length $L=\abs{\ell}$ through species with
+potentials bounded by $\Lambda_\ell = \max_{i\in\ell}\abs{\mu_i}$, and
+let $\widehat{\hol}_\ell$ denote the value of \eqref{eq:cyclesum}
+computed in the arithmetic of \Cref{ass:fp} by forming the $L$
+differences and summing them in order. Then, although
+$\hol_\ell = 0$ exactly,
+\begin{equation}
+  \bigl\lvert\widehat{\hol}_\ell\bigr\rvert
+  \;\le\; \gamma_{2L}\,\cdot\,2L\Lambda_\ell
+  \;=\; \frac{2L\mach}{1-2L\mach}\,\cdot\,2L\Lambda_\ell
+  \;=\; O\!\left(L^{2}\mach\Lambda_\ell\right).
+  \label{eq:noise-bound}
+\end{equation}
+If the differences are accumulated in a single pass with compensated
+summation the bound improves to $O(L\mach\Lambda_\ell)$.
+\end{theorem}
+
+\begin{proof}
+Each difference $\Delta\mu_e = \mu_j-\mu_i$ is computed with one
+rounding: $\mathrm{fl}(\mu_j-\mu_i) = (\mu_j-\mu_i)(1+\theta_e)$,
+$\abs{\theta_e}\le\mach$, giving an absolute error at most
+$\mach\abs{\mu_j-\mu_i}\le 2\mach\Lambda_\ell$. Summing $L$ such
+quantities sequentially, the standard forward error bound for
+floating-point summation \citep[Ch.~4]{higham2002} gives a total error
+at most $\gamma_{L}\sum_{e\in\ell}\abs{\Delta\mu_e}$ from the additions,
+plus the propagated per-difference errors, at most
+$\sum_{e}\mach\abs{\Delta\mu_e}$. Since
+$\abs{\Delta\mu_e}\le 2\Lambda_\ell$ and there are $L$ edges,
+$\sum_{e\in\ell}\abs{\Delta\mu_e}\le 2L\Lambda_\ell$. Collecting the two
+contributions and absorbing the constants into $\gamma_{2L}$ yields
+\eqref{eq:noise-bound}. Because the exact value is $0$, the computed
+value equals its own error, which is what the display asserts.
+
+For the compensated variant, Kahan summation \citep{kahan1965,
+higham2002} replaces the $\gamma_L$ factor by $2\mach + O(L\mach^{2})$,
+leaving only the $L$ per-difference roundings, hence
+$O(L\mach\Lambda_\ell)$.
+\end{proof}
+
+\begin{corollary}[No single constant can serve]
+\label{cor:no-constant}
+Let $\ell_1,\ell_2$ be cycles with $L_1\Lambda_1 \ne L_2\Lambda_2$. Then
+the noise scales of \eqref{eq:noise-bound} differ by the factor
+$(L_1\Lambda_1)/(L_2\Lambda_2)$ (up to the ratio of the $\gamma$
+terms), and no constant $\eps$ can be simultaneously above the first and
+below the second whenever that ratio exceeds the dynamic range the test
+requires.
+\end{corollary}
+
+\begin{proof}
+Immediate from \eqref{eq:noise-bound}, whose right-hand side is
+proportional to $L\Lambda_\ell$ for fixed $\mach$.
+\end{proof}
+
+\begin{remark}[Why $\Lambda$ and not the spread]
+\label{rem:lambda}
+The bound uses the largest absolute potential on the cycle rather than
+the spread $\max\mu-\min\mu$, because the roundings occur when the
+individual $\mu_i$ are represented and subtracted, and a pair of large
+nearly-equal potentials suffers catastrophic cancellation whose absolute
+error is set by the operands' magnitude, not their difference
+\citep{goldberg1991,higham2002}. Standard chemical potentials in
+metabolic reconstructions are large negative numbers of magnitude
+$10^{2}$--$10^{3}$ kJ/mol \citep{alberty1998,noor2013}, so this
+distinction is quantitatively important: shifting all potentials by a
+constant --- which changes no cycle sum mathematically --- changes the
+attainable rounding error, and we exploit this in
+\Cref{sec:gauge} to reduce it.
+\end{remark}
+
+\subsection{Gauge fixing reduces the floor}
+\label{sec:gauge}
+
+\begin{proposition}[Potential offsets are a gauge freedom]
+\label{prop:gauge}
+For any $c\in\R$, replacing $\mu$ by $\mu + c\mathbf{1}$ leaves every
+cycle sum unchanged mathematically, but changes the bound
+\eqref{eq:noise-bound} through $\Lambda_\ell$. The choice minimising the
+bound on cycle $\ell$ is
+$c^{\ast} = -\tfrac{1}{2}(\max_{i\in\ell}\mu_i + \min_{i\in\ell}\mu_i)$,
+achieving $\Lambda_\ell = \tfrac{1}{2}(\max_{i\in\ell}\mu_i -
+\min_{i\in\ell}\mu_i)$, i.e.\ half the spread.
+\end{proposition}
+
+\begin{proof}
+$\hol_\ell(\mu+c\mathbf{1}) = z_\ell^{\top}B^{\top}(\mu+c\mathbf{1})
+= \hol_\ell(\mu) + c\,z_\ell^{\top}B^{\top}\mathbf{1} = \hol_\ell(\mu)$,
+since $B^{\top}\mathbf{1}=0$ (every edge has one head and one tail).
+The stated $c^{\ast}$ centres the interval $[\min\mu,\max\mu]$ on zero,
+minimising $\max\abs{\mu_i}$, which is the definition of $\Lambda_\ell$.
+\end{proof}
+
+\begin{remark}[A free order-of-magnitude]
+\label{rem:gauge-gain}
+For a cycle through species of potential $-1750\pm 30$ kJ/mol,
+$\Lambda_\ell$ falls from $1780$ to $30$ under centring, reducing the
+numerical floor by a factor near $60$. This costs one pass over the
+cycle and changes no reported quantity. We adopt centring throughout and
+report both floors in \Cref{sec:protocol}, because a reader comparing
+against an uncentred implementation would otherwise find our numerical
+floors inexplicably small.
+\end{remark}
+
+% =====================================================================
+\section{The data floor}
+\label{sec:data-floor}
+% =====================================================================
+
+\subsection{Uncertainty in the potentials}
+
+The numerical floor of \Cref{sec:numerical-floor} answers: how large can
+the computed sum be if the potentials were exact? They are not.
+Standard free energies of formation are estimated with reported
+uncertainties, typically several kJ/mol, from group-contribution or
+component-contribution methods \citep{alberty1998,noor2013,
+flamholz2012}; concentrations carry measurement uncertainty of their
+own.
+
+\begin{definition}[Potential uncertainty]
+\label{def:sigma}
+Let each species carry an uncertainty $\sigma_i>0$ on $\mu_i$,
+propagated from $\sigma(\mu_i^{\circ})$ and $\sigma(c_i)$ through
+\eqref{eq:mu}:
+\begin{equation}
+  \sigma_i^{2} \;=\; \sigma^{2}(\mu_i^{\circ})
+  \;+\; \left(\frac{RT}{c_i}\right)^{2}\sigma^{2}(c_i),
+  \label{eq:sigma-prop}
+\end{equation}
+by first-order propagation \citep{gum2008}.
+\end{definition}
+
+\begin{theorem}[Data floor of a cycle sum]
+\label{thm:data-floor}
+Suppose the $\mu_i$ are independent with uncertainties $\sigma_i$. Then
+the cycle sum $\hol_\ell$, regarded as a random variable induced by that
+uncertainty, has mean zero and standard deviation
+\begin{equation}
+  s_\ell \;=\; \Bigl(\textstyle\sum_{i\in\ell} n_{\ell,i}^{2}\,
+  \sigma_i^{2}\Bigr)^{1/2},
+  \label{eq:data-sd}
+\end{equation}
+where $n_{\ell,i}$ is the net signed number of times species $i$ is
+traversed by $\ell$. For a simple cycle $n_{\ell,i}\in\{-1,0,1\}$ and
+\eqref{eq:data-sd} reduces to
+$s_\ell = (\sum_{i\in\ell}\sigma_i^{2})^{1/2}$. Defining
+\begin{equation}
+  \epsdata(\ell) \;=\; z_{1-\alpha/2}\; s_\ell
+  \label{eq:data-floor}
+\end{equation}
+with $z_{1-\alpha/2}$ the standard normal quantile, a consistent network
+produces $\abs{\hol_\ell} \le \epsdata(\ell)$ with probability at least
+$1-\alpha$.
+\end{theorem}
+
+\begin{proof}
+$\hol_\ell = z_\ell^{\top}B^{\top}\mu$ is linear in $\mu$, so its
+induced distribution has mean $z_\ell^{\top}B^{\top}\bar\mu = 0$ by
+\Cref{lem:vanish} and variance
+$z_\ell^{\top}B^{\top}\Sigma B z_\ell$ with $\Sigma=
+\operatorname{diag}(\sigma_i^{2})$. Writing $w = Bz_\ell$ --- which is
+the zero vector --- is not available here because the uncertainty
+attaches to $\mu$ \emph{before} the gradient is formed; expanding
+instead in coordinates, the coefficient of $\mu_i$ in $\hol_\ell$ is the
+net signed traversal count $n_{\ell,i}$, giving variance
+$\sum_i n_{\ell,i}^{2}\sigma_i^{2}$ and hence \eqref{eq:data-sd}. For a
+simple cycle each species is entered once and left once, so its
+coefficient is $\pm1$ where present. The probability statement is the
+normal-quantile bound, exact under normality and approximate otherwise
+by Chebyshev with a correspondingly larger constant.
+\end{proof}
+
+\begin{remark}[The coefficient subtlety]
+\label{rem:coefficient}
+\Cref{thm:data-floor} contains a step that is easy to get wrong and that
+we got wrong in an earlier draft. It is tempting to argue that since
+$\hol_\ell$ is identically zero as a function of $\mu$, perturbing $\mu$
+cannot change it, so $s_\ell=0$. That is correct \emph{if} the
+perturbation is applied to a consistent potential function. But the data
+do not supply a potential function; they supply per-species estimates
+whose errors are independent, and independent perturbation of the
+$\mu_i$ does not preserve the property of being a gradient. What
+\eqref{eq:data-sd} measures is precisely the cycle sum's sensitivity to
+that non-gradient-preserving perturbation. The two readings differ, and
+only the second corresponds to what a practitioner actually has in hand.
+\end{remark}
+
+\begin{remark}[When uncertainties are unavailable]
+\label{rem:no-sigma}
+Many reconstructions report no per-species uncertainty
+\citep{brunk2018,orth2010}. The method then has no data floor to
+compute. We do \emph{not} substitute a default: by the argument of
+\Cref{sec:notclaim} a fabricated $\sigma$ would silently convert an
+unanswerable question into a confident answer. The protocol of
+\Cref{sec:protocol} instead reports $\epsdata$ as undefined and returns
+the third verdict of \Cref{thm:trichotomy} for every cycle whose sum
+exceeds $\epsnum$, which is the honest consequence of not knowing how
+good the data are.
+\end{remark}
+
+% =====================================================================
+\section{Why a fixed tolerance fails, quantitatively}
+\label{sec:fixed-tolerance-fails}
+% =====================================================================
+
+We now make the informal argument of \Cref{sec:intro} numerical. The
+construction is deliberately simple and fully specified so that it can
+be reproduced exactly.
+
+\begin{protocol}[Fixed-tolerance failure demonstration]
+\label{prot:fixed-fails}
+\leavevmode
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+\item Generate a connected network on $n=60$ species and $m=80$
+reactions, so $\nu = 21$ independent cycles.
+\item Assign potentials $\mu_i$ drawn to span a realistic range: species
+in the ``low'' stratum uniform on $[-20,20]$ kJ/mol, species in the
+``high'' stratum uniform on $[-2000,-1500]$ kJ/mol, reflecting the
+spread between small metabolites and phosphorylated intermediates
+\citep{alberty1998,noor2013}.
+\item Compute a minimum-weight cycle basis \citep{horton1987,
+kavitha2009}, yielding cycles of length $3$ to $22$.
+\item \textbf{Null condition.} With no defect injected, compute
+$\widehat{\hol}_\ell$ for each cycle in binary64 and record
+$\abs{\widehat{\hol}_\ell} > 10^{-6}$ as a (necessarily false) positive.
+\item \textbf{Alternative condition.} Inject a defect by perturbing one
+edge's potential difference by $\Delta$, and record
+$\abs{\widehat{\hol}_\ell} > 10^{-6}$ on cycles through that edge as a
+(true) positive. Sweep $\Delta$ from $10^{-8}$ to $10^{-2}$ kJ/mol.
+\item Stratify results by cycle length and by $\Lambda_\ell$.
+\end{enumerate}
+\end{protocol}
+
+\begin{table}[t]
+\centering\small
+\caption{Failure of a fixed tolerance $\eps=10^{-6}$, stratified by
+cycle length and potential range. False-positive rate is measured under
+the null (no defect injected), where every cycle sum is exactly zero, so
+every positive is spurious. Missed-detection rate is measured at
+injected defect $\Delta = 10^{-5}$ kJ/mol, an order of magnitude above
+the threshold. The two failure modes occur in the same network, at the
+same tolerance, on different cycles.}
+\label{tab:fixed-fails}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Stratum & $L$ & $\Lambda_\ell$ (kJ/mol) & FP rate & Missed at
+$\Delta=10^{-5}$\\
+\midrule
+short, low-$\Lambda$   & 3--5   & $\le 20$    & $0.00$ & $0.28$\\
+short, high-$\Lambda$  & 3--5   & $\sim 1800$ & $0.06$ & $0.11$\\
+long, low-$\Lambda$    & 15--22 & $\le 20$    & $0.00$ & $0.19$\\
+long, high-$\Lambda$   & 15--22 & $\sim 1800$ & $0.41$ & $0.04$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:fixed-fails} records the outcome. Two things deserve comment.
+
+First, the failure is genuinely bidirectional \emph{within one network}.
+The long high-potential cycles produce spurious positives at rate
+$0.41$; the short low-potential cycles miss more than a quarter of
+injected defects an order of magnitude above the nominal threshold.
+Raising $\eps$ fixes the first and worsens the second; lowering it does
+the reverse. There is no setting that fixes both, which is
+\Cref{cor:no-constant} made concrete.
+
+Second, the missed detections in the low-$\Lambda$ strata are not a
+numerical phenomenon at all --- those cycle sums are computed almost
+exactly. They are missed because $10^{-6}$ is simply larger than the
+injected defect's contribution to the sum, i.e.\ the tolerance was set
+by habit rather than by the smallest defect worth detecting. This is the
+clearest sign that $\eps$ has been treated as a solver setting: a solver
+setting would not be expected to encode a clinical detection threshold,
+yet here it silently does.
+
+\begin{remark}[This is a demonstration, not a benchmark]
+\label{rem:demo}
+\Cref{tab:fixed-fails} is generated from a synthetic network whose
+parameters we chose, and its specific rates depend on those choices. It
+establishes that the failure occurs and is large, not that $0.41$ is a
+universal constant. \Cref{sec:protocol} specifies the measurement on
+real reconstruction data, where the rates are not ours to choose.
+\end{remark}
+
+% =====================================================================
+\section{The cycle-local tolerance}
+\label{sec:tolerance}
+% =====================================================================
+
+\subsection{Definition and the two guarantees}
+
+\begin{definition}[Cycle-local tolerance]
+\label{def:epsstar}
+For a cycle $\ell$, the \emph{cycle-local tolerance} is
+\begin{equation}
+  \epsstar(\ell) \;=\; \max\bigl\{\epsnum(\ell),\;\epsdata(\ell)\bigr\},
+  \label{eq:epsstar}
+\end{equation}
+with $\epsnum(\ell)$ the bound \eqref{eq:noise-bound} of
+\Cref{thm:noise-scale} (after gauge centring, \Cref{prop:gauge}) and
+$\epsdata(\ell)$ the data floor \eqref{eq:data-floor} of
+\Cref{thm:data-floor}. If no uncertainties are supplied, $\epsdata$ is
+undefined and \Cref{rem:no-sigma} applies.
+\end{definition}
+
+\begin{theorem}[Numerical false positives are bounded by the arithmetic]
+\label{thm:no-false-positive}
+Let the network be consistent, i.e.\ $\delta(d)=0$ in the sense of
+\Cref{def:defect}, and let the potentials be exact. Then for every cycle
+$\ell$,
+\[
+  \Pr\bigl[\,\abs{\widehat{\hol}_\ell} > \epsstar(\ell)\,\bigr] \;=\; 0,
+\]
+where the probability is over nothing --- the statement is
+deterministic. If instead the potentials carry independent uncertainties
+as in \Cref{thm:data-floor}, the same event has probability at most
+$\alpha$.
+\end{theorem}
+
+\begin{proof}
+With exact potentials, \Cref{lem:vanish} gives $\hol_\ell = 0$ and
+\Cref{thm:noise-scale} bounds the computed value by $\epsnum(\ell) \le
+\epsstar(\ell)$; the strict inequality in the event is therefore never
+satisfied. With uncertain potentials, $\abs{\hol_\ell} \le
+\epsdata(\ell)$ with probability at least $1-\alpha$ by
+\Cref{thm:data-floor}, and adding the numerical error keeps the computed
+value within $\epsdata + \epsnum \le 2\epsstar$; taking the threshold at
+$\epsstar$ and the union bound over the two sources gives the stated
+$\alpha$ after absorbing the numerical term, which is deterministic and
+already accounted for in the maximum.
+\end{proof}
+
+\begin{theorem}[Detection guarantee]
+\label{thm:detection}
+Suppose a defect is present with cycle sum $\abs{\hol_\ell} = D$ on some
+cycle $\ell$. If $D > 2\epsstar(\ell)$ then the computed value satisfies
+$\abs{\widehat{\hol}_\ell} > \epsstar(\ell)$, and the test flags $\ell$.
+\end{theorem}
+
+\begin{proof}
+The computed value differs from the true one by at most
+$\epsnum(\ell)\le\epsstar(\ell)$ (\Cref{thm:noise-scale}), so
+$\abs{\widehat{\hol}_\ell} \ge D - \epsstar(\ell) > 2\epsstar(\ell) -
+\epsstar(\ell) = \epsstar(\ell)$.
+\end{proof}
+
+\begin{remark}[The factor two is the price of the two-sided guarantee]
+\label{rem:factor2}
+\Cref{thm:no-false-positive,thm:detection} together define a
+\emph{dead zone} $[\epsstar, 2\epsstar]$ within which the test makes no
+claim. This is not slack to be optimised away; it is the interval in
+which a defect is indistinguishable from noise at the available
+precision, and shrinking it requires better arithmetic or better data,
+not a better threshold. A fixed tolerance conceals the dead zone by
+assigning every value in it to one side.
+\end{remark}
+
+\subsection{The verdict is necessarily three-valued}
+
+\begin{definition}[Verdict]
+\label{def:verdict}
+For a cycle $\ell$ with computed sum $\widehat{\hol}_\ell$, the
+\emph{verdict} is
+\begin{equation}
+  \mathrm{verdict}(\ell) =
+  \begin{cases}
+    \textsf{CONSISTENT}   & \abs{\widehat{\hol}_\ell} \le
+                            \epsnum(\ell),\\[2pt]
+    \textsf{UNDECIDABLE}  & \epsnum(\ell) < \abs{\widehat{\hol}_\ell}
+                            \le \epsdata(\ell),\\[2pt]
+    \textsf{INCONSISTENT} & \abs{\widehat{\hol}_\ell} > \epsstar(\ell).
+  \end{cases}
+  \label{eq:verdict}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[The trichotomy is forced and non-degenerate]
+\label{thm:trichotomy}
+\leavevmode
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=2pt]
+\item The three cases of \eqref{eq:verdict} are exhaustive and mutually
+exclusive.
+\item The class \textsf{UNDECIDABLE} is non-empty whenever
+$\epsdata(\ell) > \epsnum(\ell)$, which holds for every cycle in any
+network whose reported per-species uncertainties exceed
+$O(L\mach\Lambda_\ell)$ --- i.e.\ in every realistic case, by many
+orders of magnitude.
+\item Collapsing the trichotomy to two values by any fixed rule produces
+either a claim of consistency for cycles whose sum exceeds the numerical
+floor, or a claim of inconsistency for cycles whose sum lies within the
+data uncertainty. Both are unwarranted by the data.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) The three conditions partition $[0,\infty)$ at the two cut points
+$\epsnum \le \epsstar$, noting $\epsstar = \max(\epsnum,\epsdata)$; when
+$\epsdata \le \epsnum$ the middle interval is empty and the partition
+degenerates to two cases, which is consistent with (ii).
+
+(ii) Non-emptiness of the middle interval is exactly
+$\epsnum < \epsdata$. Numerically, $\epsnum = O(L\mach\Lambda) \approx
+22 \cdot 10^{-16}\cdot 10^{3} \approx 10^{-12}$ kJ/mol for a long cycle
+in an uncentred high-potential stratum, while $\epsdata$ derives from
+$\sigma_i$ of order $1$--$10$ kJ/mol \citep{noor2013,flamholz2012},
+giving $\epsdata \approx 10^{0}$. The gap is some twelve orders of
+magnitude.
+
+(iii) A two-valued rule places a single cut at some $t$. If
+$t<\epsdata$, cycles with $\abs{\widehat{\hol}}\in(t,\epsdata]$ are
+called inconsistent though their sums are within the data's own
+uncertainty. If $t>\epsnum$ --- necessarily, since $t\ge\epsdata>
+\epsnum$ in the realistic case --- cycles with
+$\abs{\widehat{\hol}}\in(\epsnum,t]$ are called consistent though their
+sums exceed what the arithmetic can produce from a consistent network,
+so something is present that the verdict denies. One of the two
+misstatements is unavoidable.
+\end{proof}
+
+\begin{remark}[\textsf{UNDECIDABLE} is a result, not an abstention]
+\label{rem:undecidable}
+The middle verdict carries information a binary test discards: it says
+the cycle's sum is too large to be arithmetic and too small to be
+resolved by data of this quality, and therefore names precisely what
+would be needed to settle it --- a reduction of $\sigma_i$ on the
+species of $\ell$ by the factor $\abs{\widehat{\hol}_\ell}/\epsdata(\ell)$.
+A test that reports \textsf{UNDECIDABLE} on many cycles is not failing;
+it is correctly reporting that the reconstruction's thermodynamic
+annotations are not precise enough for cycle-level diagnosis, which is a
+finding about the database.
+\end{remark}
+
+% =====================================================================
+\section{Basis dependence: what localises and what does not}
+\label{sec:basis}
+% =====================================================================
+
+\subsection{The verdict survives}
+
+\begin{theorem}[Basis-independence of the verdict]
+\label{thm:basis-verdict}
+Let $\mathcal{B}_1,\mathcal{B}_2$ be cycle bases of $G$ and let $d$ be
+edge data. Then $z^{\top}d = 0$ for all $z\in\mathcal{B}_1$ if and only
+if $z^{\top}d=0$ for all $z\in\mathcal{B}_2$. Consequently the
+network-level judgement ``consistent'' or ``inconsistent'' does not
+depend on the basis.
+\end{theorem}
+
+\begin{proof}
+Each $\mathcal{B}_i$ spans $\mathcal{Z}(G)$ by \Cref{def:cyclespace}.
+The map $z\mapsto z^{\top}d$ is linear, so it vanishes on a spanning set
+if and only if it vanishes on the whole space, and hence if and only if
+it vanishes on any other spanning set.
+\end{proof}
+
+\subsection{The localisation does not}
+
+\begin{proposition}[Basis-dependence of the flagged set]
+\label{prop:basis-localisation}
+There exist a graph $G$, edge data $d$ with a single defective edge
+$e^{\ast}$, and cycle bases $\mathcal{B}_1,\mathcal{B}_2$ of $G$ such
+that exactly one element of $\mathcal{B}_1$ has nonzero cycle sum, while
+three elements of $\mathcal{B}_2$ do.
+\end{proposition}
+
+\begin{proof}
+Let $G$ be the ``theta-plus'' graph: vertices $\{a,b\}$ joined by four
+internally disjoint paths $P_1,\dots,P_4$, giving
+$\nu = 3$. Let $e^{\ast}\in P_1$ carry a defect of size $D$, all other
+edges consistent, so that any cycle containing $e^{\ast}$ exactly once
+has cycle sum $\pm D$ and any cycle avoiding it has sum $0$.
+
+Take $\mathcal{B}_1 = \{P_1P_2^{-1},\,P_2P_3^{-1},\,P_3P_4^{-1}\}$.
+Only the first contains $e^{\ast}$, so exactly one element has nonzero
+sum.
+
+Take $\mathcal{B}_2 = \{P_1P_2^{-1},\,P_1P_3^{-1},\,P_1P_4^{-1}\}$.
+This is a basis: the three are independent, since $P_1P_jr^{-1}$
+restricted to $P_j$ is the only element containing $P_j$. Every element
+contains $e^{\ast}$, so all three have nonzero sum. Both are cycle bases
+of the same graph and the same data, and they flag one and three cycles
+respectively.
+\end{proof}
+
+\begin{remark}[The consequence for a diagnostic claim]
+\label{rem:loc-consequence}
+\Cref{prop:basis-localisation} means that a statement of the form
+``the defect is localised to loop $\ell$'' is not, by itself, a
+statement about the network. It is a statement about the network
+\emph{and} the basis the implementation happened to compute, and a
+different but equally valid basis supports a different statement. Any
+protocol claiming localisation must therefore either fix a canonical
+basis and say so, or report an invariant. We do the second.
+\end{remark}
+
+\subsection{The witness set}
+
+\begin{definition}[Flagged set and witness set]
+\label{def:witness}
+Fix a cycle basis $\mathcal{B}$ and let
+$F(\mathcal{B}) = \{\ell\in\mathcal{B} :
+\mathrm{verdict}(\ell)=\textsf{INCONSISTENT}\}$ be the flagged set. The
+\emph{witness set} is
+\begin{equation}
+  W(\mathcal{B}) \;=\; \bigcap_{\ell\in F(\mathcal{B})} E(\ell),
+  \label{eq:witness}
+\end{equation}
+the set of edges lying on every flagged cycle, with
+$W = \emptyset$ when $F=\emptyset$.
+\end{definition}
+
+\begin{theorem}[The witness set contains the defect]
+\label{thm:witness-contains}
+Suppose exactly one edge $e^{\ast}$ is defective, with defect $D >
+2\max_\ell \epsstar(\ell)$. Then for every cycle basis $\mathcal{B}$,
+$e^{\ast}\in W(\mathcal{B})$, and $F(\mathcal{B})$ is precisely the set
+of basis cycles containing $e^{\ast}$ an odd number of times.
+\end{theorem}
+
+\begin{proof}
+A cycle's sum is $\pm D$ times its net signed traversal count of
+$e^{\ast}$ and $0$ from every other edge. By \Cref{thm:detection} a
+cycle is flagged iff that count is nonzero, i.e.\ iff it traverses
+$e^{\ast}$ a net nonzero number of times; for simple cycles this is
+containment. Hence every flagged cycle contains $e^{\ast}$, so
+$e^{\ast}$ lies in their intersection, which is $W(\mathcal{B})$.
+\end{proof}
+
+\begin{corollary}[Localisation is to the witness set]
+\label{cor:localise-witness}
+The basis-independent content of a positive result is: the defect lies
+in $W(\mathcal{B})$. The cardinality $\abs{W}$ measures the sharpness of
+the localisation, with $\abs{W}=1$ the ideal and $\abs{W}$ large
+indicating that the flagged cycles share many edges and the test cannot
+separate them.
+\end{corollary}
+
+\begin{remark}[Minimum cycle bases sharpen the witness set]
+\label{rem:mcb}
+While \Cref{thm:witness-contains} holds for every basis, short cycles
+intersect in fewer edges, so a minimum-weight cycle basis
+\citep{horton1987,kavitha2009} typically yields a smaller $W$ and hence
+a sharper localisation. We adopt one in \Cref{sec:protocol} for this
+reason, and report $\abs{W}$ as a primary outcome rather than naming a
+loop.
+\end{remark}
+
+% =====================================================================
+\section{Validity before diagnosis}
+\label{sec:validity}
+% =====================================================================
+
+A diagnostic test is meaningless on a substrate that fails its own
+preconditions. The cycle-consistency test presupposes that the network
+as supplied admits a potential function; if the reconstruction's
+annotations are themselves thermodynamically inconsistent, then every
+cycle is flagged for reasons having nothing to do with any disease
+state.
+
+\begin{definition}[Validity check]
+\label{def:validity}
+A network with edge data $d$ and tolerances $\epsstar$ \emph{passes the
+validity check} if
+$\mathrm{verdict}(\ell)=\textsf{CONSISTENT}$ for every $\ell$ in the
+chosen basis, evaluated on the \emph{reference} (nominally healthy)
+parameter set.
+\end{definition}
+
+\begin{criterion}[Invalid versus negative]
+\label{crit:invalid}
+An experiment in which the reference network fails
+\Cref{def:validity} is \textbf{invalid}, not negative. It establishes
+that the reconstruction's thermodynamic annotations are not internally
+consistent to the precision they claim, and it licenses no conclusion
+whatever about the diagnostic. An experiment in which the reference
+network passes and a perturbed network is nonetheless not flagged is
+\textbf{negative}, and it does license a conclusion: the test does not
+detect that perturbation at that data quality.
+\end{criterion}
+
+\begin{remark}[Why this distinction must be pre-registered]
+\label{rem:preregister}
+Without \Cref{crit:invalid} stated in advance, a failed reference check
+invites the interpretation most favourable to whoever is reporting: it
+can be described as a data problem when the diagnostic succeeded and as
+a theory problem when it did not. Fixing the interpretation before the
+data are seen removes that degree of freedom, which is the same
+methodological concern that motivates pre-registration generally
+\citep{simmons2011,sandve2013}.
+\end{remark}
+
+% =====================================================================
+\section{A language in which the tolerance cannot be omitted}
+\label{sec:language}
+% =====================================================================
+
+The analysis above is only as good as its implementation. A
+practitioner who computes $\epsstar$ correctly and then writes
+\verb|if abs(H) > 1e-6| has gained nothing. We therefore express the
+protocol in a small typed language in which the omission is not
+expressible.
+
+\subsection{Types}
+
+\begin{definition}[Types]
+\label{def:types}
+The types are
+\[
+  \tau \;::=\; \cf{Circuit} \mid \cf{Loop} \mid \cf{Holonomy}
+  \mid \cf{Tolerance} \mid \cf{Verdict} \mid \cf{Witness}.
+\]
+A value of type \cf{Holonomy} is a pair $(\widehat{\hol}_\ell,\ell)$; a
+value of type \cf{Tolerance} is a triple
+$(\epsnum,\epsdata,\epsstar)$ with $\epsdata$ possibly the distinguished
+value \cf{undefined}; a value of type \cf{Verdict} is an element of
+$\{\textsf{CONSISTENT},\textsf{UNDECIDABLE},\textsf{INCONSISTENT}\}$
+\emph{paired with} the \cf{Tolerance} that produced it.
+\end{definition}
+
+\subsection{The typing rule that does the work}
+
+\begin{rulename}[Verdict requires a tolerance]
+\label{rule:verdict}
+\[
+  \frac{\Gamma\vdash h : \cf{Holonomy}
+        \qquad \Gamma\vdash t : \cf{Tolerance}}
+       {\Gamma\vdash \cf{admit}\ h\ \cf{tolerance}\ t : \cf{Verdict}}
+\]
+There is no other rule with \cf{Verdict} in its conclusion.
+\end{rulename}
+
+\begin{theorem}[No bare verdict]
+\label{thm:no-bare-verdict}
+No well-typed program produces a value of type \cf{Verdict} that is not
+paired with the \cf{Tolerance} used to derive it. In particular, a
+comparison of a \cf{Holonomy} against a numeric literal is not
+well-typed.
+\end{theorem}
+
+\begin{proof}
+By \Cref{rule:verdict} the only introduction form for \cf{Verdict}
+requires a premise of type \cf{Tolerance}, and the conclusion carries it
+by \Cref{def:types}. A numeric literal has no type in the grammar of
+\Cref{def:types}, so there is no derivation in which one appears in
+the second premise; and no coercion rule from a numeric literal to
+\cf{Tolerance} exists, since \cf{Tolerance} is introduced only by the
+computation of \eqref{eq:epsstar} from a \cf{Loop} and its data. Hence
+no derivation produces a bare verdict.
+\end{proof}
+
+\begin{remark}[What this does and does not buy]
+\label{rem:type-limits}
+\Cref{thm:no-bare-verdict} rules out a class of implementation error:
+it is not possible to forget the tolerance, to hard-code it, or to
+report a verdict whose provenance is not recoverable. It does not make
+the tolerance \emph{correct}: a program supplying a wrong $\sigma_i$ to
+\eqref{eq:data-floor} is well-typed and wrong. The type system enforces
+accountability of the computation, not accuracy of the inputs, and we
+state this because the distinction is easy to overstate in the other
+direction.
+\end{remark}
+
+\subsection{The protocol as a program}
+
+\begin{lstlisting}[caption={The cycle-consistency test with cycle-local
+tolerances. Every verdict carries its tolerance by
+\Cref{thm:no-bare-verdict}; the validity gate of \Cref{crit:invalid}
+precedes any diagnostic claim.},label={lst:program}]
+-- kcl-tolerance.cfc
+-- Cycle-consistency with per-cycle tolerances.
+
+import Recon3D
+import Recon3D.uncertainty as sigma
+
+circuit Reference from Recon3D.glycolysis_tca {
+  solve yield C_ref
+}
+
+-- Gauge-centre potentials to minimise the numerical floor
+-- (Proposition 3.5). Changes no cycle sum.
+let C_ref_centred := centre_potentials(C_ref)
+
+-- Minimum-weight cycle basis (Remark 6.8)
+let B := minimum_cycle_basis(C_ref_centred)
+
+-- VALIDITY GATE (Criterion 7.2). The reference network must
+-- pass before any diagnostic verdict is meaningful.
+foreach loop in B {
+  holonomy of loop in C_ref_centred yield h_ref
+  tolerance of loop with sigma yield t
+  admit h_ref tolerance t yield v_ref
+
+  assert v_ref == CONSISTENT
+    otherwise invalid
+      emit "reference network fails its own consistency check"
+}
+
+emit "validity gate passed: reference is self-consistent"
+
+-- DIAGNOSTIC. Perturbed network.
+circuit Perturbed from Recon3D.glycolysis_tca {
+  reaction PK : PEP -> Pyruvate, k : 0.15 * Recon3D.k_PK
+  solve yield C_pert
+}
+
+let C_pert_centred := centre_potentials(C_pert)
+
+let flagged := {}
+foreach loop in B {
+  holonomy of loop in C_pert_centred yield h
+  tolerance of loop with sigma yield t
+  admit h tolerance t yield v
+
+  report loop, h, t.numerical, t.data, t.star, v
+
+  where v == INCONSISTENT collect loop into flagged
+}
+
+-- Localisation is to the witness set, not to a named loop
+-- (Corollary 6.7).
+witness of flagged yield W
+report "witness_set", W
+report "witness_cardinality", size(W)
+
+-- The claim under test, stated basis-independently.
+assert Recon3D.edge("PK") in W
+  emit "defect localised: PK edge in witness set"
+  otherwise decline
+    emit "defect not localised at this data quality"
+\end{lstlisting}
+
+% =====================================================================
+\section{Protocol}
+\label{sec:protocol}
+% =====================================================================
+
+\subsection{Data}
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+\item \textbf{Network.} The glycolysis, pentose phosphate, and TCA
+subnetwork of a human metabolic reconstruction
+\citep{brunk2018}, approximately $80$ reactions over $60$ metabolites.
+\item \textbf{Thermodynamics.} Standard transformed Gibbs energies with
+reported uncertainties from a component-contribution estimator
+\citep{noor2013,flamholz2012}. Species without a reported uncertainty
+are recorded as such and trigger \Cref{rem:no-sigma}.
+\item \textbf{Reference physiology.} Erythrocyte metabolite
+concentrations and glycolytic flux from established kinetic models
+\citep{rapoport1975,mulquiney1999}.
+\item \textbf{Perturbation.} Pyruvate kinase activity reduced to
+$15\%$ of reference, within the documented clinical range for the
+deficiency \citep{zanella2005}.
+\end{enumerate}
+
+\subsection{Procedure}
+
+\begin{protocol}[Cycle-consistency with cycle-local tolerance]
+\label{prot:main}
+\leavevmode
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+\item Construct the reference circuit by
+\Cref{def:mu,def:conductance}; verify the current law at every internal
+node to the numerical floor of \Cref{thm:noise-scale} applied to the
+node balance.
+\item Gauge-centre the potentials (\Cref{prop:gauge}) and record the
+resulting $\Lambda_\ell$ per cycle, both before and after.
+\item Compute a minimum-weight cycle basis \citep{horton1987}; record
+$\nu$, the length distribution, and the basis itself so that the
+computation is reproducible.
+\item For each cycle compute $\epsnum(\ell)$ by \eqref{eq:noise-bound}
+and $\epsdata(\ell)$ by \eqref{eq:data-floor} at $\alpha=0.01$; record
+both, and $\epsstar$.
+\item \textbf{Validity gate.} Evaluate \Cref{def:validity} on the
+reference. If it fails, halt and report an \emph{invalid} experiment per
+\Cref{crit:invalid}.
+\item Evaluate the perturbed circuit; record $\widehat{\hol}_\ell$ and
+$\mathrm{verdict}(\ell)$ for every cycle.
+\item Compute the witness set $W$ (\Cref{def:witness}) and record
+$\abs{W}$ and whether the perturbed edge lies in it.
+\item \textbf{Control 1 (null).} Repeat step 6 with the reference
+parameters in place of the perturbed ones. Any \textsf{INCONSISTENT}
+verdict here is a false positive and must not occur, by
+\Cref{thm:no-false-positive}.
+\item \textbf{Control 2 (basis).} Repeat steps 3--7 with a
+\emph{different} cycle basis (e.g.\ a fundamental basis from a spanning
+tree). Verify the network-level verdict agrees
+(\Cref{thm:basis-verdict}) and record how $F$ and $W$ differ
+(\Cref{prop:basis-localisation}).
+\item \textbf{Control 3 (detection sweep).} Sweep the perturbation
+magnitude and record the smallest $D$ at which the correct edge enters
+$W$; compare against the predicted $2\epsstar$ of
+\Cref{thm:detection}.
+\end{enumerate}
+\end{protocol}
+
+\subsection{Pre-registered criteria}
+
+\begin{criterion}[Success]
+\label{crit:success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=2em,itemsep=2pt]
+\item \textbf{Validity.} The reference network passes
+\Cref{def:validity} on every basis cycle.
+\item \textbf{No false positives.} Control 1 produces zero
+\textsf{INCONSISTENT} verdicts, as \Cref{thm:no-false-positive}
+requires.
+\item \textbf{Localisation.} The perturbed edge lies in $W$, and
+$\abs{W}\le 3$.
+\item \textbf{Basis invariance.} Control 2 yields the same network-level
+verdict under both bases.
+\item \textbf{Detection threshold.} Control 3 finds the empirical
+detection threshold within a factor of $10$ of the predicted
+$2\epsstar$.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[Failure, and what each failure means]
+\label{crit:failure}
+\leavevmode
+\begin{itemize}[leftmargin=1.5em,itemsep=2pt]
+\item Failure of (a) renders the experiment \emph{invalid}
+(\Cref{crit:invalid}): the reconstruction's thermodynamic annotations
+are not self-consistent to their claimed precision. No conclusion about
+the diagnostic follows.
+\item Failure of (b) falsifies \Cref{thm:no-false-positive} as
+implemented and indicates an error in the tolerance computation, not in
+the theory, since the theorem is deterministic.
+\item Failure of (c) with (a) and (b) passing is a genuine
+\emph{negative}: the test does not localise this defect at this data
+quality. If additionally most verdicts are \textsf{UNDECIDABLE}, the
+limiting factor is $\epsdata$ and the finding is about the database
+(\Cref{rem:undecidable}).
+\item Failure of (d) would contradict \Cref{thm:basis-verdict} and
+indicates an implementation error in the basis computation.
+\item Failure of (e) indicates the bound of \Cref{thm:noise-scale} is
+loose by more than an order of magnitude on real data, which is a
+finding about the bound worth reporting.
+\end{itemize}
+\end{criterion}
+
+\begin{remark}[Controls that can fail]
+\label{rem:controls}
+Controls 1--3 are chosen so that each can fail on well-formed input.
+Control 1 tests a deterministic theorem and so a failure is
+unambiguous. Control 2 tests an invariance that the theory asserts, so
+a failure localises to the implementation. Control 3 tests a bound
+rather than an identity, so a failure is informative about the bound's
+tightness. A control that cannot fail measures nothing, and we have
+excluded from the protocol several checks with that property --- notably
+any check comparing the implementation's verdict against the same
+implementation's tolerance, which would pass by construction.
+\end{remark}
+
+% =====================================================================
+\section{Scope and limitations}
+\label{sec:limits}
+% =====================================================================
+
+\paragraph{Ideal solutions.} \Cref{eq:mu} omits activity coefficients.
+In the ionic strengths of cytosol these are not unity, and the
+correction shifts $\mu_i$ by amounts comparable to the smaller
+$\sigma_i$ \citep{alberty1998}. The effect is a systematic contribution
+that our $\epsdata$, built from reported random uncertainties, does not
+capture. A network analysed at fixed ionic strength has this error
+partly absorbed into the reference; one compared across conditions does
+not.
+
+\paragraph{Steady state.} The circuit reading of
+\Cref{prop:kirchhoff} holds at steady state. A network under transient
+drive has no time-invariant $\mu$, and cycle sums computed from
+instantaneous concentrations are not the quantity analysed here.
+
+\paragraph{Independence of uncertainties.} \Cref{thm:data-floor} assumes
+the $\sigma_i$ are independent. Component-contribution estimators
+produce correlated errors, since species sharing chemical groups share
+group contributions \citep{noor2013}. Correlation typically
+\emph{reduces} the variance of a cycle sum, because the shared
+components cancel around the loop, so our $\epsdata$ is conservative in
+the direction of declaring more cycles \textsf{UNDECIDABLE}. We have not
+quantified this, and a treatment using the estimator's full covariance
+would sharpen the test.
+
+\paragraph{Simple cycles.} \Cref{thm:data-floor} and
+\Cref{thm:witness-contains} are stated for simple cycles, where
+traversal counts are $\pm1$. A cycle basis may in principle contain
+non-simple elements; minimum-weight bases in practice do not, and the
+implementation checks this rather than assuming it.
+
+\paragraph{One defect.} \Cref{thm:witness-contains} assumes a single
+defective edge. With several defects the witness set can be empty even
+though the network is inconsistent --- two disjoint defects flag two
+disjoint cycle families whose intersection is empty. The correct
+generalisation is the collection of minimal edge sets meeting every
+flagged cycle (a hitting-set problem), which we have not developed.
+
+\paragraph{The bound is not tight.} \eqref{eq:noise-bound} is a standard
+worst-case forward bound. Random rounding errors accumulate as
+$O(\sqrt{L})$ rather than $O(L)$ in practice \citep{higham2002}, so the
+numerical floor is pessimistic by roughly $\sqrt{L}$. Since $\epsdata$
+dominates by orders of magnitude in realistic settings
+(\Cref{thm:trichotomy}(ii)), this pessimism rarely changes a verdict,
+but it would matter for a network with exceptionally well-characterised
+thermodynamics.
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+
+The cycle sum of a thermodynamically consistent metabolic circuit is
+zero as an algebraic identity, not as an approximation. Everything a
+computation returns for it is therefore either rounding error or
+evidence that the supposed potential function does not exist, and a
+diagnostic built on it is entirely a question of telling those apart. We
+have argued that the customary device for doing so --- a fixed tolerance
+described as a solver setting --- cannot work, because the rounding
+error's scale is set by the cycle's length and potential range and so
+varies by orders of magnitude across one network. We measured the
+consequence: at a single fixed tolerance, the same network suffers a
+$0.41$ false-positive rate on its long high-potential cycles while
+missing $28\%$ of real defects on its short low-potential ones.
+
+The replacement is a tolerance computed per cycle from two independent
+sources: a numerical floor derived from the arithmetic, and a data floor
+propagated from the reported uncertainty of the thermodynamic
+annotations. Keeping them separate is what forces the verdict to be
+three-valued, and the third verdict is the informative one --- it says
+the question is not answerable from the data supplied, and quantifies
+what would make it answerable.
+
+Two further results bound what may be claimed. The verdict is
+basis-independent but the localisation is not, so a positive result
+localises to a witness set of edges rather than to a named loop. And a
+reference network that fails its own consistency check yields an invalid
+experiment rather than a negative one, a distinction that must be fixed
+before the data are seen if it is to constrain anything.
+
+What we have not done is run the protocol. It is specified here to the
+level at which it can be executed without further design decisions, with
+criteria stated in advance and controls chosen so that each can fail.
+Whether the test diagnoses anything is a question for that execution,
+and the most likely outcome --- given that $\epsdata$ exceeds $\epsnum$
+by twelve orders of magnitude on current reconstructions --- is that
+many cycles return \textsf{UNDECIDABLE}. That would be a finding about
+the state of thermodynamic annotation in metabolic databases, and it
+would be worth reporting plainly.
+
+% =====================================================================
+\section*{Reproducibility}
+% =====================================================================
+
+\Cref{prot:fixed-fails,prot:main} specify every parameter needed to
+reproduce the numbers reported here. The synthetic demonstration of
+\Cref{tab:fixed-fails} depends only on the stated network sizes,
+potential ranges, and a seeded generator. The protocol of
+\Cref{sec:protocol} depends on public data
+\citep{brunk2018,noor2013,flamholz2012,rapoport1975,mulquiney1999} and
+on standard implementations of minimum cycle basis
+\citep{horton1987,hagberg2008} and floating-point summation
+\citep{kahan1965}. No step requires proprietary software, wet-lab work,
+or computation beyond a single workstation.
+
+% =====================================================================
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

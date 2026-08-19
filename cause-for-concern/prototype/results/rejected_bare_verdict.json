@@ -1,0 +1,21 @@
+{
+  "source": "examples/rejected_bare_verdict.cfc",
+  "status": "ERROR",
+  "floor": null,
+  "committed_measurements": 0,
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "mach_u": 1.1102230246251565e-16,
+    "RT_kJ_per_mol": 2.577,
+    "z_alpha": 2.5758293035489004
+  },
+  "circuits": {},
+  "tolerances": [],
+  "verdicts": [],
+  "assertions": [],
+  "emissions": [],
+  "reports": [],
+  "witness_set": null,
+  "error": "parse error: admit requires a 'tolerance <T>' clause: a verdict may not be produced without the tolerance that justifies it at line 38, column 11 (near 'yield')"
+}

@@ -1,0 +1,182 @@
+% =====================================================================
+%  Publisher Submission Sheet — Book Cover & Manuscript Metadata
+%  For: "The Blind Leading the Blind" (monograph)
+%  Author: Kundai Farai Sachikonye
+%
+%  Each field is annotated with its character count against the
+%  publisher's limit so the values can be verified at a glance.
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue!50!black]{hyperref}
+
+\definecolor{fieldbg}{RGB}{245,246,248}
+\definecolor{rulecol}{RGB}{30,64,120}
+\definecolor{labelcol}{RGB}{30,64,120}
+\definecolor{limitcol}{RGB}{120,120,120}
+
+% ---- a labelled field block -----------------------------------------
+\newcommand{\field}[3]{% {label}{limit note}{content}
+  \par\medskip
+  {\color{labelcol}\bfseries\large #1}%
+  \hfill{\color{limitcol}\small #2}\par
+  \vspace{2pt}%
+  \noindent\colorbox{fieldbg}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}
+    \vspace{2pt}#3\vspace{2pt}
+    \end{minipage}}%
+  \par
+}
+
+\newcommand{\charcount}[2]{{\color{limitcol}\small\itshape [#1 characters / #2 limit]}}
+\newcommand{\wordcount}[1]{{\color{limitcol}\small\itshape [#1 words]}}
+
+% Section heading with an underrule (no titlesec dependency):
+\newcommand{\Section}[1]{%
+  \par\addvspace{16pt}%
+  {\color{rulecol}\Large\bfseries #1}\par
+  \vspace{2pt}{\color{rulecol}\rule{\linewidth}{1pt}}\par\vspace{4pt}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+\begin{document}
+
+% =====================================================================
+\begin{center}
+  {\color{rulecol}\Huge\bfseries Publisher Submission Sheet}\\[6pt]
+  {\large Book Cover \& Manuscript Metadata}\\[10pt]
+  {\color{limitcol}\rule{\linewidth}{0.8pt}}
+\end{center}
+
+\vspace{4pt}
+
+% =====================================================================
+\Section{Book Cover}
+
+\field{Main Author Name}{}{%
+  Kundai Farai Sachikonye
+}
+
+\field{Co-Authors' Names}{max.\ 2}{%
+  \textit{None --- single-authored monograph.}
+}
+
+% Title: "The Blind Leading the Blind" = 27 chars
+\field{Book Title}{100-character limit}{%
+  The Blind Leading the Blind
+  \par\vspace{3pt}\charcount{27}{100}
+}
+
+% Subtitle chosen to fit 100 chars while carrying the scientific content.
+% "Categorical Resolution of Biological Dynamics: Cellular State, Disease, and Therapy"
+%  count = 82 characters
+\field{Subtitle}{100-character limit}{%
+  Categorical Resolution of Biological Dynamics: Cellular State, Disease, and Therapy
+  \par\vspace{3pt}\charcount{83}{100}
+}
+
+% Spine: "The Blind Leading the Blind  ·  Sachikonye" = 42 chars
+\field{Spine}{60-character limit}{%
+  The Blind Leading the Blind \quad Sachikonye
+  \par\vspace{3pt}\charcount{40}{60}
+}
+
+% =====================================================================
+% BLURB — target 250+ words, <=2200 chars. The version below is ~1980
+% characters including spaces, ~330 words.
+% =====================================================================
+\field{Blurb}{2200-character limit; min.\ 250 words}{%
+In 1568 Pieter Bruegel painted six blind men falling into a ditch, each with a
+different, clinically diagnosable eye disease. This monograph takes that image
+as a theorem about biology: every finite observer---every instrument, every
+receptor, every cell---is blind in its own specific way, and no ensemble of
+blind observers corrects itself by aggregation. Yet a healthy body still
+navigates. How?
+
+From just two axioms---that physical systems occupy a bounded phase space, and
+that any finite observer partitions it into distinguishable cells---the book
+derives a complete, self-contained mathematical framework for cellular state,
+disease, and therapy. It proves that every bounded receiver has a strictly
+positive epistemic ``floor'': the truth about a state is never a point but a
+region of positive measure. From this follow the No Template Theorem (no cell
+can store a model of itself, so self-diagnosis is structurally impossible), the
+Group Blindness Theorem (collective observation cannot reach zero error), and
+the Local Invisibility Theorem (disease is invisible to any observer confined
+to a single reaction).
+
+The resolution is geometric. Health is not knowledge of health but
+\emph{self-consistency}: when the reaction rates around every metabolic loop
+close on themselves---zero holonomy---the circuit is well, and this can be
+checked from the inside with no external template. Therapy becomes the
+restoration of loop closure, computed as a sparse, polynomial-time
+optimisation. Purpose itself appears as a dynamical fixed point: the
+destination is enacted, not seen.
+
+Rigorous yet vivid, moving from Renaissance painting to category theory,
+differential topology, and convex optimisation, this is a first-principles
+account of why living systems work despite being built entirely from blind
+parts.
+  \par\vspace{4pt}\charcount{1799}{2200}\quad\wordcount{266}
+}
+
+% =====================================================================
+% AUTHOR BIOGRAPHY — target 70+ words, <=500 chars. Below is ~470 chars, ~78 words.
+% =====================================================================
+\field{Author's Biography}{500-character limit; min.\ 70 words}{%
+Kundai Farai Sachikonye is a researcher in bioinformatics at the Technical
+University of Munich and the AIMe Registry for Artificial Intelligence. He
+develops first-principles mathematical frameworks that unify observation,
+computation, and physical dynamics, focused on the categorical geometry of
+cellular state, disease, and therapy. His research asks how living systems stay
+well while built entirely from bounded, error-prone parts. This present book is
+the synthesis of that programme of work.
+  \par\vspace{4pt}\charcount{499}{500}\quad\wordcount{70}
+}
+
+% =====================================================================
+\Section{Manuscript}
+
+\field{Book Language}{}{%
+  English (British)
+}
+
+\field{Book Category}{}{%
+  Science \guillemotright{} Life Sciences \guillemotright{} Biophysics \& Mathematical Biology
+  \par\vspace{2pt}
+  \textit{Secondary:} Mathematics \guillemotright{} Applied Mathematics (Dynamical Systems, Optimisation);\;
+  Medicine \guillemotright{} Systems Biology \& Theoretical Medicine
+}
+
+\field{Keywords}{}{%
+  \begin{minipage}{\linewidth}
+  \begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+    \item categorical dynamics; partition geometry; bounded observers
+    \item epistemic floor; cell-truth; resolution limit
+    \item metabolic circuits; Wegscheider holonomy; loop closure
+    \item disease as coherence deficit; No Template Theorem
+    \item self-consistency; reference-free diagnosis
+    \item sparse $\ell_1$ therapeutic optimisation; drug combination
+    \item oscillator coherence; Kuramoto synchronisation
+    \item mathematical biology; theoretical medicine; systems biology
+  \end{itemize}
+  \end{minipage}
+}
+
+\vfill
+\begin{center}
+{\color{limitcol}\rule{\linewidth}{0.8pt}}\\[3pt]
+{\color{limitcol}\small Prepared for publisher submission \quad\textbullet\quad
+Author: Kundai Farai Sachikonye \quad\textbullet\quad
+\href{mailto:kundai.sachikonye@bitspark.com}{kundai.sachikonye@bitspark.com}}
+\end{center}
+
+\end{document}
