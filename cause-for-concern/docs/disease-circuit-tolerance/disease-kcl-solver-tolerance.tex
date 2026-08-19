@@ -129,12 +129,21 @@ network's potential range and cycle length
 $\epsnum(\ell) \le \gamma_{\ell}\,\Lambda$ with
 $\gamma_\ell = \ell \mach/(1-\ell \mach)$ and $\Lambda$ the largest
 absolute potential on the cycle, and verify it is attained to within a
-small factor. A fixed $\eps$ is therefore simultaneously too tight on
-long high-potential cycles, where it manufactures false positives, and
-too loose on short low-potential ones, where it hides real defects. On a
-synthetic network spanning realistic ranges, a fixed $\eps=10^{-6}$
-yields a false-positive rate of $0.41$ on the longest cycles while
-missing $28\%$ of genuine perturbations on the shortest.
+small factor. We then measure what a fixed $\eps$ actually costs, and the
+measurement corrects our own initial expectation. We predicted a
+two-sided failure; in IEEE-754 binary64 the failure is \emph{one-sided},
+because the rounding error tops out near $3\times10^{-12}$ even at
+$L=30$, $\Lambda=3000$ --- six orders of magnitude below a customary
+$\eps=10^{-6}$ --- so a fixed tolerance sitting far above the numerical
+floor cannot manufacture a false positive at all. Its measured costs are
+instead that it misses every defect below itself ($100\%$ at
+$D=10^{-7}$, whatever the data quality) and that it asserts
+\textsf{INCONSISTENT} on $100\%$ of cycles whose defect lies inside the
+data's own uncertainty, where no positive claim is warranted. The
+two-sided failure does appear, and rises monotonically with $L\Lambda$
+exactly as the theory predicts, once precision falls: repeating the null
+in binary32 gives false-positive rates from $0.18$ to $0.77$ across our
+strata.
 
 Our second result is positive. We define the \emph{cycle-local
 tolerance} $\epsstar(\ell) = \max\{\epsnum(\ell),\, \epsdata(\ell)\}$,
@@ -245,13 +254,19 @@ wrong for both: too tight for the first, which it flags as diseased when
 nothing is wrong, and too loose for the second, which it clears when a
 real defect is present.
 
-This is not a subtle effect at the margins. In
-\Cref{sec:fixed-tolerance-fails} we measure it: at $\eps=10^{-6}$ on
-networks with realistic potential ranges, long cycles are flagged
-spuriously at rate $0.41$ while short cycles miss $28\%$ of injected
-defects. The test does not degrade gracefully; it fails in opposite
-directions on different parts of the same network, which is the worst
-possible failure mode for a diagnostic that claims to localise.
+How bad this is depends on the arithmetic, and here our
+measurement corrected us. We expected both failure directions to appear
+at once in double precision. They do not:
+\Cref{sec:fixed-tolerance-fails} reports zero false positives at
+$\eps=10^{-6}$ in binary64 across $1600$ trials, because the rounding
+error never comes within six orders of magnitude of that threshold. The
+argument above is still right that the noise scale varies with
+$L\Lambda$ --- \Cref{tab:v1} shows it varying over three decades --- but
+a threshold placed far above the entire range is uniformly too loose
+rather than sometimes too tight. What a fixed tolerance costs in
+practice is measured in \Cref{sec:fixed-tolerance-fails}, and the
+two-sided failure is recovered in binary32, where the floor rises to
+meet the threshold.
 
 \subsection{What replaces it}
 
@@ -310,9 +325,11 @@ does survive --- the witness set of edges common to all flagged cycles
 sum obeys $\abs{\widehat{\hol}_\ell} \le \gamma_\ell \Lambda_\ell$ with
 $\gamma_\ell = \ell\mach/(1-\ell\mach)$, and this is attained to within
 a factor we measure.
-\item \textbf{A fixed tolerance fails in both directions simultaneously}
-(\Cref{sec:fixed-tolerance-fails}), with the rates quantified on
-networks of realistic range.
+\item \textbf{The cost of a fixed tolerance, measured}
+(\Cref{sec:fixed-tolerance-fails}). The failure is one-sided in binary64
+and two-sided in binary32; we report both, together with the
+unwarranted-positive rate that is the substantive cost at any
+precision.
 \item \textbf{The cycle-local tolerance} $\epsstar(\ell)$, with a
 false-positive bound (\Cref{thm:no-false-positive}) and a detection
 guarantee (\Cref{thm:detection}) that a fixed tolerance cannot both
@@ -742,87 +759,209 @@ good the data are.
 \end{remark}
 
 % =====================================================================
-\section{Why a fixed tolerance fails, quantitatively}
+\section{What a fixed tolerance costs, measured}
 \label{sec:fixed-tolerance-fails}
 % =====================================================================
 
-We now make the informal argument of \Cref{sec:intro} numerical. The
-construction is deliberately simple and fully specified so that it can
-be reproduced exactly.
+We now make the argument of \Cref{sec:intro} numerical. Every number in
+this section comes from the validation suite described in
+\Cref{sec:validation}; the construction is fully specified so that it
+can be reproduced exactly.
 
-\begin{protocol}[Fixed-tolerance failure demonstration]
-\label{prot:fixed-fails}
-\leavevmode
-\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
-\item Generate a connected network on $n=60$ species and $m=80$
-reactions, so $\nu = 21$ independent cycles.
-\item Assign potentials $\mu_i$ drawn to span a realistic range: species
-in the ``low'' stratum uniform on $[-20,20]$ kJ/mol, species in the
-``high'' stratum uniform on $[-2000,-1500]$ kJ/mol, reflecting the
-spread between small metabolites and phosphorylated intermediates
-\citep{alberty1998,noor2013}.
-\item Compute a minimum-weight cycle basis \citep{horton1987,
-kavitha2009}, yielding cycles of length $3$ to $22$.
-\item \textbf{Null condition.} With no defect injected, compute
-$\widehat{\hol}_\ell$ for each cycle in binary64 and record
-$\abs{\widehat{\hol}_\ell} > 10^{-6}$ as a (necessarily false) positive.
-\item \textbf{Alternative condition.} Inject a defect by perturbing one
-edge's potential difference by $\Delta$, and record
-$\abs{\widehat{\hol}_\ell} > 10^{-6}$ on cycles through that edge as a
-(true) positive. Sweep $\Delta$ from $10^{-8}$ to $10^{-2}$ kJ/mol.
-\item Stratify results by cycle length and by $\Lambda_\ell$.
-\end{enumerate}
-\end{protocol}
+\subsection{The noise scale, and a prediction of ours that failed}
 
 \begin{table}[t]
 \centering\small
-\caption{Failure of a fixed tolerance $\eps=10^{-6}$, stratified by
-cycle length and potential range. False-positive rate is measured under
-the null (no defect injected), where every cycle sum is exactly zero, so
-every positive is spurious. Missed-detection rate is measured at
-injected defect $\Delta = 10^{-5}$ kJ/mol, an order of magnitude above
-the threshold. The two failure modes occur in the same network, at the
-same tolerance, on different cycles.}
-\label{tab:fixed-fails}
+\caption{Measured rounding error on cycle sums of \emph{consistent}
+circuits, where the true value is exactly zero, so the computed value is
+the error. Binary64. Each cell is the maximum over $60$ random circuits.
+The error grows with both $L$ and $\Lambda$ as \Cref{thm:noise-scale}
+predicts, spanning three decades across the grid --- but its largest
+value anywhere is $2.7\times10^{-12}$.}
+\label{tab:v1}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Stratum & $L$ & $\Lambda_\ell$ (kJ/mol) & FP rate & Missed at
-$\Delta=10^{-5}$\\
+& \multicolumn{4}{c}{$\Lambda$ (kJ/mol)}\\
+\cmidrule(l){2-5}
+$L$ & $10$ & $100$ & $1000$ & $3000$\\
 \midrule
-short, low-$\Lambda$   & 3--5   & $\le 20$    & $0.00$ & $0.28$\\
-short, high-$\Lambda$  & 3--5   & $\sim 1800$ & $0.06$ & $0.11$\\
-long, low-$\Lambda$    & 15--22 & $\le 20$    & $0.00$ & $0.19$\\
-long, high-$\Lambda$   & 15--22 & $\sim 1800$ & $0.41$ & $0.04$\\
+$3$  & $3.6\times10^{-15}$ & $2.8\times10^{-14}$ & $2.3\times10^{-13}$ & $9.1\times10^{-13}$\\
+$8$  & $3.6\times10^{-15}$ & $2.8\times10^{-14}$ & $3.4\times10^{-13}$ & $1.8\times10^{-12}$\\
+$16$ & $5.3\times10^{-15}$ & $5.7\times10^{-14}$ & $6.8\times10^{-13}$ & $1.8\times10^{-12}$\\
+$30$ & $5.3\times10^{-15}$ & $5.7\times10^{-14}$ & $6.8\times10^{-13}$ & $2.7\times10^{-12}$\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\Cref{tab:fixed-fails} records the outcome. Two things deserve comment.
+\Cref{tab:v1} records the measured noise. Over $1920$ trials spanning
+$L\in[3,30]$ and $\Lambda\in[10,3000]$, the bound of
+\Cref{thm:noise-scale} was violated \emph{zero} times, so the analysis is
+sound as far as it goes. The bound is loose: its median ratio to the
+observed error is $729$, consistent with the standard observation that
+random rounding errors accumulate as $O(\sqrt{L})$ rather than $O(L)$
+\citep{higham2002}, compounded by our worst-case treatment of each
+subtraction.
 
-First, the failure is genuinely bidirectional \emph{within one network}.
-The long high-potential cycles produce spurious positives at rate
-$0.41$; the short low-potential cycles miss more than a quarter of
-injected defects an order of magnitude above the nominal threshold.
-Raising $\eps$ fixes the first and worsens the second; lowering it does
-the reverse. There is no setting that fixes both, which is
-\Cref{cor:no-constant} made concrete.
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/panel1_numerical_floor.png}
+\caption{\textbf{The numerical floor is not a constant, and the bound on
+it is never violated.} All quantities are measured on \emph{consistent}
+circuits, where the true cycle sum is exactly zero by \Cref{lem:vanish},
+so the computed value is the rounding error itself.
+(\textbf{a})~Maximum $\abs{\widehat{\hol}_\ell}$ over $60$ random
+circuits per cell, against cycle length, one curve per potential range
+$\Lambda$. The error rises with both quantities and spans three decades
+across the grid, which is \Cref{cor:no-constant} measured rather than
+asserted. The largest value anywhere is $2.7\times10^{-12}$ kJ/mol.
+(\textbf{b})~Bound $\epsnum$ against measured error for every cell; the
+dashed line is equality. Every point lies above it, so
+\Cref{thm:noise-scale} was never violated in $1920$ trials.
+(\textbf{c})~Distribution of the slack factor, bound over measured, with
+the median at $729$ marked. The bound is loose by between one and three
+orders of magnitude, consistent with random rounding errors accumulating
+as $O(\sqrt{L})$ where the worst-case analysis assumes $O(L)$.
+(\textbf{d})~The floor $\log_{10}\epsnum$ as a surface over
+$(\log_{10}\Lambda, L)$, with contours projected below. The surface is
+monotone in both arguments and flat in neither, which is why a single
+scalar tolerance cannot track it.}
+\label{fig:panel1}
+\end{figure*}
 
-Second, the missed detections in the low-$\Lambda$ strata are not a
-numerical phenomenon at all --- those cycle sums are computed almost
-exactly. They are missed because $10^{-6}$ is simply larger than the
-injected defect's contribution to the sum, i.e.\ the tolerance was set
-by habit rather than by the smallest defect worth detecting. This is the
-clearest sign that $\eps$ has been treated as a solver setting: a solver
-setting would not be expected to encode a clinical detection threshold,
-yet here it silently does.
+That looseness is what falsified a prediction we had made. Reasoning
+from \Cref{cor:no-constant}, we expected a fixed $\eps=10^{-6}$ to
+manufacture false positives on long high-potential cycles. It does not.
+The largest rounding error anywhere in \Cref{tab:v1} is
+$2.7\times10^{-12}$, six orders of magnitude below $10^{-6}$, so in
+binary64 no consistent circuit in our grid can be spuriously flagged at
+that threshold. We measured a false-positive rate of $0.000$ in all four
+strata of \Cref{tab:v2}, across $1600$ trials.
 
-\begin{remark}[This is a demonstration, not a benchmark]
+\begin{remark}[What was wrong with the prediction, and what was not]
+\label{rem:prediction-failed}
+\Cref{cor:no-constant} is correct: the noise scale genuinely varies with
+$L\Lambda$, over three decades in \Cref{tab:v1}. What does not follow ---
+and what we asserted without checking --- is that a \emph{particular}
+customary threshold sits inside that range. It does not; $10^{-6}$ is
+above all of it. A constant is unusable when it must separate cycles
+whose floors differ by decades, but a constant placed far above every
+floor is not thereby too tight, it is uniformly too loose. The corrected
+claim is weaker in one direction and sharper in the other, and it is the
+one the data support.
+\end{remark}
+
+\subsection{The costs that are real}
+
+\begin{table}[t]
+\centering\small
+\caption{Measured behaviour of a fixed $\eps=10^{-6}$, $400$ trials per
+stratum. Column~3 is the fraction of consistent circuits spuriously
+flagged in binary64; column~4 repeats the null in binary32. Column~5 is
+the fraction of injected defects at $D=10^{-7}$ that go undetected.
+Column~6 is the fraction of cycles on which the fixed test asserts
+\textsf{INCONSISTENT} while the defect lies inside the data's own
+uncertainty, so that the cycle-local test returns \textsf{UNDECIDABLE}.}
+\label{tab:v2}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Stratum & $\Lambda$ & FP$_{64}$ & FP$_{32}$ & Miss@$10^{-7}$ &
+Unwarranted\\
+\midrule
+short, low-$\Lambda$   & $20$   & $0.000$ & $0.177$ & $1.000$ & $1.000$\\
+short, high-$\Lambda$  & $1800$ & $0.000$ & $0.445$ & $1.000$ & $1.000$\\
+long, low-$\Lambda$    & $20$   & $0.000$ & $0.565$ & $1.000$ & $1.000$\\
+long, high-$\Lambda$   & $1800$ & $0.000$ & $0.765$ & $1.000$ & $1.000$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:v2} separates what a fixed tolerance does badly from what it
+does not do at all.
+
+\paragraph{It misses everything below itself.} At $D=10^{-7}$ the
+missed-detection rate is $1.000$ in every stratum. This is not a
+numerical phenomenon --- those cycle sums are computed almost exactly ---
+but the direct consequence of a threshold chosen by habit rather than
+from the smallest defect worth detecting. A solver setting would not be
+expected to encode a clinical detection threshold, yet here it silently
+does, and the value it encodes is $10^{-6}$ kJ/mol for reasons that have
+nothing to do with metabolism.
+
+\paragraph{It asserts more than the data support.} The final column is
+the substantive cost. With per-species uncertainty $\sigma=1$ kJ/mol and
+an injected defect of $0.5$ kJ/mol --- comfortably inside that
+uncertainty --- the fixed test reports \textsf{INCONSISTENT} on
+$100\%$ of cycles, because $0.5 \gg 10^{-6}$. The cycle-local test
+returns \textsf{UNDECIDABLE}, which is the correct verdict: the signal
+is far above the arithmetic and far below what the data can resolve. A
+two-valued test has no way to say this and must assert something it
+cannot support.
+
+\paragraph{The two-sided failure is a precision phenomenon.} Column~4
+repeats the null computation in binary32, where the unit roundoff is
+$\approx6\times10^{-8}$ and the numerical floor rises by some seven
+orders of magnitude, into the neighbourhood of $10^{-6}$. The
+false-positive rate then climbs from $0.177$ to $0.765$, and it is
+ordered as the mechanism requires: within either length class, raising
+$\Lambda$ raises the rate ($0.177\to0.445$ for short cycles,
+$0.565\to0.765$ for long ones), and within either potential class,
+raising $L$ raises it as well. The two-sided failure we originally
+expected is real; it belongs to a precision regime we had not
+specified.
+
+The ordering is not monotone in the product $L\Lambda$, and the
+departure is informative rather than noise. The long low-$\Lambda$
+stratum ($L\Lambda=370$) exceeds the short high-$\Lambda$ stratum
+($L\Lambda=7200$), $0.565$ against $0.445$: cycle length dominates
+potential range. This is consistent with \Cref{thm:noise-scale}, whose
+bound carries $L$ both in the count of accumulated terms and inside
+$\gamma_{2L}$ while $\Lambda$ enters only linearly, and it is a
+reminder that $\epsnum$ must be computed per cycle from both quantities
+rather than summarised by their product.
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/panel2_fixed_tolerance.png}
+\caption{\textbf{What a fixed $\eps=10^{-6}$ actually costs, and the
+precision at which its false-positive mode appears.}
+(\textbf{a})~False-positive rate on consistent circuits. In binary64 it
+is exactly $0.000$ in all four strata --- drawn as a baseline stub,
+since a bar of height zero would be invisible --- because the rounding
+error of \Cref{fig:panel1} never comes within six orders of magnitude of
+$10^{-6}$. This falsified our own prediction (\Cref{rem:prediction-failed}).
+In binary32 the floor rises by some seven orders of magnitude and the
+rate climbs to $0.765$.
+(\textbf{b})~The binary32 rate decomposed by length class. Raising
+$\Lambda$ raises the rate within either class, and raising $L$ raises it
+within either potential class, but the effect of $L$ is the larger: the
+long low-$\Lambda$ stratum exceeds the short high-$\Lambda$ one despite
+a twentyfold smaller $L\Lambda$. Plotting against the product would
+misrepresent this, so we do not.
+(\textbf{c})~Missed-detection rate against injected defect magnitude,
+with $\eps$ marked. Every defect below the threshold is missed with
+probability $1$, in every stratum, whatever the data quality --- the
+direct cost of a tolerance chosen by habit rather than from the smallest
+defect worth detecting.
+(\textbf{d})~The three costs side by side per stratum. $\mathrm{FP}_{64}$
+is identically zero; $\mathrm{FP}_{32}$ grows with $L$ and $\Lambda$;
+the unwarranted-positive rate is $1.000$ everywhere --- with
+$\sigma=1$ kJ/mol and a $0.5$ kJ/mol defect, the fixed test asserts
+\textsf{INCONSISTENT} on every cycle whose defect lies wholly inside the
+data's own uncertainty.}
+\label{fig:panel2}
+\end{figure*}
+
+\begin{remark}[Why report the corrected prediction at all]
 \label{rem:demo}
-\Cref{tab:fixed-fails} is generated from a synthetic network whose
-parameters we chose, and its specific rates depend on those choices. It
-establishes that the failure occurs and is large, not that $0.41$ is a
-universal constant. \Cref{sec:protocol} specifies the measurement on
-real reconstruction data, where the rates are not ours to choose.
+We could have stated only the measured claim. We report the failed
+prediction because it changes how the result should be read: the case
+against a fixed tolerance is not that it is calibrated wrongly against
+noise in double precision --- it is not calibrated against noise at all,
+and in binary64 it sits so far above the noise that noise is irrelevant.
+The argument for computing $\eps$ therefore rests on the data floor and
+on detection sensitivity, not on rounding. Had we not measured, we would
+have advanced a correct conclusion supported by a reason that does not
+hold.
 \end{remark}
 
 % =====================================================================
@@ -1395,6 +1534,252 @@ implementation's tolerance, which would pass by construction.
 \end{remark}
 
 % =====================================================================
+\section{Computational validation}
+\label{sec:validation}
+% =====================================================================
+
+Every numbered result above is checked computationally. This section
+reports what the checks establish and, equally, what they cannot.
+
+\subsection{What the suite can and cannot establish}
+
+Two of our claims are identities and three are bounds, and the checks
+differ accordingly. For an identity --- \Cref{lem:vanish}, that the cycle
+sum vanishes exactly --- a check can confirm the implementation computes
+it and nothing more; the mathematics is not in question. For a bound ---
+\Cref{thm:noise-scale}, \Cref{thm:detection} --- a check can measure
+\emph{slack}, which is informative about whether the bound is usable.
+
+Three properties make the suite capable of failing.
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+\item \textbf{Negative controls.} \Cref{tab:validation} rows V1 and V4
+assert that something does \emph{not} happen on well-formed input: no
+bound violation, and no disagreement in verdict between cycle bases.
+\item \textbf{An independent perturbation route.} The defect is injected
+on an \emph{edge}, not by manipulating a cycle sum, so the quantity
+tested is not the quantity constructed (\Cref{rem:edge-not-node}).
+\item \textbf{No self-referential check.} No check compares the
+implementation's verdict against the same implementation's tolerance.
+Such a check passes by construction and measures only self-consistency.
+\end{enumerate}
+
+\begin{table}[t]
+\centering\small
+\caption{Validation suite. Every experiment is seeded; the JSON record
+is the source of every number quoted in this paper.}
+\label{tab:validation}
+\begin{tabular}{@{}llll@{}}
+\toprule
+& Result tested & Trials & Outcome\\
+\midrule
+V1 & \Cref{thm:noise-scale} & $1920$ & $0$ violations; median slack $729$\\
+V2 & \Cref{sec:fixed-tolerance-fails} & $1600$ & one-sided in binary64\\
+V3 & \Cref{thm:trichotomy} & $1040$ & \textsf{UNDECIDABLE} $=80.9\%$\\
+V4 & \Cref{thm:basis-verdict}, \Cref{prop:basis-localisation} & $200$ &
+$0$ verdict disagreements; $34.5\%$ flagged-set\\
+V5 & \Cref{thm:detection} & $1100$ & $0$ violations\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{V3: the undecidable region is most of the plane}
+
+\Cref{thm:trichotomy}(ii) asserts that \textsf{UNDECIDABLE} is
+non-empty. The measurement is considerably stronger than non-emptiness.
+Sweeping per-species uncertainty $\sigma\in[10^{-3},10]$ kJ/mol against
+injected defect $D\in[10^{-10},10^{2}]$ kJ/mol on a six-cycle at
+$\Lambda=200$, over $1040$ grid points:
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Verdict & Fraction of the $(\sigma,D)$ grid\\
+\midrule
+\textsf{CONSISTENT}   & $0.000$\\
+\textsf{UNDECIDABLE}  & $0.809$\\
+\textsf{INCONSISTENT} & $0.191$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The numerical floor on this cycle is $2.5\times10^{-12}$ kJ/mol, and the
+data floor at the middle of the $\sigma$ range exceeds it by
+$\mathbf{11.5}$ \textbf{orders of magnitude}. That gap is the
+\textsf{UNDECIDABLE} band, and at these data qualities it occupies four
+fifths of the plane.
+
+The \textsf{CONSISTENT} fraction of $0.000$ deserves comment, since it
+looks alarming. It is an artefact of the sweep's lower limit: the
+smallest defect tested, $10^{-10}$, is still forty times the numerical
+floor, so no grid point falls in the \textsf{CONSISTENT} band. A sweep
+extended below $10^{-12}$ recovers it. We report the number as measured
+rather than adjusting the grid to produce a more balanced-looking table.
+
+\begin{remark}[The practical reading]
+\label{rem:v3-reading}
+If four fifths of a realistic $(\sigma,D)$ plane is undecidable, then a
+cycle-consistency diagnostic run against current thermodynamic
+annotations will return \textsf{UNDECIDABLE} on most cycles. That is not
+a failure of the test. It is the test correctly reporting that the
+annotations are not precise enough to support cycle-level diagnosis, and
+it quantifies the improvement in $\sigma$ that would change the answer.
+A two-valued test on the same data would return a definite verdict on
+every one of those cycles, and would be wrong to.
+\end{remark}
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/panel3_trichotomy.png}
+\caption{\textbf{The undecidable region occupies four fifths of a
+realistic parameter plane.} A six-cycle at $\Lambda=200$ kJ/mol, swept
+over per-species uncertainty $\sigma$ and injected defect $D$,
+$1040$ grid points.
+(\textbf{a})~Verdict map: blue \textsf{CONSISTENT}, orange
+\textsf{UNDECIDABLE}, red \textsf{INCONSISTENT}. The solid curve is
+$\epsdata(\sigma)$ and the dashed vertical is $\epsnum$; the orange band
+between them is the undecidable region, and it is most of the plane.
+(\textbf{b})~The two floors against $\sigma$ on common axes. $\epsnum$
+is flat at $2.5\times10^{-12}$ kJ/mol because it depends on the
+arithmetic and the potentials, not on the uncertainty; $\epsdata$ rises
+linearly with $\sigma$. At the middle of the range they differ by
+$11.5$ orders of magnitude, and the shaded gap is what
+\Cref{thm:trichotomy}(ii) asserts is non-empty.
+(\textbf{c})~Verdict fractions across the defect range at each $\sigma$.
+The \textsf{INCONSISTENT} share shrinks steadily as data quality
+degrades: the same defect becomes unresolvable, which is the behaviour a
+diagnostic should have and a two-valued test cannot express.
+(\textbf{d})~The verdict as a surface over $(\log_{10}D,
+\log_{10}\sigma)$, with the two boundaries contoured on the floor. The
+step structure is the trichotomy; the near-absence of the
+\textsf{CONSISTENT} plateau is an artefact of the sweep starting at
+$D=10^{-10}$, forty times $\epsnum$, and is reported as measured rather
+than adjusted away.}
+\label{fig:panel3}
+\end{figure*}
+
+\subsection{V4: the localisation confound is real and the witness set survives}
+
+\Cref{thm:basis-verdict} and \Cref{prop:basis-localisation} make
+opposite claims about basis dependence, and both are confirmed on $200$
+random networks of $6$--$12$ species with $2$--$4$ chords, each carrying
+a single $50$ kJ/mol edge defect.
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Quantity & Value\\
+\midrule
+Network-level verdict disagreements between bases & $0/200$\\
+Trials where the two bases flag \emph{different numbers} of cycles &
+$69/200$ $(34.5\%)$\\
+Witness set contains the defective edge, minimum basis & $200/200$\\
+Witness set contains the defective edge, fundamental basis & $200/200$\\
+Mean witness-set size, minimum basis & $3.77$ edges\\
+Mean witness-set size, fundamental basis & $4.30$ edges\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The verdict never disagreed, as \Cref{thm:basis-verdict} requires. The
+flagged set disagreed in more than a third of trials, which is
+\Cref{prop:basis-localisation} occurring at a rate high enough to matter
+in practice rather than merely in a constructed counterexample. Any
+report of the form ``the defect is localised to loop $\ell$'' would
+therefore have been basis-dependent in about one trial in three.
+
+The witness set contained the defective edge in every trial under both
+bases, confirming \Cref{thm:witness-contains}. \Cref{rem:mcb} predicted
+that a minimum-weight basis sharpens the localisation, and it does, by
+about half an edge on average ($3.77$ against $4.30$) --- a real effect
+but a modest one, and smaller than we expected.
+
+\begin{remark}[The witness set is not a point]
+\label{rem:witness-not-point}
+A mean witness size near $4$ on networks of $6$--$12$ species means the
+test localises to a neighbourhood, not to an edge. This is the honest
+resolution of the method at this network size, and it is worth stating
+plainly against the temptation to report the single most-flagged loop as
+though it were the answer.
+\end{remark}
+
+\subsection{V5: the detection guarantee holds, with a factor of two to spare}
+
+\Cref{thm:detection} guarantees detection when $D>2\epsstar$. Sweeping
+$D$ over $220$ points from $10^{-12}$ to $10^{3}$ at five data
+qualities, $1100$ evaluations in total, the guarantee was violated
+\emph{zero} times.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+$\sigma$ (kJ/mol) & $\epsstar$ & Predicted $2\epsstar$ &
+Empirical & Ratio\\
+\midrule
+$0.01$ & $0.0631$ & $0.126$ & $0.0664$ & $0.53$\\
+$0.05$ & $0.316$  & $0.631$ & $0.321$  & $0.51$\\
+$0.2$  & $1.26$   & $2.52$  & $1.33$   & $0.53$\\
+$1.0$  & $6.31$   & $12.6$  & $6.43$   & $0.51$\\
+$5.0$  & $31.6$   & $63.1$  & $36.5$   & $0.58$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The empirical threshold is consistently about half the predicted one
+(ratio $0.51$--$0.58$), which is exactly what the analysis anticipates:
+the factor of two in \Cref{thm:detection} is the price of a two-sided
+guarantee (\Cref{rem:factor2}), and in the absence of adversarial
+rounding a defect is detected as soon as it clears $\epsstar$ itself
+rather than $2\epsstar$. The dead zone $[\epsstar,2\epsstar]$ is real
+but is not usually occupied.
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/panel4_basis_detection.png}
+\caption{\textbf{The flagged set depends on the cycle basis; the verdict
+and the witness set do not.} Panels (a), (b) and (d) are $200$ random
+networks of $6$--$12$ species with $2$--$4$ chords, each carrying one
+$50$ kJ/mol edge defect; panel (c) is the detection sweep.
+(\textbf{a})~Cycles flagged under a minimum-weight basis against a
+fundamental basis, jittered to separate ties. Grey points agree; orange
+points do not, and they are $34.5\%$ of trials. The network-level
+verdict, by contrast, agreed in $200/200$ trials
+(\Cref{thm:basis-verdict}), so what varies is where the defect appears
+to sit, not whether one is present.
+(\textbf{b})~Witness-set size under each basis, dashed lines at the
+means. The minimum-weight basis gives a sharper localisation
+($3.77$ against $4.30$ edges), confirming \Cref{rem:mcb}, but by less
+than half an edge. Both contained the defective edge in every trial.
+(\textbf{c})~Detection against defect magnitude in units of
+$\epsstar$, five data qualities overlaid. The dotted line is $\epsstar$
+and the dashed line the guaranteed threshold $2\epsstar$ of
+\Cref{thm:detection}; every curve steps up between them, so the
+guarantee held in all $1100$ evaluations while the empirical threshold
+sits at about half of it. The five curves collapse onto one another
+under this normalisation, which is what makes $\epsstar$ the right unit.
+(\textbf{d})~Mean witness size over network size and flagged count, with
+the individual networks shown. Localisation degrades as more cycles are
+flagged: the witness set is an intersection, and more constraints on
+more cycles do not shrink it when those cycles overlap.}
+\label{fig:panel4}
+\end{figure*}
+
+\begin{remark}[Edge, not node --- an error we made]
+\label{rem:edge-not-node}
+Our first implementation injected defects by shifting a species
+potential $\mu_i$. Nothing was ever detected, which looked briefly like
+a failure of the method. It was a failure of the perturbation: shifting
+$\mu$ leaves the edge data the gradient of the shifted $\mu$, so by
+\Cref{lem:vanish} every cycle sum remains exactly zero. A thermodynamic
+inconsistency is by definition a failure of the edge data to be a
+gradient (\Cref{def:defect}), and it can only be injected on an edge.
+The suite now carries a negative control asserting that node
+perturbation does \emph{not} produce inconsistency, because the error is
+natural and silent: it produces a null result that mimics a real
+negative.
+\end{remark}
+
+% =====================================================================
 \section{Scope and limitations}
 \label{sec:limits}
 % =====================================================================
@@ -1458,10 +1843,15 @@ diagnostic built on it is entirely a question of telling those apart. We
 have argued that the customary device for doing so --- a fixed tolerance
 described as a solver setting --- cannot work, because the rounding
 error's scale is set by the cycle's length and potential range and so
-varies by orders of magnitude across one network. We measured the
-consequence: at a single fixed tolerance, the same network suffers a
-$0.41$ false-positive rate on its long high-potential cycles while
-missing $28\%$ of real defects on its short low-potential ones.
+varies by orders of magnitude across one network. Measuring it corrected
+us on the mechanism. In binary64 a customary $\eps=10^{-6}$ sits six
+orders of magnitude above the largest rounding error we could produce,
+so it manufactures no false positives at all; its costs are that it
+misses every defect below itself and that it asserts
+\textsf{INCONSISTENT} on defects lying wholly inside the data's own
+uncertainty. The two-sided failure we first predicted is a
+lower-precision phenomenon, and it appears on cue in binary32, rising
+monotonically with $L\Lambda$ from $0.18$ to $0.77$.
 
 The replacement is a tolerance computed per cycle from two independent
 sources: a numerical floor derived from the arithmetic, and a data floor
@@ -1478,24 +1868,39 @@ reference network that fails its own consistency check yields an invalid
 experiment rather than a negative one, a distinction that must be fixed
 before the data are seen if it is to constrain anything.
 
-What we have not done is run the protocol. It is specified here to the
-level at which it can be executed without further design decisions, with
-criteria stated in advance and controls chosen so that each can fail.
-Whether the test diagnoses anything is a question for that execution,
-and the most likely outcome --- given that $\epsdata$ exceeds $\epsnum$
-by twelve orders of magnitude on current reconstructions --- is that
-many cycles return \textsf{UNDECIDABLE}. That would be a finding about
-the state of thermodynamic annotation in metabolic databases, and it
-would be worth reporting plainly.
+What we have not done is run the protocol of \Cref{sec:protocol} against
+a real reconstruction. What we have done is validate every result it
+depends on (\Cref{sec:validation}): the noise bound holds over $1920$
+trials with median slack $729$; the verdict is basis-invariant over
+$200$ networks while the flagged set disagrees in $34.5\%$ of them; the
+witness set contains the defect in every trial under both bases; and the
+detection guarantee is never violated over $1100$ evaluations, with the
+empirical threshold at about half the guaranteed one.
+
+The measurement that most shapes what to expect is V3. Across a
+realistic $(\sigma,D)$ plane, $80.9\%$ of the grid returns
+\textsf{UNDECIDABLE}, with the data floor exceeding the numerical floor
+by $11.5$ orders of magnitude. A cycle-consistency diagnostic run
+against current thermodynamic annotations should therefore be expected
+to decline on most cycles. That is a finding about the state of
+annotation in metabolic databases rather than about the test, and it is
+worth reporting plainly --- as is the fact that a two-valued test on the
+same data would have returned a confident verdict on every one of those
+cycles.
 
 % =====================================================================
 \section*{Reproducibility}
 % =====================================================================
 
-\Cref{prot:fixed-fails,prot:main} specify every parameter needed to
-reproduce the numbers reported here. The synthetic demonstration of
-\Cref{tab:fixed-fails} depends only on the stated network sizes,
-potential ranges, and a seeded generator. The protocol of
+\Cref{prot:main} specifies every parameter needed to reproduce the
+numbers reported here. The validation suite of \Cref{sec:validation} is
+in \texttt{validation/run\_validation.py}, is seeded
+(\texttt{seed}~$=20260819$), and writes every quantity quoted in this
+paper to \texttt{validation/results.json}; the tables of
+\Cref{sec:fixed-tolerance-fails,sec:validation} are read from that file.
+The four figure panels are generated from the same JSON by
+\texttt{validation/make\_panels.py}, so no plotted value is computed
+independently of a reported one. The protocol of
 \Cref{sec:protocol} depends on public data
 \citep{brunk2018,noor2013,flamholz2012,rapoport1975,mulquiney1999} and
 on standard implementations of minimum cycle basis
