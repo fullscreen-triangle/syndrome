@@ -12,12 +12,13 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Editor from "./components/Editor.jsx";
+import Landing from "./components/Landing.jsx";
 import Reference from "./components/Reference.jsx";
 import SweepLab from "./components/SweepLab.jsx";
 import ChartColumn from "./components/ChartColumn.jsx";
 import { VERDICT_COLOR } from "./components/charts.jsx";
 import {
-  BookIcon, ChevronIcon, FileGlyph, FilesIcon, LabIcon, RunIcon,
+  BookIcon, ChevronIcon, FileGlyph, FilesIcon, InfoIcon, LabIcon, RunIcon,
 } from "./components/icons.jsx";
 import { runSource } from "./cfc/interpreter.js";
 import { EXAMPLES, DEFAULT_FILE } from "./data/examples.js";
@@ -41,7 +42,7 @@ const fmt = (x) => {
 };
 
 export default function App() {
-  const [view, setView] = useState("editor");
+  const [view, setView] = useState("landing");
   const [files, setFiles] = useState(() => {
     try {
       const saved = localStorage.getItem(STORE);
@@ -285,7 +286,8 @@ export default function App() {
           alignItems: "center", paddingTop: 6, gap: 2, flexShrink: 0,
           borderRight: "1px solid #252526",
         }}>
-          {[["editor", FilesIcon, "Experiments"],
+          {[["landing", InfoIcon, "What this is"],
+            ["editor", FilesIcon, "Experiments"],
             ["lab", LabIcon, "Validation lab"],
             ["docs", BookIcon, "Reference"]].map(([id, Icon, tip]) => (
             <button key={id} onClick={() => setView(id)} title={tip}
@@ -300,6 +302,7 @@ export default function App() {
           ))}
         </div>
 
+        {view === "landing" && <Landing onOpen={openFile} />}
         {view === "lab" && <SweepLab />}
         {view === "docs" && <Reference />}
 

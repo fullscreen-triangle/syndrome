@@ -18,6 +18,21 @@ await page.waitForTimeout(600);
 let bad = 0;
 const check = (ok, msg) => { console.log(`  ${ok ? "PASS" : "FAIL"}  ${msg}`); if (!ok) bad++; };
 
+// ---- landing --------------------------------------------------------
+// The app opens here, so this also covers the default view.
+const landed = await page.$eval("body", (b) =>
+  // The masthead is uppercased by CSS, so innerText is not the source casing.
+  /Cause-for-Concern . Workbench/i.test(b.innerText) &&
+  /Two floors, neither of them constant/i.test(b.innerText) &&
+  /UNDECIDABLE/.test(b.innerText));
+check(landed, "landing page renders on load");
+
+// Its file links are the intended way in.
+await page.click("[data-testid=landing-start]");
+await page.waitForTimeout(250);
+const inEditor = await page.$("[data-testid=run]");
+check(!!inEditor, "landing opens the first experiment in the editor");
+
 // ---- examples -------------------------------------------------------
 const expect = {
   "01_validity_gate.cfc": "OK",

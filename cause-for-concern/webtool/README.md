@@ -64,7 +64,15 @@ the reference failed its own check, so the run licenses no conclusion.
 | `04_rejected.cfc` | ERROR | a verdict without a tolerance does not parse |
 | `05_node_vs_edge.cfc` | OK | node perturbation detects nothing; edge does |
 
-## Three views
+## Four views
+
+**What this is** (info icon) — the landing page, and where the app
+opens. A scientific account of the system: the circuit mapping, the
+derivation of both floors, why the verdict has to be three-valued, what
+survives a change of cycle basis, why defects live on edges rather than
+nodes, the measured results, and an explicit scope table for what is and
+is not implemented. Filenames in it are links that open that example in
+the editor.
 
 **Experiments** (files icon) — the editor. Write and run `.cfc` programs;
 edits persist to `localStorage` and a dot marks a modified file, with
@@ -130,12 +138,12 @@ shipped examples are stored.
 ```bash
 node test/examples.mjs   # every example, headless
 node test/sweeps.mjs     # every sweep, with timings
-node test/browser.mjs    # 11 end-to-end checks (needs `npm run preview`)
+node test/browser.mjs    # 13 end-to-end checks (needs `npm run preview`)
 ```
 
-The browser suite drives all five examples, the charts, the inspector,
-the keyboard shortcut, all five sweeps and the reference pane, and fails
-on any console error.
+The browser suite drives the landing page, all five examples, the
+charts, the inspector, the keyboard shortcut, all five sweeps and the
+reference pane, and fails on any console error.
 
 ## Limits
 

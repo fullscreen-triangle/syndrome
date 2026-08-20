@@ -37,3 +37,10 @@ export const ChevronIcon = ({ open, c = "#9a9a9a" }) => (
     <path d="M6 3.5L11 8l-5 4.5" stroke={c} strokeWidth="1.5"
       strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
+
+/** Landing / explanation page. */
+export const InfoIcon = ({ size = 20, c = "#aaa" }) => (
+  <svg {...s(size)}><circle cx="10" cy="10" r="7.4" stroke={c} strokeWidth="1.3" />
+    <path d="M10 9v5" stroke={c} strokeWidth="1.5" strokeLinecap="round" />
+    <circle cx="10" cy="6.4" r="0.95" fill={c} /></svg>
+);
