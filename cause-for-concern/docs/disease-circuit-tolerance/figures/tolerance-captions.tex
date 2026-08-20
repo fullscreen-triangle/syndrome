@@ -1,0 +1,258 @@
+% =====================================================================
+%  Figure panels for:
+%  The Solver Tolerance Is Not a Solver Parameter
+%
+%  Every numerical value quoted below is read from
+%  validation/results.json, produced by validation/run_validation.py
+%  at seed 20260819. No caption quotes a value that is not in that file.
+%
+%  Usage: \input{figures/tolerance-captions} after \begin{document},
+%  or copy individual figure* environments into the body.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% PANEL 1 -- the numerical floor
+% ---------------------------------------------------------------------
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel1_numerical_floor.png}
+    \caption{\textbf{The Numerical Floor of a Cycle Sum: Growth with
+    Length and Potential Range, Validity of the Forward Bound, Its
+    Slack, and the Two-Parameter Floor Surface.}
+    Every quantity is measured on \emph{thermodynamically consistent}
+    circuits, for which the cycle sum vanishes identically
+    (\Cref{lem:vanish}); the computed value is therefore the accumulated
+    rounding error itself and carries no information about the network.
+    All arithmetic is IEEE-754 binary64 with unit roundoff
+    $\mach = 2^{-53} \approx 1.11\times10^{-16}$.
+    (\textbf{A})~Maximum computed $|\widehat{\hol}_\ell|$ over $60$
+    randomly generated ring circuits per grid cell, plotted against
+    cycle length $L \in \{3,5,8,12,16,20,25,30\}$ on a logarithmic
+    ordinate, with one curve per potential range
+    $\Lambda \in \{10, 10^2, 10^3, 3\times10^3\}$ kJ/mol.
+    The error grows with both parameters and spans three decades across
+    the grid, from $1.78\times10^{-15}$ at $(L,\Lambda)=(3,10)$ to
+    $2.73\times10^{-12}$ at $(30,3000)$ --- the empirical content of
+    \Cref{cor:no-constant}, which asserts that no single scalar can
+    track a floor varying this widely.
+    Critically, the largest value anywhere on the grid remains six
+    orders of magnitude below the customary tolerance $10^{-6}$, which
+    is the observation that falsified our own initial prediction
+    (\Cref{rem:prediction-failed}).
+    (\textbf{B})~Forward error bound $\epsnum(\ell) = \gamma_{2L}\cdot
+    2L\Lambda_\ell$ from \Cref{thm:noise-scale} plotted against the
+    measured error for all $32$ grid cells on doubly logarithmic axes;
+    the dashed diagonal marks equality.
+    Every point lies strictly above the diagonal, so the bound was
+    violated zero times in $1920$ trials --- a negative control that
+    would have failed had the error analysis of
+    \Cref{sec:numerical-floor} been unsound.
+    (\textbf{C})~Distribution of the slack factor
+    $\epsnum/|\widehat{\hol}_\ell|$ on a logarithmic abscissa, with the
+    median at $729$ marked in orange.
+    Slack ranges from $10.1$ to $722$, indicating the bound is
+    pessimistic by one to three orders of magnitude; this is the
+    expected consequence of a worst-case analysis assuming errors
+    accumulate as $O(L)$ when random rounding accumulates as
+    $O(\sqrt{L})$ \citep{higham2002}.
+    The bound is therefore safe but not tight, and we report the
+    slack rather than claiming sharpness.
+    (\textbf{D})~The numerical floor $\log_{10}\epsnum$ rendered as a
+    surface over $(\log_{10}\Lambda,\, L)$ with iso-contours projected
+    onto the base plane, spanning $2.93\times10^{-14}$ to
+    $1.17\times10^{-9}$ kJ/mol.
+    The surface is monotone increasing in both arguments and flat in
+    neither, which is precisely why the tolerance must be computed per
+    cycle from the pair $(L, \Lambda_\ell)$ rather than fixed globally
+    or summarised by their product.}
+    \label{fig:tol_panel1}
+\end{figure*}
+
+% ---------------------------------------------------------------------
+% PANEL 2 -- what a fixed tolerance costs
+% ---------------------------------------------------------------------
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel2_fixed_tolerance.png}
+    \caption{\textbf{Measured Cost of a Fixed Tolerance
+    $\eps=10^{-6}$: Absence of False Positives in Double Precision,
+    Their Recovery in Single Precision, Uniform Missed Detection Below
+    Threshold, and the Unwarranted-Positive Rate.}
+    Four strata of $400$ trials each, crossing short cycles
+    ($L\in[3,5]$) against long ($L\in[15,22]$) and low potential range
+    ($\Lambda = 20$ kJ/mol) against high ($\Lambda = 1800$ kJ/mol).
+    (\textbf{A})~False-positive rate on consistent circuits, where by
+    \Cref{lem:vanish} every positive is necessarily spurious.
+    In binary64 the rate is exactly $0.000$ in all four strata; because
+    a bar of height zero is invisible, it is drawn as a stub at the
+    baseline.
+    This falsifies the prediction, which we had made from
+    \Cref{cor:no-constant} without checking, that a fixed tolerance
+    would manufacture false positives on long high-potential cycles:
+    the rounding error of \Cref{fig:tol_panel1} never approaches
+    $10^{-6}$, so a threshold placed far above the entire noise range
+    is uniformly too loose rather than sometimes too tight.
+    Repeating the identical null computation in binary32, where unit
+    roundoff rises to $\approx 6\times10^{-8}$ and the numerical floor
+    with it, recovers the predicted mode: the rate climbs to
+    $0.177$, $0.445$, $0.565$ and $0.765$ across the four strata.
+    (\textbf{B})~The binary32 rate decomposed by length class against
+    $\Lambda$ on a logarithmic abscissa.
+    Raising $\Lambda$ raises the rate within either length class
+    ($0.177\to0.445$ short, $0.565\to0.765$ long), and raising $L$
+    raises it within either potential class, so both parameters act in
+    the direction \Cref{thm:noise-scale} predicts.
+    The effect of $L$ is however the larger: the long low-$\Lambda$
+    stratum ($L\Lambda = 370$) exceeds the short high-$\Lambda$ stratum
+    ($L\Lambda = 7200$) at $0.565$ against $0.445$, so the rate is
+    \emph{not} monotone in the product.
+    This is consistent with $L$ entering the bound twice --- in the
+    count of accumulated terms and inside $\gamma_{2L}$ --- while
+    $\Lambda$ enters only linearly, and it is the reason we plot the
+    two parameters separately rather than collapsing them.
+    (\textbf{C})~Missed-detection rate against injected edge defect
+    $D \in [10^{-8}, 1]$ kJ/mol on a logarithmic abscissa, one curve per
+    stratum, with $\eps = 10^{-6}$ marked by the dashed vertical.
+    Every defect below the threshold is missed with probability
+    $1.000$ in every stratum, independently of data quality; at
+    $D = \eps$ exactly the rate falls to $0.367$--$0.545$, and by
+    $D = 10^{-5}$ it reaches $0.000$ everywhere.
+    The sharpness of this transition shows the threshold is functioning
+    as a detection limit rather than a noise gate --- a quantity chosen
+    by habit is thereby silently encoding a clinical decision.
+    (\textbf{D})~The three measured costs per stratum as grouped
+    three-dimensional bars.
+    $\mathrm{FP}_{64}$ is identically zero; $\mathrm{FP}_{32}$ grows
+    with both $L$ and $\Lambda$; and the unwarranted-positive rate is
+    $1.000$ in all four strata --- with per-species uncertainty
+    $\sigma = 1$ kJ/mol and an injected defect of $0.5$ kJ/mol lying
+    wholly inside that uncertainty, the fixed test asserts
+    \textsf{INCONSISTENT} on every cycle, where the cycle-local test
+    correctly returns \textsf{UNDECIDABLE}.
+    This last quantity, not the false-positive rate, is the substantive
+    cost of a fixed tolerance at any precision.}
+    \label{fig:tol_panel2}
+\end{figure*}
+
+% ---------------------------------------------------------------------
+% PANEL 3 -- the trichotomy
+% ---------------------------------------------------------------------
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel3_trichotomy.png}
+    \caption{\textbf{The Three-Valued Verdict over Data Quality and
+    Defect Magnitude: Verdict Map, Separation of the Two Floors, Verdict
+    Composition, and the Trichotomy as a Surface.}
+    A six-edge cycle at $\Lambda = 200$ kJ/mol evaluated on a
+    $26\times40$ grid of per-species uncertainty
+    $\sigma \in [10^{-3}, 10]$ kJ/mol against injected edge defect
+    $D \in [10^{-10}, 10^{2}]$ kJ/mol, $1040$ points in total.
+    (\textbf{A})~Verdict map with blue \textsf{CONSISTENT}, orange
+    \textsf{UNDECIDABLE} and red \textsf{INCONSISTENT}.
+    The solid black curve traces the data floor
+    $\epsdata(\sigma) = z_{0.995}\,(\sum_i \sigma_i^2)^{1/2}$ and the
+    dashed vertical marks the numerical floor
+    $\epsnum = 2.48\times10^{-12}$ kJ/mol.
+    The orange band lying between them is the undecidable region of
+    \Cref{def:verdict}, and it occupies $80.9\%$ of the grid; the
+    boundary is a straight line of unit slope in these coordinates
+    because $\epsdata$ scales linearly with $\sigma$.
+    (\textbf{B})~The two floors plotted against $\sigma$ on doubly
+    logarithmic axes with the intervening region shaded.
+    The numerical floor is flat at $2.48\times10^{-12}$ kJ/mol, since it
+    depends on the arithmetic and the potentials but not on the reported
+    uncertainty; the data floor rises from $6.31\times10^{-3}$ to
+    $63.1$ kJ/mol across the swept range.
+    At the midpoint the two differ by $11.5$ orders of magnitude, which
+    is the quantitative content of \Cref{thm:trichotomy}(ii): the
+    undecidable class is not a technicality but the dominant regime at
+    every realistic data quality.
+    (\textbf{C})~Verdict composition across the full defect range as a
+    function of $\sigma$, shown as stacked fractions.
+    The \textsf{INCONSISTENT} share contracts monotonically from
+    $0.350$ at $\sigma = 10^{-3}$ to $0.025$ at $\sigma = 10$, so the
+    same defect becomes progressively unresolvable as annotation quality
+    degrades.
+    This is the behaviour a calibrated diagnostic must have and that a
+    two-valued test cannot express: at $\sigma = 10$ a binary rule would
+    still return a definite verdict on $97.5\%$ of the defects on which
+    this test correctly declines.
+    (\textbf{D})~The verdict rendered as a surface over
+    $(\log_{10} D,\, \log_{10}\sigma)$ with the two decision boundaries
+    contoured on the base plane, the vertical axis taking the three
+    discrete values \textsf{C}, \textsf{U} and \textsf{I}.
+    The step structure exhibits the trichotomy directly.
+    The near-absence of the \textsf{CONSISTENT} plateau
+    (measured fraction $0.000$) is an artefact of the sweep beginning at
+    $D = 10^{-10}$, some forty times $\epsnum$, so that no grid point
+    falls below the numerical floor; extending the sweep below
+    $10^{-12}$ recovers it.
+    We report the fraction as measured rather than adjusting the grid to
+    produce a more balanced figure.}
+    \label{fig:tol_panel3}
+\end{figure*}
+
+% ---------------------------------------------------------------------
+% PANEL 4 -- basis dependence and detection
+% ---------------------------------------------------------------------
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/panel4_basis_detection.png}
+    \caption{\textbf{Basis Dependence of Localisation, Invariance of the
+    Witness Set, the Detection Threshold in Units of the Cycle-Local
+    Tolerance, and Degradation of Localisation with Flag Count.}
+    Panels (A), (B) and (D) are computed on $200$ random networks of
+    $6$--$11$ species carrying $2$--$4$ chords, each with exactly one
+    edge defect of $50$ kJ/mol and per-species uncertainty
+    $\sigma = 0.05$ kJ/mol; panel (C) is an independent detection sweep.
+    (\textbf{A})~Number of cycles flagged \textsf{INCONSISTENT} under a
+    minimum-weight cycle basis against the number flagged under a
+    fundamental (spanning-tree) basis, with Gaussian jitter of standard
+    deviation $0.07$ applied to separate coincident integer points and
+    the dashed diagonal marking agreement.
+    Grey points agree; orange points do not, and they constitute
+    $69/200$ trials, a disagreement rate of $34.5\%$.
+    The network-level verdict, by contrast, agreed in $200/200$ trials,
+    confirming \Cref{thm:basis-verdict} while
+    \Cref{prop:basis-localisation} occurs at a rate high enough to
+    matter in practice rather than only in a constructed
+    counterexample: a report naming a single flagged loop would have
+    been basis-dependent in roughly one trial in three.
+    (\textbf{B})~Distribution of witness-set cardinality
+    $|W| = |\bigcap_{\ell \in F} E(\ell)|$ under each basis, with dashed
+    lines at the means.
+    The minimum-weight basis yields a sharper localisation
+    ($3.77$ against $4.30$ edges, ranges $1$--$9$ and $1$--$10$),
+    confirming the prediction of \Cref{rem:mcb} that shorter cycles
+    intersect in fewer edges; the improvement is real but modest, under
+    half an edge, and smaller than we anticipated.
+    Both bases contained the defective edge in $200/200$ trials, which
+    is \Cref{thm:witness-contains} verified without exception.
+    (\textbf{C})~Detection indicator against defect magnitude expressed
+    in units of the cycle-local tolerance, $D/\epsstar$, on a
+    logarithmic abscissa, for five data qualities
+    $\sigma \in \{0.01, 0.05, 0.2, 1, 5\}$ kJ/mol swept over $220$
+    points each.
+    The dotted vertical marks $\epsstar$ and the dashed vertical the
+    guaranteed threshold $2\epsstar$ of \Cref{thm:detection}; every
+    curve steps from $0$ to $1$ between them, so the guarantee held in
+    all $1100$ evaluations while the empirical threshold sits at
+    $0.51$--$0.58$ of the guaranteed value.
+    The factor of two is thus the price of a two-sided guarantee
+    (\Cref{rem:factor2}) and is not usually paid in practice.
+    That the five curves collapse onto one another under this
+    normalisation --- despite $\epsstar$ itself ranging over three
+    decades, from $0.063$ to $31.6$ kJ/mol --- is what establishes
+    $\epsstar$ as the correct unit for the detection threshold.
+    (\textbf{D})~Mean witness-set size as a surface over network size
+    and number of flagged cycles, with the individual networks
+    overlaid as points.
+    Localisation degrades as more cycles are flagged (Pearson
+    $r = -0.72$ between flag count and witness size): the witness set is
+    an intersection, and additional flagged cycles shrink it only when
+    they do not overlap.
+    Sharp localisation therefore requires a basis of short,
+    weakly-overlapping cycles rather than merely a large number of
+    positive tests.}
+    \label{fig:tol_panel4}
+\end{figure*}
