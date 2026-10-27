@@ -10,6 +10,9 @@ which of them are load-bearing, and what would I break by touching this one.* If
 you only need a definition site, use `ask` and stop reading; it is cheaper. See
 [When not to use this](#when-not-to-use-this).
 
+Username: kundai
+Password: Kundai12345
+
 ---
 
 ## 1. The thing to understand before you run anything

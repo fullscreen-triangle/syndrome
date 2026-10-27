@@ -1,0 +1,10 @@
+Background. A metabolic network at steady state can be written as a resistive circuit, in which Kirchhoff's voltage law becomes the Wegscheider condition: the sum of chemical-potential differences around any cycle vanishes identically, so nonzero cycle sums witness thermodynamic inconsistency. Every such test needs a tolerance below which a cycle sum counts as zero, conventionally a round number treated as a solver setting.
+
+Methods. We bound the rounding error of a cycle sum and propagate the uncertainty of the edge data - not of the species potentials, whose errors cancel around every cycle - through the same sum, giving a numerical and a data floor whose sum is the cycle-local tolerance. We evaluate it in 29,860 seeded trials and on experimental data: 3,276 measured equilibrium constants from TECRDB, and the human erythrocyte network assembled from UniProt and Rhea.
+
+Results. In binary64 a fixed tolerance of 1e-6 produces no false positives, since rounding error stays below 2.7e-12; it fails by asserting inconsistency the data cannot resolve. On measured data that failure is total: all 67 independent cycle sums exceed 1e-6 kJ/mol, whereas the cycle-local tolerance flags 7 and returns UNDECIDABLE on 60, its two floors lying 14 orders of magnitude apart. Under simulated noise it gives false positives at 0.009 against a nominal 0.01, but repeated measurements of one reaction, whose cycle sums are known to vanish, are heavier-tailed than the Gaussian floor assumes, and a floor calibrated on them flags 3 cycles. In the erythrocyte, pyruvate kinase lies on no cycle and no cycle is fully measured, so the test cannot reach the commonest erythrocyte enzymopathy.
+
+Conclusion. The tolerance is a property of the cycle and the data, not of the solver, and computing it converts unsupported verdicts into an explicit statement of what the data can resolve.
+
+KEYWORDS
+Wegscheider condition; metabolic networks; thermodynamic consistency; cycle basis; floating-point error analysis; detection limit; three-valued classification

@@ -54,6 +54,7 @@ class Reaction:
     src: str
     dst: str
     k: float
+    sigma: Optional[float] = None       # uncertainty on the edge datum, kJ/mol
 
 
 @dataclass
@@ -117,7 +118,7 @@ class Circuit:
         c = Circuit(
             species={k: Species(v.name, v.mu0, v.concentration, v.sigma)
                      for k, v in self.species.items()},
-            reactions=[Reaction(r.name, r.src, r.dst, r.k)
+            reactions=[Reaction(r.name, r.src, r.dst, r.k, r.sigma)
                        for r in self.reactions],
             RT=self.RT,
             edge_offset=dict(self.edge_offset),
@@ -134,8 +135,11 @@ class Circuit:
     def centre_potentials(self) -> "Circuit":
         """Shift all potentials so max|mu| is minimised.
 
-        Changes no cycle sum mathematically; reduces the numerical floor
-        because rounding error scales with operand magnitude.
+        Changes no cycle sum mathematically, and does not change the
+        rounding error either: a difference of two floats is rounded
+        relative to the difference, not to the operands. What it changes
+        is the bound, which is stated in max|mu| and is tightest when the
+        potentials are centred (max|mu| = half the spread).
         """
         if not self.solved:
             self.solve()
@@ -404,12 +408,29 @@ def numerical_floor(c: Circuit, cy: Cycle) -> float:
 
 def data_floor(c: Circuit, cy: Cycle,
                z: float = Z_ALPHA) -> Optional[float]:
-    """eps_data = z * sqrt(sum_i sigma_i^2), or None if any sigma absent.
+    """eps_data = z * sqrt(sum_e sigma_e^2) over the cycle's edges.
+
+    Only uncertainty on the edge data can reach a cycle sum: an error on a
+    species potential perturbs a gradient, and the sum still telescopes to
+    zero. So the floor is built from per-edge uncertainties when every
+    edge of the cycle carries one.
+
+    Legacy path: if no edge carries a sigma, the per-species sigmas are
+    summed over the cycle's nodes, as the CfC interpreter's `with sigma`
+    form supplies them. On a simple cycle this is numerically the same
+    sum, but it should be read as an uncertainty declared for the edge
+    data, not as an uncertainty on the potentials.
 
     Returning None rather than substituting a default is deliberate: a
     fabricated uncertainty converts an unanswerable question into a
     confident answer.
     """
+    by_name = {r.name: r for r in c.reactions}
+    edge_sigmas = [by_name[e].sigma for e, _ in cy.edges]
+    if all(s is not None for s in edge_sigmas):
+        return z * math.sqrt(sum(s * s for s in edge_sigmas))
+    if any(s is not None for s in edge_sigmas):
+        return None
     total = 0.0
     for name in set(cy.nodes):
         s = c.species[name].sigma
@@ -491,7 +512,10 @@ def compute_tolerance(c: Circuit, cy: Cycle,
                       z: float = Z_ALPHA) -> Tolerance:
     en = numerical_floor(c, cy)
     ed = data_floor(c, cy, z=z)
-    star = en if ed is None else max(en, ed)
+    # The sum, not the max: the computed value carries both errors at
+    # once, and only the sum makes the false-positive and detection
+    # guarantees hold together under data noise.
+    star = en if ed is None else en + ed
     return Tolerance(numerical=en, data=ed, star=star, loop=cy.name)
 
 
@@ -504,13 +528,13 @@ def admit(h: Holonomy, t: Tolerance) -> Verdict:
     """The three-valued classification.
 
     Below the numerical floor          -> CONSISTENT
-    Between numerical and data floor   -> UNDECIDABLE
-    Above both                         -> INCONSISTENT
+    Between it and eps* = num + data   -> UNDECIDABLE
+    Above eps*                         -> INCONSISTENT
     """
     a = abs(h.value)
     if a <= t.numerical:
         label = CONSISTENT
-    elif t.data is not None and a <= t.data:
+    elif t.data is not None and a <= t.star:
         label = UNDECIDABLE
     elif t.data is None and a > t.numerical:
         # No uncertainty data: cannot distinguish real defect from

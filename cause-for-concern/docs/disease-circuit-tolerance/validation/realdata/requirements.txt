@@ -1,0 +1,6 @@
+# Stage A of run_realdata.py (the reverse Legendre transform) needs these;
+# stage B (--from-derived) needs only numpy and pandas.
+equilibrator-api==0.8.1
+equilibrator-cache==0.8.1
+numpy>=2
+pandas>=2

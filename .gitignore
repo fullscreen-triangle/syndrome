@@ -3,6 +3,9 @@
 **/*.rs.bk
 *.pdb
 Cargo.lock
+.claude
+.agw.json 
+
 
 # IDE files
 .idea/

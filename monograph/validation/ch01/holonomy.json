@@ -1,0 +1,21 @@
+{
+ "conditions": {
+  "pH": 7.2,
+  "I_M": 0.15,
+  "T_K": 310.15,
+  "pMg": 3.0
+ },
+ "plasma": {
+  "glucose_M": 0.005,
+  "lactate_M": 0.001
+ },
+ "glucose_to_2_lactate": {
+  "dG0_prime_kJmol": -198.6,
+  "sd_kJmol": 1.88,
+  "dG_prime_at_plasma_kJmol": -220.6
+ },
+ "atp_hydrolysis": {
+  "dG0_prime_kJmol": -29.42,
+  "sd_kJmol": 0.3
+ }
+}

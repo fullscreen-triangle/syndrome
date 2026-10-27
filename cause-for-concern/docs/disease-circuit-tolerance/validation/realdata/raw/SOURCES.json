@@ -1,0 +1,59 @@
+{
+  "retrieved": "2026-10-21",
+  "TECRDB.csv.gz": {
+    "url": "https://raw.githubusercontent.com/eladnoor/component-contribution/67d3804f7cf8e5a909ab0c81d7b3d628cd2207cb/src/component_contribution/data/TECRDB.csv.gz",
+    "sha256": "b84fe77eaf0cbe1ba22f4d072abd1f9cf7081a4722248c704da7ee120dfd4625",
+    "bytes": 100363
+  },
+  "uniprot_erythrocyte.json": {
+    "url": "https://rest.uniprot.org/uniprotkb/search (one query per gene)",
+    "sha256": "6e9ce93c9ec1666b9dbc1bb643391d0014ad8691515dfa946d4e24675df451a4",
+    "bytes": 203059
+  },
+  "rhea_participants.csv": {
+    "url": "https://sparql.rhea-db.org/sparql",
+    "sha256": "d4a98779819aad70dd906ad961df29f4a8ec3730b70cfc4cb23694b171c46147",
+    "bytes": 58069
+  },
+  "rhea_query": "PREFIX rh:<http://rdf.rhea-db.org/>\nSELECT ?rhea ?order ?coef ?chebi WHERE {\n VALUES ?rhea { rh:9863 rh:10116 rh:10131 rh:10136 rh:10164 rh:10300 rh:10508 rh:10596 rh:10948 rh:11028 rh:11060 rh:11604 rh:11605 rh:11740 rh:11816 rh:12556 rh:12973 rh:13233 rh:13285 rh:13557 rh:13677 rh:14657 rh:14729 rh:14777 rh:14801 rh:15609 rh:15841 rh:15901 rh:16109 rh:16125 rh:16249 rh:16609 rh:16833 rh:16989 rh:17053 rh:17089 rh:17090 rh:17091 rh:17765 rh:17825 rh:17937 rh:17973 rh:17989 rh:18105 rh:18113 rh:18157 rh:18353 rh:18585 rh:19057 rh:20101 rh:20960 rh:21544 rh:22740 rh:23100 rh:23444 rh:23536 rh:24036 rh:24408 rh:25098 rh:25237 rh:25424 rh:27381 rh:27646 rh:27678 rh:27682 rh:27686 rh:27690 rh:27738 rh:27750 rh:28190 rh:30347 rh:44640 rh:46608 rh:48620 rh:48888 rh:50708 rh:66684 rh:68748 rh:68752 rh:69180 rh:69412 rh:69651 rh:72067 rh:72075 rh:76687 rh:76691 rh:76695 rh:76699 rh:76703 rh:76707 rh:76711 rh:76715 rh:77111 rh:77115 rh:77119 rh:77123 rh:77127 rh:77131 rh:77135 rh:77139 rh:77143 rh:77147 rh:78311 rh:79047 rh:79859 rh:79863 rh:79867 rh:79871 rh:79875 rh:79899 rh:84295 rh:84299 rh:84315 rh:85575 rh:85579 rh:85583 rh:86243 rh:86567 }\n ?rhea rh:side ?side . ?side rh:curatedOrder ?order .\n ?side ?contains ?p . ?contains rh:coefficient ?coef .\n ?p rh:compound ?c . OPTIONAL { ?c rh:chebi ?chebi . } }",
+  "genes": [
+    "HK1",
+    "GPI",
+    "PFKL",
+    "PFKM",
+    "ALDOA",
+    "TPI1",
+    "GAPDH",
+    "PGK1",
+    "BPGM",
+    "MINPP1",
+    "PGAM1",
+    "ENO1",
+    "PKLR",
+    "LDHA",
+    "LDHB",
+    "G6PD",
+    "PGLS",
+    "PGD",
+    "RPE",
+    "RPIA",
+    "TKT",
+    "TALDO1",
+    "PGM1",
+    "AK1",
+    "NME1",
+    "NME2",
+    "GSR",
+    "GPX1",
+    "GCLC",
+    "GSS",
+    "ADA",
+    "AMPD3",
+    "PNP",
+    "APRT",
+    "HPRT1",
+    "PRPS1",
+    "ATP1A1",
+    "ATP2B4"
+  ]
+}

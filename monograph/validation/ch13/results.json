@@ -1,0 +1,296 @@
+{
+  "C1_degree_heterogeneity": {
+    "regular": {
+      "mean_degree": 8.0,
+      "var_degree": 0.0,
+      "excess_ratio": 8.0,
+      "R0": 0.64,
+      "final_size": 0.0033
+    },
+    "poisson": {
+      "mean_degree": 8.039,
+      "var_degree": 7.9825,
+      "excess_ratio": 9.032,
+      "R0": 0.7226,
+      "final_size": 0.0039
+    },
+    "bimodal": {
+      "mean_degree": 7.9365,
+      "var_degree": 332.821,
+      "excess_ratio": 49.872,
+      "R0": 3.9898,
+      "final_size": 0.2028
+    },
+    "note": "tau = 0.08 per contact and the mean contact number are identical across the three rows; only the variance of the contact distribution differs.",
+    "R0_ratio_bimodal_over_regular": 6.2341
+  },
+  "C2_assortative_mixing": {
+    "groups": 5,
+    "tau": 0.05,
+    "assortativity_at_fixed_row_sums": [
+      {
+        "within_fraction": 0.0,
+        "row_sum": 10.0,
+        "spectral_radius": 0.5
+      },
+      {
+        "within_fraction": 0.25,
+        "row_sum": 10.0,
+        "spectral_radius": 0.5
+      },
+      {
+        "within_fraction": 0.5,
+        "row_sum": 10.0,
+        "spectral_radius": 0.5
+      },
+      {
+        "within_fraction": 0.75,
+        "row_sum": 10.0,
+        "spectral_radius": 0.5
+      },
+      {
+        "within_fraction": 1.0,
+        "row_sum": 10.0,
+        "spectral_radius": 0.5
+      }
+    ],
+    "verdict_assortativity": "NO EFFECT. Constant row sums force rho = tau * row_sum by Perron-Frobenius, whatever the within/between split.",
+    "ratio_assorted_over_proportionate": 1.0,
+    "heterogeneity_at_fixed_mean": [
+      {
+        "spread": 0.0,
+        "group_activities": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "population_mean_contact": 10.0,
+        "row_sums": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "excess_ratio": 10.0,
+        "spectral_radius": 0.5,
+        "predicted_tau_times_excess": 0.5
+      },
+      {
+        "spread": 0.3,
+        "group_activities": [
+          7.0,
+          8.5,
+          10.0,
+          11.5,
+          13.0
+        ],
+        "population_mean_contact": 10.0,
+        "row_sums": [
+          7.0,
+          8.5,
+          10.0,
+          11.5,
+          13.0
+        ],
+        "excess_ratio": 10.45,
+        "spectral_radius": 0.5225,
+        "predicted_tau_times_excess": 0.5225
+      },
+      {
+        "spread": 0.6,
+        "group_activities": [
+          4.0,
+          7.0,
+          10.0,
+          13.0,
+          16.0
+        ],
+        "population_mean_contact": 10.0,
+        "row_sums": [
+          4.0,
+          7.0,
+          10.0,
+          13.0,
+          16.0
+        ],
+        "excess_ratio": 11.8,
+        "spectral_radius": 0.59,
+        "predicted_tau_times_excess": 0.59
+      },
+      {
+        "spread": 0.9,
+        "group_activities": [
+          1.0,
+          5.5,
+          10.0,
+          14.5,
+          19.0
+        ],
+        "population_mean_contact": 10.0,
+        "row_sums": [
+          1.0,
+          5.5,
+          10.0,
+          14.5,
+          19.0
+        ],
+        "excess_ratio": 14.05,
+        "spectral_radius": 0.7025,
+        "predicted_tau_times_excess": 0.7025
+      }
+    ],
+    "verdict_heterogeneity": "EFFECT. Unequal group totals at the same population mean raise rho, because rho depends on the second moment of the contact distribution and not on its mean.",
+    "ratio_spread09_over_spread0": 1.405
+  },
+  "C3_group_size": {
+    "tau": 0.05,
+    "mean_degree_held_at": 40.0,
+    "rows": [
+      {
+        "group_size": 1,
+        "within_contacts": 0.0,
+        "outside_contacts": 40.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 1.0,
+        "R_star": 2.0
+      },
+      {
+        "group_size": 2,
+        "within_contacts": 1.0,
+        "outside_contacts": 39.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 1.0504,
+        "R_star": 2.0483
+      },
+      {
+        "group_size": 3,
+        "within_contacts": 2.0,
+        "outside_contacts": 38.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 1.1036,
+        "R_star": 2.0968
+      },
+      {
+        "group_size": 5,
+        "within_contacts": 4.0,
+        "outside_contacts": 36.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 1.2301,
+        "R_star": 2.2141
+      },
+      {
+        "group_size": 10,
+        "within_contacts": 9.0,
+        "outside_contacts": 31.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 1.6759,
+        "R_star": 2.5976
+      },
+      {
+        "group_size": 20,
+        "within_contacts": 19.0,
+        "outside_contacts": 21.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 3.9939,
+        "R_star": 4.1936
+      },
+      {
+        "group_size": 30,
+        "within_contacts": 29.0,
+        "outside_contacts": 11.0,
+        "mean_degree": 40.0,
+        "mean_infected_per_group_introduction": 11.2531,
+        "R_star": 6.1892
+      }
+    ],
+    "note": "Mean degree is held at 40 in every row, so the mean number of contacts per person is constant. R_star is the expected number of outside infections produced by one introduction and all the cases it causes inside its own group. Two effects oppose each other: larger groups amplify locally (mu rises, superlinearly once (s-1)*tau approaches 1) but consume the contact budget that reaches other groups (outside falls linearly). R_star is therefore NON-MONOTONE in group size, with an interior maximum. Concentrating contact is not uniformly worse; it is worse over a range and then self-limiting, because a group that has absorbed a person's whole contact budget can infect no one else.",
+    "R_star_values": [
+      2.0,
+      2.0483,
+      2.0968,
+      2.2141,
+      2.5976,
+      4.1936,
+      6.1892
+    ],
+    "argmax_group_size": 30
+  },
+  "C4_weighting_function": {
+    "rows": [
+      {
+        "order_parameter": 0.15,
+        "regime": "turbulent",
+        "core_population_fraction": 0.85,
+        "core_degree": 1.4118,
+        "periphery_degree": 45.3333,
+        "mean_degree": 8.0,
+        "excess_ratio": 38.7451,
+        "normalised_to_turbulent": 1.0,
+        "f_structural": 0.1544
+      },
+      {
+        "order_parameter": 0.4,
+        "regime": "aperture",
+        "core_population_fraction": 0.6,
+        "core_degree": 5.3333,
+        "periphery_degree": 12.0,
+        "mean_degree": 8.0,
+        "excess_ratio": 9.3333,
+        "normalised_to_turbulent": 0.2409,
+        "f_structural": 0.0372
+      },
+      {
+        "order_parameter": 0.65,
+        "regime": "cascade",
+        "core_population_fraction": 0.35,
+        "core_degree": 14.8571,
+        "periphery_degree": 4.3077,
+        "mean_degree": 8.0,
+        "excess_ratio": 11.1648,
+        "normalised_to_turbulent": 0.2882,
+        "f_structural": 0.0445
+      },
+      {
+        "order_parameter": 0.87,
+        "regime": "coherent",
+        "core_population_fraction": 0.13,
+        "core_degree": 53.5385,
+        "periphery_degree": 1.1954,
+        "mean_degree": 8.0,
+        "excess_ratio": 46.7339,
+        "normalised_to_turbulent": 1.2062,
+        "f_structural": 0.1863
+      },
+      {
+        "order_parameter": 0.97,
+        "regime": "phase-locked",
+        "core_population_fraction": 0.03,
+        "core_degree": 258.6667,
+        "periphery_degree": 0.2474,
+        "mean_degree": 8.0,
+        "excess_ratio": 250.9141,
+        "normalised_to_turbulent": 6.476,
+        "f_structural": 1.0
+      }
+    ],
+    "posited_f": [
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "posited_ratio": 5.0,
+    "structural_ratio_phase_locked_over_turbulent": 6.476,
+    "monotone_in_r": false,
+    "verdict": "NOT MONOTONE. The structural f is U-shaped in r, not increasing. The reason is visible in the columns: <k^2>/<k> at fixed mean is minimised when the degree distribution is uniform, which this family reaches at r = 0.5, and it rises in BOTH directions away from that point. At r = 0.15 a small periphery carries very high degree; at r = 0.97 a small core does. Both are concentrated, and concentration is what the second moment measures. So a single scalar order parameter running from 0 to 1 does not order populations by vulnerability unless one also fixes WHICH tail is heavy. The posited monotone step function f = 0.2 ... 1.0 therefore does not follow from the contact structure it is meant to summarise. The chapter states the second-moment result (C1, C2b), which is exact, and does not use f or its numerical values for any claim."
+  },
+  "provenance": {
+    "seed": 20261027,
+    "numpy": "2.4.3",
+    "claim": "Every number here is a function of contact structure and a single fixed per-contact transmission probability. No environmental variable and no pathogen-specific parameter is fitted or used."
+  }
+}

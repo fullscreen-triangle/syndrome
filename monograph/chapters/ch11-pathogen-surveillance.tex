@@ -300,7 +300,7 @@ correct ordering of a positive--negative pair under the test statistic
 \citep{vantrees2001}.
 \end{proof}
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel1_identification.png}
     \caption{\textbf{Matched-Filter Pathogen Identification: ROC Performance, Detection z-Score, Position Recovery, and Three-Dimensional z-Score Surface.}
@@ -309,7 +309,7 @@ correct ordering of a positive--negative pair under the test statistic
     (\textbf{C})~Exact position-recovery rate (fraction of trials in which the global $\arg\max$ of the normalised matched filter lies within $\pm 2$\,bp of the planted position) versus substitution rate $\mu$ for three query lengths $L_q\in\{50,\,100,\,200\}$\,bp, computed over $n=20$ trials per rate per query length. 
     (\textbf{D})~Three-dimensional surface of the analytically approximated peak $z$-score $z\approx\sqrt{L_q/50}\cdot\max(1-2\mu,\,0.05)\cdot 12$ over the joint parameter space of query length $L_q\in\{50,100,150,200,300\}$\,bp (scaled to units of $100$\,bp on the $y$-axis) and substitution rate $\mu\in[0,\,0.5]$, rendered in the \texttt{plasma} colormap. }
     \label{ps:fig:pathogen_panel1}
-\end{figure*}
+\end{figure}
 
 \subsection{FFT Acceleration via the Convolution Theorem}
 
@@ -410,7 +410,7 @@ $\rho^*_{\text{trop}} \approx 0.62$ is a threshold calibrated on known
 virus--receptor pairs.
 \end{definition}
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel2_tropism.png}
     \caption{\textbf{Receptor-Pathogen Spectral Overlap and Tropism Prediction: Score Distributions, ROC Performance, Multi-Receptor Binding Panel, and Three-Dimensional Attachment Protein Clustering.}
@@ -419,7 +419,7 @@ virus--receptor pairs.
     (\textbf{C})~Grouped bar chart of receptor binding scores $\rho(\psi_\text{path},\,\psi_\text{rec})$ for five pathogen samples (P1--P5) against five receptor targets (ACE2, CD4, Sia-2,6, Sia-2,3, TMPRSS2 analogues), displayed as five groups of five bars. Each pathogen displays high spectral overlap with its cognate receptor family and low overlap with non-cognate receptors, reproducing the receptor-selectivity pattern observed in known host-range determinants.
     (\textbf{D})~Three-dimensional scatter $(\psi_1,\psi_2,\psi_3)$ of $n=50$ pathogen attachment protein spectra ($5$ families $\times$ $10$ members) colour-coded by cognate receptor target (ACE2-blue, CD4-red, Sia-2,6-green, Sia-2,3-orange, TMPRSS2-purple). Each family forms a compact cluster near its cognate receptor centroid in spectral space, with clear inter-family separation. The cluster geometry directly encodes tropism.}
     \label{ps:fig:pathogen_panel2}
-\end{figure*}
+\end{figure}
 
 \subsection{Case Studies in Known Tropism}
 
@@ -529,7 +529,7 @@ recognition.
 \end{algorithmic}
 \end{algorithm}
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel3_escape_landscape.png}
     \caption{\textbf{Viral Immune Escape Landscape: Escape Score Ranking, Viability Scatter, Compound Escape Difficulty, and Three-Dimensional Spectral Escape Surface.}
@@ -537,7 +537,7 @@ recognition.
     (\textbf{C})~Compound escape difficulty: viable escape fraction plotted on a semi-logarithmic scale versus the number of antibodies in the neutralising panel (1--8), each drawn independently from the unit sphere in $\mathbb{R}^{48}$. 
     (\textbf{D})~Three-dimensional escape score surface: the escape score $E_i$ for $n=300$ variants is interpolated onto a $20\times 20$ regular grid over the first two spectral coordinates $(\psi_1,\psi_2)$ via linear Delaunay triangulation, rendered with the \texttt{RdYlGn} colormap. }
     \label{ps:fig:pathogen_panel3}
-\end{figure*}
+\end{figure}
 
 \subsection{Historical Validation Against SARS-CoV-2 Variants}
 
@@ -677,7 +677,7 @@ relebactam, which maintain binding affinity across the CTX-M, TEM, and SHV
 variant spectra. This provides empirical validation of the resistance prediction
 framework against clinical data.
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel4_resistance.png}
     \caption{\textbf{Antibiotic Resistance Prediction via Enzyme Spectral Evasion: Susceptible-Resistant Distributions, Resistance Mutation Landscape, Drug Robustness Scores, and Three-Dimensional Robustness Surface.}
@@ -686,7 +686,7 @@ framework against clinical data.
     (\textbf{C})~Robustness scores for $n_D=8$ drug candidates, defined as the product of the nominal binding score $\rho(\psi_D,\psi_E)$ and the worst-case binding retention $\min_{m\in\mathcal{M}_\text{res}}\rho(\psi_D,\psi_{E_m})$ across $n=50$ resistance mutations. 
     (\textbf{D})~Three-dimensional robustness surface over the joint space of drug-enzyme binding $\rho_\text{drug}\in[-0.5,\,1.0]$ and substrate-enzyme binding $\rho_\text{sub}\in[-0.5,\,1.0]$, defined as $\text{Robustness}=\rho_\text{drug}\cdot\max(\rho_\text{sub},\,0)$ on a $20\times 20$ grid, rendered in the \texttt{RdYlGn} colormap.}
     \label{ps:fig:pathogen_panel4}
-\end{figure*}
+\end{figure}
 
 % ============================================================
 \section{Infection Dynamics and Host Oscillator Coherence}
@@ -832,7 +832,7 @@ $D_\mathcal{G}(t)$, which is proportional to $\lambda_\mathcal{G} \sum_j
 antagonists (as SARS-CoV-2 does with ORF6, NSP1, NSP3, and ORF9b) are
 predicted to carry elevated cytokine storm risk.
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel5_infection_dynamics.png}
     \caption{\textbf{Infection Dynamics via Host Oscillator Coherence Deformation: Disease Vector Trajectories, Pathogen-Host Spectral Overlap, Viral-Load-Dependent Peak Dysfunction, and Three-Dimensional Disease Surface.}
@@ -841,7 +841,7 @@ predicted to carry elevated cytokine storm risk.
     (\textbf{C})~Peak disease index $D_i^* = \max_t D_i(t)$ as a function of viral load $V_\text{max}\in[0.1,\,2.0]$ for three oscillator classes: protein folding (P, blue), mitochondrial ATP (A, orange), and gene expression (G, purple), computed from $n=30$ ODE integrations at evenly spaced $V_\text{max}$ values. 
     (\textbf{D})~Three-dimensional disease surface: the full $8\times 200$ disease trajectory matrix $D_i(t_k)$ rendered as a surface with oscillator class on the $x$-axis (labelled P, E, C, M, A, G, Ca, R), time on the $y$-axis ($0$--$14$\,days), and $D_i(t)$ on the $z$-axis, coloured by the \texttt{coolwarm} colormap (blue$=0$, red$=1$). }
     \label{ps:fig:pathogen_panel5}
-\end{figure*}
+\end{figure}
 
 % ============================================================
 \section{Microbiome Dysbiosis as Collective Spectral Interference}
@@ -918,7 +918,7 @@ turnbaugh2006}. Infection therefore shifts the community composition toward
 commensals with dissimilar spectra, potentially driving $\Psi_{\text{micro}}$
 away from $\Psi_{\text{host}}$ and inducing secondary dysbiosis.
 
-\begin{figure*}[!htbp]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{panels/panel6_microbiome.png}
     \caption{\textbf{Microbiome Dysbiosis via Collective Spectral Misalignment: Host Alignment Distributions, Diversity-Eubiosis Relationship, Optimal Probiotic Formulation, and Three-Dimensional Species Spectral Space.}
@@ -927,7 +927,7 @@ away from $\Psi_{\text{host}}$ and inducing secondary dysbiosis.
     (\textbf{C})~Optimal probiotic species fractions $f^*_i\propto\max(\rho(\psi_i,\Psi_\text{host}),\,0)$ for the top 10 species (by $f^*_i$) out of $N_\text{sp}=20$ species, displayed as a horizontal bar chart. Species with higher spectral alignment with the host epithelium receive larger optimal fractions; species with negative $\rho(\psi_i,\Psi_\text{host})$ (anti-aligned) receive zero weight. 
     (\textbf{D})~Three-dimensional scatter $(\psi_1,\psi_2,\psi_3)$ of $N_\text{sp}=20$ species spectral centroids coloured by host alignment score $\rho(\psi_i,\Psi_\text{host})$ (RdYlGn; green $=$ high alignment, red $=$ low alignment). The host epithelial spectrum $\Psi_\text{host}$ is marked by the gold star and the optimal probiotic mixture centroid $\Psi^*_\text{micro}$ is marked by the green upward triangle. }
     \label{ps:fig:pathogen_panel6}
-\end{figure*}
+\end{figure}
 
 % ============================================================
 \section{GPU Architecture and the Empty Database Principle}
@@ -1113,7 +1113,7 @@ class shown experimentally to retain activity across TEM, SHV, and CTX-M
 families. Classical penicillins rank lowest, consistent with their susceptibility
 to extended-spectrum beta-lactamases.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.23\textwidth}
   \rule{\textwidth}{0.6\textwidth}
@@ -1153,9 +1153,9 @@ single-channel) across $\mu$ values. Gain is 1.7--1.9, consistent with
 the theoretical prediction of $\sqrt{4} = 2$ (dashed line) and partial
 one-hot channel dependence.}
 \label{ps:fig:identification}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.23\textwidth}
   \rule{\textwidth}{0.6\textwidth}
@@ -1195,9 +1195,9 @@ low divergence; clusters overlap at $\mu \geq 0.30$.
 $\rho(\text{att}(P), \text{ACE2})$ vs.\ $\rho(\text{att}(P), \text{TMPRSS2})$
 plane, illustrating the conjunctive threshold structure of~\eqref{ps:eq:multi_receptor}.}
 \label{ps:fig:tropism}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.23\textwidth}
   \rule{\textwidth}{0.6\textwidth}
@@ -1239,9 +1239,9 @@ required for escape) as a function of the number of spectrally independent
 antibodies $K_{\text{ind}}$, illustrating the linear growth predicted by
 Proposition~\ref{ps:prop:multiescape}.}
 \label{ps:fig:escape}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.23\textwidth}
   \rule{\textwidth}{0.6\textwidth}
@@ -1289,7 +1289,7 @@ IBD-like composition. \textit{Lactobacillus} and \textit{Bifidobacterium}
 species dominate the solution, consistent with clinical probiotic practice
 \citep{turnbaugh2006}.}
 \label{ps:fig:dynamics}
-\end{figure*}
+\end{figure}
 
 % ============================================================
 \section{Discussion}

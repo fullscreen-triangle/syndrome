@@ -119,17 +119,20 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems}
 
-%% Full-width display math in two-column layout.
-%% Uses stfloats so that starred floats (figure*/table*) can appear at the
-%% bottom of a page as well as the top, and provides a "widestrip" for display
-%% equations that must span both columns (mirroring the source papers).
-\usepackage{stfloats}
-\usepackage{cuted}   %% \begin{strip}...\end{strip} spans both columns (text/listings)
-%% \fiteq{<math>} shrinks an over-wide display formula to exactly the column
-%% width so it never spills into the gutter (guaranteed via \resizebox).
-%% Use for single-line formulas too wide for a 10pt two-column measure.
-\newcommand{\fiteq}[1]{%
-  \[\resizebox{\columnwidth}{!}{$\displaystyle #1$}\]}
+%% The monograph is set in ONE column. The two helpers below exist because
+%% the chapters were converted from two-column source papers and still use
+%% them; in one column both are no-ops that simply typeset their content at
+%% the full text width.
+%%
+%% `strip' comes from cuted and spans both columns, which is an error outside
+%% twocolumn mode. Define it as a transparent environment instead: at the
+%% full measure there is nothing to span.
+\newenvironment{strip}{\par\addvspace{\medskipamount}}%
+                      {\par\addvspace{\medskipamount}}
+%% \fiteq{<math>} shrank an over-wide display formula to the column width.
+%% At the full measure almost nothing needs shrinking, and \resizebox would
+%% change the type size, so typeset it as an ordinary display.
+\newcommand{\fiteq}[1]{\[#1\]}
 
 %% -------------------------------------------------------------------------
 %% Unified notation
@@ -210,6 +213,20 @@
 \Crefname{assumption}{Assumption}{Assumptions}
 \crefname{principle}{Principle}{Principles}
 \Crefname{principle}{Principle}{Principles}
+
+%% Chapter 1 (What disease is): the one postulate, statements supplied from
+%% established science, and the label carried by every link of the chain
+%% ([D] derived here, [S] supplied with a reference, [C] checked on data).
+\theoremstyle{definition}
+\newtheorem{postulate}{Postulate}
+\newtheorem{inputstmt}[theorem]{Input}
+\crefname{postulate}{Postulate}{Postulates}
+\Crefname{postulate}{Postulate}{Postulates}
+\crefname{inputstmt}{Input}{Inputs}
+\Crefname{inputstmt}{Input}{Inputs}
+\newcommand{\lnkD}{\textsf{[D]}}
+\newcommand{\lnkS}{\textsf{[S]}}
+\newcommand{\lnkC}{\textsf{[C]}}
 
 %% Paper-local macros + cfc listing language for the Disease-part chapters
 \input{chapters/disease-macros}

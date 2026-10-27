@@ -1,0 +1,14 @@
+{
+  "version": "martial/v0",
+  "profile": "manuscript",
+  "evidence": [
+    {
+      "claim": "A tropical region made artificially cool would show unchanged prevalence.",
+      "not_a_claim": "This sentence states a claim of the superseded chapter in order to withdraw it; the next sentence reads 'I withdraw all three' and the following paragraphs give the evidence against it (Mordecai 2013/2019, Gething 2011). It asserts nothing in this chapter's own voice."
+    },
+    {
+      "claim": "from the published literature, with a reference",
+      "not_a_claim": "An item in the list defining the chapter's [D]/[S]/[C] link labels. It explains what the [S] mark means, and is not an assertion about the world."
+    }
+  ]
+}

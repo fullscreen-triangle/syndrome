@@ -2,22 +2,29 @@
 """
 run_validation.py -- validation experiments for the solver-tolerance paper.
 
-Five experiments, each testing a numbered result:
+Six experiments, each testing a numbered result:
 
-  V1  noise scale        Thm 3.2  eps_num ~ L^2 u Lambda, and the bound holds
-  V2  fixed tolerance    Sec 4    a constant eps fails in BOTH directions
-  V3  trichotomy         Thm 5.5  UNDECIDABLE is non-empty and non-degenerate
-  V4  basis dependence   Thm 6.1 / Prop 6.2  verdict invariant, flagged set not
-  V5  detection          Thm 5.3  D > 2 eps* implies flagged; empirical threshold
+  V1  noise scale        the eps_num bound holds, and how slack it is
+  V2  fixed tolerance    what a constant eps = 1e-6 costs (one-sided in
+                         binary64, two-sided in binary32)
+  V3  trichotomy         the (sigma, D) verdict map on noise-free data
+  V4  basis dependence   verdict invariant across bases, flagged set not
+  V5  detection          the noise-free detection threshold against 2 eps*
+  V6  data noise         the probabilistic guarantees under simulated noise:
+                         species-level noise cancels; edge-level noise gives
+                         false positives at rate <= alpha and detection at
+                         2 eps* with probability >= 1 - alpha
 
 Everything is seeded. Results are written to results.json, which is the
 single source for every number quoted in the manuscript and every point
 plotted in the panels.
 
-Design note: no check here compares the implementation against its own
-tolerance computation, because such a check passes by construction.
-Where a claim is an identity we verify it exactly; where it is a bound we
-measure how slack the bound is and report that.
+Design note. V1, V2 (binary32 column) and V4 measure behaviour the
+definitions do not fix in advance. V3 and V5 run on noise-free data, so
+their verdicts are deterministic functions of the defect and the two
+floors: they map the geometry of the verdict, they do not test it. V6 is
+the test of the probabilistic claims, which only simulated noise can
+exercise.
 """
 
 from __future__ import annotations
@@ -54,21 +61,32 @@ RESULTS: Dict[str, object] = {}
 def make_ring(n: int, mu_lo: float, mu_hi: float,
               sigma: float, rng: np.random.Generator,
               chords: int = 0) -> Circuit:
-    """A ring of n species, optionally with `chords` extra edges."""
+    """A ring of n species, optionally with `chords` extra edges.
+
+    `sigma` is the uncertainty of every edge datum: uncertainty on the
+    species potentials would cancel around every cycle (V6a).
+    """
     c = Circuit()
     mus = rng.uniform(mu_lo, mu_hi, size=n)
     for i in range(n):
         # Fold the sampled potential into mu0 with c = 1 so that
         # mu = mu0 exactly; this keeps Lambda under our control.
-        c.add_species(Species(f"S{i}", float(mus[i]), 1.0, sigma))
+        c.add_species(Species(f"S{i}", float(mus[i]), 1.0, None))
     for i in range(n):
-        c.add_reaction(Reaction(f"R{i}", f"S{i}", f"S{(i + 1) % n}", 0.1))
+        c.add_reaction(Reaction(f"R{i}", f"S{i}", f"S{(i + 1) % n}", 0.1,
+                                sigma))
     for j in range(chords):
         a = int(rng.integers(0, n))
         b = int((a + 2 + rng.integers(0, max(1, n - 3))) % n)
         if a != b:
-            c.add_reaction(Reaction(f"C{j}", f"S{a}", f"S{b}", 0.1))
+            c.add_reaction(Reaction(f"C{j}", f"S{a}", f"S{b}", 0.1, sigma))
     return c.solve()
+
+
+def ring_cycle(L: int) -> Cycle:
+    return Cycle(name="ring",
+                 edges=[(f"R{i}", +1) for i in range(L)],
+                 nodes=[f"S{i}" for i in range(L)] + ["S0"])
 
 
 def verdict_label(c: Circuit, cy: Cycle) -> str:
@@ -156,7 +174,7 @@ def v2_fixed_tolerance(eps_fixed: float = 1e-6) -> dict:
       (a) miss real defects, because 1e-6 is a habit rather than a
           detection threshold, and any defect below it is invisible
           however well-characterised the data;
-      (b) claim CONSISTENT on defects that lie inside the data's own
+      (b) assert INCONSISTENT on defects that lie inside the data's own
           uncertainty, which is an unwarranted positive assertion where
           the honest verdict is UNDECIDABLE.
 
@@ -292,8 +310,8 @@ def v3_trichotomy() -> dict:
 
     for i, s in enumerate(sigmas):
         c = clone(base)
-        for sp in c.species.values():
-            sp.sigma = float(s)
+        for r in c.reactions:
+            r.sigma = float(s)
         eps_data_ref.append(float(data_floor(c, cy)))
         for j, D in enumerate(defects):
             d = clone(c)
@@ -468,6 +486,97 @@ def v5_detection() -> dict:
 
 
 # =====================================================================
+# V6 -- the probabilistic guarantees, under simulated data noise
+# =====================================================================
+
+def v6_data_noise(n_trials: int = 4000) -> dict:
+    """Test the guarantees that only data noise can exercise.
+
+    (a) Species-level noise: perturb every potential independently. The
+        edge data remain the gradient of the perturbed potentials, so
+        every cycle sum must stay at the rounding level -- CONSISTENT,
+        whatever sigma is. This is the negative control for the claim
+        that species uncertainty never reaches a cycle sum.
+    (b) Edge-level noise, no defect: the false-positive rate (verdict
+        INCONSISTENT) must not exceed alpha.
+    (c) Edge-level noise plus a defect D = 2 eps*: detection must occur
+        with probability at least 1 - alpha.
+    (d) Edge-level noise plus a defect D = eps*: inside the dead zone,
+        where no guarantee is made; reported, not tested.
+    """
+    rng = np.random.default_rng(SEED + 5)
+    alpha = 2.0 * (1.0 - 0.995)                 # Z_ALPHA is the 0.995 quantile
+    se = math.sqrt(alpha * (1.0 - alpha) / n_trials)
+    lengths = [4, 8, 16]
+    sigmas = [0.1, 1.0]
+    lam = 500.0
+    rows = []
+    species_failures = 0
+
+    for L in lengths:
+        for sig in sigmas:
+            base = make_ring(L, -lam, lam, sigma=sig, rng=rng)
+            cy = ring_cycle(L)
+            tol = compute_tolerance(base, cy)
+            counts = {"species_consistent": 0, "edge_null_fp": 0,
+                      "detect_at_2star": 0, "detect_at_star": 0}
+            for _ in range(n_trials):
+                # (a) species-level noise
+                d = clone(base)
+                for k in d.mu:
+                    d.mu[k] += float(rng.normal(0.0, sig))
+                if verdict_label(d, cy) == CONSISTENT:
+                    counts["species_consistent"] += 1
+                else:
+                    species_failures += 1
+                # (b)-(d) edge-level noise, with and without a defect
+                noise = rng.normal(0.0, sig, size=L)
+                for key, D in (("edge_null_fp", 0.0),
+                               ("detect_at_2star", 2.0 * tol.star),
+                               ("detect_at_star", tol.star)):
+                    d = clone(base)
+                    for i in range(L):
+                        d.edge_offset[f"R{i}"] = float(noise[i])
+                    d.edge_offset["R0"] += D
+                    if verdict_label(d, cy) == INCONSISTENT:
+                        counts[key] += 1
+            rows.append({
+                "length": L, "sigma": sig,
+                "eps_num": tol.numerical, "eps_data": tol.data,
+                "eps_star": tol.star, "n": n_trials,
+                "species_noise_consistent_rate":
+                    counts["species_consistent"] / n_trials,
+                "edge_null_false_positive_rate":
+                    counts["edge_null_fp"] / n_trials,
+                "detection_rate_at_2eps_star":
+                    counts["detect_at_2star"] / n_trials,
+                "detection_rate_at_eps_star":
+                    counts["detect_at_star"] / n_trials,
+            })
+
+    fp = [r["edge_null_false_positive_rate"] for r in rows]
+    det = [r["detection_rate_at_2eps_star"] for r in rows]
+    fp_ok = all(x <= alpha + 3 * se for x in fp)
+    det_ok = all(x >= 1.0 - alpha - 3 * se for x in det)
+    return {
+        "alpha": alpha,
+        "trials_per_config": n_trials,
+        "rows": rows,
+        "species_noise_nonconsistent": species_failures,
+        "max_false_positive_rate": float(max(fp)),
+        "mean_false_positive_rate": float(np.mean(fp)),
+        "min_detection_rate_at_2eps_star": float(min(det)),
+        "detection_rate_at_eps_star_range":
+            [float(min(r["detection_rate_at_eps_star"] for r in rows)),
+             float(max(r["detection_rate_at_eps_star"] for r in rows))],
+        "tolerance_3se": 3 * se,
+        "claim": ("species noise cancels around every cycle; edge noise "
+                  "gives FP <= alpha and detection at 2 eps* >= 1 - alpha"),
+        "passed": bool(species_failures == 0 and fp_ok and det_ok),
+    }
+
+
+# =====================================================================
 # main
 # =====================================================================
 
@@ -479,6 +588,7 @@ def main() -> int:
         ("V3_trichotomy", v3_trichotomy),
         ("V4_basis_dependence", v4_basis),
         ("V5_detection", v5_detection),
+        ("V6_data_noise", v6_data_noise),
     ]
     for key, fn in experiments:
         print(f"  {key} ...", end=" ", flush=True)

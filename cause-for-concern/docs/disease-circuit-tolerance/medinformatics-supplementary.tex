@@ -1,0 +1,800 @@
+% Supplementary Material: proofs
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[natbibapa]{apacite}
+\usepackage{aliascnt}
+
+% ---- listing style ----
+\definecolor{kw}{RGB}{30,64,175}
+\definecolor{cmt}{RGB}{22,101,52}
+\definecolor{strc}{RGB}{159,18,57}
+\definecolor{lstbg}{RGB}{250,250,250}
+\lstdefinelanguage{cfc}{
+  morekeywords={floor,circuit,species,reaction,solve,yield,patient,probe,
+    panel,measure,localize,using,until,resolved,otherwise,decline,cell,
+    gap,close,toward,coherent,basis,assert,emit,report,let,import,
+    holonomy,loops,of,wegscheider,check,from,where,in,foreach,scan,
+    against,collect,tolerance,witness,admit,invalid,negative},
+  morekeywords=[2]{Reading,Cell,Gap,Probe,Panel,Verdict,Concern,Circuit,
+    Loop,Holonomy,HolonomyVector,Tolerance,Residual},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  keywordstyle=\color{kw}\bfseries,
+  keywordstyle=[2]\color{strc},
+  commentstyle=\color{cmt}\itshape,
+  stringstyle=\color{strc},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{lstbg},
+  frame=single,framesep=4pt,xleftmargin=6pt,xrightmargin=4pt,
+  breaklines=true,showstringspaces=false,columns=fullflexible,tabsize=2
+}
+\lstset{language=cfc}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xr}
+
+% Import the main manuscript's labels so that every \Cref in a proof
+% resolves to the number the reader sees in the main text.
+\externaldocument{medinformatics-submission}
+
+% Theorem environments, so \Cref names ("Theorem", "Lemma", ...) resolve.
+% Aliased counters: shared numbering, but cleveref sees each type.
+\newcommand{\newsharedtheorem}[2]{%
+  \newaliascnt{#1}{theorem}\newtheorem{#1}[#1]{#2}\aliascntresetthe{#1}}
+\newtheorem{theorem}{Theorem}[section]
+% Sections here are unnumbered, so number results S1, S2, ... to keep
+% them distinct from the main text's numbering. Set before the aliases,
+% which copy this format when they are created.
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\renewcommand{\thetable}{S\arabic{table}}
+\newsharedtheorem{lemma}{Lemma}
+\newsharedtheorem{proposition}{Proposition}
+\newsharedtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newsharedtheorem{definition}{Definition}
+\newsharedtheorem{assumption}{Assumption}
+\newsharedtheorem{criterion}{Criterion}
+\newsharedtheorem{protocol}{Protocol}
+\newsharedtheorem{rulename}{Rule}
+\theoremstyle{remark}
+\newsharedtheorem{remark}{Remark}
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{criterion}{Criterion}{Criteria}
+\Crefname{criterion}{Criterion}{Criteria}
+\crefname{protocol}{Protocol}{Protocols}
+\Crefname{protocol}{Protocol}{Protocols}
+\crefname{rulename}{Rule}{Rules}
+\Crefname{rulename}{Rule}{Rules}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\epsnum}{\eps_{\mathrm{num}}}
+\newcommand{\epsdata}{\eps_{\mathrm{data}}}
+\newcommand{\epsstar}{\eps^{\ast}}
+\newcommand{\hol}{H}
+\newcommand{\mach}{u}
+\newcommand{\cf}[1]{\texttt{#1}}
+
+\title{Supplementary Material\\[4pt]
+\large Proofs for ``Separating Numerical Noise from Thermodynamic
+Inconsistency in Cycle-Consistency Tests on Metabolic Circuits''}
+\author{Kundai Farai Sachikonye}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+This document collects the proofs of every numbered result in the main
+text, in order of appearance. Section~S$k$ here proves the result whose
+proof the main text defers to Section~S$k$. Notation, numbering, and
+equation references follow the main text.
+
+\section*{S1}
+\addcontentsline{toc}{section}{S1}
+(i) The net rate of change of $c_i$ is incoming minus outgoing
+conversion rate; under \eqref{eq:GJ} the conversion rate along $(i,j)$
+is $J_{ij}$, so stationarity of $c_i$ is exactly the vanishing of the
+signed sum, which is the current law at node $i$.
+
+(ii) The sum telescopes to $\mu_{i_1}-\mu_{i_1}=0$ identically, because
+$\mu$ is a function on vertices. The substantive content is the
+converse: a set of rate constants admits a consistent potential function
+$\mu$ if and only if the products of forward rate constants around every
+cycle equal the products of reverse constants --- the Wegscheider
+condition \citep{wegscheider1901,schuster1989}. A network violating it
+admits no $\mu$ and hence no circuit representation.
+
+\section*{S2}
+\addcontentsline{toc}{section}{S2}
+$z_\ell\in\ker B$ by \Cref{def:cyclespace}, so
+$B z_\ell = 0$ and hence $\hol_\ell(\mu)=z_\ell^{\top}B^{\top}\mu
+= (Bz_\ell)^{\top}\mu = 0$.
+
+\section*{S3}
+\addcontentsline{toc}{section}{S3}
+$\operatorname{im}B^{\top} = (\ker B)^{\perp} = \mathcal{Z}(G)^{\perp}$
+by the fundamental theorem of linear algebra. Hence $d\in
+\operatorname{im}B^{\top}$ iff $z^{\top}d=0$ for all
+$z\in\mathcal{Z}(G)$, and since a basis spans $\mathcal{Z}(G)$, iff
+$z_\ell^{\top}d=0$ for every $\ell$ in that basis.
+
+\section*{S4}
+\addcontentsline{toc}{section}{S4}
+Each difference $\Delta\mu_e = \mu_j-\mu_i$ is computed with one
+rounding: $\mathrm{fl}(\mu_j-\mu_i) = (\mu_j-\mu_i)(1+\theta_e)$,
+$\abs{\theta_e}\le\mach$, giving an absolute error at most
+$\mach\abs{\mu_j-\mu_i}\le 2\mach\Lambda_\ell$. Summing $L$ such
+quantities sequentially, the standard forward error bound for
+floating-point summation \citep[Ch.~4]{higham2002} gives a total error
+at most $\gamma_{L}\sum_{e\in\ell}\abs{\Delta\mu_e}$ from the additions,
+plus the propagated per-difference errors, at most
+$\sum_{e}\mach\abs{\Delta\mu_e}$. Since
+$\abs{\Delta\mu_e}\le 2\Lambda_\ell$ and there are $L$ edges,
+$\sum_{e\in\ell}\abs{\Delta\mu_e}\le 2L\Lambda_\ell$. Collecting the two
+contributions and absorbing the constants into $\gamma_{2L}$ yields
+\eqref{eq:noise-bound}. Because the exact value is $0$, the computed
+value equals its own error, which is what the display asserts.
+
+For the compensated variant, Kahan summation \citep{kahan1965,
+higham2002} replaces the $\gamma_L$ factor by $2\mach + O(L\mach^{2})$,
+leaving only the $L$ per-difference roundings, hence
+$O(L\mach\Lambda_\ell)$.
+
+The bound is stated in $\Lambda_\ell=\max\abs{\mu_i}$ only through
+$\abs{\Delta\mu_e}\le 2\Lambda_\ell$; every step above holds with
+$2\Lambda_\ell$ replaced by the spread $\max\mu-\min\mu$ on the cycle,
+which is gauge-invariant. When all potentials on the cycle lie within a
+factor of two of one another, Sterbenz's lemma \citep{goldberg1991} makes
+each difference exact, and since each partial sum
+$\mu_{i_{k+1}}-\mu_{i_1}$ is then itself a difference of two such
+potentials, every addition is exact as well: the computed cycle sum is
+exactly zero.
+
+\section*{S5}
+\addcontentsline{toc}{section}{S5}
+Immediate from \eqref{eq:noise-bound}, whose right-hand side is, for
+fixed $\mach$, proportional to $\gamma_{2L}\,L\Lambda_\ell$ and hence to
+$L^{2}\Lambda_\ell$ to first order in $L\mach$. Two cycles whose values of
+$L^{2}\Lambda$ differ by a factor $r$ have floors differing by $r$, and
+a constant threshold separating noise from signal on both must lie
+within a factor $r$ of each floor at once, which fails once $r$ exceeds
+the dynamic range the test requires.
+
+\section*{S6}
+\addcontentsline{toc}{section}{S6}
+$\hol_\ell(\mu+c\mathbf{1}) = z_\ell^{\top}B^{\top}(\mu+c\mathbf{1})
+= \hol_\ell(\mu) + c\,z_\ell^{\top}B^{\top}\mathbf{1} = \hol_\ell(\mu)$,
+since $B^{\top}\mathbf{1}=0$ (every edge has one head and one tail).
+The stated $c^{\ast}$ centres the interval $[\min\mu,\max\mu]$ on zero,
+minimising $\max\abs{\mu_i}$, which is the definition of $\Lambda_\ell$.
+
+\section*{S7}
+\addcontentsline{toc}{section}{S7}
+\emph{\Cref{lem:species-cancel}.} With $d=B^{\top}\hat\mu$,
+$\hol_\ell(d)=z_\ell^{\top}B^{\top}\hat\mu=(Bz_\ell)^{\top}\hat\mu=0$,
+since $Bz_\ell=0$ by \Cref{def:cyclespace}. The argument holds for every
+$\hat\mu$, and in particular for $\hat\mu=\mu+\eta$ with any $\eta$.
+Equivalently, the coefficient of $\hat\mu_i$ in the cycle sum is the
+number of times the cycle enters species $i$ minus the number of times
+it leaves, which is zero for every species of a closed walk.
+
+\emph{\Cref{thm:data-floor}.} With $d=\bar d+\eta$ and $\bar d$
+consistent, $\hol_\ell(d)=z_\ell^{\top}\bar d+z_\ell^{\top}\eta
+=z_\ell^{\top}\eta$ by \Cref{prop:detect-defect}. This is linear in the
+independent errors, so it has mean zero and variance
+$\sum_e z_\ell(e)^{2}\sigma_e^{2}$, which is \eqref{eq:data-sd}; for a
+simple cycle $z_\ell(e)\in\{-1,0,1\}$ and the sum runs over the edges of
+$\ell$. Under normality $z_\ell^{\top}\eta$ is normal, and
+$\Pr[\abs{z_\ell^{\top}\eta}\le z_{1-\alpha/2}s_\ell]=1-\alpha$ exactly.
+Without normality, Chebyshev's inequality gives the same statement with
+$z_{1-\alpha/2}$ replaced by $\alpha^{-1/2}$.
+
+The two results are the two halves of one fact: the cycle sum reads only
+the part of the edge data that is not a gradient, so an error enters it
+if and only if it enters edge by edge.
+
+\section*{S8}
+\addcontentsline{toc}{section}{S8}
+With exact data, \Cref{lem:vanish} gives $\hol_\ell = 0$ and
+\Cref{thm:noise-scale} bounds the computed value by $\epsnum(\ell) \le
+\epsstar(\ell)$; the strict inequality in the event is therefore never
+satisfied. With uncertain edge data, $\abs{\hol_\ell} \le \epsdata(\ell)$
+with probability at least $1-\alpha$ by \Cref{thm:data-floor}, and on
+that event the computed value satisfies
+$\abs{\widehat{\hol}_\ell}\le\abs{\hol_\ell}+\epsnum(\ell)
+\le\epsdata(\ell)+\epsnum(\ell)=\epsstar(\ell)$. Hence
+$\Pr[\abs{\widehat{\hol}_\ell}>\epsstar(\ell)]\le\alpha$. (With
+$\epsstar$ the maximum of the two floors rather than their sum, the last
+inequality fails, which is why the sum is used.) Strictly, the rounding
+bound is here applied to a sum whose exact value is $\hol_\ell$ rather
+than zero; the argument of S4 applies unchanged with
+$\sum_{e\in\ell}\abs{d_e}$ in place of $2L\Lambda_\ell$, which for edge
+data within a few $\sigma_e$ of a gradient changes the bound
+negligibly.
+
+\section*{S9}
+\addcontentsline{toc}{section}{S9}
+With exact data, the computed value differs from the true one by at most
+$\epsnum(\ell)\le\epsstar(\ell)$ (\Cref{thm:noise-scale}), so
+$\abs{\widehat{\hol}_\ell} \ge D - \epsstar(\ell) > 2\epsstar(\ell) -
+\epsstar(\ell) = \epsstar(\ell)$. With independent errors on the edge
+data, the true sum is $\pm D+z_\ell^{\top}\eta$, and
+$\abs{z_\ell^{\top}\eta}\le\epsdata(\ell)$ with probability at least
+$1-\alpha$ (S7). On that event
+$\abs{\widehat{\hol}_\ell}\ge D-\epsdata(\ell)-\epsnum(\ell)
+=D-\epsstar(\ell)>\epsstar(\ell)$.
+
+\section*{S10}
+\addcontentsline{toc}{section}{S10}
+(i) The three conditions partition $[0,\infty)$ at the two cut points
+$\epsnum \le \epsstar = \epsnum+\epsdata$. When $\epsdata$ is undefined
+(\Cref{rem:no-sigma}) there is one cut point and every value above it is
+\textsf{UNDECIDABLE}.
+
+(ii) The middle interval $(\epsnum,\epsnum+\epsdata]$ is non-empty
+exactly when $\epsdata>0$. Numerically, the measured noise in a long
+uncentred high-potential cycle is of order $10^{-12}$ kJ/mol and the
+bound $\epsnum$ at most of order $10^{-9}$ (main text, \Cref{tab:v1} and
+\Cref{fig:tol_panel1}), while edge-level uncertainties of $1$--$10$
+kJ/mol \citep{noor2013,flamholz2012} give $\epsdata$ of order $1$--$10$
+kJ/mol. The middle interval therefore spans some nine to thirteen orders
+of magnitude.
+
+(iii) A two-valued rule places a single cut at some $t$. If
+$t<\epsstar$, cycles with $\abs{\widehat{\hol}}\in(t,\epsstar]$ are
+called inconsistent though their sums are within what the data's own
+uncertainty and the arithmetic can produce from a consistent network. If
+$t\ge\epsstar$, then $t>\epsnum$, and cycles with
+$\abs{\widehat{\hol}}\in(\epsnum,t]$ are called consistent though their
+sums exceed what the arithmetic alone can produce from exact data, so
+the verdict asserts a consistency the data do not establish. Either way
+one of the two misstatements occurs.
+
+\section*{S11}
+\addcontentsline{toc}{section}{S11}
+Each $\mathcal{B}_i$ spans $\mathcal{Z}(G)$ by \Cref{def:cyclespace}.
+The map $z\mapsto z^{\top}d$ is linear, so it vanishes on a spanning set
+if and only if it vanishes on the whole space, and hence if and only if
+it vanishes on any other spanning set.
+
+\section*{S12}
+\addcontentsline{toc}{section}{S12}
+Let $G$ be the ``theta-plus'' graph: vertices $\{a,b\}$ joined by four
+internally disjoint paths $P_1,\dots,P_4$, giving
+$\nu = 3$. Let $e^{\ast}\in P_1$ carry a defect of size $D$, all other
+edges consistent, so that any cycle containing $e^{\ast}$ exactly once
+has cycle sum $\pm D$ and any cycle avoiding it has sum $0$.
+
+Take $\mathcal{B}_1 = \{P_1P_2^{-1},\,P_2P_3^{-1},\,P_3P_4^{-1}\}$.
+Only the first contains $e^{\ast}$, so exactly one element has nonzero
+sum.
+
+Take $\mathcal{B}_2 = \{P_1P_2^{-1},\,P_1P_3^{-1},\,P_1P_4^{-1}\}$.
+This is a basis: the three are independent, since $P_1P_j^{-1}$ is the
+only element containing $P_j$, for $j=2,3,4$. Every element
+contains $e^{\ast}$, so all three have nonzero sum. Both are cycle bases
+of the same graph and the same data, and they flag one and three cycles
+respectively.
+
+\section*{S13}
+\addcontentsline{toc}{section}{S13}
+With the remaining edge data exact, a cycle's true sum is $D$ times its
+net signed traversal count of $e^{\ast}$, and $0$ from every other edge.
+A cycle with nonzero count has $\abs{\hol_\ell}\ge D>2\epsstar(\ell)$
+and is flagged by \Cref{thm:detection}; a cycle with zero count has
+$\hol_\ell=0$ and is not flagged, by \Cref{thm:no-false-positive}. For
+simple cycles a nonzero count is containment. Hence every flagged cycle
+contains $e^{\ast}$, so $e^{\ast}$ lies in their intersection, which is
+$W(\mathcal{B})$. With independent errors on the edge data, each of the
+$\nu$ basis cycles receives the verdict the exact case assigns it except
+with probability at most $\alpha$ (\Cref{thm:no-false-positive,%
+thm:detection}); by the union bound all $\nu$ do so with probability at
+least $1-\nu\alpha$, and on that event the argument above applies.
+
+\section*{S14}
+\addcontentsline{toc}{section}{S14}
+By \Cref{rule:verdict} the only introduction form for \cf{Verdict}
+requires a premise of type \cf{Tolerance}, and the conclusion carries it
+by \Cref{def:types}. A numeric literal has no type in the grammar of
+\Cref{def:types}, so there is no derivation in which one appears in
+the second premise; and no coercion rule from a numeric literal to
+\cf{Tolerance} exists, since \cf{Tolerance} is introduced only by the
+computation of \eqref{eq:epsstar} from a \cf{Loop} and its data. Hence
+no derivation produces a bare verdict.
+
+
+%% ---- moved from the main text for length ----
+
+\section*{S15: a language in which the tolerance cannot be omitted}
+\addcontentsline{toc}{section}{S15}
+% =====================================================================
+
+The analysis of the main text is only as good as its
+implementation. A practitioner who computes $\epsstar$ correctly and then writes
+\verb|if abs(H) > 1e-6| has gained nothing. We therefore express the
+protocol in a small typed language in which the omission is not
+expressible.
+
+\subsection*{Types}
+
+\begin{definition}[Types]
+\label{def:types}
+The types are
+\[
+  \tau \;::=\; \cf{Circuit} \mid \cf{Loop} \mid \cf{Holonomy}
+  \mid \cf{Tolerance} \mid \cf{Verdict} \mid \cf{Witness}.
+\]
+A value of type \cf{Holonomy} is a pair $(\widehat{\hol}_\ell,\ell)$; a
+value of type \cf{Tolerance} is a triple
+$(\epsnum,\epsdata,\epsstar)$ with $\epsdata$ possibly the distinguished
+value \cf{undefined}; a value of type \cf{Verdict} is an element of
+$\{\textsf{CONSISTENT},\textsf{UNDECIDABLE},\textsf{INCONSISTENT}\}$
+\emph{paired with} the \cf{Tolerance} that produced it.
+\end{definition}
+
+\subsection*{The typing rule that does the work}
+
+\begin{rulename}[Verdict requires a tolerance]
+\label{rule:verdict}
+\[
+  \frac{\Gamma\vdash h : \cf{Holonomy}
+        \qquad \Gamma\vdash t : \cf{Tolerance}}
+       {\Gamma\vdash \cf{admit}\ h\ \cf{tolerance}\ t : \cf{Verdict}}
+\]
+There is no other rule with \cf{Verdict} in its conclusion.
+\end{rulename}
+
+\begin{theorem}[No bare verdict]
+\label{thm:no-bare-verdict}
+No well-typed program produces a value of type \cf{Verdict} that is not
+paired with the \cf{Tolerance} used to derive it. In particular, a
+comparison of a \cf{Holonomy} against a numeric literal is not
+well-typed.
+\end{theorem}
+
+\noindent\emph{Proof.} See Section~S14 above.
+
+\begin{remark}[What this does and does not buy]
+\label{rem:type-limits}
+\Cref{thm:no-bare-verdict} rules out a class of implementation error:
+it is not possible to forget the tolerance, to hard-code it, or to
+report a verdict whose provenance is not recoverable. It does not make
+the tolerance \emph{correct}: a program supplying a wrong $\sigma_i$ to
+\eqref{eq:data-floor} is well-typed and wrong. The type system enforces
+accountability of the computation, not accuracy of the inputs, and we
+state this because the distinction is easy to overstate in the other
+direction.
+\end{remark}
+
+\subsection*{The protocol as a program}
+
+\begin{lstlisting}[caption={The cycle-consistency test with cycle-local
+tolerances. Every verdict carries its tolerance by
+\Cref{thm:no-bare-verdict}; the validity gate of \Cref{crit:invalid}
+precedes any diagnostic claim.},label={lst:program}]
+-- kcl-tolerance.cfc
+-- Cycle-consistency with per-cycle tolerances.
+
+import Recon3D
+import Recon3D.uncertainty as sigma
+
+circuit Reference from Recon3D.glycolysis_tca {
+  solve yield C_ref
+}
+
+-- Gauge-centre potentials to tighten the bound on the numerical
+-- floor (gauge proposition). Changes no cycle sum.
+let C_ref_centred := centre_potentials(C_ref)
+
+-- Minimum-weight cycle basis: sharper witness sets.
+let B := minimum_cycle_basis(C_ref_centred)
+
+-- VALIDITY GATE (invalid versus negative). The reference network
+-- must pass before any diagnostic verdict is meaningful. Data floors
+-- here are taken at level alpha / size(B).
+foreach loop in B {
+  holonomy of loop in C_ref_centred yield h_ref
+  tolerance of loop with sigma yield t
+  admit h_ref tolerance t yield v_ref
+
+  assert v_ref != INCONSISTENT
+    otherwise invalid
+      emit "reference network fails its own consistency check"
+}
+
+emit "validity gate passed: reference is self-consistent"
+
+-- DIAGNOSTIC. Perturbed network: the forward constant alone is
+-- scaled, which breaks the Haldane relation and injects a defect of
+-- RT ln(1/0.15) = 4.9 kJ/mol on the PK edge.
+circuit Perturbed from Recon3D.glycolysis_tca {
+  reaction PK : PEP -> Pyruvate, k : 0.15 * Recon3D.k_PK
+  solve yield C_pert
+}
+
+let C_pert_centred := centre_potentials(C_pert)
+
+let flagged := {}
+foreach loop in B {
+  holonomy of loop in C_pert_centred yield h
+  tolerance of loop with sigma yield t
+  admit h tolerance t yield v
+
+  report loop, h, t.numerical, t.data, t.star, v
+
+  where v == INCONSISTENT collect loop into flagged
+}
+
+-- Localisation is to the witness set, not to a named loop.
+witness of flagged yield W
+report "witness_set", W
+report "witness_cardinality", size(W)
+
+-- The claim under test, stated basis-independently.
+assert Recon3D.edge("PK") in W
+  emit "defect localised: PK edge in witness set"
+  otherwise decline
+    emit "defect not localised at this data quality"
+\end{lstlisting}
+
+% =====================================================================
+\section*{S16: protocol and pre-registered criteria}
+\addcontentsline{toc}{section}{S16}
+% =====================================================================
+
+\subsection*{Data}
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+\item \textbf{Network.} The glycolysis, pentose phosphate, and TCA
+subnetwork of a human metabolic reconstruction
+\citep{brunk2018}, approximately $80$ reactions over $60$ metabolites.
+\item \textbf{Edge data.} For each reaction with forward and reverse rate
+constants in the kinetic models \citep{rapoport1975,mulquiney1999}, the
+edge datum is the standard reaction energy those constants imply by the
+Haldane relation, $d_e=-RT\ln(k_e^{+}/k_e^{-})$, with its reported
+uncertainty $\sigma_e$; where an equilibrium constant is reported
+independently for the reaction, it is used instead. Edges whose datum is
+derived from component-contribution formation energies
+\citep{noor2013,flamholz2012} are consistent by construction
+(\Cref{lem:species-cancel}) and are recorded as such. Edges without a
+reported uncertainty are recorded and trigger \Cref{rem:no-sigma}.
+\item \textbf{Reference physiology.} Erythrocyte metabolite
+concentrations and glycolytic flux from established kinetic models
+\citep{rapoport1975,mulquiney1999}.
+\item \textbf{Perturbation.} The pyruvate kinase forward rate constant
+reduced to $15\%$ of reference with the reverse constant unchanged,
+which injects a defect of $RT\ln(1/0.15)\approx4.9$ kJ/mol on the PK
+edge. The $15\%$ matches the residual activity documented in the
+clinical deficiency \citep{zanella2005}; the deficiency itself scales
+both directions, which is Control~1.
+\end{enumerate}
+
+\subsection*{Procedure}
+
+\begin{protocol}[Cycle-consistency with cycle-local tolerance]
+\leavevmode
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+\item Construct the reference circuit by
+\Cref{def:mu,def:conductance}; verify the current law at every internal
+node to the numerical floor of \Cref{thm:noise-scale} applied to the
+node balance.
+\item Gauge-centre the potentials (\Cref{prop:gauge}) and record the
+resulting $\Lambda_\ell$ per cycle, both before and after.
+\item Compute a minimum-weight cycle basis \citep{horton1987}; record
+$\nu$, the length distribution, and the basis itself so that the
+computation is reproducible. Verify that the PK edge lies on at least
+one cycle; if it is a bridge, no cycle sum can detect the perturbation
+and the experiment is invalid by design.
+\item For each cycle compute $\epsnum(\ell)$ by \eqref{eq:noise-bound}
+and $\epsdata(\ell)$ by \eqref{eq:data-floor}, at $\alpha/\nu$ for the
+validity gate and at $\alpha=0.01$ otherwise; record both, and
+$\epsstar$.
+\item \textbf{Validity gate.} Evaluate \Cref{def:validity} on the
+reference. If it fails, halt and report an \emph{invalid} experiment per
+\Cref{crit:invalid}.
+\item Evaluate the perturbed circuit; record $\widehat{\hol}_\ell$ and
+$\mathrm{verdict}(\ell)$ for every cycle.
+\item Compute the witness set $W$ (\Cref{def:witness}) and record
+$\abs{W}$ and whether the perturbed edge lies in it.
+\item \textbf{Control 1 (activity loss).} Repeat step 6 with both PK
+constants scaled by $0.15$, which preserves the Haldane relation and
+every cycle sum. Any \textsf{INCONSISTENT} verdict here is a false
+positive; at level $\alpha/\nu$ per cycle its probability is at most
+$\alpha$ (\Cref{thm:no-false-positive}). This control also shows
+directly that the test is blind to a loss of activity that leaves the
+equilibrium constant unchanged.
+\item \textbf{Control 2 (basis).} Repeat steps 3--7 with a
+\emph{different} cycle basis (e.g.\ a fundamental basis from a spanning
+tree). Verify the network-level verdict agrees
+(\Cref{thm:basis-verdict}) and record how $F$ and $W$ differ
+(\Cref{prop:basis-localisation}).
+\item \textbf{Control 3 (detection sweep).} Sweep the perturbation
+magnitude and record the smallest $D$ at which the correct edge enters
+$W$; compare against the predicted $2\epsstar$ of
+\Cref{thm:detection}.
+\end{enumerate}
+\end{protocol}
+
+\subsection*{Pre-registered criteria}
+
+\begin{criterion}[Success]
+\label{crit:success}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=2em,itemsep=2pt]
+\item \textbf{Validity.} The reference network passes
+\Cref{def:validity} on every basis cycle.
+\item \textbf{No false positives.} Control 1 produces zero
+\textsf{INCONSISTENT} verdicts, as \Cref{thm:no-false-positive}
+requires.
+\item \textbf{Localisation.} The perturbed edge lies in $W$, and
+$\abs{W}\le 3$.
+\item \textbf{Basis invariance.} Control 2 yields the same network-level
+verdict under both bases.
+\item \textbf{Detection threshold.} Control 3 finds the empirical
+detection threshold within a factor of $10$ of the predicted
+$2\epsstar$.
+\end{enumerate}
+\end{criterion}
+
+\begin{criterion}[Failure, and what each failure means]
+\label{crit:failure}
+\leavevmode
+\begin{itemize}[leftmargin=1.5em,itemsep=2pt]
+\item Failure of (a) renders the experiment \emph{invalid}
+(\Cref{crit:invalid}): the reconstruction's thermodynamic annotations
+are not self-consistent to their claimed precision. No conclusion about
+the diagnostic follows.
+\item Failure of (b) has probability at most $\alpha$ under the stated
+error model. It indicates an error in the tolerance computation, or
+reported uncertainties that understate the real errors of the edge
+data; it is not a detection.
+\item Failure of (c) with (a) and (b) passing is a genuine
+\emph{negative}: the test does not localise this defect at this data
+quality. If additionally most verdicts are \textsf{UNDECIDABLE}, the
+limiting factor is $\epsdata$ and the finding is about the database
+(\Cref{rem:undecidable}).
+\item Failure of (d) would contradict \Cref{thm:basis-verdict} and
+indicates an implementation error in the basis computation.
+\item Failure of (e) indicates the bound of \Cref{thm:noise-scale} is
+loose by more than an order of magnitude on real data, which is a
+finding about the bound worth reporting.
+\end{itemize}
+\end{criterion}
+
+\begin{remark}[Controls that can fail]
+\label{rem:controls}
+Controls 1--3 are chosen so that each can fail on well-formed input.
+Control 1 tests a theorem whose failure probability is bounded by
+$\alpha$, so a failure is strong evidence against the computation or the
+error model. Control 2 tests an invariance that the theory asserts, so
+a failure localises to the implementation. Control 3 tests a bound
+rather than an identity, so a failure is informative about the bound's
+tightness. A control that cannot fail measures nothing, and we have
+excluded from the protocol several checks with that property --- notably
+any check comparing the implementation's verdict against the same
+implementation's tolerance, which would pass by construction.
+\end{remark}
+
+
+\subsection*{Outcome on the erythrocyte network}
+
+We executed the protocol on the human erythrocyte network assembled from
+UniProtKB/Swiss-Prot \citep{uniprot2025} and Rhea \citep{bansal2022}
+(main text, \Cref{sec:data}) rather than on the Recon3D glycolysis--TCA
+subnetwork named under \emph{Data} above, since erythrocytes have no
+mitochondria and no tricarboxylic acid cycle. Step~3 fails: the pyruvate
+kinase reaction lies on none of the network's seven cycles, because no
+erythrocyte enzyme returns pyruvate to phosphoenolpyruvate. By the
+criterion of step~3 the experiment is invalid by design, and steps
+4--10 were not run. No erythrocyte cycle has a measured equilibrium
+constant on every edge (Section~S17), so on present data there is no
+substitute target either.
+
+\section*{S17: analysis of experimental data}
+
+The code is \texttt{validation/realdata/run\_realdata.py}; every number
+below is read from \texttt{results\_real.json}.
+
+\subsection*{Cycles of a stoichiometric network}
+
+Let $S\in\mathbb{Z}^{n\times m}$ be the stoichiometric matrix of $m$
+reactions over $n$ species, after balancing with water and protons and
+removing the proton row. A cycle is an integer $z\in\ker S$; its sum on
+edge data $d\in\mathbb{R}^{m}$ is $\hol_z=z^{\top}d$. If
+$d=S^{\top}\mu$ for any $\mu\in\mathbb{R}^{n}$, then
+$\hol_z=(Sz)^{\top}\mu=0$; this is \Cref{lem:vanish}, and with $\mu$
+replaced by species-level errors it is \Cref{lem:species-cancel}. The
+proof of \Cref{thm:data-floor} uses only the linearity of $\hol_z$ in
+$d$ and so holds unchanged, with variance $\sum_e z_e^{2}\sigma_e^{2}$.
+The incidence matrix of the main text is the case in which every column
+of $S$ has one $+1$ and one $-1$.
+
+\begin{proposition}[Numerical floor for edge data]
+\label{prop:edge-floor}
+Let the edge data $d$ be held in the arithmetic of \Cref{ass:fp}, and
+let $z$ have $k$ nonzero entries, each exactly representable. Then the
+value $\widehat{\hol}_z$ of $z^{\top}d$ computed by forming the $k$
+products and summing them in any order satisfies
+\[
+  \bigl\lvert\widehat{\hol}_z-\hol_z\bigr\rvert
+  \;\le\;\gamma_k\sum_{e}\abs{z_e d_e}.
+\]
+\end{proposition}
+
+\noindent\emph{Proof.} This is the standard bound for an inner product
+of length $k$ \citep[Section~3.1]{higham2002}: each product incurs at
+most one relative rounding error of size $\mach$, none when $\abs{z_e}$
+is a power of two, and any summation order incurs at most $k-1$ more
+along the path of each term. Collecting the factors $(1+\delta_j)$ by
+Lemma~3.1 of \citet{higham2002} gives the bound. When the data are
+differences of potentials, forming each difference adds one rounding
+per term, which is the source of $\gamma_{2L}$ in
+\Cref{thm:noise-scale}. \hfill$\square$
+
+We span $\ker S$ by the fundamental basis of the reduced row-echelon
+form of $S$, computed in exact rational arithmetic and scaled to coprime
+integers, so that the basis carries no rounding error of its own.
+
+\subsection*{Data, transform and aggregation}
+
+TECRDB as distributed with component contribution (commit
+\texttt{67d3804}) has $4{,}544$ rows; $3{,}912$ report $K'$, $T$ and
+pH. Of these, $173$ involve a compound without a structure in the
+eQuilibrator cache and were dropped; every remaining reaction balanced
+with water and protons. Restricting to grades A--C and $293$--$313$ K
+leaves $3{,}276$ measurements from $908$ studies of $418$ distinct
+reactions. For a measurement of reaction $e$ at conditions
+$c=(\mathrm{pH},I,T,\mathrm{pMg})$,
+\[
+  d_e \;=\; -RT\ln K'_e \;-\; \sum_i S_{ie}\,\tau_i(c),
+\]
+where $\tau_i(c)$ is the Legendre transform of compound $i$ computed by
+eQuilibrator \citep{beber2022} from its pKa and magnesium-binding
+constants; a missing ionic strength is taken as $0.25$ M and a missing
+pMg as $14$, as component contribution does \citep{noor2013}. Any
+reference-state term in $\tau_i$ is a species-level quantity and
+cancels around every cycle (\Cref{lem:species-cancel}), so only the
+dependence of $\tau_i$ on each measurement's own conditions reaches a
+cycle sum. As a check of the transform, the values recovered at pH~$7$,
+$I=0.25$ M and $298.15$ K are $+7.7$ kJ/mol for triose-phosphate
+isomerase (DHAP to GAP), $-2.4$ for adenylate kinase (ATP + AMP to 2
+ADP), $-3.0$ for enolase (2PG to PEP) and $+3.2$ for glucose-6-phosphate
+isomerase (G6P to F6P), in line with tabulated standard values
+\citep{alberty1998}.
+
+Measurements repeated within one study are averaged into one value; a
+reaction's datum is the mean over its $n_e$ studies, with
+$\sigma_e=\sigma/\sqrt{n_e}$ and $\sigma$ the pooled between-study
+standard deviation, $\bigl(\sum_e\sum_s(x_{es}-\bar x_e)^2/
+\sum_e(n_e-1)\bigr)^{1/2}=2.68$ kJ/mol over the $165$ reactions
+measured in at least two studies ($1.49$ kJ/mol for grade A alone).
+
+\subsection*{Calibration on repeated measurements}
+
+For a reaction measured in $n\ge2$ studies, the leave-one-out deviation
+$t_s=(x_s-\bar x_{-s})/(\sigma\sqrt{1+1/(n-1)})$ is the standardised
+sum of a two-edge cycle whose true sum is zero. Over all grades the
+$655$ values exceed the Gaussian quantile $2.576$ in $3.5\%$ of cases
+(nominal $1\%$); their $95$th and $99$th percentiles are $2.15$ and
+$3.81$, and the largest is $5.26$. For grade A alone the $85$ values
+exceed $2.576$ in $1.2\%$ of cases and their $99$th percentile is
+$2.58$. Across the $67$ basis cycles of the main analysis the
+standardised sums $Z=\hol_z/(\sum_e z_e^2\sigma_e^2)^{1/2}$ have
+standard deviation $1.75$, and $10.4\%$ exceed $2.576$.
+
+\begin{table}[h]
+\centering\small
+\caption{Verdicts on the $67$ basis cycles of the measured-reaction
+network (grades A--C) and the $13$ of the grade-A network, by the
+quantile used in the data floor, and the number flagged by a fixed
+tolerance. No cycle is \textsf{CONSISTENT} under any rule.}
+\label{tab:s-real}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Data & Rule & \textsf{INCONSISTENT} & \textsf{UNDECIDABLE}\\
+\midrule
+A--C & cycle-local, Gaussian ($2.58$) & $7$ & $60$\\
+A--C & cycle-local, replicate-calibrated ($3.81$) & $3$ & $64$\\
+A--C & cycle-local, Chebyshev ($10$) & $0$ & $67$\\
+A--C & fixed $\eps=10^{-6}$ or $10^{-3}$ kJ/mol & $67$ & ---\\
+A--C & fixed $\eps=1$, $5$, $10$ kJ/mol & $54$, $27$, $14$ & ---\\
+A    & cycle-local, Gaussian or calibrated ($2.58$) & $2$ & $11$\\
+A    & cycle-local, Chebyshev ($10$) & $0$ & $13$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{The flagged cycles}
+
+The seven cycles flagged under the Gaussian floor in the reference
+basis are listed by EC number, with each reaction's coefficient and the
+number of studies behind it; ``\&'' marks a single measurement of a
+coupled reaction.
+
+\begin{table}[h]
+\centering\footnotesize
+\caption{Cycles flagged \textsf{INCONSISTENT} (Gaussian data floor,
+$\alpha=0.01$) in the reference basis. $\hol$ and $\epsstar$ in kJ/mol.}
+\label{tab:s-flagged}
+\begin{tabular}{@{}rrrp{0.6\textwidth}@{}}
+\toprule
+$\hol$ & $\epsstar$ & $Z$ & Reactions: coefficient, EC (studies)\\
+\midrule
+$-27.77$ & $8.45$ & $-8.46$ & $+1$~2.7.1.90 (1); $-1$~3.1.3.11 (3);
+$+1$~3.6.1.1 (6)\\
+$-13.77$ & $8.45$ & $-4.20$ & $+1$~2.7.7.4 (3); $-1$~2.7.7.4\&3.6.1.1 (1);
+$+1$~3.6.1.1 (6)\\
+$23.97$ & $16.18$ & $3.82$ & $+1$~2.1.3.1 (1); $-1$~3.6.1.38 (1);
+$-1$~1.1.1.37\&4.1.3.7 (1); $+1$~1.1.1.39 (1); $+1$~4.1.3.7 (1);
+$+1$~6.4.1.3 (2)\\
+$14.51$ & $11.34$ & $3.30$ & $+1$~1.5.1.15 (1); $-1$~1.4.1.2 (5);
+$-1$~1.5.1.5 (1); $+1$~1.4.1.3 (4); $+1$~3.5.4.9 (4)\\
+$-14.51$ & $12.28$ & $-3.04$ & $+1$~4.1.2.13 (2); $+1$~3.1.3.1 (2);
+$-1$~3.1.3.2 (1); $-1$~2.2.1.2 (1); $-1$~4.1.2.13 (6)\\
+$-10.02$ & $9.63$ & $-2.68$ & $+1$~1.1.1.3 (2); $-1$~1.4.1.2 (5);
+$+1$~1.4.1.3 (4); $+1$~1.1.1.3 (1)\\
+$20.03$ & $19.52$ & $2.64$ & $+1$~2.7.7 (1); $+1$~3.6.1.38 (1);
+$+1$~1.1.1.37\&4.1.3.7 (1); $+1$~4.1.1.38 (1); $-1$~1.1.1.39 (1);
+$-1$~4.1.3.7 (1); $+1$~3.1.4 (1); $-1$~2.7.9.1 (3); $-2$~3.6.1.1 (6)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A repeated EC number within a cycle marks distinct reactions of one
+enzyme class (for example, glutamate dehydrogenase with NAD$^+$ and
+with NADP$^+$). Over $200$ further fundamental bases, from random
+column orders, some cycle was flagged in every basis, the number
+flagged ranged from $2$ to $40$, and the intersection of flagged cycles
+was always empty. The reactions lying on a flagged cycle in at least
+$75\%$ of bases are pyrophosphate--fructose-6-phosphate
+1-phosphotransferase (EC~2.7.1.90, $94\%$), methylmalonyl-CoA
+carboxyltransferase (2.1.3.1, $88.5\%$), propanoyl-CoA carboxylase
+(6.4.1.3, $88.5\%$), methylenetetrahydrofolate dehydrogenase
+(NAD$^+$; 1.5.1.15, $80.5\%$) and ADP-glucose phosphodiesterase
+(3.1.4, $78\%$); all but one rest on a single study.
+
+\subsection*{The erythrocyte network}
+
+The $38$ genes are HK1, GPI, PFKL, PFKM, ALDOA, TPI1, GAPDH, PGK1, BPGM,
+MINPP1, PGAM1, ENO1, PKLR, LDHA, LDHB, G6PD, PGLS, PGD, RPE, RPIA, TKT,
+TALDO1, PGM1, AK1, NME1, NME2, GSR, GPX1, GCLC, GSS, ADA, AMPD3, PNP,
+APRT, HPRT1, PRPS1, ATP1A1 and ATP2B4. Their UniProtKB/Swiss-Prot
+entries annotate $118$ Rhea reactions. We excluded $27$ whose
+participants are compound classes without a defined structure (such as
+``a D-hexose''), $8$ with generic macromolecular participants, and $9$
+with no net chemistry once compartments are merged (pure transport),
+leaving $74$, of which $70$ are chemically distinct, over $101$ species.
+$S$ has rank $63$, so $\nu=7$, and $19$ reactions lie on a cycle.
+
+One basis cycle is the Rapoport--Luebering shunt: phosphoglycerate
+kinase ($3$ studies), phosphoglycerate mutase ($12$),
+bisphosphoglycerate mutase ($0$), bisphosphoglycerate phosphatase ($0$)
+and ATP hydrolysis by the Ca$^{2+}$ pump ($1$). The other six are cycles
+of nucleotide interconversion by adenylate kinase and
+nucleoside-diphosphate kinase on (deoxy)nucleotides, with at most one
+measured edge each. No cycle has a measured constant on every edge, and
+the $31$ erythrocyte reactions with any measurement form a subnetwork
+with no cycle at all. Matching to TECRDB is at the level of molecular
+connectivity, so an anomer-specific Rhea reaction is matched to
+TECRDB's generic one.
+
+
+\bibliographystyle{apacite}
+\bibliography{references}
+
+\end{document}
